@@ -8,11 +8,12 @@ RM := rm -rf
 
 # All of the sources participating in the build are defined here
 -include sources.mk
+-include Time/subdir.mk
 -include Serializacion/subdir.mk
--include Sac-Server/subdir.mk
 -include ManejoDePunterosDobles/subdir.mk
 -include Lista/subdir.mk
 -include Conexiones/subdir.mk
+-include Bitmap/subdir.mk
 -include Archivos/subdir.mk
 -include subdir.mk
 -include objects.mk

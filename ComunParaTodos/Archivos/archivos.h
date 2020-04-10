@@ -2,10 +2,42 @@
 #define ARCHIVOS_H_
 #include <string.h>
 #include <stdlib.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+
+
+typedef uint32_t ptrGBloque;
+
+
+typedef struct {
+	/*unsigned*/ char bytes [4096];
+} Bloque;
+
+
+typedef struct {
+	ptrGBloque bloques_de_datos [1024];
+} Bloque_de_puntero;
+
 
 ////////////////////////////////////////
 //       Funciones De Archivos       //
 ///////////////////////////////////////
+
+
+
+/*
+* Esta funcion retorna el tamanio de
+* el archivo pasado por parametro
+*/
+uint32_t tamanio_archivo(char *archivo);
+
+/*
+* Esta funcion retorna el tamanio de
+* el archivo pasado por parametro en bloques
+*/
+int tamanio_archivo_en_bloques(uint32_t tamanio);
+
 
 /*
  * Retorna un char* con el ultimo valor del path despues de la ultima "/"

@@ -1,4 +1,4 @@
-#include "Sac-Server.h"
+#include "Bitmap.h"
 
 void cargar_bitmap(int cantidad, t_bitarray *tBitarray, t_log *logger){
 	int cargado = 0;
@@ -10,28 +10,6 @@ void cargar_bitmap(int cantidad, t_bitarray *tBitarray, t_log *logger){
 		cargado = cargado + 1;
 	}
 	log_info(logger, "cargado: %i", cargado);
-}
-
-uint64_t timestamp(){
-	struct timeval tv;
-	gettimeofday(&tv, NULL);
-	long long result = (((long long )tv.tv_sec) * 1000 + ((long) tv.tv_usec) / 1000); //opero con milisegundos
-	uint64_t timefinal = result;
-	return timefinal;
-}
-
-uint32_t tamanio_archivo(char *archivo){
-	FILE* file = fopen(archivo,"r");
-	fseek(file, 0L, SEEK_END);
-	uint32_t tamanio = ftell(file);
-	fclose(file);
-	return tamanio;
-}
-
-int tamanio_archivo_en_bloques(uint32_t tamanio){
-	if(tamanio%sizeof(Bloque)>0){
-		return tamanio/sizeof(Bloque);
-	}return (tamanio/sizeof(Bloque))+1;
 }
 
 int buscar_espacio_en_bitmap(t_bitarray *tBitarray, t_log *logger){

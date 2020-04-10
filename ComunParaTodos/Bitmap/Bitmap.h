@@ -15,30 +15,8 @@
 #include <math.h>
 
 
-#ifndef SAC_SERVER_H_
-#define SAC_SERVER_H_
-
-
-//Estructuras para FileSystem
-
-typedef uint32_t ptrGBloque;
-
-
-typedef struct {
-	/*unsigned*/ char bytes [4096];
-} Bloque;
-
-typedef struct {
-	ptrGBloque bloques_de_datos [1024];
-} Bloque_de_puntero;
-
-typedef struct {
-	char identificador [3];
-	uint32_t version;
-	ptrGBloque inicio_bitmap;
-	uint32_t tamanio_bitmap;
-	unsigned char rellenuto[4081];
-}Header;
+#ifndef BITMAP_H_
+#define BITMAP_H_
 
 typedef struct{
 	char *bitArray;
@@ -51,32 +29,6 @@ typedef struct{
 * al bitmap en 1
 */
 void cargar_bitmap(int cantidad, t_bitarray *tBitarray, t_log *logger);
-
-///////////////////////////////
-// FUNCIONES ADMINISTRATIVAS //
-//////////////////////////////
-
-/*
-* Esta funcion se ocupa de
-* retornar la hora actual 
-*/
-uint64_t timestamp();
-
-/*
-* Esta funcion retorna el tamanio de
-* el archivo pasado por parametro
-*/
-uint32_t tamanio_archivo(char *archivo);
-
-/*
-* Esta funcion retorna el tamanio de
-* el archivo pasado por parametro en bloques
-*/
-int tamanio_archivo_en_bloques(uint32_t tamanio);
-
-//////////////////////////
-// FUNCIONES DEL BITMAP //
-/////////////////////////
 
 /*
 * Esta funcion retorna el primer
@@ -96,4 +48,4 @@ void ocupar_bloque_en_bitmap(int indice, t_bitarray *tBitarray);
 */
 void liberar_bloque_en_bitmap(int indice, t_bitarray *tBitarray);
 
-#endif /* SAC_SERVER_H_ */
+#endif /* BITMAP_H_ */
