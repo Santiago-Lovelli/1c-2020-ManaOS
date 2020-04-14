@@ -11,6 +11,7 @@ RM := rm -rf
 -include Time/subdir.mk
 -include Serializacion/subdir.mk
 -include ManejoDePunterosDobles/subdir.mk
+-include Logger/subdir.mk
 -include Lista/subdir.mk
 -include Conexiones/subdir.mk
 -include Bitmap/subdir.mk

@@ -17,6 +17,7 @@ Archivos \
 Bitmap \
 Conexiones \
 Lista \
+Logger \
 ManejoDePunterosDobles \
 Serializacion \
 Time \
