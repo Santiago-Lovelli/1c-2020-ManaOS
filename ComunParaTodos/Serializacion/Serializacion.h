@@ -21,13 +21,43 @@
 #include <errno.h>
 #include <fcntl.h>
 
+/////////////////////////////////////////
+//       Como usar esta libreria       //
+/////////////////////////////////////////
+//                                     //
+// - Para enviar se utiliza Serialize  //
+// _PackAndSend_ y el tipo de paquete  //
+// correspondiente                     //
+//                                     //
+// - Para recibir algo primero se      //
+// utiliza receiveHeader y despues     //
+// con los datos obtenidos, se llama a //
+// receive and unpack obteniendo asi   //
+// el pack void*                       //
+//                                     //
+// - Para extraer datos especificos    //
+// de estos paquetes se utilizan las   //
+// funciones unpack                    //
+//                                     //
+// - NUNCA llamar a una funcion unpack //
+// no correspondiente al tipo de pack  //
+// que recibimos                       //
+//                                     //
+/////////////////////////////////////////
+
 //////////////////////////////////////////
-//           Tipos de Permisos         //
+//           Tipos de mensajes          //
 //////////////////////////////////////////
-typedef enum f_operaciones {
-	f_HANDSHAKE,
-	f_RESPONSE
-} f_operacion;
+typedef enum d_messages {
+	d_NEW_POKEMON,
+	d_CATCH_POKEMON,
+	d_GET_POKEMON,
+	d_APPEARED_POKEMON,
+	d_CAUGHT_POKEMON,
+	d_LOCALIZED_POKEMON,
+	d_ACK,
+	d_SUBSCRIBE_QUEUE
+} d_message;
 
 ////////////////////////
 // Comunicacion Base //
@@ -35,8 +65,8 @@ typedef enum f_operaciones {
 
 typedef struct {
 	uint32_t tamanioMensaje;
-	f_operacion operaciones;
-}__attribute__((packed)) HeaderFuse; //Esta estructura es de tamaño 8
+	d_message tipoMensaje;
+}__attribute__((packed)) HeaderDelibird; //Esta estructura es de tamaño 8
 
 ////////////////
 // FUNCIONES //
@@ -48,15 +78,53 @@ typedef struct {
 
 /**
 * ESTA FUNCION ENVIA UN PAQUETE DEL TAMAÑO ESPECIFICADO A TRAVES DEL SOCKET ESPECIFICADO
+* ES LA FUNCION DEFAULT QUE USAMOS PARA ENVIAR UN PAQUETE Y LAS OTRAS FUNCIONES DE ENVIAR
+* PAQUETES LLAMARAN A ESTA
 */
 
-bool Fuse_PackAndSend(int socketCliente, const void*path, uint32_t tamPath, f_operacion operacion);
+bool Serialize_PackAndSend(int socketCliente, const void*pack, uint32_t tamPack, d_message tipoMensaje);
 
 /**
-* ESTA FUNCION ENVIA UNA RESPONSE INT DEL SERVER AL CLI
+* ESTA FUNCION NOS SIRVE PARA CONTESTAR ACK
 */
 
-bool Fuse_PackAndSend_Uint32_Response(int socketCliente, uint32_t response);
+bool Serialize_PackAndSend_ACK(int socketCliente, uint32_t miId);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO NEW_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_NEW_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY, uint32_t cantidad);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO CATCH_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_CATCH_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO GET_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_GET_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO APPEARED_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_APPEARED_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO CAUGHT_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_CAUGHT_POKEMON(int socketCliente, uint32_t idMensaje, uint32_t resultado);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO LOCALIZED_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_LOCALIZED_POKEMON();
 
 ////////////////////////////
 // FUNCIONES PARA RECIBIR //
@@ -64,45 +132,91 @@ bool Fuse_PackAndSend_Uint32_Response(int socketCliente, uint32_t response);
 
 /**
 * ESTA FUNCION RETORNA UNA ESTRUCTURA DEL TIPO
-* HEADERFUSE DE LA CUAL PODEMOS OBTENER EL TIPO
+* HEADERDELIBIRD DE LA CUAL PODEMOS OBTENER EL TIPO
 * DE MENSAJE Y EL TAMANIO DEL MISMO, ESTE ULTIMO
 * PARAMETRO DEBEREMOS PASARSELO A LA FUNCION
-* Fuse_ReceiveAndUnpack PARA QUE NOS DE EL RESTO
-* DEL PAQUETE
+* Serialize_ReceiveAndUnpack PARA QUE NOS DE EL RESTO
+* DEL PAQUETE Y DESPUES DE ESO EL RESTO DEL PAQUETE PASARSELO
+* A LAS FUNCIONES DE DESEMPAQUETADO CORRESPONDIENTE
 */
 
-HeaderFuse Fuse_RecieveHeader(int socketCliente);
+HeaderDelibird Serialize_RecieveHeader(int socketCliente);
 
 /**
 * ESTA FUNCION RECIBE UN PAQUETE A TRAVES DEL
 * SOCKET, TENER EN CUENTA QUE SEGUN EL TIPO DE
 * OPERACION, EL PAQUETE RECIBIDO SERA DISTINTO
-* EN ALGUNOS CASOS SERA SOLO UN PATH ASI QUE PODREMOS
-* USARLO DIRECTAMENTE, EN OTROS HARA FALTA LLAMAR
-* A OTRAS FUNCIONES DE DESEMPAQUETADO
+* PARA DESEMPAQUETAR APROPIADAMENTE HARA FALTA
+* LLAMAR A OTRAS FUNCIONES DE DESEMPAQUETADO
 */
 
-void* Fuse_ReceiveAndUnpack(int socketCliente, uint32_t tamanioChar);
+void* Serialize_ReceiveAndUnpack(int socketCliente, uint32_t tamanioChar);
 
 //////////////////////////////////
 // FUNCIONES PARA DESEMPAQUETAR //
 /////////////////////////////////
 
 /**
-* ESTA FUNCION SE USA SOLO EN CASO DE QUERER
-* RECIBIR UN UINT32 DE UN PAQUETE ENVIADO POR
-* EL SERVIDOR
+* ESTA FUNCION DESEMPAQUETA EL ENTERO DE UN
+* PAQUETE ACK, ESTE ENTERO REPRESENTARA EL
+* ESTADO DE LA OPERACION
 */
 
-uint32_t Fuse_Unpack_Response_Uint32(void *pack);
+uint32_t Serialize_Unpack_ACK(void *pack);
+
 
 /**
-* ESTA FUNCION SE USA SOLO EN CASO DE QUERER
-* RECIBIR UN PATH DE UN PAQUETE QUE CONTENGA ALGO
-* MAS ADEMAS DEL PATH
-*/
+ * ESTA FUNCION DESEMPAQUETA EL ID DEL MENSAJE DE UN
+ * PAQUETE VOID* QUE LO CONTENGA
+ * NO USAR ESTA FUNCION EN PAQUETES QUE NO
+ * CONTENGAN DICHO DATO
+ */
 
-char* Fuse_Unpack_Path(void *buffer);
+uint32_t Serialize_Unpack_idMensaje(void *pack);
 
+/**
+ * ESTA FUNCION DESEMPAQUETA EL NOMBRE DEL POKEMON
+ * PAQUETE VOID* QUE LO CONTENGA
+ * NO USAR ESTA FUNCION EN PAQUETES QUE NO
+ * CONTENGAN DICHO DATO
+ */
+
+char* Serialize_Unpack_pokemonName(void *buffer);
+
+/**
+ * ESTA FUNCION DESEMPAQUETA LA POSICION X
+ * PAQUETE VOID* QUE LO CONTENGA
+ * NO USAR ESTA FUNCION EN PAQUETES QUE NO
+ * CONTENGAN DICHO DATO
+ */
+
+uint32_t Serialize_Unpack_posX(void *pack);
+
+/**
+ * ESTA FUNCION DESEMPAQUETA LA POSICION Y
+ * PAQUETE VOID* QUE LO CONTENGA
+ * NO USAR ESTA FUNCION EN PAQUETES QUE NO
+ * CONTENGAN DICHO DATO
+ */
+
+uint32_t Serialize_Unpack_posY(void *pack);
+
+/**
+ * ESTA FUNCION DESEMPAQUETA LA CANTIDAD
+ * PAQUETE VOID* QUE LO CONTENGA
+ * NO USAR ESTA FUNCION EN PAQUETES QUE NO
+ * CONTENGAN DICHO DATO
+ */
+
+uint32_t Serialize_Unpack_cantidad(void *pack);
+
+/**
+ * ESTA FUNCION DESEMPAQUETA EL RESULTADO
+ * PAQUETE VOID* QUE LO CONTENGA
+ * NO USAR ESTA FUNCION EN PAQUETES QUE NO
+ * CONTENGAN DICHO DATO
+ */
+
+uint32_t Serialize_unpack_resultado(void *pack);
 
 #endif /* SERIALIZACION_SERIALIZACION_H_ */

@@ -14,6 +14,7 @@
 #include <Logger/Logger.h>
 #include <commons/config.h>
 #include <Conexiones/Conexiones.h>
+#include <Serializacion/Serializacion.h>
 
 t_log * loggerGeneral;
 t_config *archivo_de_configuracion;

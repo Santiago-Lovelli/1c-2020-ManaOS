@@ -5,7 +5,7 @@ int main(void) {
 	char *puerto = config_get_string_value(archivo_de_configuracion, "PUERTO_GAMECARD");
 	char *ip = config_get_string_value(archivo_de_configuracion, "IP_GAMECARD");
 	t_log *logger = iniciar_log("GameBoy");
-	conectarse_a_un_servidor(ip,puerto,logger);
-
+	int conexion = conectarse_a_un_servidor(ip,puerto,logger);
+	Serialize_PackAndSend_ACK(conexion, 99);
 	return EXIT_SUCCESS;
 }

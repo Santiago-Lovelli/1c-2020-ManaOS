@@ -10,6 +10,15 @@ void* atenderGameBoy(){
 	int conexion = iniciar_servidor(ip, puerto, gameBoyLog);
 	int cliente = esperar_cliente_con_accept(conexion, gameBoyLog);
 	log_info(gameBoyLog, "se conecto cliente: %i", cliente);
+
+	HeaderDelibird header =  Serialize_RecieveHeader(cliente);
+	if(header.tipoMensaje == d_ACK){
+		void* packet = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+		uint32_t gameboy = Serialize_Unpack_ACK(packet);
+		log_info(gameBoyLog,"gameboy llegado: %i", gameboy);
+	}else{
+		puts("error");
+	}
 }
 
 void iniciarServidorDeGameBoy(){
