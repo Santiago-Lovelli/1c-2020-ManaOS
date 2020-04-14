@@ -1,0 +1,5 @@
+[INFO] 08:48:51:245 GameCard/(25182:25182): Logger iniciado: GameCard.log
+
+[INFO] 08:48:51:245 GameCard/(25182:25182): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 08:48:51:245 GameCard/(25182:25182): Se creo hilo de GameBoy
