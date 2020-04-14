@@ -7,3 +7,12 @@
 [INFO] 08:48:51:245 GameBoy/(25182:25187): esperando
 [INFO] 08:48:51:245 GameBoy/(25182:25187): Se conecto un cliente!
 [INFO] 08:48:51:245 GameBoy/(25182:25187): se conecto cliente: -1
+[INFO] 11:09:35:398 GameBoy/(4940:4945): Logger iniciado: GameBoy.log
+
+[INFO] 11:09:35:398 GameBoy/(4940:4945): Puerto GameCard: 9123
+[INFO] 11:09:35:401 GameBoy/(4940:4945): Ip GameCard: 127.0.0.1
+[INFO] 11:09:35:402 GameBoy/(4940:4945): Dentro de iniciar servidor
+[INFO] 11:09:35:402 GameBoy/(4940:4945): Listo para escuchar a mi cliente
+[INFO] 11:09:35:402 GameBoy/(4940:4945): esperando
+[INFO] 11:10:21:143 GameBoy/(4940:4945): Se conecto un cliente!
+[INFO] 11:10:21:143 GameBoy/(4940:4945): se conecto cliente: 6

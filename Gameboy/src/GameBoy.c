@@ -6,6 +6,10 @@ int main(void) {
 	char *ip = config_get_string_value(archivo_de_configuracion, "IP_GAMECARD");
 	t_log *logger = iniciar_log("GameBoy");
 	int conexion = conectarse_a_un_servidor(ip,puerto,logger);
-	Serialize_PackAndSend_ACK(conexion, 99);
+
+	Serialize_PackAndSend_NEW_POKEMON(conexion, 1,"PIKACHU", 5, 5, 10);
+
+	log_info(logger,"Se envio mensaje: %i, %s, x: %i, y: %i, cant: %i\n", 1,"PIKACHU", 5, 5, 10);
+
 	return EXIT_SUCCESS;
 }

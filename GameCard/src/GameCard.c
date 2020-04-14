@@ -1,5 +1,32 @@
 #include "GameCard.h"
 
+void atender(HeaderDelibird header, int cliente){
+
+	switch (header.tipoMensaje) {
+		case d_NEW_POKEMON:;
+			log_info(loggerGeneral, "Llego un new pokemon");
+
+			void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+			uint32_t idMensaje = Serialize_Unpack_idMensaje(packNewPokemon);
+			char *pokemon = Serialize_Unpack_pokemonName(packNewPokemon);
+			uint32_t posX = Serialize_Unpack_posX(packNewPokemon);
+			uint32_t posY = Serialize_Unpack_posY(packNewPokemon);
+			uint32_t cantidad = Serialize_Unpack_cantidad(packNewPokemon);
+
+			log_info(loggerGeneral,"Me llego mensaje. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n", idMensaje,pokemon, posX, posY, cantidad);
+			break;
+		case d_CATCH_POKEMON:;
+			log_info(loggerGeneral, "Llego un catch pokemon");
+			break;
+		case d_GET_POKEMON:;
+			log_info(loggerGeneral, "Llego un get pokemon");
+			break;
+		default:
+			log_error(loggerGeneral, "Mensaje no entendido: %i\n", header);
+			break;
+	}
+}
+
 void* atenderGameBoy(){
 	t_log* gameBoyLog = iniciar_log("GameBoy");
 	char *puerto = config_get_string_value(archivo_de_configuracion, "PUERTO_GAMECARD");
@@ -12,13 +39,8 @@ void* atenderGameBoy(){
 	log_info(gameBoyLog, "se conecto cliente: %i", cliente);
 
 	HeaderDelibird header =  Serialize_RecieveHeader(cliente);
-	if(header.tipoMensaje == d_ACK){
-		void* packet = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-		uint32_t gameboy = Serialize_Unpack_ACK(packet);
-		log_info(gameBoyLog,"gameboy llegado: %i", gameboy);
-	}else{
-		puts("error");
-	}
+
+	atender(header,cliente);
 }
 
 void iniciarServidorDeGameBoy(){

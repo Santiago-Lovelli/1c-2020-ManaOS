@@ -3,3 +3,10 @@
 [INFO] 08:48:51:245 GameCard/(25182:25182): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
 
 [INFO] 08:48:51:245 GameCard/(25182:25182): Se creo hilo de GameBoy
+[INFO] 11:09:35:387 GameCard/(4940:4940): Logger iniciado: GameCard.log
+
+[INFO] 11:09:35:390 GameCard/(4940:4940): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 11:09:35:390 GameCard/(4940:4940): Se creo hilo de GameBoy
+[ERROR] 11:10:38:497 GameCard/(4940:4945): Mensaje no entendido: 168430090
+
