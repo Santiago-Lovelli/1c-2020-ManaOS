@@ -40,11 +40,11 @@ bool Serialize_PackAndSend_NEW_POKEMON(int socketCliente, uint32_t idMensaje,con
 	desplazamiento += sizeof(uint32_t);
 	memcpy(buffer + desplazamiento, pokemon, tamNombrePokemon);
 	desplazamiento += tamNombrePokemon;
-	memcpy(buffer, &posX, sizeof(uint32_t));
+	memcpy(buffer + desplazamiento, &posX, sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
-	memcpy(buffer, &posY, sizeof(uint32_t));
+	memcpy(buffer + desplazamiento, &posY, sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
-	memcpy(buffer, &cantidad, sizeof(uint32_t));
+	memcpy(buffer + desplazamiento, &cantidad, sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
 	int resultado = Serialize_PackAndSend(socketCliente, buffer, tamMessage, d_NEW_POKEMON);
 	free(buffer);
@@ -63,9 +63,9 @@ bool Serialize_PackAndSend_CATCH_POKEMON(int socketCliente, uint32_t idMensaje,c
 	desplazamiento += sizeof(uint32_t);
 	memcpy(buffer + desplazamiento, pokemon, tamNombrePokemon);
 	desplazamiento += tamNombrePokemon;
-	memcpy(buffer, &posX, sizeof(uint32_t));
+	memcpy(buffer + desplazamiento, &posX, sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
-	memcpy(buffer, &posY, sizeof(uint32_t));
+	memcpy(buffer + desplazamiento, &posY, sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
 	int resultado = Serialize_PackAndSend(socketCliente, buffer, tamMessage, d_CATCH_POKEMON);
 	free(buffer);
