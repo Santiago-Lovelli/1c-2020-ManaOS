@@ -14,6 +14,7 @@ void atender(HeaderDelibird header, int cliente){
 			uint32_t cantidad = Serialize_Unpack_cantidad(packNewPokemon);
 
 			log_info(loggerGeneral,"Me llego mensaje. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n", idMensaje,pokemon, posX, posY, cantidad);
+			free(packNewPokemon);
 			break;
 		case d_CATCH_POKEMON:;
 			log_info(loggerGeneral, "Llego un catch pokemon");
