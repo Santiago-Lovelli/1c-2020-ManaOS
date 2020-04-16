@@ -7,12 +7,16 @@ void atender(HeaderDelibird header, int cliente){
 			log_info(loggerGeneral, "Llego un new pokemon");
 
 			void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+			uint32_t idMensaje,posX,posY,cantidad;
+			char *pokemon;
+			Serialize_Unpack_NewPokemon(packNewPokemon, &idMensaje, &pokemon, &posX, &posY, &cantidad);
+			/*
 			uint32_t idMensaje = Serialize_Unpack_idMensaje(packNewPokemon);
 			char *pokemon = Serialize_Unpack_pokemonName(packNewPokemon);
 			uint32_t posX = Serialize_Unpack_posX(packNewPokemon);
 			uint32_t posY = Serialize_Unpack_posY(packNewPokemon);
 			uint32_t cantidad = Serialize_Unpack_cantidad(packNewPokemon);
-
+			*/
 			log_info(loggerGeneral,"Me llego mensaje. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n", idMensaje,pokemon, posX, posY, cantidad);
 			break;
 		case d_CATCH_POKEMON:;

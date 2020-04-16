@@ -106,6 +106,7 @@ bool Serialize_PackAndSend_CAUGHT_POKEMON(int socketCliente, uint32_t idMensaje,
 
 bool Serialize_PackAndSend_LOCALIZED_POKEMON() {
 	//pendiente
+	return true;
 }
 
 ////////////////////////////
@@ -186,10 +187,49 @@ uint32_t Serialize_Unpack_cantidad(void *pack) {
 	return response;
 }
 
-uint32_t Serialize_unpack_resultado(void *pack){
+uint32_t Serialize_Unpack_resultado(void *pack){
 	uint32_t resultado = 0;
 	memcpy(&resultado, pack+sizeof(uint32_t), sizeof(uint32_t));
 	return resultado;
+}
+
+//////////////////////////////////////
+// FUNCIONES PARA DESEMPAQUETAR PRO //
+/////////////////////////////////////
+
+void Serialize_Unpack_NewPokemon(void *packNewPokemon, uint32_t *idMensaje, char **nombre, uint32_t *posX, uint32_t *posY, uint32_t *cantidad){
+	*idMensaje = Serialize_Unpack_idMensaje(packNewPokemon);
+	*nombre = Serialize_Unpack_pokemonName(packNewPokemon);
+	*posX = Serialize_Unpack_posX(packNewPokemon);
+	*posY = Serialize_Unpack_posY(packNewPokemon);
+	*cantidad = Serialize_Unpack_cantidad(packNewPokemon);
+}
+
+void Serialize_Unpack_CatchPokemon(void *packCatchPokemon, uint32_t *idMensaje, char **nombre, uint32_t *posX, uint32_t *posY){
+	*idMensaje = Serialize_Unpack_idMensaje(packCatchPokemon);
+	*nombre = Serialize_Unpack_pokemonName(packCatchPokemon);
+	*posX = Serialize_Unpack_posX(packCatchPokemon);
+	*posY = Serialize_Unpack_posY(packCatchPokemon);
+}
+
+void Serialize_Unpack_GetPokemon(void *packGetPokemon, uint32_t *idMensaje, char **nombre){
+	*idMensaje = Serialize_Unpack_idMensaje(packGetPokemon);
+	*nombre = Serialize_Unpack_pokemonName(packGetPokemon);
+}
+
+void Serialize_Unpack_AppearedPokemon(void *packAppearedPokemon, uint32_t *idMensaje, char **nombre, uint32_t *posX, uint32_t *posY){
+	Serialize_Unpack_CatchPokemon(packAppearedPokemon,idMensaje,nombre,posX,posY); //revisar
+	//Uso la misma funcion porque los paquetes son identicos, la separo en otra para que no sea confuso
+}
+
+void Serialize_Unpack_CaughtPokemon(void *packCaughtPokemon, uint32_t *idMensaje, uint32_t *resultado){
+	*idMensaje = Serialize_Unpack_idMensaje(packCaughtPokemon);
+	*resultado = Serialize_Unpack_resultado(packCaughtPokemon);
+
+}
+
+void Serialize_Unpack_LocalizedPokemon(){
+	//pendiente
 }
 
 
