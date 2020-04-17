@@ -22,5 +22,7 @@ t_config *archivo_de_configuracion;
 void* atenderGameboy();
 void iniciarServidorDeGameBoy();
 void iniciar();
+void atender(HeaderDelibird header, int cliente);
+void recibirYAtenderUnCliente(int cliente);
 
 #endif /* GAMECARD_H_ */

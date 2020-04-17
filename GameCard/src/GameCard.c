@@ -28,6 +28,17 @@ void atender(HeaderDelibird header, int cliente){
 	}
 }
 
+void recibirYAtenderUnCliente(int cliente){
+	while(1){
+			HeaderDelibird headerRecibido =  Serialize_RecieveHeader(cliente);
+			if(headerRecibido.tipoMensaje == -1){
+				log_error(loggerGeneral, "Se desconecto el GameBoy\n");
+				break;
+			}
+			atender(headerRecibido,cliente);
+		}
+}
+
 void* atenderGameBoy(){
 	t_log* gameBoyLog = iniciar_log("GameBoy");
 	char *puerto = config_get_string_value(archivo_de_configuracion, "PUERTO_GAMECARD");
@@ -38,14 +49,15 @@ void* atenderGameBoy(){
 	int conexion = iniciar_servidor(ip, puerto, gameBoyLog);
 	int cliente = esperar_cliente_con_accept(conexion, gameBoyLog);
 	log_info(gameBoyLog, "se conecto cliente: %i", cliente);
-
-	HeaderDelibird header =  Serialize_RecieveHeader(cliente);
-
-	atender(header,cliente);
+	recibirYAtenderUnCliente(cliente);
 }
 
-void iniciarServidorDeGameBoy(){
-
+void iniciarServidorDeGameBoy(pthread_t* servidor){
+		if(pthread_create(servidor,NULL,(void*)atenderGameBoy,NULL) == 0){
+			log_info(loggerGeneral,"Se creo hilo de GameBoy");
+		}else{
+			log_error(loggerGeneral,"No se pudo crear el hilo de GameBoy");
+		}
 }
 
 void iniciar(){
@@ -57,14 +69,8 @@ void iniciar(){
 
 int main(void) {
 	iniciar();
-
 	pthread_t* servidor = malloc(sizeof(pthread_t));
-	if(pthread_create(servidor,NULL,(void*)atenderGameBoy,NULL) == 0){
-		log_info(loggerGeneral,"Se creo hilo de GameBoy");
-	}else{
-		log_error(loggerGeneral,"No se pudo crear el hilode GameBoy");
-	}
-
+	iniciarServidorDeGameBoy(servidor);
 
 	pthread_join(*servidor, NULL);
 	return EXIT_SUCCESS;

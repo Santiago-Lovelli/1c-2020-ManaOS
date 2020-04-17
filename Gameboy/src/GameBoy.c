@@ -8,8 +8,11 @@ int main(void) {
 	int conexion = conectarse_a_un_servidor(ip,puerto,logger);
 
 	Serialize_PackAndSend_NEW_POKEMON(conexion, 1,"PIKACHU", 5, 5, 10);
-
 	log_info(logger,"Se envio mensaje: %i, %s, x: %i, y: %i, cant: %i\n", 1,"PIKACHU", 5, 5, 10);
+
+	Serialize_PackAndSend_NEW_POKEMON(conexion, 2,"CHARIZARD", 5, 5, 10);
+	log_info(logger,"Se envio mensaje: %i, %s, x: %i, y: %i, cant: %i\n", 2,"CHARIZARD", 5, 5, 10);
+
 
 	return EXIT_SUCCESS;
 }
