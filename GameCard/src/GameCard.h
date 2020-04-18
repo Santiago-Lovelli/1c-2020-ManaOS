@@ -1,10 +1,3 @@
-/*
- * GameCard.h
- *
- *  Created on: 13 abr. 2020
- *      Author: utnso
- */
-
 #ifndef GAMECARD_H_
 #define GAMECARD_H_
 

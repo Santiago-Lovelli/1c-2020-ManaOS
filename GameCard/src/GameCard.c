@@ -7,21 +7,39 @@ void atender(HeaderDelibird header, int cliente){
 			log_info(loggerGeneral, "Llego un new pokemon");
 
 			void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t idMensaje,posX,posY,cantidad;
-			char *pokemon;
-			Serialize_Unpack_NewPokemon(packNewPokemon, &idMensaje, &pokemon, &posX, &posY, &cantidad);
-			log_info(loggerGeneral,"Me llego mensaje. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n", idMensaje,pokemon, posX, posY, cantidad);
+			uint32_t idMensajeNew,posicionNewX,posicionNewY,newCantidad;
+			char *newNombrePokemon;
+			Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
+			log_info(loggerGeneral,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n", header.tipoMensaje,idMensajeNew,newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
 			// Se hace lo necesario
 			free(packNewPokemon);
 			break;
 		case d_CATCH_POKEMON:;
 			log_info(loggerGeneral, "Llego un catch pokemon");
+
+			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+			uint32_t idMensajeCatch,posicionCatchX,posicionCatchY;
+			char *catchNombrePokemon;
+			Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
+			log_info(loggerGeneral,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n", header.tipoMensaje,idMensajeCatch,catchNombrePokemon, posicionCatchX, posicionCatchY);
+			// Se hace lo necesario
+			free(packCatchPokemon);
 			break;
 		case d_GET_POKEMON:;
 			log_info(loggerGeneral, "Llego un get pokemon");
+
+			void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+			uint32_t idMensajeGet;
+			char *getNombrePokemon;
+			Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet, &getNombrePokemon);
+			log_info(loggerGeneral,"Me llego mensaje de %i. Id: %i, Pkm: %s\n", header.tipoMensaje, idMensajeGet, getNombrePokemon);
+			// Se hace lo necesario
+			free(packGetPokemon);
 			break;
 		default:
 			log_error(loggerGeneral, "Mensaje no entendido: %i\n", header);
+			void* packBasura = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+			free(packBasura);
 			break;
 	}
 }
