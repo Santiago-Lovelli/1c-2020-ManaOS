@@ -91,6 +91,12 @@ bool Serialize_PackAndSend(int socketCliente, const void*pack, uint32_t tamPack,
 bool Serialize_PackAndSend_ACK(int socketCliente, uint32_t miId);
 
 /**
+ * ESTA FUNCION NOS SIRVE PARA PEDIR SUSCRIBIRNOS A UNA COLA
+ */
+
+bool Serialize_PackAndSend_SubscribeQueue(int socketCliente, d_message queue);
+
+/**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO NEW_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 

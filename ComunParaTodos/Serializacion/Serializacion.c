@@ -29,6 +29,14 @@ bool Serialize_PackAndSend_ACK(int socketCliente, uint32_t miId){
 	return resultado;
 }
 
+bool Serialize_PackAndSend_SubscribeQueue(int socketCliente, d_message queue){
+	void* pack = malloc(sizeof(d_message));
+	memcpy(pack, &queue, sizeof(d_message));
+	int resultado = Serialize_PackAndSend(socketCliente, pack, sizeof(d_message), d_SUBSCRIBE_QUEUE);
+	free(pack);
+	return resultado;
+}
+
 bool Serialize_PackAndSend_NEW_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY, uint32_t cantidad) {
 	uint32_t tamMessage = strlen(pokemon) + 1 + (5*sizeof(uint32_t)); //+1 por el /0
 	uint32_t tamNombrePokemon = strlen(pokemon) + 1;
