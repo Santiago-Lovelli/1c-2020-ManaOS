@@ -126,6 +126,13 @@ bool Serialize_PackAndSend_CAUGHT_POKEMON(int socketCliente, uint32_t idMensaje,
 
 bool Serialize_PackAndSend_LOCALIZED_POKEMON();
 
+/**
+ * ESTA FUNCION SIRVE COMO UNA ABSTRACCION PARA NO REPETIR LOGICA, SE USA A TRAVES DE
+ * LAS FUNCIOENS PACK AND SEND CATCH Y APPEARED
+ */
+
+bool Serialize_PackAndSend_CATCHoAPPEARED(int socketCliente, uint32_t idMensaje, const void *pokemon, uint32_t posX, uint32_t posY, d_message tipoMensaje);
+
 ////////////////////////////
 // FUNCIONES PARA RECIBIR //
 ////////////////////////////
