@@ -68,6 +68,12 @@ typedef struct {
 	d_message tipoMensaje;
 }__attribute__((packed)) HeaderDelibird; //Esta estructura es de tamaño 8
 
+typedef struct {
+	uint32_t posX;
+	uint32_t posY;
+	uint32_t cantidad;
+}__attribute__((packed)) d_PosCant;
+
 ////////////////
 // FUNCIONES //
 ///////////////
@@ -130,7 +136,7 @@ bool Serialize_PackAndSend_CAUGHT_POKEMON(int socketCliente, uint32_t idMensaje,
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO LOCALIZED_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 
-bool Serialize_PackAndSend_LOCALIZED_POKEMON();
+bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensaje, char *pokemon, t_list *poscant);
 
 /**
  * ESTA FUNCION SIRVE COMO UNA ABSTRACCION PARA NO REPETIR LOGICA, SE USA A TRAVES DE
@@ -287,6 +293,6 @@ void Serialize_Unpack_CaughtPokemon(void *packCaughtPokemon, uint32_t *idMensaje
  * DEL PAQUETE DE TIPO LOCALIZED_POKEMON (SOLO SIRVE PARA ESE TIPO DE PAQUETE)
  */
 
-void Serialize_Unpack_LocalizedPokemon();
+void Serialize_Unpack_LocalizedPokemon(void *packLocalizedPokemon, uint32_t *idMensaje, char **nombre, t_list **poscant);
 
 #endif /* SERIALIZACION_SERIALIZACION_H_ */
