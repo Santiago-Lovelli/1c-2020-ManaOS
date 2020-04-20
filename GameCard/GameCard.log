@@ -1,12 +1,33 @@
-[INFO] 08:48:51:245 GameCard/(25182:25182): Logger iniciado: GameCard.log
+[INFO] 17:13:41:735 GameCard/(9639:9639): Logger iniciado: GameCard.log
 
-[INFO] 08:48:51:245 GameCard/(25182:25182): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+[INFO] 17:13:41:735 GameCard/(9639:9639): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
 
-[INFO] 08:48:51:245 GameCard/(25182:25182): Se creo hilo de GameBoy
-[INFO] 11:09:35:387 GameCard/(4940:4940): Logger iniciado: GameCard.log
+[INFO] 17:13:41:736 GameCard/(9639:9639): El montaje es: /home/utnso/desktop/tall-grass
+[INFO] 17:13:41:736 GameCard/(9639:9639): Se creo hilo de GameBoy
+[ERROR] 17:13:41:736 GameCard/(9639:9639): Error de conexion
 
-[INFO] 11:09:35:390 GameCard/(4940:4940): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+[ERROR] 17:13:41:736 GameCard/(9639:9639): No se pudo conectar con el Broken
+[INFO] 17:15:33:317 GameCard/(9761:9761): Logger iniciado: GameCard.log
 
-[INFO] 11:09:35:390 GameCard/(4940:4940): Se creo hilo de GameBoy
-[ERROR] 11:10:38:497 GameCard/(4940:4945): Mensaje no entendido: 168430090
+[INFO] 17:15:33:317 GameCard/(9761:9761): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
 
+[INFO] 17:15:33:317 GameCard/(9761:9761): El montaje es: /home/utnso/Escritorio/tall-grass
+[INFO] 17:15:33:317 GameCard/(9761:9761): Se creo hilo de GameBoy
+[ERROR] 17:15:33:317 GameCard/(9761:9761): Error de conexion
+
+[ERROR] 17:15:33:317 GameCard/(9761:9761): No se pudo conectar con el Broken
+[INFO] 17:17:26:404 GameCard/(9898:9898): Logger iniciado: GameCard.log
+
+[INFO] 17:17:26:404 GameCard/(9898:9898): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 17:17:26:404 GameCard/(9898:9898): El montaje es: /home/utnso/Escritorio/tall-grass
+[INFO] 17:17:26:404 GameCard/(9898:9898): Se creo hilo de GameBoy
+[ERROR] 17:17:26:404 GameCard/(9898:9898): Error de conexion
+
+[ERROR] 17:17:26:404 GameCard/(9898:9898): No se pudo conectar con el Broken
+[INFO] 17:27:51:441 GameCard/(10397:10397): Logger iniciado: GameCard.log
+
+[INFO] 17:27:51:443 GameCard/(10397:10397): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 17:27:51:443 GameCard/(10397:10397): El montaje es: /home/utnso/Escritorio/tall-grass
+[ERROR] 17:27:51:443 GameCard/(10397:10397): no se abrio el meta

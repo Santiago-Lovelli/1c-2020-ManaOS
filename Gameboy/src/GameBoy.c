@@ -20,7 +20,7 @@ int main(void) {
 	log_info(logger,"Se envio mensaje: %i, %s\n", 3,"BULBASUAR");
 
 	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, 4, 0);
-	log_info(logger,"Se envio mensaje: %i, %s, $i\n", 3,"BULBASUAR", 0);
+	log_info(logger,"Se envio mensaje: %i, %s, %i\n", 3,"BULBASUAR", 0);
 
 	return EXIT_SUCCESS;
 }

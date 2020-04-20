@@ -1,63 +1,81 @@
 #include "GameCard.h"
 
-void atender(HeaderDelibird header, int cliente){
+void atender(HeaderDelibird header, int cliente) {
 
 	switch (header.tipoMensaje) {
-		case d_NEW_POKEMON:;
-			log_info(loggerGeneral, "Llego un new pokemon");
+	case d_NEW_POKEMON:
+		;
+		log_info(loggerGeneral, "Llego un new pokemon");
 
-			void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t idMensajeNew,posicionNewX,posicionNewY,newCantidad;
-			char *newNombrePokemon;
-			Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
-			log_info(loggerGeneral,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n", header.tipoMensaje,idMensajeNew,newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
-			// Se hace lo necesario
-			free(packNewPokemon);
-			break;
-		case d_CATCH_POKEMON:;
-			log_info(loggerGeneral, "Llego un catch pokemon");
+		void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		uint32_t idMensajeNew, posicionNewX, posicionNewY, newCantidad;
+		char *newNombrePokemon;
+		Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew,
+				&newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
+		log_info(loggerGeneral,
+				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n",
+				header.tipoMensaje, idMensajeNew, newNombrePokemon,
+				posicionNewX, posicionNewY, newCantidad);
+		// Se hace lo necesario
+		free(packNewPokemon);
+		break;
+	case d_CATCH_POKEMON:
+		;
+		log_info(loggerGeneral, "Llego un catch pokemon");
 
-			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t idMensajeCatch,posicionCatchX,posicionCatchY;
-			char *catchNombrePokemon;
-			Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
-			log_info(loggerGeneral,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n", header.tipoMensaje,idMensajeCatch,catchNombrePokemon, posicionCatchX, posicionCatchY);
-			// Se hace lo necesario
-			free(packCatchPokemon);
-			break;
-		case d_GET_POKEMON:;
-			log_info(loggerGeneral, "Llego un get pokemon");
+		void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		uint32_t idMensajeCatch, posicionCatchX, posicionCatchY;
+		char *catchNombrePokemon;
+		Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch,
+				&catchNombrePokemon, &posicionCatchX, &posicionCatchY);
+		log_info(loggerGeneral,
+				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n",
+				header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
+				posicionCatchX, posicionCatchY);
+		// Se hace lo necesario
+		free(packCatchPokemon);
+		break;
+	case d_GET_POKEMON:
+		;
+		log_info(loggerGeneral, "Llego un get pokemon");
 
-			void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t idMensajeGet;
-			char *getNombrePokemon;
-			Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet, &getNombrePokemon);
-			log_info(loggerGeneral,"Me llego mensaje de %i. Id: %i, Pkm: %s\n", header.tipoMensaje, idMensajeGet, getNombrePokemon);
-			// Se hace lo necesario
-			free(packGetPokemon);
-			break;
-		default:
-			log_error(loggerGeneral, "Mensaje no entendido: %i\n", header);
-			void* packBasura = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			free(packBasura);
-			break;
+		void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		uint32_t idMensajeGet;
+		char *getNombrePokemon;
+		Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet,
+				&getNombrePokemon);
+		log_info(loggerGeneral, "Me llego mensaje de %i. Id: %i, Pkm: %s\n",
+				header.tipoMensaje, idMensajeGet, getNombrePokemon);
+		// Se hace lo necesario
+		free(packGetPokemon);
+		break;
+	default:
+		log_error(loggerGeneral, "Mensaje no entendido: %i\n", header);
+		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		free(packBasura);
+		break;
 	}
 }
 
-void recibirYAtenderUnCliente(int cliente){
-	while(1){
-			HeaderDelibird headerRecibido =  Serialize_RecieveHeader(cliente);
-			if(headerRecibido.tipoMensaje == -1){
-				log_error(loggerGeneral, "Se desconecto el GameBoy\n");
-				break;
-			}
-			atender(headerRecibido,cliente);
+void recibirYAtenderUnCliente(int cliente) {
+	while (1) {
+		HeaderDelibird headerRecibido = Serialize_RecieveHeader(cliente);
+		if (headerRecibido.tipoMensaje == -1) {
+			log_error(loggerGeneral, "Se desconecto el GameBoy\n");
+			break;
 		}
+		atender(headerRecibido, cliente);
+	}
 }
 
-void* atenderGameBoy(){
+void* atenderGameBoy() {
 	t_log* gameBoyLog = iniciar_log("GameBoy");
-	char *puerto = config_get_string_value(archivo_de_configuracion, "PUERTO_GAMECARD");
+	char *puerto = config_get_string_value(archivo_de_configuracion,
+			"PUERTO_GAMECARD");
 	log_info(gameBoyLog, "Puerto GameCard: %s", puerto);
 	char *ip = config_get_string_value(archivo_de_configuracion, "IP_GAMECARD");
 	log_info(gameBoyLog, "Ip GameCard: %s", ip);
@@ -68,26 +86,91 @@ void* atenderGameBoy(){
 	recibirYAtenderUnCliente(cliente);
 }
 
-void iniciarServidorDeGameBoy(pthread_t* servidor){
-		if(pthread_create(servidor,NULL,(void*)atenderGameBoy,NULL) == 0){
-			log_info(loggerGeneral,"Se creo hilo de GameBoy");
-		}else{
-			log_error(loggerGeneral,"No se pudo crear el hilo de GameBoy");
-		}
+void iniciarServidorDeGameBoy(pthread_t* servidor) {
+	if (pthread_create(servidor, NULL, (void*) atenderGameBoy, NULL) == 0) {
+		log_info(loggerGeneral, "Se creo hilo de GameBoy");
+	} else {
+		log_error(loggerGeneral, "No se pudo crear el hilo de GameBoy");
+	}
 }
 
-void iniciar(){
+void levantarLogYArchivoDeConfiguracion() {
 	loggerGeneral = iniciar_log("GameCard");
-	archivo_de_configuracion = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config");
-	log_info(loggerGeneral, "Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config\n");
+	archivo_de_configuracion =
+			config_create(
+					"/home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config");
+	log_info(loggerGeneral,
+			"Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config\n");
 }
 
+void conectarmeColaDe(d_message colaDeSuscripcion) {
+
+	char *puerto = config_get_string_value(archivo_de_configuracion,
+			"PUERTO_BROKER");
+	char *ip = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
+
+	uint32_t reconectar = config_get_int_value(archivo_de_configuracion,
+			"TIEMPO_DE_REINTENTO_CONEXION");
+	int conexion;
+
+	while (1) {
+		conexion = conectarse_a_un_servidor(ip, puerto, loggerGeneral);
+		if (conexion == -1) {
+			log_error(loggerGeneral, "No se pudo conectar con el Broken");
+			sleep(reconectar);
+		} else {
+			break;
+		}
+	}
+	Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
+}
+
+void iniciar() {
+	char *tallgrass = config_get_string_value(archivo_de_configuracion,
+			"PUNTO_MONTAJE_TALLGRASS");
+	log_info(loggerGeneral, "El montaje es: %s", tallgrass);
+
+	char* rutaMetadata = "/Metadata/Metadata.bin";
+
+	char* montajeMetadata = malloc(
+			strlen(tallgrass) + strlen(rutaMetadata) + 1);
+
+	memcpy(montajeMetadata, tallgrass, strlen(tallgrass));
+	memcpy(montajeMetadata + strlen(tallgrass), rutaMetadata,
+			strlen(rutaMetadata) + 1);
+
+	log_info(loggerGeneral, "\n %s \n", montajeMetadata);
+
+	uint32_t tamanio_disco = tamanio_archivo(montajeMetadata);
+	log_info(loggerGeneral, "Tamanio archivo: %i", tamanio_disco);
+
+	int disco = open(montajeMetadata, O_RDWR, 0);
+	void *inicio_de_disco = mmap(NULL, tamanio_disco, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_FILE, disco, 0);
+
+	log_info(loggerGeneral, "EN DISCO: \n%s", inicio_de_disco);
+
+}
 
 int main(void) {
+	levantarLogYArchivoDeConfiguracion();
 	iniciar();
+
 	pthread_t* servidor = malloc(sizeof(pthread_t));
 	iniciarServidorDeGameBoy(servidor);
 
+	pthread_t* suscriptoNewPokemon = malloc(sizeof(pthread_t));
+	conectarmeColaDe(d_NEW_POKEMON);
+
+	pthread_t* suscriptoCatchPokemon = malloc(sizeof(pthread_t));
+	conectarmeColaDe(d_CATCH_POKEMON);
+
+	pthread_t* suscriptoGetPokemon = malloc(sizeof(pthread_t));
+	conectarmeColaDe(d_GET_POKEMON);
+
 	pthread_join(*servidor, NULL);
+	pthread_join(*suscriptoNewPokemon, NULL);
+	pthread_join(*suscriptoCatchPokemon, NULL);
+	pthread_join(*suscriptoGetPokemon, NULL);
+
 	return EXIT_SUCCESS;
 }
