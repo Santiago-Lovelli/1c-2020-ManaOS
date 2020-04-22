@@ -59,6 +59,13 @@ typedef enum d_messages {
 	d_SUBSCRIBE_QUEUE
 } d_message;
 
+typedef enum d_process {
+	d_BROKER,
+	d_TEAM,
+	d_GAMECARD,
+	d_SUBSCRIBER
+} d_process;
+
 ////////////////////////
 // Comunicacion Base //
 ///////////////////////
