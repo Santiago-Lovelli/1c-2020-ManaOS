@@ -125,7 +125,7 @@ void conectarmeColaDe(d_message colaDeSuscripcion) {
 	Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
 }
 
-void iniciar() {
+void * obtenerMetadata() {
 	char *tallgrass = config_get_string_value(archivo_de_configuracion,
 			"PUNTO_MONTAJE_TALLGRASS");
 	log_info(loggerGeneral, "El montaje es: %s", tallgrass);
@@ -139,21 +139,77 @@ void iniciar() {
 	memcpy(montajeMetadata + strlen(tallgrass), rutaMetadata,
 			strlen(rutaMetadata) + 1);
 
-	log_info(loggerGeneral, "\n %s \n", montajeMetadata);
+	log_info(loggerGeneral, "Montaje de metadata: %s \n", montajeMetadata);
 
-	uint32_t tamanio_disco = tamanio_archivo(montajeMetadata);
-	log_info(loggerGeneral, "Tamanio archivo: %i", tamanio_disco);
+	uint32_t tamanio_archivo_de_metadata = tamanio_archivo(montajeMetadata);
+	log_info(loggerGeneral, "Tamanio archivo: %i", tamanio_archivo_de_metadata);
 
 	int disco = open(montajeMetadata, O_RDWR, 0);
-	void *inicio_de_disco = mmap(NULL, tamanio_disco, PROT_READ|PROT_WRITE, MAP_SHARED|MAP_FILE, disco, 0);
+	void *metadata = mmap(NULL, tamanio_archivo_de_metadata,
+			PROT_READ | PROT_WRITE,
+			MAP_SHARED | MAP_FILE, disco, 0);
+	return metadata;
+}
 
-	log_info(loggerGeneral, "EN DISCO: \n%s", inicio_de_disco);
+void * obtenerBitmap() {
+	char *tallgrass = config_get_string_value(archivo_de_configuracion,
+			"PUNTO_MONTAJE_TALLGRASS");
+	log_info(loggerGeneral, "El montaje es: %s", tallgrass);
 
+	char* rutaMetadata = "/Metadata/Bitmap.bin";
+
+	char* montajeMetadata = malloc(
+			strlen(tallgrass) + strlen(rutaMetadata) + 1);
+
+	memcpy(montajeMetadata, tallgrass, strlen(tallgrass));
+	memcpy(montajeMetadata + strlen(tallgrass), rutaMetadata,
+			strlen(rutaMetadata) + 1);
+
+	log_info(loggerGeneral, "Montaje de bitmap: %s \n", montajeMetadata);
+
+	uint32_t tamanio_archivo_de_bitmap = tamanio_archivo(montajeMetadata);
+	log_info(loggerGeneral, "Tamanio archivo: %i", tamanio_archivo_de_bitmap);
+
+	int disco = open(montajeMetadata, O_RDWR, 0);
+	void *bitmap = mmap(NULL, tamanio_archivo_de_bitmap, PROT_READ | PROT_WRITE,
+	MAP_SHARED | MAP_FILE, disco, 0);
+	return bitmap;
+}
+
+void cargarMetadata() {
+
+	char *meta = obtenerBitmap();
+
+	char **separadoPorIguales = string_split(meta, "=");
+
+	char **separadorParaBlockSize = string_split(separadoPorIguales[1], "B");
+	uint32_t blockSize = atoi(separadorParaBlockSize[0]);
+	log_info(loggerGeneral, "BLOCK_SIZE: %i", blockSize);
+
+	char **separadorParaBlocks = string_split(separadoPorIguales[2], "M");
+	uint32_t blocks = atoi(separadorParaBlocks[0]);
+	log_info(loggerGeneral, "BLOCKS: %i", blocks);
+
+	char *magicNumber = malloc(strlen(separadoPorIguales[3]) + 1);
+	memcpy(magicNumber, separadoPorIguales[3],
+			strlen(separadoPorIguales[3]) + 1);
+
+	log_info(loggerGeneral, "MAGIC_NUMBER: %s", separadoPorIguales[3]);
+
+	metadata metadata;
+	metadata.tamanioDeBloque = blockSize;
+	metadata.bloques = blocks;
+	memcpy(metadata.numeroMagico, magicNumber, strlen(magicNumber) + 1);
+}
+
+void iniciarBitmap() {
+	t_bitarray * bitmap = obtenerBitmap();
 }
 
 int main(void) {
 	levantarLogYArchivoDeConfiguracion();
-	iniciar();
+	cargarMetadata();
+	iniciarBitmap();
 
 	pthread_t* servidor = malloc(sizeof(pthread_t));
 	iniciarServidorDeGameBoy(servidor);
