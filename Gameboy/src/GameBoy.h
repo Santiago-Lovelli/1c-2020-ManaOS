@@ -24,11 +24,13 @@ char *ipGamecard;
 // FUNCIONES  //
 ///////////////
 
+uint32_t OKoFAIL(char *actual);
 void New_pokemon(char *argv[]);
 void Appeared_pokemon(char *argv[]);
 void Catch_pokemon(char *argv[]);
 void Caught_pokemon(char *argv[]);
 void Get_pokemon(char *argv[]);
+void Subscribe_Queue(char *argv[]);
 int obtenerNroMensaje(char *actual);
 int obtenerNroProceso(char *actual);
 char* obtenerPuertoProceso(char *actual);

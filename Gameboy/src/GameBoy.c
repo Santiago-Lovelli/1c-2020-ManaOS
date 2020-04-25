@@ -1,28 +1,68 @@
 #include "GameBoy.h"
 
+uint32_t OKoFAIL(char *actual){
+	if( string_equals_ignore_case(actual, "OK") )
+		return 1;
+	else if( string_equals_ignore_case(actual, "FAIL") )
+		return 0;
+	return 99;
+}
+
 void New_pokemon(char *argv[]){
-	int conexion = conectarA(argv[2]);
-	//Serialize
+	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
+	log_info(logger,"POKEMON: %s ", argv[3]);
+	log_info(logger,"POSX: %i ", atoi( argv[4] ) );
+	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
+	log_info(logger,"CANTIDAD: %i ", atoi( argv[6] ) );
+	log_info(logger,"IDMENSAJE: %i ", atoi( argv[7] ) );
+	/*int conexion = conectarA(argv[1]);
+	Serialize_PackAndSend_NEW_POKEMON(conexion, atoi(argv[7]), argv[3], atoi(argv[4]), atoi(argv[5]), atoi( argv[6]) );*/
 }
 
 void Appeared_pokemon(char *argv[]){
-	int conexion = conectarA(argv[2]);
-	//Serialize
+	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
+	log_info(logger,"POKEMON: %s ", argv[3] );
+	log_info(logger,"POSX: %i ", atoi( argv[4] ) );
+	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
+	log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
+	/*int conexion = conectarA(argv[1]);
+	Serialize_PackAndSend_APPEARED_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoii(argv[4]), atoi(argv[5]) );*/
 }
 
 void Catch_pokemon(char *argv[]){
-	int conexion = conectarA(argv[2]);
-	//Serialize
+	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
+	log_info(logger,"POKEMON: %s ", argv[3] );
+	log_info(logger,"POSX: %i ", atoi( argv[4] ) );
+	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
+	log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
+	/*int conexion = conectarA(argv[1]);
+	Serialize_PackAndSend_CATCH_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoii(argv[4]), atoi(argv[5]) );*/
 }
 
 void Caught_pokemon(char *argv[]){
-	int conexion = conectarA(argv[2]);
-	//Serialize
+	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
+	log_info(logger,"IDMENSAJE: %i ", atoi( argv[3] ) );
+	log_info(logger,"ESTADO: %s ", argv[4] );
+
+	/*int conexion = conectarA(argv[1]);
+	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, atoi(argv[3]), OKoFAIL(argv[4]) );*/
+
 }
 
 void Get_pokemon(char *argv[]){
-	int conexion = conectarA(argv[2]);
-	//Serialize
+	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
+	log_info(logger,"POKEMON: %s ", argv[3] );
+	/*int conexion = conectarA(argv[1]);
+	Serialize_PackAndSend_GET_POKEMON(conexion, IDMENSAJE 0, argv[3]);*/
+}
+
+void Subscribe_Queue(char *argv[]){
+	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
+	log_info(logger,"COLA DE MENSAJES: %s ", argv[2] );
+	log_info(logger, "TIEMPO", atoi(argv[3]));
+	/*int conexion = conectarA("BROKER");
+	Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));*/
+
 }
 
 int obtenerNroMensaje(char *actual){
@@ -90,23 +130,24 @@ int conectarA(char *actual){
 }
 
 void cumplirPedido(int argc, char *argv[]){
-	switch( obtenerNroMensaje(argv[3]) ) {
+	log_info(logger, "ARGC: %i ARG0: %s", argc, argv[0]);
+	switch( obtenerNroMensaje(argv[2]) ) {
 
 	case d_NEW_POKEMON:;
 		if(argc < 8){
-		    log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[3]);
+		    log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
 		    break;
 		}
-		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[3], argv[2]);
+		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[2], argv[1]);
 		New_pokemon(argv);
 		break;
 
 	case d_APPEARED_POKEMON:;
 	    if(argc < 7){
-	    	log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[3]);
+	    	log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
 	    	break;
 	    }
-		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[3], argv[2]);
+		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[2], argv[1]);
 		Appeared_pokemon(argv);
 		/*log_info(logger,"POKEMON: %s ", argv[4]);
 		log_info(logger,"POSX: %i ", atoi( argv[5] ) );
@@ -115,34 +156,40 @@ void cumplirPedido(int argc, char *argv[]){
 
 	case d_CATCH_POKEMON:;
 		if(argc < 7){
-			log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[3]);
+			log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
 			break;
 		}
-		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[3], argv[2]);
+		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[2], argv[1]);
 		Catch_pokemon(argv);
 		break;
 
 	case d_CAUGHT_POKEMON:;
-		if(argc < 6){
-			log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[3]);
+		if(argc < 5){
+			log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
 			break;
 		}
-		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[3], argv[2]);
+		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[2], argv[1]);
 		Caught_pokemon(argv);
 		break;
 
 	case d_GET_POKEMON:;
-		if(argc < 5){
-			log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[3]);
+		if(argc < 4){
+			log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
 			break;
 		}
-		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[3], argv[2]);
+		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[2], argv[1]);
 		Get_pokemon(argv);
 		break;
-	case d_SUBSCRIBE_QUEUE:;
-		//pendiente
-		break;
 	default:;
+		if( string_equals_ignore_case(argv[1],"SUSCRIPTOR") ){
+			if(argc < 4){
+				log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
+				break;
+			}
+			log_info(logger,"RECIBI EL PEDIDO: %s PARA LA COLA DE MENSAJES: %s", argv[1], argv[2]);
+			Subscribe_Queue(argv);
+			break;
+		}
 		log_info(logger,"DEFAULT");
 		break;
 	}
