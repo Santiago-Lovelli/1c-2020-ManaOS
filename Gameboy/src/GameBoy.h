@@ -37,6 +37,8 @@ char* obtenerPuertoProceso(char *actual);
 char* obtenerIpProceso(char *actual);
 int conectarA(char *actual);
 void cumplirPedido(int argc, char *argv[]);
+void iniciarConfiguracion();
+void iniciarEstructuras();
 
 
 #endif /* GAMEBOY_H_ */

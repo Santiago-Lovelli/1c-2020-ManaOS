@@ -126,11 +126,16 @@ char* obtenerIpProceso(char *actual){
 }
 
 int conectarA(char *actual){
+	log_info(logger, "Intentando conectar a: %s", actual);
 	return conectarse_a_un_servidor( obtenerIpProceso(actual) , obtenerPuertoProceso(actual) , logger);
 }
 
 void cumplirPedido(int argc, char *argv[]){
 	log_info(logger, "ARGC: %i ARG0: %s", argc, argv[0]);
+	if(argc == 1){
+		log_info(logger, "Argumentos insuficientes");
+		return;
+	}
 	switch( obtenerNroMensaje(argv[2]) ) {
 
 	case d_NEW_POKEMON:;
@@ -149,9 +154,6 @@ void cumplirPedido(int argc, char *argv[]){
 	    }
 		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[2], argv[1]);
 		Appeared_pokemon(argv);
-		/*log_info(logger,"POKEMON: %s ", argv[4]);
-		log_info(logger,"POSX: %i ", atoi( argv[5] ) );
-		log_info(logger,"POSY: %i ", atoi( argv[6] ) );*/
 		break;
 
 	case d_CATCH_POKEMON:;
@@ -166,6 +168,10 @@ void cumplirPedido(int argc, char *argv[]){
 	case d_CAUGHT_POKEMON:;
 		if(argc < 5){
 			log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
+			break;
+		}
+		if(OKoFAIL(argv[4]) == 99){
+			log_info(logger, "Argumentos erroneo: %s", argv[4]);
 			break;
 		}
 		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[2], argv[1]);
@@ -195,48 +201,26 @@ void cumplirPedido(int argc, char *argv[]){
 	}
 }
 
-int main(int argc, char *argv[]) {
+void iniciarConfiguracion(){
 	t_config* archivo_de_configuracion = config_create("../Gameboy.config");
-
 	puertoBroker = config_get_string_value(archivo_de_configuracion, "PUERTO_BROKER");
 	ipBroker = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
-
 	puertoTeam = config_get_string_value(archivo_de_configuracion, "PUERTO_TEAM");
 	ipTeam = config_get_string_value(archivo_de_configuracion, "IP_TEAM");
-
 	puertoGameCard = config_get_string_value(archivo_de_configuracion, "PUERTO_GAMECARD");
 	ipGamecard = config_get_string_value(archivo_de_configuracion, "IP_GAMECARD");
+}
 
+void iniciarEstructuras(){
+	iniciarConfiguracion();
 	logger = iniciar_log("GameBoy");
-
 	log_info(logger,"PUERTO BROKER: %s IP BROKER: %s\n", puertoBroker, ipBroker);
 	log_info(logger,"PUERTO TEAM: %s IP TEAM: %s\n", puertoTeam, ipTeam);
 	log_info(logger,"PUERTO GAMECARD: %s IP GAMECARD: %s\n", puertoGameCard, ipGamecard);
+}
 
+int main(int argc, char *argv[]) {
+	iniciarEstructuras();
 	cumplirPedido(argc,argv);
-
-	/*
-	int conexionBroker = conectarse_a_un_servidor(ipBroker,puertoBroker,logger);
-	int conexionTeam = conectarse_a_un_servidor(ipTeam,puertoTeam,logger);
-	int conexionGamecard = conectarse_a_un_servidor(ipGamecard,puertoGameCard,logger);
-	*/
-
-	/*
-	Serialize_PackAndSend_NEW_POKEMON(conexion, 1,"PIKACHU", 5, 5, 10);
-	log_info(logger,"Se envio mensaje: %i, %s, x: %i, y: %i, cant: %i\n", 1,"PIKACHU", 5, 5, 10);
-
-	Serialize_PackAndSend_CATCH_POKEMON(conexion, 2,"CHARIZARD", 2, 5);
-	log_info(logger,"Se envio mensaje: %i, %s, x: %i, y: %i\n", 2,"CHARIZARD", 2, 5);
-
-	Serialize_PackAndSend_GET_POKEMON(conexion, 3,"BULBASUAR");
-	log_info(logger,"Se envio mensaje: %i, %s\n", 3,"BULBASUAR");
-
-	Serialize_PackAndSend_GET_POKEMON(conexion, 3,"BULBASUAR");
-	log_info(logger,"Se envio mensaje: %i, %s\n", 3,"BULBASUAR");
-
-	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, 4, 0);
-	log_info(logger,"Se envio mensaje: %i, %s, %i\n", 3,"BULBASUAR", 0);
-	*/
-
 	return EXIT_SUCCESS;
 }
