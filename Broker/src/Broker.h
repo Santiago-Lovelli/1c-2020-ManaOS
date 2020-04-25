@@ -38,12 +38,20 @@ enum queueName {
 ///////FUNCIONES INICIALIZACION/////////
 void Init();
 void ConfigInit();
+void ListsInit();
+
+//////FUNCIONES DE CONEXION//////////
+void EsperarClientes();
+void* AtenderCliente();
+void ActuarAnteMensaje();
 
 
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;
 t_log * LOGGER_GENERAL;
+t_log * LOGGER_OBLIGATORIO;
 enum queueName COLAS;
+t_list* CONEXIONES;
 
 #endif /* BROKER_H_ */
 
