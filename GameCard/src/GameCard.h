@@ -13,6 +13,7 @@
 #include <Serializacion/Serializacion.h>
 #include <sys/mman.h>
 #include <Bitmap/Bitmap.h>
+#include <unistd.h>
 
 t_log * loggerGeneral;
 t_config *archivo_de_configuracion;
@@ -21,8 +22,10 @@ typedef struct {
 	uint32_t tamanioDeBloque;
 	uint32_t bloques;
 	char numeroMagico[11];
-}metadata;
+}m_metadata;
 
+m_metadata metadata;
+t_bitarray * bitmap;
 
 void* atenderGameboy();
 void iniciarServidorDeGameBoy();
