@@ -116,10 +116,22 @@ bool Serialize_PackAndSend_SubscribeQueue(int socketCliente, d_message queue);
 bool Serialize_PackAndSend_NEW_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY, uint32_t cantidad);
 
 /**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO NEW_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_NEW_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY, uint32_t cantidad);
+
+/**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO CATCH_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 
 bool Serialize_PackAndSend_CATCH_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO CATCH_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_CATCH_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY);
 
 /**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO GET_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
@@ -128,10 +140,22 @@ bool Serialize_PackAndSend_CATCH_POKEMON(int socketCliente, uint32_t idMensaje,c
 bool Serialize_PackAndSend_GET_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon);
 
 /**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO GET_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_GET_POKEMON_NoID(int socketCliente,const void *pokemon);
+
+/**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO APPEARED_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 
 bool Serialize_PackAndSend_APPEARED_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO APPEARED_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_APPEARED_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY);
 
 /**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO CAUGHT_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
@@ -151,6 +175,13 @@ bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensa
  */
 
 bool Serialize_PackAndSend_CATCHoAPPEARED(int socketCliente, uint32_t idMensaje, const void *pokemon, uint32_t posX, uint32_t posY, d_message tipoMensaje);
+
+/**
+ * ESTA FUNCION SIRVE COMO UNA ABSTRACCION PARA NO REPETIR LOGICA, SE USA A TRAVES DE
+ * LAS FUNCIOENS PACK AND SEND CATCH Y APPEARED EN SUS VERSIONES SIN ID
+ */
+
+bool Serialize_PackAndSend_CATCHoAPPEARED_NoID(int socketCliente, const void *pokemon, uint32_t posX, uint32_t posY, d_message tipoMensaje);
 
 ////////////////////////////
 // FUNCIONES PARA RECIBIR //
