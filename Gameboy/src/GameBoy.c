@@ -15,8 +15,12 @@ void New_pokemon(char *argv[]){
 	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
 	log_info(logger,"CANTIDAD: %i ", atoi( argv[6] ) );
 	log_info(logger,"IDMENSAJE: %i ", atoi( argv[7] ) );
-	/*int conexion = conectarA(argv[1]);
-	Serialize_PackAndSend_NEW_POKEMON(conexion, atoi(argv[7]), argv[3], atoi(argv[4]), atoi(argv[5]), atoi( argv[6]) );*/
+	int conexion = conectarA(argv[1]);
+	d_process procesoActual = obtenerNroProceso(argv[1]);
+	if( procesoActual == d_BROKER)
+		Serialize_PackAndSend_NEW_POKEMON_NoID(conexion, argv[3], atoi(argv[4]), atoi(argv[5]), atoi( argv[6]) );
+	else if ( procesoActual == d_GAMECARD)
+		Serialize_PackAndSend_NEW_POKEMON(conexion, atoi(argv[7]), argv[3], atoi(argv[4]), atoi(argv[5]), atoi( argv[6]) );
 }
 
 void Appeared_pokemon(char *argv[]){
@@ -25,8 +29,12 @@ void Appeared_pokemon(char *argv[]){
 	log_info(logger,"POSX: %i ", atoi( argv[4] ) );
 	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
 	log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
-	/*int conexion = conectarA(argv[1]);
-	Serialize_PackAndSend_APPEARED_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoii(argv[4]), atoi(argv[5]) );*/
+	int conexion = conectarA(argv[1]);
+	d_process procesoActual = obtenerNroProceso(argv[1]);
+	if( procesoActual == d_BROKER)
+		Serialize_PackAndSend_APPEARED_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoi(argv[4]), atoi(argv[5]) );
+	else if ( procesoActual == d_TEAM)
+		Serialize_PackAndSend_APPEARED_POKEMON_NoID(conexion, argv[3], atoi(argv[4]), atoi(argv[5]));
 }
 
 void Catch_pokemon(char *argv[]){
@@ -35,8 +43,8 @@ void Catch_pokemon(char *argv[]){
 	log_info(logger,"POSX: %i ", atoi( argv[4] ) );
 	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
 	log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
-	/*int conexion = conectarA(argv[1]);
-	Serialize_PackAndSend_CATCH_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoii(argv[4]), atoi(argv[5]) );*/
+	int conexion = conectarA(argv[1]);
+	Serialize_PackAndSend_CATCH_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoii(argv[4]), atoi(argv[5]) );
 }
 
 void Caught_pokemon(char *argv[]){
@@ -44,25 +52,25 @@ void Caught_pokemon(char *argv[]){
 	log_info(logger,"IDMENSAJE: %i ", atoi( argv[3] ) );
 	log_info(logger,"ESTADO: %s ", argv[4] );
 
-	/*int conexion = conectarA(argv[1]);
-	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, atoi(argv[3]), OKoFAIL(argv[4]) );*/
+	int conexion = conectarA(argv[1]);
+	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, atoi(argv[3]), OKoFAIL(argv[4]) );
 
 }
 
 void Get_pokemon(char *argv[]){
 	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
 	log_info(logger,"POKEMON: %s ", argv[3] );
-	/*int conexion = conectarA(argv[1]);
-	Serialize_PackAndSend_GET_POKEMON(conexion, IDMENSAJE 0, argv[3]);*/
+	int conexion = conectarA(argv[1]);
+	Serialize_PackAndSend_GET_POKEMON_NoID(conexion, argv[3]);
 }
 
 void Subscribe_Queue(char *argv[]){
 	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
 	log_info(logger,"COLA DE MENSAJES: %s ", argv[2] );
 	log_info(logger, "TIEMPO", atoi(argv[3]));
-	/*int conexion = conectarA("BROKER");
-	Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));*/
+	int conexion = conectarA("BROKER");
 
+	Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));
 }
 
 int obtenerNroMensaje(char *actual){
