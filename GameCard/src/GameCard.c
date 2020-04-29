@@ -6,14 +6,17 @@ char* montajeDeArchivo() {
 	return tallgrass;
 }
 
-char* pathDePokemon(char * pokemon) {
+char* pathDePokemonMetadata(char * pokemon) {
 
 	char *tallgrass = montajeDeArchivo();
 
 	char* rutaFiles = "/Files/";
 
+	char* rutaMeta = "/Metadata.bin";
+
 	char* path = malloc(
-			strlen(tallgrass) + strlen(rutaFiles) + strlen(pokemon) + 1);
+			strlen(tallgrass) + strlen(rutaFiles) + strlen(pokemon)
+					+ strlen(rutaMeta) + 1);
 	int desplazamiento = 0;
 
 	memcpy(path + desplazamiento, tallgrass, strlen(tallgrass));
@@ -21,6 +24,8 @@ char* pathDePokemon(char * pokemon) {
 	memcpy(path + desplazamiento, rutaFiles, strlen(rutaFiles));
 	desplazamiento = desplazamiento + strlen(rutaFiles);
 	memcpy(path + desplazamiento, pokemon, strlen(pokemon));
+	desplazamiento = desplazamiento + strlen(pokemon);
+	memcpy(path + desplazamiento, rutaMeta, strlen(rutaMeta));
 
 	log_info(loggerGeneral, "Montaje de path pokemon metadata: %s \n", path);
 
@@ -28,27 +33,48 @@ char* pathDePokemon(char * pokemon) {
 }
 
 bool existePokemon(char* pokemon) {
-	char* path = pathDePokemon(pokemon);
+	char* path = pathDePokemonMetadata(pokemon);
 	FILE* archivoPokemon = fopen(path, "rb");
 	bool existe = false;
 	if (archivoPokemon != NULL) {
 		existe = true;
 		fclose(archivoPokemon);
+	} else {
+		log_info(loggerGeneral, "No existe el pokemon: %s en el sistema",
+				pokemon);
 	}
 	return existe;
 }
 
-void crearPokemon(char* pokemon) {
-	char* path = pathDePokemon(pokemon);
+void obtenerBloquesDeMetadataPokemon(char* metadataPokemon){
+	char** separadoPorEnter = string_split(metadataPokemon, "\n");
+	char** bloquesEnPosicionUno = string_split(separadoPorEnter[2], "=");
+	log_info(loggerGeneral,"Bloques: %s", bloquesEnPosicionUno[1]);
+	sleep(100);
+}
 
-	DIR* dir = opendir("mydir");
-	if (dir) {
-		/* Directory exists. */
-		closedir(dir);
-	} else if (ENOENT == errno) {
-		/* Directory does not exist. */
+void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
+		uint32_t cantidad) {
+
+	char* path = pathDePokemonMetadata(pkm);
+
+	uint32_t tamanio_archivo_de_metadata = tamanio_archivo(path);
+
+	log_info(loggerGeneral, "Tamanio archivo: %i", tamanio_archivo_de_metadata);
+
+	int disco = open(path, O_RDWR, 0);
+
+	char *archivoPokemon = mmap(NULL, tamanio_archivo_de_metadata,
+	PROT_READ | PROT_WRITE,
+	MAP_SHARED | MAP_FILE, disco, 0);
+
+	if (archivoPokemon == MAP_FAILED) {
+		log_error(loggerGeneral, "Mmap de %s a fallado", path);
+		free(path);
 	} else {
-		/* opendir() failed for some other reason. */
+		log_info(loggerGeneral, "Mapeado %s", path);
+		free(path);
+		obtenerBloquesDeMetadataPokemon(archivoPokemon);
 	}
 }
 
@@ -58,10 +84,14 @@ void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	bool existe = existePokemon(pkm);
 
 	if (!existe) {
+		log_error(loggerGeneral, "NO existe el pokemon: %s", pkm);
+	} else {
+
+		log_info(loggerGeneral, "Existe: %i", existe);
+
+		agregarPosicionA(pkm, posicionX, posicionY, cantidad);
 
 	}
-
-	log_info(loggerGeneral, "existe: %i", existe);
 }
 
 void atender(HeaderDelibird header, int cliente, t_log* logger) {
