@@ -1,7 +1,26 @@
 #include <Team.h>
 
 int main (void){
+	iniciar();
+	escucharMensajes(); ///////ESTO VA CON UN HILO
+	conectarseConBroker(); //////ESTO VA CON OTRO HILO SEGUN ENTIENDO
+	return EXIT_SUCCESS;
+}
+
+void iniciar(){
+	TEAM_LOG = iniciar_log("Team");
 	iniciarConfig();
+	log_info (TEAM_LOG, "TEAM OK");
+	iniciarHilos();
+}
+
+void escucharMensajes(){
+	int servidor = iniciar_servidor(TEAM_CONFIG.IP_TEAM, TEAM_CONFIG.PUERTO_TEAM,TEAM_LOG);
+	int espera = esperar_cliente_con_accept(servidor, TEAM_LOG); //ESTO ES CON OTRO HILO?
+}
+
+void conectarseConBroker(){
+	int cliente = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER,TEAM_LOG);
 }
 
 void iniciarConfig(){
@@ -17,7 +36,11 @@ void iniciarConfig(){
 	TEAM_CONFIG.IP_BROKER = config_get_string_value (creacionConfig, "IP_BROKER");
 	TEAM_CONFIG.PUERTO_BROKER = config_get_int_value (creacionConfig, "PUERTO_BROKER");
 	TEAM_CONFIG.LOG_FILE = config_get_string_value (creacionConfig, "LOG_FILE");
+	TEAM_CONFIG.IP_TEAM = config_get_string_value (creacionConfig, "IP_TEAM");
+	TEAM_CONFIG.PUERTO_TEAM = config_get_int_value (creacionConfig, "PUERTO_TEAM");
 }
+
+
 
 
 

@@ -25,12 +25,18 @@ typedef struct config{
 	char* IP_BROKER;
 	int PUERTO_BROKER;
 	char* LOG_FILE;
+	char* IP_TEAM;
+	int PUERTO_TEAM;
 }config;
 
-//////FUNCION CONFIG/////////
+//////FUNCIONES/////////
 void iniciarConfig();
+void iniciar();
+void escucharMensajes();
+void conectarseConBroker();
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;
+t_log * TEAM_LOG;
 
 #endif /* TEAM_H_ */
