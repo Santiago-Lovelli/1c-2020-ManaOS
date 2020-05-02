@@ -1,7 +1,7 @@
 #include "Broker.h"
 
 int main(void) {
-	ConfigInit();
+	Init();
 	EsperarClientes();
 	return EXIT_SUCCESS;
 }
@@ -138,7 +138,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -152,4 +152,14 @@ void ConfigInit(){
 
 void ListsInit () {
 	CONEXIONES = list_create();
+	SUSCRIPTORES_NEW = list_create();
+	SUSCRIPTORES_APPEARED = list_create();
+	SUSCRIPTORES_GET = list_create();
+	SUSCRIPTORES_CATCH = list_create();
+	SUSCRIPTORES_CAUGHT = list_create();
+	SUSCRIPTORES_LOCALIZED = list_create();
+}
+
+void agregarSuscriptor(int id_suscriptor, t_list* lista){
+	list_add(lista, id_suscriptor);
 }

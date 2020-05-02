@@ -11,6 +11,7 @@
 #include <commons/config.h>
 #include <commons/string.h>
 #include <commons/collections/list.h>
+#include <commons/log.h>
 
 ///////ESTRUCTURAS//////////
 typedef struct config
@@ -45,6 +46,9 @@ void EsperarClientes();
 void* AtenderCliente();
 void ActuarAnteMensaje();
 
+//////SUSCRIPCION//////////
+void agregarSuscriptor();
+
 
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;
@@ -52,6 +56,15 @@ t_log * LOGGER_GENERAL;
 t_log * LOGGER_OBLIGATORIO;
 enum queueName COLAS;
 t_list* CONEXIONES;
+
+
+////////LISTA DE SUSCRIPTORES//////
+t_list* SUSCRIPTORES_NEW;
+t_list* SUSCRIPTORES_APPEARED;
+t_list* SUSCRIPTORES_GET;
+t_list* SUSCRIPTORES_CATCH;
+t_list* SUSCRIPTORES_CAUGHT;
+t_list* SUSCRIPTORES_LOCALIZED;
 
 #endif /* BROKER_H_ */
 
