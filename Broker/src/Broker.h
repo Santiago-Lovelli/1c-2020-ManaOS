@@ -36,6 +36,14 @@ enum queueName {
 	APPEARED
 };
 
+typedef struct memoriaInterna {
+	int idMensaje;
+	d_message tipoMensaje;
+	t_list* suscriptoresConMensaje;
+	t_list* suscriptoresConACK;
+}memoriaInterna;
+
+
 ///////FUNCIONES INICIALIZACION/////////
 void Init();
 void ConfigInit();
