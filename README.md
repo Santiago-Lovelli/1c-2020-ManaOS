@@ -1,6 +1,4 @@
 # tp-2020-1c-ManaOS-
- No newline at end of file
-# tp-2020-1c-ManaOS-
 
 ## Compilacio: 
 ### GameCard (29-04): 
