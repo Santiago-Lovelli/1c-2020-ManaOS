@@ -10,17 +10,8 @@ int main(void) {
 	Serialize_PackAndSend_NEW_POKEMON(conexion, 1,"PIKACHU", 5, 5, 10);
 	log_info(logger,"Se envio mensaje: %i, %s, x: %i, y: %i, cant: %i\n", 1,"PIKACHU", 5, 5, 10);
 
-	Serialize_PackAndSend_CATCH_POKEMON(conexion, 2,"CHARIZARD", 2, 5);
-	log_info(logger,"Se envio mensaje: %i, %s, x: %i, y: %i\n", 2,"CHARIZARD", 2, 5);
-
-	Serialize_PackAndSend_GET_POKEMON(conexion, 3,"BULBASUAR");
-	log_info(logger,"Se envio mensaje: %i, %s\n", 3,"BULBASUAR");
-
-	Serialize_PackAndSend_GET_POKEMON(conexion, 3,"BULBASUAR");
-	log_info(logger,"Se envio mensaje: %i, %s\n", 3,"BULBASUAR");
-
-	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, 4, 0);
-	log_info(logger,"Se envio mensaje: %i, %s, $i\n", 3,"BULBASUAR", 0);
+	Serialize_PackAndSend_NEW_POKEMON(conexion, 0,"PIKACHU", 4, 4, 4);
+	log_info(logger,"Se envio mensaje: %i, %s, x: %i, y: %i, cant: %i\n", 0,"PIKACHU", 4, 4, 4);
 
 	return EXIT_SUCCESS;
 }
