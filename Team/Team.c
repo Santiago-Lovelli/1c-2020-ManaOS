@@ -2,8 +2,6 @@
 
 int main (void){
 	iniciar();
-	escucharMensajes(); ///////ESTO VA CON UN HILO
-	conectarseConBroker(); //////ESTO VA CON OTRO HILO SEGUN ENTIENDO
 	return EXIT_SUCCESS;
 }
 
@@ -14,9 +12,17 @@ void iniciar(){
 	iniciarHilos();
 }
 
+void iniciarHilos(){
+	pthread_create(&hiloEscucha, NULL, (void*) escucharMensajes, NULL);
+	log_info(TEAM_LOG, "Se creo el hilo Escucha");
+	pthread_create(&hiloConexionBroker, NULL, (void*) conectarseConBroker, NULL);
+	log_info(TEAM_LOG, "Se creo el hilo Conexion Broker");
+}
+
 void escucharMensajes(){
 	int servidor = iniciar_servidor(TEAM_CONFIG.IP_TEAM, TEAM_CONFIG.PUERTO_TEAM,TEAM_LOG);
 	int espera = esperar_cliente_con_accept(servidor, TEAM_LOG); //ESTO ES CON OTRO HILO?
+	///ver que hacer cuando recibe los nuevos pokemones, no puede superar el global
 }
 
 void conectarseConBroker(){

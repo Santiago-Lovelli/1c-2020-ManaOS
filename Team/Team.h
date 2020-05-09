@@ -39,4 +39,8 @@ void conectarseConBroker();
 config TEAM_CONFIG;
 t_log * TEAM_LOG;
 
+/////////HILOS///////////
+pthread_t hiloEscucha;
+pthread_t hiloConexionBroker;
+
 #endif /* TEAM_H_ */
