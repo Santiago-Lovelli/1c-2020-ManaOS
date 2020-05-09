@@ -43,4 +43,11 @@ t_log * TEAM_LOG;
 pthread_t hiloEscucha;
 pthread_t hiloConexionBroker;
 
+///////LISTAS//////////
+t_list* EstadoNew;
+t_list* EstadoReady;
+t_list* EstadoBlock;
+t_list* EstadoExec;
+t_list* EstadoExit;
+
 #endif /* TEAM_H_ */

@@ -10,6 +10,7 @@ void iniciar(){
 	iniciarConfig();
 	log_info (TEAM_LOG, "TEAM OK");
 	iniciarHilos();
+	crearEstados();
 }
 
 void iniciarHilos(){
@@ -21,13 +22,21 @@ void iniciarHilos(){
 
 void escucharMensajes(){
 	int servidor = iniciar_servidor(TEAM_CONFIG.IP_TEAM, TEAM_CONFIG.PUERTO_TEAM,TEAM_LOG);
-	int espera = esperar_cliente_con_accept(servidor, TEAM_LOG); //ESTO ES CON OTRO HILO?
-	///ver que hacer cuando recibe los nuevos pokemones, no puede superar el global
+	while(1){
+	int cliente = esperar_cliente_con_accept(servidor, TEAM_LOG); //ESTO ES CON OTRO HILO?
+	log_info ("Se conecto el cliente: %i", cliente);
+	}
 }
 
 void conectarseConBroker(){
 	int cliente = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER,TEAM_LOG);
+	if (cliente == -1){
+		reintentarConexión(); ////////Ver como hago con TIEMPO_RECONEXION del config
+	}
+	else
+		log_info ("Conexion exitosa");
 }
+
 
 void iniciarConfig(){
 	t_config* creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team.config");
@@ -46,7 +55,13 @@ void iniciarConfig(){
 	TEAM_CONFIG.PUERTO_TEAM = config_get_int_value (creacionConfig, "PUERTO_TEAM");
 }
 
-
+void crearEstados(){
+	EstadoNew = list_created();
+	EstadoReady = list_created();
+	EstadoBlock = list_created();
+	EstadoExit = list_created();
+	EstadoExec = list_created();
+}
 
 
 
