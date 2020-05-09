@@ -337,11 +337,8 @@ void * obtenerBitmap() {
 
 	truncate(montajeBitmap, metadata.bloques);
 
-	uint32_t tamanio_archivo_de_bitmap = tamanio_archivo(montajeBitmap);
-	log_info(loggerGeneral, "Tamanio archivo: %i", tamanio_archivo_de_bitmap);
-
 	int disco = open(montajeBitmap, O_RDWR, 0);
-	void *bitmapLevantado = mmap(NULL, tamanio_archivo_de_bitmap,
+	void *bitmapLevantado = mmap(NULL, metadata.bloques,
 	PROT_READ | PROT_WRITE,
 	MAP_SHARED | MAP_FILE, disco, 0);
 	free(montajeBitmap);
