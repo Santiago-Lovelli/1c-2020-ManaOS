@@ -60,6 +60,27 @@ bool Serialize_PackAndSend_NEW_POKEMON(int socketCliente, uint32_t idMensaje,con
 
 }
 
+bool Serialize_PackAndSend_NEW_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY, uint32_t cantidad) {
+	uint32_t tamMessage = strlen(pokemon) + 1 + (4*sizeof(uint32_t)); //+1 por el /0
+	uint32_t tamNombrePokemon = strlen(pokemon) + 1;
+	void* buffer = malloc( tamMessage );
+	int desplazamiento = 0;
+	memcpy(buffer + desplazamiento , &tamNombrePokemon, sizeof(uint32_t));
+	desplazamiento += sizeof(uint32_t);
+	memcpy(buffer + desplazamiento, pokemon, tamNombrePokemon);
+	desplazamiento += tamNombrePokemon;
+	memcpy(buffer + desplazamiento, &posX, sizeof(uint32_t));
+	desplazamiento += sizeof(uint32_t);
+	memcpy(buffer + desplazamiento, &posY, sizeof(uint32_t));
+	desplazamiento += sizeof(uint32_t);
+	memcpy(buffer + desplazamiento, &cantidad, sizeof(uint32_t));
+	desplazamiento += sizeof(uint32_t);
+	int resultado = Serialize_PackAndSend(socketCliente, buffer, tamMessage, d_NEW_POKEMON);
+	free(buffer);
+	return resultado;
+
+}
+
 bool Serialize_PackAndSend_CATCHoAPPEARED(int socketCliente, uint32_t idMensaje, const void *pokemon, uint32_t posX, uint32_t posY, d_message tipoMensaje){
 	uint32_t tamMessage = strlen(pokemon) + 1 + (4*sizeof(uint32_t)); //+1 por el /0
 	uint32_t tamNombrePokemon = strlen(pokemon) + 1;
@@ -80,9 +101,31 @@ bool Serialize_PackAndSend_CATCHoAPPEARED(int socketCliente, uint32_t idMensaje,
 	return resultado;
 }
 
+bool Serialize_PackAndSend_CATCHoAPPEARED_NoID(int socketCliente, const void *pokemon, uint32_t posX, uint32_t posY, d_message tipoMensaje){
+	uint32_t tamMessage = strlen(pokemon) + 1 + (3*sizeof(uint32_t)); //+1 por el /0
+	uint32_t tamNombrePokemon = strlen(pokemon) + 1;
+	void* buffer = malloc( tamMessage );
+	int desplazamiento = 0;
+	memcpy(buffer + desplazamiento, &tamNombrePokemon, sizeof(uint32_t));
+	desplazamiento += sizeof(uint32_t);
+	memcpy(buffer + desplazamiento, pokemon, tamNombrePokemon);
+	desplazamiento += tamNombrePokemon;
+	memcpy(buffer + desplazamiento, &posX, sizeof(uint32_t));
+	desplazamiento += sizeof(uint32_t);
+	memcpy(buffer + desplazamiento, &posY, sizeof(uint32_t));
+	desplazamiento += sizeof(uint32_t);
+	int resultado = Serialize_PackAndSend(socketCliente, buffer, tamMessage, tipoMensaje);
+	free(buffer);
+	return resultado;
+}
+
 bool Serialize_PackAndSend_CATCH_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY) {
 	return Serialize_PackAndSend_CATCHoAPPEARED(socketCliente,idMensaje,pokemon,posX,posY,d_CATCH_POKEMON);
 
+}
+
+bool Serialize_PackAndSend_CATCH_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY) {
+	return Serialize_PackAndSend_CATCHoAPPEARED_NoID(socketCliente,pokemon,posX,posY,d_CATCH_POKEMON);
 }
 
 bool Serialize_PackAndSend_GET_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon) {
@@ -102,8 +145,27 @@ bool Serialize_PackAndSend_GET_POKEMON(int socketCliente, uint32_t idMensaje,con
 
 }
 
+bool Serialize_PackAndSend_GET_POKEMON_NoID(int socketCliente,const void *pokemon) {
+	uint32_t tamMessage = strlen(pokemon) + 1 + (1*sizeof(uint32_t)); //+1 por el /0
+	uint32_t tamNombrePokemon = strlen(pokemon) + 1;
+	void* buffer = malloc( tamMessage );
+	int desplazamiento = 0;
+	memcpy(buffer + desplazamiento, &tamNombrePokemon, sizeof(uint32_t));
+	desplazamiento += sizeof(uint32_t);
+	memcpy(buffer + desplazamiento, pokemon, tamNombrePokemon);
+	desplazamiento += tamNombrePokemon;
+	int resultado = Serialize_PackAndSend(socketCliente, buffer, tamMessage, d_GET_POKEMON);
+	free(buffer);
+	return resultado;
+
+}
+
 bool Serialize_PackAndSend_APPEARED_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY) {
 	return Serialize_PackAndSend_CATCHoAPPEARED(socketCliente,idMensaje,pokemon,posX,posY,d_APPEARED_POKEMON);
+}
+
+bool Serialize_PackAndSend_APPEARED_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY) {
+	return Serialize_PackAndSend_CATCHoAPPEARED_NoID(socketCliente,pokemon,posX,posY,d_APPEARED_POKEMON);
 }
 
 bool Serialize_PackAndSend_CAUGHT_POKEMON(int socketCliente, uint32_t idMensaje, uint32_t resultado){
