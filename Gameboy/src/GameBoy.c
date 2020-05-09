@@ -44,7 +44,7 @@ void Catch_pokemon(char *argv[]){
 	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
 	log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
 	int conexion = conectarA(argv[1]);
-	Serialize_PackAndSend_CATCH_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoii(argv[4]), atoi(argv[5]) );
+	Serialize_PackAndSend_CATCH_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoi(argv[4]), atoi(argv[5]) );
 }
 
 void Caught_pokemon(char *argv[]){
