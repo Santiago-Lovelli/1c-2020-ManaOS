@@ -46,16 +46,7 @@ bool existePokemon(char* pokemon) {
 	return existe;
 }
 
-void obtenerBloquesDeMetadataPokemon(char* metadataPokemon){
-	char** separadoPorEnter = string_split(metadataPokemon, "\n");
-	char** bloquesEnPosicionUno = string_split(separadoPorEnter[2], "=");
-	log_info(loggerGeneral,"Bloques: %s", bloquesEnPosicionUno[1]);
-	sleep(100);
-}
-
-void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
-		uint32_t cantidad) {
-
+char* obtenerBloquesDeMetadataPokemon(char* pkm) {
 	char* path = pathDePokemonMetadata(pkm);
 
 	uint32_t tamanio_archivo_de_metadata = tamanio_archivo(path);
@@ -68,14 +59,36 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	PROT_READ | PROT_WRITE,
 	MAP_SHARED | MAP_FILE, disco, 0);
 
-	if (archivoPokemon == MAP_FAILED) {
-		log_error(loggerGeneral, "Mmap de %s a fallado", path);
-		free(path);
-	} else {
-		log_info(loggerGeneral, "Mapeado %s", path);
-		free(path);
-		obtenerBloquesDeMetadataPokemon(archivoPokemon);
+	log_info(loggerGeneral, "Mapeado %s", path);
+	free(path);
+
+	char** separadoPorEnter = string_split(archivoPokemon, "\n");
+	char** bloquesEnPosicionUno = string_split(separadoPorEnter[2], "=");
+	log_info(loggerGeneral, "Bloques: %s", bloquesEnPosicionUno[1]);
+	return bloquesEnPosicionUno[1];
+
+}
+
+void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
+		uint32_t cantidad) {
+	char* bloques = obtenerBloquesDeMetadataPokemon(pkm);
+	char** arrayDeBloques = string_get_string_as_array(bloques);
+	int contador = 0;
+	while (arrayDeBloques[contador] != NULL) {
+		log_info(loggerGeneral, "%s", arrayDeBloques[contador]);
+		contador = contador + 1;
+
+	/*Agregar la posiciones
+	 * Levanto el primer bloque o todos?
+	 * Onda, busco en todos juntos o de a un bloque?
+	 * Onda copio todo junto? o solo en el primero?
+	 * mmap por cada archivo, memcpy todos a un mega char*,
+	 * Buscar y despues memcpy a los mmaps de diez hasta que
+	 * me quede uno mas chico a diez y ahi copio todo al ultimo bloque
+	 * */
+
 	}
+
 }
 
 void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
@@ -85,6 +98,7 @@ void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 	if (!existe) {
 		log_error(loggerGeneral, "NO existe el pokemon: %s", pkm);
+		//Falta: crear toda la estructura
 	} else {
 
 		log_info(loggerGeneral, "Existe: %i", existe);
