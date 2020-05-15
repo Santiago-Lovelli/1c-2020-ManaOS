@@ -46,8 +46,7 @@ bool existePokemon(char* pokemon) {
 	return existe;
 }
 
-char* obtenerBloquesDeMetadataPokemon(char* pkm) {
-	char* path = pathDePokemonMetadata(pkm);
+char *archivoMetadataPokemon(path){
 
 	uint32_t tamanio_archivo_de_metadata = tamanio_archivo(path);
 
@@ -61,21 +60,109 @@ char* obtenerBloquesDeMetadataPokemon(char* pkm) {
 
 	log_info(loggerGeneral, "Mapeado %s", path);
 	free(path);
+	return archivoPokemon;
+}
+
+char* obtenerBloquesDeMetadataPokemon(char* pkm) {
+	char* path = pathDePokemonMetadata(pkm);
+
+	char *archivoPokemon = archivoMetadataPokemon(path);
 
 	char** separadoPorEnter = string_split(archivoPokemon, "\n");
 	char** bloquesEnPosicionUno = string_split(separadoPorEnter[2], "=");
 	log_info(loggerGeneral, "Bloques: %s", bloquesEnPosicionUno[1]);
+
 	return bloquesEnPosicionUno[1];
 
 }
 
+char** obtenerBloquesDeMetadataPokemonEnArray(char* unPokemon){
+	char* bloques = obtenerBloquesDeMetadataPokemon(unPokemon);
+	char** arrayDeBloques = string_get_string_as_array(bloques);
+
+	return arrayDeBloques;
+}
+
+char* obtenerDirectory(char* pkm){
+	char* path = pathDePokemonMetadata(pkm);
+	char *archivoPokemon = archivoMetadataPokemon(path);
+	char** separadoPorEnter = string_split(archivoPokemon, "\n");
+	char** directoryEnUno = string_split(separadoPorEnter[0], "=");
+
+	return directoryEnUno[1];
+}
+
+uint32_t obtenerSizeDePokemon(char* pkm){
+	char* path = pathDePokemonMetadata(pkm);
+	char *archivoPokemon = archivoMetadataPokemon(path);
+	char** separadoPorEnter = string_split(archivoPokemon, "\n");
+	char** tamanioEnUno = string_split(separadoPorEnter[1], "=");
+	uint32_t tamanio = atoi(tamanioEnUno[1]);
+	return tamanio;
+}
+
+char* obtenerOpen(char* pkm){
+
+	char* path = pathDePokemonMetadata(pkm);
+	char *archivoPokemon = archivoMetadataPokemon(path);
+	char** separadoPorEnter = string_split(archivoPokemon, "\n");
+	char** abiertoEnUno = string_split(separadoPorEnter[3], "=");
+
+	return abiertoEnUno[1];
+}
+
+p_metadata* obtenerMetadataEnteraDePokemon(char* unPokemon){
+
+	char* directory = obtenerDirectory(unPokemon);
+	log_info(loggerGeneral,"obtenerDirectory: %s", directory);
+
+	uint32_t tamanioDePokemon = obtenerSizeDePokemon(unPokemon);
+	log_info(loggerGeneral,"obtenerSizeDePokemon: %i", tamanioDePokemon);
+
+	char** arrayDeBloques = obtenerBloquesDeMetadataPokemonEnArray(unPokemon);
+	int cantidadDeBloquesObtenidos = 0;
+	while(arrayDeBloques[cantidadDeBloquesObtenidos] != NULL){
+		log_info(loggerGeneral, "arrayDeBloques[%i] %s", cantidadDeBloquesObtenidos, arrayDeBloques[cantidadDeBloquesObtenidos]);
+		cantidadDeBloquesObtenidos = cantidadDeBloquesObtenidos + 1;
+	}
+	char* abierto = obtenerOpen(unPokemon);
+	log_info(loggerGeneral,"obtenerOpen: %s", abierto);
+
+	p_metadata* metadataObtenida = malloc(strlen(directory)+ strlen(abierto) + sizeof(arrayDeBloques) + sizeof(uint32_t));
+
+	memcpy(metadataObtenida->directory,directory,strlen(directory));
+	metadataObtenida->size = tamanioDePokemon;
+	int cont=0;
+
+	while(arrayDeBloques[cont]){
+		memcpy(metadataObtenida->bloks[cont],arrayDeBloques,strlen(arrayDeBloques[cont]));
+		cont = cont + 1;
+	}
+
+	memcpy(metadataObtenida->open,abierto,strlen(abierto));
+
+	free(directory);
+	free(abierto);
+	liberarDoblePuntero(arrayDeBloques);
+
+	log_info(loggerGeneral,"\ndirectory: %s",metadataObtenida->directory);
+	log_info(loggerGeneral,"\nsize: %i", metadataObtenida->size);
+	for (int i = 0; i < cont; ++i) {
+		log_info(loggerGeneral,"\nbloque %i: %s", i, metadataObtenida->bloks[i]);
+	}
+	log_info(loggerGeneral,"\nopen: %s\n",metadataObtenida->open);
+	sleep(100);
+	return metadataObtenida;
+}
+
 void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		uint32_t cantidad) {
-	char* bloques = obtenerBloquesDeMetadataPokemon(pkm);
-	char** arrayDeBloques = string_get_string_as_array(bloques);
+
+	p_metadata* metadataDePokemon = obtenerMetadataEnteraDePokemon(pkm);
+
 	int contador = 0;
-	while (arrayDeBloques[contador] != NULL) {
-		log_info(loggerGeneral, "%s", arrayDeBloques[contador]);
+	while (metadataDePokemon->bloks[contador] != NULL) {
+		log_info(loggerGeneral, "%s", metadataDePokemon->bloks[contador]);
 		contador = contador + 1;
 
 	/*Agregar la posiciones

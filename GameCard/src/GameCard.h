@@ -25,6 +25,13 @@ typedef struct {
 	char numeroMagico[11];
 } m_metadata;
 
+typedef struct {
+	char* directory;
+	uint32_t size;
+	char** bloks;
+	char* open;
+} p_metadata;
+
 m_metadata metadata;
 t_bitarray * bitmap;
 
