@@ -25,7 +25,7 @@ char* pathDePokemonMetadata(char * pokemon) {
 	desplazamiento = desplazamiento + strlen(rutaFiles);
 	memcpy(path + desplazamiento, pokemon, strlen(pokemon));
 	desplazamiento = desplazamiento + strlen(pokemon);
-	memcpy(path + desplazamiento, rutaMeta, strlen(rutaMeta));
+	memcpy(path + desplazamiento, rutaMeta, strlen(rutaMeta)+1);
 
 	log_info(loggerGeneral, "Montaje de path pokemon metadata: %s \n", path);
 
@@ -34,6 +34,7 @@ char* pathDePokemonMetadata(char * pokemon) {
 
 bool existePokemon(char* pokemon) {
 	char* path = pathDePokemonMetadata(pokemon);
+	log_info(loggerGeneral,":::::::::::::%s",path);
 	FILE* archivoPokemon = fopen(path, "rb");
 	bool existe = false;
 	if (archivoPokemon != NULL) {
@@ -46,7 +47,7 @@ bool existePokemon(char* pokemon) {
 	return existe;
 }
 
-char *archivoMetadataPokemon(path){
+char *archivoMetadataPokemon(char *path){
 
 	uint32_t tamanio_archivo_de_metadata = tamanio_archivo(path);
 

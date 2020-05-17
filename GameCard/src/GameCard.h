@@ -45,4 +45,13 @@ void cargarMetadata();
 void * obtenerBitmap();
 void * obtenerMetadata();
 
+char* montajeDeArchivo();
+char* pathDePokemonMetadata(char * pokemon);
+bool existePokemon(char* pokemon);
+char *archivoMetadataPokemon(char *path);
+char* obtenerBloquesDeMetadataPokemon(char* pkm);
+char** obtenerBloquesDeMetadataPokemonEnArray(char* unPokemon);
+char* obtenerDirectory(char* pkm);
+uint32_t obtenerSizeDePokemon(char* pkm);
+
 #endif /* GAMECARD_H_ */
