@@ -28,7 +28,7 @@ typedef struct {
 typedef struct {
 	char* directory;
 	uint32_t size;
-	char** bloks;
+	char* bloksEnFormatoDeArray;
 	char* open;
 } p_metadata;
 

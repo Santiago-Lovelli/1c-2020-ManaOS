@@ -76,13 +76,6 @@ char* obtenerBloquesDeMetadataPokemon(char* pkm) {
 
 }
 
-char** obtenerBloquesDeMetadataPokemonEnArray(char* unPokemon) {
-	char* bloques = obtenerBloquesDeMetadataPokemon(unPokemon);
-	char** arrayDeBloques = string_get_string_as_array(bloques);
-
-	return arrayDeBloques;
-}
-
 char* obtenerDirectory(char* pkm) {
 	char* path = pathDePokemonMetadata(pkm);
 	char *archivoPokemon = archivoMetadataPokemon(path);
@@ -119,49 +112,19 @@ p_metadata* obtenerMetadataEnteraDePokemon(char* unPokemon) {
 	uint32_t tamanioDePokemon = obtenerSizeDePokemon(unPokemon);
 	log_info(loggerGeneral, "obtenerSizeDePokemon: %i", tamanioDePokemon);
 
-	char** arrayDeBloques = obtenerBloquesDeMetadataPokemonEnArray(unPokemon);
-	int cantidadDeBloquesObtenidos = 0;
+	char* arrayDeBloques = obtenerBloquesDeMetadataPokemon(unPokemon);
+	log_info(loggerGeneral, "obtenerBloquesDeMetadataPokemon: %s", arrayDeBloques);
 
-	if(arrayDeBloques[cantidadDeBloquesObtenidos] == NULL){
-		log_error(loggerGeneral, "No hay bloques a pesar de existir el pokemon");
-		return EXIT_FAILURE;
-	}
-
-	while (arrayDeBloques[cantidadDeBloquesObtenidos] != NULL) {
-		log_info(loggerGeneral, "arrayDeBloques[%i] %s",
-				cantidadDeBloquesObtenidos,
-				arrayDeBloques[cantidadDeBloquesObtenidos]);
-		cantidadDeBloquesObtenidos = cantidadDeBloquesObtenidos + 1;
-	}
 	char* abierto = obtenerOpen(unPokemon);
 	log_info(loggerGeneral, "obtenerOpen: %s", abierto);
 
 	p_metadata* metadataObtenida = malloc(
-			strlen(directory) + 1 + strlen(abierto) + 1 + sizeof(arrayDeBloques)
+			strlen(directory) + 1 + strlen(abierto) + 1 + strlen(arrayDeBloques) + 1
 					+ sizeof(uint32_t));
 
 	metadataObtenida->directory = malloc(strlen(directory) + 1);
 
-	/*--------------------------------------------------------------------------------------------------------------------------------------*/
-	int i = 0;
-	int contadorParaMalloc = 0;
-
-	for (i = 0; i < cantidadDeBloquesObtenidos; ++i) {
-		contadorParaMalloc = contadorParaMalloc + strlen(arrayDeBloques[i]) + 1;
-	}
-
-	log_info(loggerGeneral, "contadorMalloc: %i", contadorParaMalloc);
-
-	metadataObtenida->bloks = malloc(contadorParaMalloc);
-
-	for (i = 0; i < cantidadDeBloquesObtenidos; ++i) {
-		log_info(loggerGeneral, "::::::::::Strlen: %i::::::::::::", strlen(arrayDeBloques[i]) +1);
-		metadataObtenida->bloks[i] = malloc(strlen(arrayDeBloques[i]) + 1);
-		log_info(loggerGeneral, "::::::::::Malloc: %i::::::::::::", i);
-		sleep(2);
-	}
-	puts("---------------------------------------------------------------");
-	sleep(20);
+	metadataObtenida->bloksEnFormatoDeArray = malloc(strlen(arrayDeBloques) + 1);
 
 	metadataObtenida->open = malloc(strlen(abierto) + 1);
 
@@ -170,30 +133,21 @@ p_metadata* obtenerMetadataEnteraDePokemon(char* unPokemon) {
 
 	metadataObtenida->size = tamanioDePokemon;
 
-	int cont = 0;
+	memcpy(metadataObtenida->bloksEnFormatoDeArray, arrayDeBloques, strlen(arrayDeBloques));
+	memcpy(metadataObtenida->bloksEnFormatoDeArray + strlen(arrayDeBloques), "\0", 1);
 
-	while (arrayDeBloques[cont]) {
-		memcpy(metadataObtenida->bloks[cont], arrayDeBloques,
-				strlen(arrayDeBloques[cont]));
-		memcpy(metadataObtenida->bloks[cont] + strlen(arrayDeBloques[cont]),
-				"\0", 1);
-		cont = cont + 1;
-	}
-	/*--------------------------------------------------------------------------------------------------------------------------------------*/
 	memcpy(metadataObtenida->open, abierto, strlen(abierto));
+	memcpy(metadataObtenida->open+ strlen(abierto), "\0", 1);
 
 	free(directory);
 	free(abierto);
-	liberarDoblePuntero(arrayDeBloques);
+	free(arrayDeBloques);
 
-	log_info(loggerGeneral, "\ndirectory: %s", metadataObtenida->directory);
-	log_info(loggerGeneral, "\nsize: %i", metadataObtenida->size);
-	for (int i = 0; i < cont; ++i) {
-		log_info(loggerGeneral, "\nbloque %i: %s", i,
-				metadataObtenida->bloks[i]);
-	}
-	log_info(loggerGeneral, "\nopen: %s\n", metadataObtenida->open);
-	sleep(100);
+	log_info(loggerGeneral, "directory: %s", metadataObtenida->directory);
+	log_info(loggerGeneral, "size: %i", metadataObtenida->size);
+	log_info(loggerGeneral, "bloks: %s", metadataObtenida->bloksEnFormatoDeArray);
+	log_info(loggerGeneral, "open: %s", metadataObtenida->open);
+
 	return metadataObtenida;
 }
 
@@ -201,11 +155,6 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		uint32_t cantidad) {
 
 	p_metadata* metadataDePokemon = obtenerMetadataEnteraDePokemon(pkm);
-
-	int contador = 0;
-	while (metadataDePokemon->bloks[contador] != NULL) {
-		log_info(loggerGeneral, "%s", metadataDePokemon->bloks[contador]);
-		contador = contador + 1;
 
 		/*Agregar la posiciones
 		 * Levanto el primer bloque o todos?
@@ -215,9 +164,6 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		 * Buscar y despues memcpy a los mmaps de diez hasta que
 		 * me quede uno mas chico a diez y ahi copio todo al ultimo bloque
 		 * */
-
-	}
-
 }
 
 void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
