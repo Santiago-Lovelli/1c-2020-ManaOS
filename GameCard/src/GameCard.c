@@ -1,4 +1,5 @@
 #include "GameCard.h"
+#include <dirent.h>
 
 char* montajeDeArchivo() {
 	char *tallgrass = config_get_string_value(archivo_de_configuracion,
@@ -76,15 +77,6 @@ char* obtenerBloquesDeMetadataPokemon(char* pkm) {
 
 }
 
-char* obtenerDirectory(char* pkm) {
-	char* path = pathDePokemonMetadata(pkm);
-	char *archivoPokemon = archivoMetadataPokemon(path);
-	char** separadoPorEnter = string_split(archivoPokemon, "\n");
-	char** directoryEnUno = string_split(separadoPorEnter[0], "=");
-
-	return directoryEnUno[1];
-}
-
 uint32_t obtenerSizeDePokemon(char* pkm) {
 	char* path = pathDePokemonMetadata(pkm);
 	char *archivoPokemon = archivoMetadataPokemon(path);
@@ -106,47 +98,36 @@ char* obtenerOpen(char* pkm) {
 
 p_metadata* obtenerMetadataEnteraDePokemon(char* unPokemon) {
 
-	char* directory = obtenerDirectory(unPokemon);
-	log_info(loggerGeneral, "obtenerDirectory: %s", directory);
+	//A futuro hacer refactor para no habrir archivo de metadata tantas veces
 
-	uint32_t tamanioDePokemon = obtenerSizeDePokemon(unPokemon);
-	log_info(loggerGeneral, "obtenerSizeDePokemon: %i", tamanioDePokemon);
+	char* path = pathDePokemonMetadata(unPokemon);
+	char *archivoPokemon = archivoMetadataPokemon(path);
 
-	char* arrayDeBloques = obtenerBloquesDeMetadataPokemon(unPokemon);
-	log_info(loggerGeneral, "obtenerBloquesDeMetadataPokemon: %s", arrayDeBloques);
+	char** separadoPorEnter = string_split(archivoPokemon, "\n");
 
-	char* abierto = obtenerOpen(unPokemon);
-	log_info(loggerGeneral, "obtenerOpen: %s", abierto);
+	uint32_t desplazamientoDirectory = strlen("DIRECTORY") + 1;
+	uint32_t desplazamientoSize = strlen(separadoPorEnter[0]) + 1
+			+ strlen("SIZE") + 1;
+	uint32_t desplazamientoBlocks = strlen(separadoPorEnter[0]) + 1
+			+ strlen(separadoPorEnter[1]) + 1 + strlen("BLOCKS") + 1;
+	uint32_t desplazamientoOpen = strlen(separadoPorEnter[0]) + 1
+			+ strlen(separadoPorEnter[1]) + 1 + strlen(separadoPorEnter[2]) + 1
+			+ strlen("OPEN") + 1;
+
+	log_info(loggerGeneral, "en archivo: %s",
+			archivoPokemon + desplazamientoOpen);
 
 	p_metadata* metadataObtenida = malloc(
-			strlen(directory) + 1 + strlen(abierto) + 1 + strlen(arrayDeBloques) + 1
-					+ sizeof(uint32_t));
+			strlen(archivoPokemon + desplazamientoDirectory)
+					+ strlen(archivoPokemon + desplazamientoSize)
+					+ strlen(archivoPokemon + desplazamientoBlocks)
+					+ strlen(archivoPokemon + desplazamientoOpen));
 
-	metadataObtenida->directory = malloc(strlen(directory) + 1);
-
-	metadataObtenida->bloksEnFormatoDeArray = malloc(strlen(arrayDeBloques) + 1);
-
-	metadataObtenida->open = malloc(strlen(abierto) + 1);
-
-	memcpy(metadataObtenida->directory, directory, strlen(directory));
-	memcpy(metadataObtenida->directory + strlen(directory), "\0", 1);
-
-	metadataObtenida->size = tamanioDePokemon;
-
-	memcpy(metadataObtenida->bloksEnFormatoDeArray, arrayDeBloques, strlen(arrayDeBloques));
-	memcpy(metadataObtenida->bloksEnFormatoDeArray + strlen(arrayDeBloques), "\0", 1);
-
-	memcpy(metadataObtenida->open, abierto, strlen(abierto));
-	memcpy(metadataObtenida->open+ strlen(abierto), "\0", 1);
-
-	free(directory);
-	free(abierto);
-	free(arrayDeBloques);
-
-	log_info(loggerGeneral, "directory: %s", metadataObtenida->directory);
-	log_info(loggerGeneral, "size: %i", metadataObtenida->size);
-	log_info(loggerGeneral, "bloks: %s", metadataObtenida->bloksEnFormatoDeArray);
-	log_info(loggerGeneral, "open: %s", metadataObtenida->open);
+	metadataObtenida->inicioDirectory = archivoPokemon
+			+ desplazamientoDirectory;
+	metadataObtenida->inicioSize = archivoPokemon + desplazamientoSize;
+	metadataObtenida->inicioBloques = archivoPokemon + desplazamientoBlocks;
+	metadataObtenida->inicioOpen = archivoPokemon + desplazamientoOpen;
 
 	return metadataObtenida;
 }
@@ -156,14 +137,31 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 	p_metadata* metadataDePokemon = obtenerMetadataEnteraDePokemon(pkm);
 
-		/*Agregar la posiciones
-		 * Levanto el primer bloque o todos?
-		 * Onda, busco en todos juntos o de a un bloque?
-		 * Onda copio todo junto? o solo en el primero?
-		 * mmap por cada archivo, memcpy todos a un mega char*,
-		 * Buscar y despues memcpy a los mmaps de diez hasta que
-		 * me quede uno mas chico a diez y ahi copio todo al ultimo bloque
-		 * */
+	log_info(loggerGeneral,"%s",metadataDePokemon->inicioDirectory);
+	log_info(loggerGeneral,"%s",metadataDePokemon->inicioSize);
+	log_info(loggerGeneral,"%s",metadataDePokemon->inicioBloques);
+	log_info(loggerGeneral,"%s",metadataDePokemon->inicioOpen);
+	sleep(111);
+	uint32_t reconectar = config_get_int_value(archivo_de_configuracion,
+			"TIEMPO_DE_REINTENTO_OPERACION");
+
+	//aca va el wait
+	char* openDeArchivo = obtenerOpen(pkm);
+	memcpy(metadataDePokemon->inicioOpen, openDeArchivo,
+			strlen(openDeArchivo) + 1);
+
+	while (metadataDePokemon->inicioOpen == "Y") {
+		sleep(reconectar);
+	}
+
+	/*Agregar la posiciones
+	 * Levanto el primer bloque o todos?
+	 * Onda, busco en todos juntos o de a un bloque?
+	 * Onda copio todo junto? o solo en el primero?
+	 * mmap por cada archivo, memcpy todos a un mega char*,
+	 * Buscar y despues memcpy a los mmaps de diez hasta que
+	 * me quede uno mas chico a diez y ahi copio todo al ultimo bloque
+	 * */
 }
 
 void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
@@ -445,14 +443,67 @@ void levantarBitmap() {
 
 }
 
+
+void cargarListaAtual(){
+	DIR *dir;
+	struct dirent *dirrectorio;
+
+	char *tallgrass = montajeDeArchivo();
+
+	char* rutaFiles = "/Files/";
+
+	char* rutaMeta = "/Metadata.bin";
+
+	char* path = malloc(
+			strlen(tallgrass) + strlen(rutaFiles) + 1);
+	int desplazamiento = 0;
+
+	memcpy(path + desplazamiento, tallgrass, strlen(tallgrass));
+	desplazamiento = desplazamiento + strlen(tallgrass);
+	memcpy(path + desplazamiento, rutaFiles, strlen(rutaFiles)+1);
+
+	log_info(loggerGeneral, "Ruta de t_list pokemons: %s \n", path);
+
+	pokemonsEnFiles = list_create();
+
+	dir = opendir(path);
+	int cont = 0;
+	if (dir)
+	{
+		while ((dirrectorio = readdir(dir)) != NULL)
+		{
+			char* nombre = dirrectorio->d_name;
+			if(dirrectorio->d_type == 4 && strcmp( nombre, ".") != 0 && strcmp(nombre, "..") != 0){
+
+				p_pokemonSemaforo* auxPokemon = malloc(strlen(nombre) + 1 + sizeof(pthread_mutex_t));
+
+				auxPokemon->nombreDePokemon = malloc(strlen(nombre) + 1);
+
+				memcpy(auxPokemon->nombreDePokemon, nombre, strlen(nombre));
+				memcpy(auxPokemon->nombreDePokemon+strlen(nombre), "\0", 1);
+				pthread_mutex_init(&(auxPokemon->semaforoDePokemon), NULL);
+
+				list_add(pokemonsEnFiles,auxPokemon);
+				cont++;
+			}
+		}
+		closedir(dir);
+		for (int i = 0; i < cont; ++i) {
+			p_pokemonSemaforo* elDeLaLista = list_get(pokemonsEnFiles,i);
+			log_info(loggerGeneral,"Elemento en index %i: %s\n", i, elDeLaLista->nombreDePokemon);
+		}
+	}
+}
+
 void finalizar() {
 	log_destroy(loggerGeneral);
 	config_destroy(archivo_de_configuracion);
 }
 
 int main(void) {
-
 	levantarLogYArchivoDeConfiguracion();
+	cargarListaAtual();
+	sleep(100);
 	cargarMetadata();
 	iniciarBitmap();
 

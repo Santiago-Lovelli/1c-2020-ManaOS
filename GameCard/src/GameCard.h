@@ -8,6 +8,7 @@
 #include <Logger/Logger.h>
 #include <commons/config.h>
 #include <commons/string.h>
+#include <commons/collections/list.h>
 #include <Conexiones/Conexiones.h>
 #include <Serializacion/Serializacion.h>
 #include <sys/mman.h>
@@ -18,6 +19,7 @@
 
 t_log * loggerGeneral;
 t_config *archivo_de_configuracion;
+t_list* pokemonsEnFiles;
 
 typedef struct {
 	uint32_t tamanioDeBloque;
@@ -26,11 +28,16 @@ typedef struct {
 } m_metadata;
 
 typedef struct {
-	char* directory;
-	uint32_t size;
-	char* bloksEnFormatoDeArray;
-	char* open;
+	char* inicioDirectory;
+	char* inicioSize;
+	char* inicioBloques;
+	char* inicioOpen;
 } p_metadata;
+
+typedef struct {
+	char* nombreDePokemon;
+	pthread_mutex_t semaforoDePokemon;
+} p_pokemonSemaforo;
 
 m_metadata metadata;
 t_bitarray * bitmap;
