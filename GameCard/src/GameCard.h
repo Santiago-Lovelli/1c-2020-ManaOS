@@ -16,6 +16,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <errno.h>
+#include <Lista/lista.h>
 
 t_log * loggerGeneral;
 t_config *archivo_de_configuracion;
@@ -60,5 +61,8 @@ char* obtenerBloquesDeMetadataPokemon(char* pkm);
 char** obtenerBloquesDeMetadataPokemonEnArray(char* unPokemon);
 char* obtenerDirectory(char* pkm);
 uint32_t obtenerSizeDePokemon(char* pkm);
+
+
+int indiceDePokemonEnLista(char* pkm);
 
 #endif /* GAMECARD_H_ */

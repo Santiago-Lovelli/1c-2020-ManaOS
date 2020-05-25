@@ -34,17 +34,8 @@ char* pathDePokemonMetadata(char * pokemon) {
 }
 
 bool existePokemon(char* pokemon) {
-	char* path = pathDePokemonMetadata(pokemon);
-	FILE* archivoPokemon = fopen(path, "rb");
-	bool existe = false;
-	if (archivoPokemon != NULL) {
-		existe = true;
-		fclose(archivoPokemon);
-	} else {
-		log_info(loggerGeneral, "No existe el pokemon: %s en el sistema",
-				pokemon);
-	}
-	return existe;
+	int indice = indiceDePokemonEnLista(pokemon);
+	return indice != (-1);
 }
 
 char *archivoMetadataPokemon(char *path) {
@@ -62,28 +53,6 @@ char *archivoMetadataPokemon(char *path) {
 	log_info(loggerGeneral, "Mapeado %s", path);
 	free(path);
 	return archivoPokemon;
-}
-
-char* obtenerBloquesDeMetadataPokemon(char* pkm) {
-	char* path = pathDePokemonMetadata(pkm);
-
-	char *archivoPokemon = archivoMetadataPokemon(path);
-
-	char** separadoPorEnter = string_split(archivoPokemon, "\n");
-	char** bloquesEnPosicionUno = string_split(separadoPorEnter[2], "=");
-	log_info(loggerGeneral, "Bloques: %s", bloquesEnPosicionUno[1]);
-
-	return bloquesEnPosicionUno[1];
-
-}
-
-uint32_t obtenerSizeDePokemon(char* pkm) {
-	char* path = pathDePokemonMetadata(pkm);
-	char *archivoPokemon = archivoMetadataPokemon(path);
-	char** separadoPorEnter = string_split(archivoPokemon, "\n");
-	char** tamanioEnUno = string_split(separadoPorEnter[1], "=");
-	uint32_t tamanio = atoi(tamanioEnUno[1]);
-	return tamanio;
 }
 
 char* obtenerOpen(char* pkm) {
@@ -132,27 +101,47 @@ p_metadata* obtenerMetadataEnteraDePokemon(char* unPokemon) {
 	return metadataObtenida;
 }
 
+bool esElPokemon(p_pokemonSemaforo* pkmSem, char* pkm) {
+	return strcmp(pkmSem->nombreDePokemon, pkm) == 0;
+}
+
+int indiceDePokemonEnLista(char* pkm) {
+	return list_get_index(pokemonsEnFiles, pkm, (void*) esElPokemon);
+}
+
+p_pokemonSemaforo* obtenerPokemonSemaforo(char* pokemon) {
+	int indice = indiceDePokemonEnLista(pokemon);
+	return list_get(pokemonsEnFiles, indice);
+}
+
 void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		uint32_t cantidad) {
 
 	p_metadata* metadataDePokemon = obtenerMetadataEnteraDePokemon(pkm);
 
-	log_info(loggerGeneral,"%s",metadataDePokemon->inicioDirectory);
-	log_info(loggerGeneral,"%s",metadataDePokemon->inicioSize);
-	log_info(loggerGeneral,"%s",metadataDePokemon->inicioBloques);
-	log_info(loggerGeneral,"%s",metadataDePokemon->inicioOpen);
-	sleep(111);
 	uint32_t reconectar = config_get_int_value(archivo_de_configuracion,
 			"TIEMPO_DE_REINTENTO_OPERACION");
 
-	//aca va el wait
-	char* openDeArchivo = obtenerOpen(pkm);
-	memcpy(metadataDePokemon->inicioOpen, openDeArchivo,
-			strlen(openDeArchivo) + 1);
+	p_pokemonSemaforo* semaforoDePokemon = obtenerPokemonSemaforo(pkm);
 
-	while (metadataDePokemon->inicioOpen == "Y") {
-		sleep(reconectar);
+	pthread_mutex_lock(&semaforoDePokemon->semaforoDePokemon);
+
+	char* open = malloc(2);
+	memcpy(open, metadataDePokemon->inicioOpen, 1);
+	memcpy(open + 1, "\0", 1);
+
+	while (1) {
+		if (strcmp(metadataDePokemon->inicioOpen, "N") == 0) {
+			memcpy(metadataDePokemon->inicioOpen, "Y" ,strlen("Y"));
+			log_info(loggerGeneral,"Se puede escribir: %s",metadataDePokemon->inicioOpen);
+			break;
+		} else {
+			log_info(loggerGeneral,"::: F :::");
+			sleep(reconectar);
+		}
 	}
+
+	pthread_mutex_unlock(&semaforoDePokemon->semaforoDePokemon);
 
 	/*Agregar la posiciones
 	 * Levanto el primer bloque o todos?
@@ -171,13 +160,11 @@ void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 	if (!existe) {
 		log_error(loggerGeneral, "NO existe el pokemon: %s", pkm);
+		puts("**************  A HACER  **************");
 		//Falta: crear toda la estructura
 	} else {
-
-		log_info(loggerGeneral, "Existe: %i", existe);
-
+		log_info(loggerGeneral, "Existe el pokemon %s", pkm);
 		agregarPosicionA(pkm, posicionX, posicionY, cantidad);
-
 	}
 }
 
@@ -443,8 +430,7 @@ void levantarBitmap() {
 
 }
 
-
-void cargarListaAtual(){
+void cargarListaAtual() {
 	DIR *dir;
 	struct dirent *dirrectorio;
 
@@ -454,13 +440,12 @@ void cargarListaAtual(){
 
 	char* rutaMeta = "/Metadata.bin";
 
-	char* path = malloc(
-			strlen(tallgrass) + strlen(rutaFiles) + 1);
+	char* path = malloc(strlen(tallgrass) + strlen(rutaFiles) + 1);
 	int desplazamiento = 0;
 
 	memcpy(path + desplazamiento, tallgrass, strlen(tallgrass));
 	desplazamiento = desplazamiento + strlen(tallgrass);
-	memcpy(path + desplazamiento, rutaFiles, strlen(rutaFiles)+1);
+	memcpy(path + desplazamiento, rutaFiles, strlen(rutaFiles) + 1);
 
 	log_info(loggerGeneral, "Ruta de t_list pokemons: %s \n", path);
 
@@ -468,29 +453,30 @@ void cargarListaAtual(){
 
 	dir = opendir(path);
 	int cont = 0;
-	if (dir)
-	{
-		while ((dirrectorio = readdir(dir)) != NULL)
-		{
+	if (dir) {
+		while ((dirrectorio = readdir(dir)) != NULL) {
 			char* nombre = dirrectorio->d_name;
-			if(dirrectorio->d_type == 4 && strcmp( nombre, ".") != 0 && strcmp(nombre, "..") != 0){
+			if (dirrectorio->d_type == 4 && strcmp(nombre, ".") != 0
+					&& strcmp(nombre, "..") != 0) {
 
-				p_pokemonSemaforo* auxPokemon = malloc(strlen(nombre) + 1 + sizeof(pthread_mutex_t));
+				p_pokemonSemaforo* auxPokemon = malloc(
+						strlen(nombre) + 1 + sizeof(pthread_mutex_t));
 
 				auxPokemon->nombreDePokemon = malloc(strlen(nombre) + 1);
 
 				memcpy(auxPokemon->nombreDePokemon, nombre, strlen(nombre));
-				memcpy(auxPokemon->nombreDePokemon+strlen(nombre), "\0", 1);
+				memcpy(auxPokemon->nombreDePokemon + strlen(nombre), "\0", 1);
 				pthread_mutex_init(&(auxPokemon->semaforoDePokemon), NULL);
 
-				list_add(pokemonsEnFiles,auxPokemon);
+				list_add(pokemonsEnFiles, auxPokemon);
 				cont++;
 			}
 		}
 		closedir(dir);
 		for (int i = 0; i < cont; ++i) {
-			p_pokemonSemaforo* elDeLaLista = list_get(pokemonsEnFiles,i);
-			log_info(loggerGeneral,"Elemento en index %i: %s\n", i, elDeLaLista->nombreDePokemon);
+			p_pokemonSemaforo* elDeLaLista = list_get(pokemonsEnFiles, i);
+			log_info(loggerGeneral, "Elemento en index %i: %s\n", i,
+					elDeLaLista->nombreDePokemon);
 		}
 	}
 }
@@ -503,7 +489,6 @@ void finalizar() {
 int main(void) {
 	levantarLogYArchivoDeConfiguracion();
 	cargarListaAtual();
-	sleep(100);
 	cargarMetadata();
 	iniciarBitmap();
 
