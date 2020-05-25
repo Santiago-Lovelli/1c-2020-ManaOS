@@ -33,3 +33,15 @@ void ocupar_bloque_en_bitmap(int indice, t_bitarray *tBitarray){
 void liberar_bloque_en_bitmap(int indice, t_bitarray *tBitarray){
 	bitarray_clean_bit(tBitarray,indice);
 }
+
+void limpiar_bitmap(int desdePosision, int cantidad, t_bitarray *tBitarray, t_log *logger){
+	int cargado = desdePosision;
+	while(cargado < cantidad){
+		bitarray_clean_bit(tBitarray, cargado);
+		if(bitarray_test_bit(tBitarray, cargado)){
+			log_error(logger, "Quedo cargado en posicion: %i", cargado);
+		}
+		cargado = cargado + 1;
+	}
+	log_info(logger, "cargado: %i", cargado);
+}
