@@ -1,6 +1,11 @@
 #include "GameCard.h"
 #include <dirent.h>
 
+int crearDirectorioEn(char *path){
+	return mkdir(path,0777);
+	//retorna 0 en exito, -1 si fallo
+}
+
 char* montajeDeArchivo() {
 	char *tallgrass = config_get_string_value(archivo_de_configuracion,
 			"PUNTO_MONTAJE_TALLGRASS");
@@ -501,6 +506,7 @@ void finalizar() {
 }
 
 int main(void) {
+
 	levantarLogYArchivoDeConfiguracion();
 	cargarListaAtual();
 	cargarMetadata();

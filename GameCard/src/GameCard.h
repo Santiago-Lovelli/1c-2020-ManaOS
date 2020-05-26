@@ -48,6 +48,8 @@ typedef struct {
 m_metadata metadata;
 t_bitarray * bitmap;
 
+
+int crearDirectorioEn(char *path);
 void* atenderGameboy();
 void iniciarServidorDeGameBoy();
 void levantarLogYArchivoDeConfiguracion();
