@@ -83,9 +83,6 @@ p_metadata* obtenerMetadataEnteraDePokemon(char* unPokemon) {
 			+ strlen(separadoPorEnter[1]) + 1 + strlen(separadoPorEnter[2]) + 1
 			+ strlen("OPEN") + 1;
 
-	log_info(loggerGeneral, "en archivo: %s",
-			archivoPokemon + desplazamientoOpen);
-
 	p_metadata* metadataObtenida = malloc(
 			strlen(archivoPokemon + desplazamientoDirectory)
 					+ strlen(archivoPokemon + desplazamientoSize)
@@ -126,17 +123,14 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 	pthread_mutex_lock(&semaforoDePokemon->semaforoDePokemon);
 
-	char* open = malloc(2);
-	memcpy(open, metadataDePokemon->inicioOpen, 1);
-	memcpy(open + 1, "\0", 1);
-
 	while (1) {
 		if (strcmp(metadataDePokemon->inicioOpen, "N") == 0) {
-			memcpy(metadataDePokemon->inicioOpen, "Y" ,strlen("Y"));
-			log_info(loggerGeneral,"Se puede escribir: %s",metadataDePokemon->inicioOpen);
+			memcpy(metadataDePokemon->inicioOpen, "Y", strlen("Y"));
+			log_info(loggerGeneral, "Se puede escribir %s", pkm);
 			break;
 		} else {
-			log_info(loggerGeneral,"::: F :::");
+			log_error(loggerGeneral,
+					"El archivo %s ya esta abierto por otro proceso", pkm);
 			sleep(reconectar);
 		}
 	}
@@ -174,7 +168,6 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	case d_NEW_POKEMON:
 		;
 		log_info(logger, "Llego un new pokemon");
-
 		void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
 		uint32_t idMensajeNew, posicionNewX, posicionNewY, newCantidad;
@@ -185,7 +178,6 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n",
 				header.tipoMensaje, idMensajeNew, newNombrePokemon,
 				posicionNewX, posicionNewY, newCantidad);
-
 		newPokemon(newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
 
 		free(packNewPokemon);
@@ -231,31 +223,50 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	}
 }
 
-void recibirYAtenderUnCliente(int cliente, t_log* log) {
+void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 	while (1) {
-		HeaderDelibird headerRecibido = Serialize_RecieveHeader(cliente);
+		HeaderDelibird headerRecibido = Serialize_RecieveHeader(elemento->cliente);
 		if (headerRecibido.tipoMensaje == -1) {
-			log_error(log, "Se desconecto el GameBoy\n");
+			log_error(elemento->log, "Se desconecto el GameBoy\n");
 			break;
 		}
-		atender(headerRecibido, cliente, log);
+		atender(headerRecibido, elemento->cliente, elemento->log);
 	}
+	return 0;
 }
 
 void* atenderGameBoy() {
 	t_log* gameBoyLog = iniciar_log("GameBoy");
+
 	char *puerto = config_get_string_value(archivo_de_configuracion,
 			"PUERTO_GAMECARD");
+
 	log_info(gameBoyLog, "Puerto GameCard: %s", puerto);
+
 	char *ip = config_get_string_value(archivo_de_configuracion, "IP_GAMECARD");
+
 	log_info(gameBoyLog, "Ip GameCard: %s", ip);
 
 	int conexion = iniciar_servidor(ip, puerto, gameBoyLog);
-	int cliente = esperar_cliente_con_accept(conexion, gameBoyLog);
-	log_info(gameBoyLog, "se conecto cliente: %i", cliente);
-	recibirYAtenderUnCliente(cliente, gameBoyLog);
+	while (1) {
+		int cliente = esperar_cliente_con_accept(conexion, gameBoyLog);
+		log_info(gameBoyLog, "se conecto cliente: %i", cliente);
+		pthread_t* dondeSeAtiende = malloc(sizeof(pthread_t));
 
-	log_destroy(gameBoyLog);
+		p_elementoDeHilo elemento;
+		elemento.cliente = cliente;
+		elemento.log = gameBoyLog;
+
+
+		if (pthread_create(dondeSeAtiende, NULL,
+				(void*) recibirYAtenderUnCliente, &elemento) == 0) {
+			log_info(gameBoyLog, ":::: Se creo hilo para cliente ::::");
+		} else {
+			log_error(gameBoyLog,
+					":::: No se pudo crear el hilo para cliente ::::");
+		}
+		pthread_detach(*dondeSeAtiende);
+	}
 }
 
 void iniciarServidorDeGameBoy(pthread_t* servidor) {
@@ -297,7 +308,12 @@ void* suscribirme(d_message colaDeSuscripcion) {
 	}
 	Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
 
-	recibirYAtenderUnCliente(conexion, loggerGeneral);
+	p_elementoDeHilo* elemento;
+	elemento->cliente = conexion;
+	elemento->log = loggerGeneral;
+
+	recibirYAtenderUnCliente(elemento);
+	return 0;
 }
 
 void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion) {
@@ -437,8 +453,6 @@ void cargarListaAtual() {
 	char *tallgrass = montajeDeArchivo();
 
 	char* rutaFiles = "/Files/";
-
-	char* rutaMeta = "/Metadata.bin";
 
 	char* path = malloc(strlen(tallgrass) + strlen(rutaFiles) + 1);
 	int desplazamiento = 0;

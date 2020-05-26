@@ -40,6 +40,11 @@ typedef struct {
 	pthread_mutex_t semaforoDePokemon;
 } p_pokemonSemaforo;
 
+typedef struct {
+	int cliente;
+	t_log* log;
+} p_elementoDeHilo;
+
 m_metadata metadata;
 t_bitarray * bitmap;
 
@@ -47,7 +52,7 @@ void* atenderGameboy();
 void iniciarServidorDeGameBoy();
 void levantarLogYArchivoDeConfiguracion();
 void atender(HeaderDelibird header, int cliente, t_log* logger);
-void recibirYAtenderUnCliente(int cliente, t_log* log);
+void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento);
 void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion);
 void cargarMetadata();
 void * obtenerBitmap();
