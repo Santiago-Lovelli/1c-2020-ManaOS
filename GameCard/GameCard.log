@@ -1,12 +1,99 @@
-[INFO] 08:48:51:245 GameCard/(25182:25182): Logger iniciado: GameCard.log
+[INFO] 17:13:41:735 GameCard/(9639:9639): Logger iniciado: GameCard.log
 
-[INFO] 08:48:51:245 GameCard/(25182:25182): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+[INFO] 17:13:41:735 GameCard/(9639:9639): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
 
-[INFO] 08:48:51:245 GameCard/(25182:25182): Se creo hilo de GameBoy
-[INFO] 11:09:35:387 GameCard/(4940:4940): Logger iniciado: GameCard.log
+[INFO] 17:13:41:736 GameCard/(9639:9639): El montaje es: /home/utnso/desktop/tall-grass
+[INFO] 17:13:41:736 GameCard/(9639:9639): Se creo hilo de GameBoy
+[ERROR] 17:13:41:736 GameCard/(9639:9639): Error de conexion
 
-[INFO] 11:09:35:390 GameCard/(4940:4940): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+[ERROR] 17:13:41:736 GameCard/(9639:9639): No se pudo conectar con el Broken
+[INFO] 17:15:33:317 GameCard/(9761:9761): Logger iniciado: GameCard.log
 
-[INFO] 11:09:35:390 GameCard/(4940:4940): Se creo hilo de GameBoy
-[ERROR] 11:10:38:497 GameCard/(4940:4945): Mensaje no entendido: 168430090
+[INFO] 17:15:33:317 GameCard/(9761:9761): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
 
+[INFO] 17:15:33:317 GameCard/(9761:9761): El montaje es: /home/utnso/Escritorio/tall-grass
+[INFO] 17:15:33:317 GameCard/(9761:9761): Se creo hilo de GameBoy
+[ERROR] 17:15:33:317 GameCard/(9761:9761): Error de conexion
+
+[ERROR] 17:15:33:317 GameCard/(9761:9761): No se pudo conectar con el Broken
+[INFO] 17:17:26:404 GameCard/(9898:9898): Logger iniciado: GameCard.log
+
+[INFO] 17:17:26:404 GameCard/(9898:9898): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 17:17:26:404 GameCard/(9898:9898): El montaje es: /home/utnso/Escritorio/tall-grass
+[INFO] 17:17:26:404 GameCard/(9898:9898): Se creo hilo de GameBoy
+[ERROR] 17:17:26:404 GameCard/(9898:9898): Error de conexion
+
+[ERROR] 17:17:26:404 GameCard/(9898:9898): No se pudo conectar con el Broken
+[INFO] 17:27:51:441 GameCard/(10397:10397): Logger iniciado: GameCard.log
+
+[INFO] 17:27:51:443 GameCard/(10397:10397): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 17:27:51:443 GameCard/(10397:10397): El montaje es: /home/utnso/Escritorio/tall-grass
+[ERROR] 17:27:51:443 GameCard/(10397:10397): no se abrio el meta
+[INFO] 12:37:47:988 GameCard/(4476:4476): Logger iniciado: GameCard.log
+
+[INFO] 12:37:47:992 GameCard/(4476:4476): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 12:37:48:927 GameCard/(4476:4476): Montaje de metadata: /home/utnso/Escritorio/tall-grass/Metadata/Metadata.bin 
+
+[INFO] 12:37:48:928 GameCard/(4476:4476): Tamanio archivo: 49
+[INFO] 12:37:48:929 GameCard/(4476:4476): BLOCK_SIZE: 64
+[INFO] 12:37:48:929 GameCard/(4476:4476): BLOCKS: 5192
+[INFO] 12:37:48:929 GameCard/(4476:4476): MAGIC_NUMBER: TALL_GRASS
+[INFO] 12:37:48:930 GameCard/(4476:4476): ESTRUCTURA METADATA: 64, 5192, TALL_GRASS
+[INFO] 12:37:49:630 GameCard/(4476:4476): Montaje de bitmap: /home/utnso/Escritorio/tall-grass/Metadata/Bitmap.bin 
+
+[INFO] 12:37:49:630 GameCard/(4476:4476): Tamanio archivo: 5192
+[INFO] 12:37:49:631 GameCard/(4476:4476): cargado: 5192
+[INFO] 12:37:49:631 GameCard/(4476:4476): ::::Bitmap Iniciado::::
+[INFO] 12:37:55:382 GameCard/(4476:4476): ::::Se creo hilo de GameBoy::::
+[INFO] 12:38:28:989 GameCard/(4537:4537): Logger iniciado: GameCard.log
+
+[INFO] 12:38:28:990 GameCard/(4537:4537): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 12:38:29:501 GameCard/(4537:4537): Montaje de metadata: /home/utnso/Escritorio/tall-grass/Metadata/Metadata.bin 
+
+[INFO] 12:38:29:502 GameCard/(4537:4537): Tamanio archivo: 49
+[INFO] 12:38:29:502 GameCard/(4537:4537): BLOCK_SIZE: 64
+[INFO] 12:38:29:503 GameCard/(4537:4537): BLOCKS: 5192
+[INFO] 12:38:29:503 GameCard/(4537:4537): MAGIC_NUMBER: TALL_GRASS
+[INFO] 12:38:29:503 GameCard/(4537:4537): ESTRUCTURA METADATA: 64, 5192, TALL_GRASS
+[INFO] 12:38:29:990 GameCard/(4537:4537): Montaje de bitmap: /home/utnso/Escritorio/tall-grass/Metadata/Bitmap.bin 
+
+[INFO] 12:38:29:990 GameCard/(4537:4537): Tamanio archivo: 5192
+[INFO] 12:38:29:990 GameCard/(4537:4537): cargado: 5192
+[INFO] 12:38:29:990 GameCard/(4537:4537): ::::Bitmap Iniciado::::
+[INFO] 12:38:49:507 GameCard/(4592:4592): Logger iniciado: GameCard.log
+
+[INFO] 12:38:49:507 GameCard/(4592:4592): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 12:38:49:865 GameCard/(4592:4592): Montaje de metadata: /home/utnso/Escritorio/tall-grass/Metadata/Metadata.bin 
+
+[INFO] 12:38:49:866 GameCard/(4592:4592): Tamanio archivo: 49
+[INFO] 12:38:49:866 GameCard/(4592:4592): BLOCK_SIZE: 64
+[INFO] 12:38:49:866 GameCard/(4592:4592): BLOCKS: 5192
+[INFO] 12:38:49:866 GameCard/(4592:4592): MAGIC_NUMBER: TALL_GRASS
+[INFO] 12:38:49:866 GameCard/(4592:4592): ESTRUCTURA METADATA: 64, 5192, TALL_GRASS
+[INFO] 12:38:50:208 GameCard/(4592:4592): Montaje de bitmap: /home/utnso/Escritorio/tall-grass/Metadata/Bitmap.bin 
+
+[INFO] 12:38:50:208 GameCard/(4592:4592): Tamanio archivo: 5192
+[INFO] 12:38:50:208 GameCard/(4592:4592): cargado: 5192
+[INFO] 12:38:50:208 GameCard/(4592:4592): ::::Bitmap Iniciado::::
+[INFO] 12:39:12:866 GameCard/(4642:4642): Logger iniciado: GameCard.log
+
+[INFO] 12:39:12:867 GameCard/(4642:4642): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 12:39:12:868 GameCard/(4642:4642): Montaje de metadata: /home/utnso/Escritorio/tall-grass/Metadata/Metadata.bin 
+
+[INFO] 12:39:12:868 GameCard/(4642:4642): Tamanio archivo: 49
+[INFO] 12:39:12:868 GameCard/(4642:4642): BLOCK_SIZE: 64
+[INFO] 12:39:12:868 GameCard/(4642:4642): BLOCKS: 5192
+[INFO] 12:39:12:868 GameCard/(4642:4642): MAGIC_NUMBER: TALL_GRASS
+[INFO] 12:39:12:868 GameCard/(4642:4642): ESTRUCTURA METADATA: 64, 5192, TALL_GRASS
+[INFO] 12:39:12:868 GameCard/(4642:4642): Montaje de bitmap: /home/utnso/Escritorio/tall-grass/Metadata/Bitmap.bin 
+
+[INFO] 12:39:12:868 GameCard/(4642:4642): Tamanio archivo: 5192
+[INFO] 12:39:12:868 GameCard/(4642:4642): cargado: 5192
+[INFO] 12:39:12:868 GameCard/(4642:4642): ::::Bitmap Iniciado::::
+[INFO] 12:39:12:869 GameCard/(4642:4642): ::::Se creo hilo de GameBoy::::
