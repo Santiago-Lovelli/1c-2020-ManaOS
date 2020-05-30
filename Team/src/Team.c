@@ -141,58 +141,62 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	switch (header.tipoMensaje) {
 	case d_APPEARED_POKEMON:
 		;
-		/*log_info(logger, "Llego un new pokemon");
-		void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente,
+		log_info(logger, "Llego un appeared pokemon");
+		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		uint32_t idMensajeNew, posicionNewX, posicionNewY, newCantidad;
-		char *newNombrePokemon;
-		Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew,
-				&newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
+		uint32_t idMensajeAppeared, posicionAppearedX, posicionAppearedY;
+		char *AppearedNombrePokemon;
+		Serialize_Unpack_AppearedPokemon(packAppearedPokemon, &idMensajeAppeared,
+				&AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
 		log_info(logger,
 				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n",
-				header.tipoMensaje, idMensajeNew, newNombrePokemon,
-				posicionNewX, posicionNewY, newCantidad);
-		newPokemon(newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
+				header.tipoMensaje, idMensajeAppeared, AppearedNombrePokemon,
+				posicionAppearedX, posicionAppearedY);
 
-		free(packNewPokemon);*/
+		//HACER APPEARED
+
+		free(packAppearedPokemon);
 		break;
 	case d_LOCALIZED_POKEMON:
 		;
-		/*log_info(logger, "Llego un catch pokemon");
+		//SERIALIZACION PENDIENTE
 
-		void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente,
-				header.tamanioMensaje);
-		uint32_t idMensajeCatch, posicionCatchX, posicionCatchY;
-		char *catchNombrePokemon;
-		Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch,
-				&catchNombrePokemon, &posicionCatchX, &posicionCatchY);
-		log_info(logger,
-				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n",
-				header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
-				posicionCatchX, posicionCatchY);
-		// Se hace lo necesario
-		free(packCatchPokemon);*/
+			/*log_info(logger, "Llego un catch pokemon");
+
+			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente,
+					header.tamanioMensaje);
+			uint32_t idMensajeCatch, posicionCatchX, posicionCatchY;
+			char *catchNombrePokemon;
+			Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch,
+					&catchNombrePokemon, &posicionCatchX, &posicionCatchY);
+			log_info(logger,
+					"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n",
+					header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
+					posicionCatchX, posicionCatchY);
+			// Se hace lo necesario
+			free(packCatchPokemon);*/
 		break;
 	case d_CAUGHT_POKEMON:
 		;
-		/*log_info(logger, "Llego un get pokemon");
+		log_info(logger, "Llego un caught pokemon");
 
-		void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente,
+		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		uint32_t idMensajeGet;
-		char *getNombrePokemon;
-		Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet,
-				&getNombrePokemon);
+		uint32_t idMensajeCaught, resultadoCaught;
+		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught,
+				&resultadoCaught);
 		log_info(logger, "Me llego mensaje de %i. Id: %i, Pkm: %s\n",
-				header.tipoMensaje, idMensajeGet, getNombrePokemon);
-		// Se hace lo necesario
-		free(packGetPokemon);
+				header.tipoMensaje, idMensajeCaught, resultadoCaught);
+
+		// HACER CAUGHT
+
+		free(packCaughtPokemon);
 		break;
 	default:
 		log_error(logger, "Mensaje no entendido: %i\n", header);
 		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		free(packBasura);*/
+		free(packBasura);
 		break;
 	}
 }
