@@ -23,8 +23,10 @@ typedef struct config{
 	int QUANTUM;
 	int ESTIMACION_INICIAL;
 	char* IP_BROKER;
-	int PUERTO_BROKER;
+	char* PUERTO_BROKER;
 	char* LOG_FILE;
+	char* IP_TEAM;
+	char* PUERTO_TEAM;
 }config;
 
 typedef struct punto{
@@ -42,6 +44,11 @@ typedef struct proceso{
 	entrenador* entrenador;
 	int ciclosUsados;
 }proceso;
+
+typedef struct {
+	int cliente;
+	t_log* log;
+} p_elementoDeHilo;
 
 //////FUNCIONES INICIALES/////////
 void iniciarConfig();

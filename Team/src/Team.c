@@ -31,6 +31,170 @@ void inicializar(){
 	setObjetivoGlobal(); //
 	log_info (TEAM_LOG, "TEAM OK");
 	//iniciarHilos();
+	pthread_t* servidor = malloc(sizeof(pthread_t));
+	iniciarServidorDeGameBoy(servidor);
+
+	pthread_t* suscriptoAppearedPokemon = malloc(sizeof(pthread_t));
+	conectarmeColaDe(suscriptoAppearedPokemon, d_APPEARED_POKEMON);
+
+	pthread_t* suscriptoLocalizedPokemon = malloc(sizeof(pthread_t));
+	conectarmeColaDe(suscriptoLocalizedPokemon, d_LOCALIZED_POKEMON);
+
+	pthread_t* suscriptoCaughtPokemon = malloc(sizeof(pthread_t));
+	conectarmeColaDe(suscriptoCaughtPokemon, d_CAUGHT_POKEMON);
+
+	pthread_join(*servidor, NULL);
+	pthread_join(*suscriptoAppearedPokemon, NULL);
+	pthread_join(*suscriptoLocalizedPokemon, NULL);
+	pthread_join(*suscriptoCaughtPokemon, NULL);
+}
+
+void iniciarServidorDeGameBoy(pthread_t* servidor) {
+	if (pthread_create(servidor, NULL, (void*) atenderGameBoy, NULL) == 0) {
+		log_info(TEAM_LOG, "::::Se creo hilo de GameBoy::::");
+	} else {
+		log_error(TEAM_LOG, "::::No se pudo crear el hilo de GameBoy::::");
+	}
+}
+
+
+void* atenderGameBoy() {
+	t_log* gameBoyLog = iniciar_log("GameBoy");
+
+	int conexion = iniciar_servidor(TEAM_CONFIG.IP_TEAM, TEAM_CONFIG.PUERTO_TEAM, gameBoyLog);
+	while (1) {
+		int cliente = esperar_cliente_con_accept(conexion, gameBoyLog);
+		log_info(gameBoyLog, "se conecto cliente: %i", cliente);
+		pthread_t* dondeSeAtiende = malloc(sizeof(pthread_t));
+
+		p_elementoDeHilo elemento;
+		elemento.cliente = cliente;
+		elemento.log = gameBoyLog;
+
+
+		if (pthread_create(dondeSeAtiende, NULL,
+				(void*) recibirYAtenderUnCliente, &elemento) == 0) {
+			log_info(gameBoyLog, ":::: Se creo hilo para cliente ::::");
+		} else {
+			log_error(gameBoyLog,
+					":::: No se pudo crear el hilo para cliente ::::");
+		}
+		pthread_detach(*dondeSeAtiende);
+	}
+}
+
+void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion) {
+
+	if (pthread_create(hilo, NULL, (void*) suscribirme,
+			(void*) colaDeSuscripcion) == 0) {
+		log_info(TEAM_LOG, "::::Se creo hilo de suscripcion para: %i::::",
+				colaDeSuscripcion);
+	} else {
+		log_error(TEAM_LOG,
+				"::::No se pudo crear el hilo de suscripcion para: %i::::",
+				colaDeSuscripcion);
+	}
+
+}
+
+
+void* suscribirme(d_message colaDeSuscripcion) {
+	int conexion;
+
+	while (1) {
+		conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+		if (conexion == -1) {
+			log_error(TEAM_LOG,
+					"No se pudo conectar con el Broken a la cola de: %i\n",
+					colaDeSuscripcion);
+			sleep(TEAM_CONFIG.TIEMPO_RECONEXION);
+		} else {
+			break;
+		}
+	}
+	Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
+
+	p_elementoDeHilo* elemento;
+	elemento->cliente = conexion;
+	elemento->log = TEAM_LOG;
+
+	recibirYAtenderUnCliente(elemento);
+	return 0;
+}
+
+void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
+	while (1) {
+		HeaderDelibird headerRecibido = Serialize_RecieveHeader(elemento->cliente);
+		if (headerRecibido.tipoMensaje == -1) {
+			log_error(elemento->log, "Se desconecto el GameBoy\n");
+			break;
+		}
+		atender(headerRecibido, elemento->cliente, elemento->log);
+	}
+	return 0;
+}
+
+
+void atender(HeaderDelibird header, int cliente, t_log* logger) {
+	//es el atender del gamecard, ahora hay que tunearlo para que atienda el team
+
+	/*switch (header.tipoMensaje) {
+	case d_NEW_POKEMON:
+		;
+		log_info(logger, "Llego un new pokemon");
+		void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		uint32_t idMensajeNew, posicionNewX, posicionNewY, newCantidad;
+		char *newNombrePokemon;
+		Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew,
+				&newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
+		log_info(logger,
+				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n",
+				header.tipoMensaje, idMensajeNew, newNombrePokemon,
+				posicionNewX, posicionNewY, newCantidad);
+		newPokemon(newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
+
+		free(packNewPokemon);
+		break;
+	case d_CATCH_POKEMON:
+		;
+		log_info(logger, "Llego un catch pokemon");
+
+		void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		uint32_t idMensajeCatch, posicionCatchX, posicionCatchY;
+		char *catchNombrePokemon;
+		Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch,
+				&catchNombrePokemon, &posicionCatchX, &posicionCatchY);
+		log_info(logger,
+				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n",
+				header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
+				posicionCatchX, posicionCatchY);
+		// Se hace lo necesario
+		free(packCatchPokemon);
+		break;
+	case d_GET_POKEMON:
+		;
+		log_info(logger, "Llego un get pokemon");
+
+		void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		uint32_t idMensajeGet;
+		char *getNombrePokemon;
+		Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet,
+				&getNombrePokemon);
+		log_info(logger, "Me llego mensaje de %i. Id: %i, Pkm: %s\n",
+				header.tipoMensaje, idMensajeGet, getNombrePokemon);
+		// Se hace lo necesario
+		free(packGetPokemon);
+		break;
+	default:
+		log_error(logger, "Mensaje no entendido: %i\n", header);
+		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		free(packBasura);
+		break;
+	}*/
 }
 
 void finalFeliz(){
@@ -50,8 +214,10 @@ void iniciarConfig(){
 	TEAM_CONFIG.QUANTUM = config_get_int_value (creacionConfig, "QUANTUM");
 	TEAM_CONFIG.ESTIMACION_INICIAL = config_get_int_value (creacionConfig, "ESTIMACION_INICIAL");
 	TEAM_CONFIG.IP_BROKER = config_get_string_value (creacionConfig, "IP_BROKER");
-	TEAM_CONFIG.PUERTO_BROKER = config_get_int_value (creacionConfig, "PUERTO_BROKER");
+	TEAM_CONFIG.PUERTO_BROKER = config_get_string_value (creacionConfig, "PUERTO_BROKER");
 	TEAM_CONFIG.LOG_FILE = config_get_string_value (creacionConfig, "LOG_FILE");
+	TEAM_CONFIG.IP_TEAM = config_get_string_value(creacionConfig, "IP_TEAM");
+	TEAM_CONFIG.PUERTO_TEAM = config_get_string_value(creacionConfig, "PUERTO_TEAM");
 	free(creacionConfig);
 }
 
