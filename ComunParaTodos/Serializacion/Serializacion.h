@@ -59,6 +59,13 @@ typedef enum d_messages {
 	d_SUBSCRIBE_QUEUE
 } d_message;
 
+typedef enum d_process {
+	d_BROKER,
+	d_TEAM,
+	d_GAMECARD,
+	d_SUBSCRIBER
+} d_process;
+
 ////////////////////////
 // Comunicacion Base //
 ///////////////////////
@@ -67,6 +74,12 @@ typedef struct {
 	uint32_t tamanioMensaje;
 	d_message tipoMensaje;
 }__attribute__((packed)) HeaderDelibird; //Esta estructura es de tamaño 8
+
+typedef struct {
+	uint32_t posX;
+	uint32_t posY;
+	uint32_t cantidad;
+}__attribute__((packed)) d_PosCant;
 
 ////////////////
 // FUNCIONES //
@@ -103,10 +116,22 @@ bool Serialize_PackAndSend_SubscribeQueue(int socketCliente, d_message queue);
 bool Serialize_PackAndSend_NEW_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY, uint32_t cantidad);
 
 /**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO NEW_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_NEW_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY, uint32_t cantidad);
+
+/**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO CATCH_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 
 bool Serialize_PackAndSend_CATCH_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO CATCH_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_CATCH_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY);
 
 /**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO GET_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
@@ -115,10 +140,22 @@ bool Serialize_PackAndSend_CATCH_POKEMON(int socketCliente, uint32_t idMensaje,c
 bool Serialize_PackAndSend_GET_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon);
 
 /**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO GET_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_GET_POKEMON_NoID(int socketCliente,const void *pokemon);
+
+/**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO APPEARED_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 
 bool Serialize_PackAndSend_APPEARED_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO APPEARED_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_APPEARED_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY);
 
 /**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO CAUGHT_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
@@ -130,7 +167,7 @@ bool Serialize_PackAndSend_CAUGHT_POKEMON(int socketCliente, uint32_t idMensaje,
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO LOCALIZED_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 
-bool Serialize_PackAndSend_LOCALIZED_POKEMON();
+bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensaje, char *pokemon, t_list *poscant);
 
 /**
  * ESTA FUNCION SIRVE COMO UNA ABSTRACCION PARA NO REPETIR LOGICA, SE USA A TRAVES DE
@@ -138,6 +175,13 @@ bool Serialize_PackAndSend_LOCALIZED_POKEMON();
  */
 
 bool Serialize_PackAndSend_CATCHoAPPEARED(int socketCliente, uint32_t idMensaje, const void *pokemon, uint32_t posX, uint32_t posY, d_message tipoMensaje);
+
+/**
+ * ESTA FUNCION SIRVE COMO UNA ABSTRACCION PARA NO REPETIR LOGICA, SE USA A TRAVES DE
+ * LAS FUNCIOENS PACK AND SEND CATCH Y APPEARED EN SUS VERSIONES SIN ID
+ */
+
+bool Serialize_PackAndSend_CATCHoAPPEARED_NoID(int socketCliente, const void *pokemon, uint32_t posX, uint32_t posY, d_message tipoMensaje);
 
 ////////////////////////////
 // FUNCIONES PARA RECIBIR //
@@ -287,6 +331,6 @@ void Serialize_Unpack_CaughtPokemon(void *packCaughtPokemon, uint32_t *idMensaje
  * DEL PAQUETE DE TIPO LOCALIZED_POKEMON (SOLO SIRVE PARA ESE TIPO DE PAQUETE)
  */
 
-void Serialize_Unpack_LocalizedPokemon();
+void Serialize_Unpack_LocalizedPokemon(void *packLocalizedPokemon, uint32_t *idMensaje, char **nombre, t_list **poscant);
 
 #endif /* SERIALIZACION_SERIALIZACION_H_ */
