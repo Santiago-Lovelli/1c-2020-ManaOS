@@ -144,13 +144,13 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		log_info(logger, "Llego un appeared pokemon");
 		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		uint32_t idMensajeAppeared, posicionAppearedX, posicionAppearedY;
+		uint32_t posicionAppearedX, posicionAppearedY;
 		char *AppearedNombrePokemon;
-		Serialize_Unpack_AppearedPokemon(packAppearedPokemon, &idMensajeAppeared,
+		Serialize_Unpack_AppearedPokemon_NoID(packAppearedPokemon,
 				&AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
 		log_info(logger,
-				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n",
-				header.tipoMensaje, idMensajeAppeared, AppearedNombrePokemon,
+				"Me llego mensaje de %i. Pkm: %s, x: %i, y: %i\n",
+				header.tipoMensaje, AppearedNombrePokemon,
 				posicionAppearedX, posicionAppearedY);
 
 		//HACER APPEARED
@@ -185,7 +185,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		uint32_t idMensajeCaught, resultadoCaught;
 		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught,
 				&resultadoCaught);
-		log_info(logger, "Me llego mensaje de %i. Id: %i, Pkm: %s\n",
+		log_info(logger, "Me llego mensaje de %i. Id: %i, Result: %i\n",
 				header.tipoMensaje, idMensajeCaught, resultadoCaught);
 
 		// HACER CAUGHT
