@@ -14,7 +14,7 @@ void New_pokemon(char *argv[]){
 	log_info(logger,"POSX: %i ", atoi( argv[4] ) );
 	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
 	log_info(logger,"CANTIDAD: %i ", atoi( argv[6] ) );
-	log_info(logger,"IDMENSAJE: %i ", atoi( argv[7] ) );
+	//log_info(logger,"IDMENSAJE: %i ", atoi( argv[7] ) );
 	int conexion = conectarA(argv[1]);
 	d_process procesoActual = obtenerNroProceso(argv[1]);
 	if( procesoActual == d_BROKER)
@@ -28,7 +28,7 @@ void Appeared_pokemon(char *argv[]){
 	log_info(logger,"POKEMON: %s ", argv[3] );
 	log_info(logger,"POSX: %i ", atoi( argv[4] ) );
 	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
-	log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
+	//log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
 	int conexion = conectarA(argv[1]);
 	d_process procesoActual = obtenerNroProceso(argv[1]);
 	if( procesoActual == d_BROKER)
@@ -42,7 +42,7 @@ void Catch_pokemon(char *argv[]){
 	log_info(logger,"POKEMON: %s ", argv[3] );
 	log_info(logger,"POSX: %i ", atoi( argv[4] ) );
 	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
-	log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
+	//log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
 	int conexion = conectarA(argv[1]);
 	d_process procesoActual = obtenerNroProceso(argv[1]);
 	if( procesoActual == d_BROKER)
