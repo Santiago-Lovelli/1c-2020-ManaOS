@@ -138,10 +138,10 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	//es el atender del gamecard, ahora hay que tunearlo para que atienda el team
 
-	/*switch (header.tipoMensaje) {
-	case d_NEW_POKEMON:
+	switch (header.tipoMensaje) {
+	case d_APPEARED_POKEMON:
 		;
-		log_info(logger, "Llego un new pokemon");
+		/*log_info(logger, "Llego un new pokemon");
 		void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
 		uint32_t idMensajeNew, posicionNewX, posicionNewY, newCantidad;
@@ -154,11 +154,11 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 				posicionNewX, posicionNewY, newCantidad);
 		newPokemon(newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
 
-		free(packNewPokemon);
+		free(packNewPokemon);*/
 		break;
-	case d_CATCH_POKEMON:
+	case d_LOCALIZED_POKEMON:
 		;
-		log_info(logger, "Llego un catch pokemon");
+		/*log_info(logger, "Llego un catch pokemon");
 
 		void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
@@ -171,11 +171,11 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 				header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
 				posicionCatchX, posicionCatchY);
 		// Se hace lo necesario
-		free(packCatchPokemon);
+		free(packCatchPokemon);*/
 		break;
-	case d_GET_POKEMON:
+	case d_CAUGHT_POKEMON:
 		;
-		log_info(logger, "Llego un get pokemon");
+		/*log_info(logger, "Llego un get pokemon");
 
 		void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
@@ -192,9 +192,9 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		log_error(logger, "Mensaje no entendido: %i\n", header);
 		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		free(packBasura);
+		free(packBasura);*/
 		break;
-	}*/
+	}
 }
 
 void finalFeliz(){

@@ -79,12 +79,20 @@ proceso* SJFSD(t_list* procesos);
 unsigned long int getClockTime();
 void agregarTiempo(int cantidad);
 
+////////FUNCIONES HILOS////////////
+void iniciarServidorDeGameBoy(pthread_t* servidor);
+void* atenderGameBoy();
+void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion);
+void* suscribirme(d_message colaDeSuscripcion);
+void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento);
+void atender(HeaderDelibird header, int cliente, t_log* logger);
+
+
 ////////VARIABLES PLANIFICACION////////////
 unsigned long int CLOCK;
 int CAMBIOS_DE_CONTEXTO_REALIZADOS;
 int DEADLOCKS_PRODUCIDOS;
 int DEADLOCKS_RESUELTOS;
-
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;
