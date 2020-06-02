@@ -1,6 +1,7 @@
 #ifndef TEAM_H_
 #define TEAM_H_
 
+#include <sys/socket.h>
 #include <commons/collections/list.h>
 #include <commons/string.h>
 #include <commons/config.h>
@@ -80,12 +81,14 @@ unsigned long int getClockTime();
 void agregarTiempo(int cantidad);
 
 ////////FUNCIONES HILOS////////////
+int iniciarConexionABroker();
 void iniciarServidorDeGameBoy(pthread_t* servidor);
 void* atenderGameBoy();
 void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion);
 void* suscribirme(d_message colaDeSuscripcion);
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento);
 void atender(HeaderDelibird header, int cliente, t_log* logger);
+int enviarGetPokemonYRecibirResponse(char *pokemon);
 
 
 ////////VARIABLES PLANIFICACION////////////

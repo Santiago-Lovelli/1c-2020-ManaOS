@@ -49,6 +49,39 @@ void inicializar(){
 	pthread_join(*suscriptoCaughtPokemon, NULL);
 }
 
+int iniciarConexionABroker(){
+	int conexion;
+	while (1) {
+		conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+		if (conexion == -1) {
+			log_error(TEAM_LOG,
+					"No se pudo conectar con el Broker");
+			sleep(TEAM_CONFIG.TIEMPO_RECONEXION);
+		} else {
+			break;
+		}
+	}
+	return conexion;
+}
+
+int enviarGetPokemonYRecibirResponse(char *pokemon){
+	int conexion = iniciarConexionABroker();
+	Serialize_PackAndSend_GET_POKEMON_NoID(conexion,pokemon);
+	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
+	if(headerACK.tipoMensaje == d_ACK)
+	{
+		void* packACK = Serialize_ReceiveAndUnpack(conexion, headerACK.tamanioMensaje);
+		uint32_t id = Serialize_Unpack_ACK(packACK);
+		free(packACK);
+		//cerrar conexion;
+		close(conexion);
+		return id;
+	}
+	else
+		return -1; //codigo de error
+
+}
+
 void iniciarServidorDeGameBoy(pthread_t* servidor) {
 	if (pthread_create(servidor, NULL, (void*) atenderGameBoy, NULL) == 0) {
 		log_info(TEAM_LOG, "::::Se creo hilo de GameBoy::::");
@@ -99,19 +132,7 @@ void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion) {
 
 
 void* suscribirme(d_message colaDeSuscripcion) {
-	int conexion;
-
-	while (1) {
-		conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
-		if (conexion == -1) {
-			log_error(TEAM_LOG,
-					"No se pudo conectar con el Broken a la cola de: %i\n",
-					colaDeSuscripcion);
-			sleep(TEAM_CONFIG.TIEMPO_RECONEXION);
-		} else {
-			break;
-		}
-	}
+	int conexion = iniciarConexionABroker();
 	Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
 
 	p_elementoDeHilo* elemento;
