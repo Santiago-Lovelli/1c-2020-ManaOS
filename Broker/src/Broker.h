@@ -55,7 +55,7 @@ void* AtenderCliente();
 void ActuarAnteMensaje();
 
 //////SUSCRIPCION//////////
-void agregarSuscriptor();
+void suscribir (uint32_t variable, int cliente);
 
 
 ////////VARIABLES GLOBALES//////////

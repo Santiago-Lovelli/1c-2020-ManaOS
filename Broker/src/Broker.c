@@ -119,12 +119,47 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			*/
 		case d_SUBSCRIBE_QUEUE:
 			log_info(LOGGER_GENERAL, "Llego un Subscribe");
+			void * recibir = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+			uint32_t variable = Serialize_Unpack_ACK(recibir);
+			suscribir(variable, cliente);
 			break;
 		default:
 			log_error(LOGGER_GENERAL, "Mensaje no entendido: %i\n", header);
 			void* packBasura = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			free(packBasura);
 			break;
+	}
+}
+
+void suscribir(uint32_t variable, int cliente){
+	switch (variable){
+	case d_NEW_POKEMON:
+		log_info (LOGGER_GENERAL, "Se agrego un suscritor a la cola de NEW");
+		list_add (SUSCRIPTORES_NEW, cliente);
+		break;
+	case d_CATCH_POKEMON:
+		log_info (LOGGER_GENERAL, "Se agrego un suscritor a la cola de CATCH");
+		list_add (SUSCRIPTORES_CATCH, cliente);
+		break;
+	case d_GET_POKEMON:
+			log_info (LOGGER_GENERAL, "Se agrego un suscritor a la cola de GET");
+			list_add (SUSCRIPTORES_GET, cliente);
+			break;
+	case d_APPEARED_POKEMON:
+			log_info (LOGGER_GENERAL, "Se agrego un suscritor a la cola de Appeared");
+			list_add (SUSCRIPTORES_APPEARED, cliente);
+			break;
+	case d_CAUGHT_POKEMON:
+			log_info (LOGGER_GENERAL, "Se agrego un suscritor a la cola de Caught");
+			list_add (SUSCRIPTORES_CAUGHT, cliente);
+			break;
+	case d_LOCALIZED_POKEMON:
+			log_info (LOGGER_GENERAL, "Se agrego un suscritor a la cola de Localized");
+			list_add (SUSCRIPTORES_LOCALIZED, cliente);
+			break;
+	default:
+		log_info (LOGGER_GENERAL, "No se suscribio");
+		break;
 	}
 }
 
@@ -160,6 +195,3 @@ void ListsInit () {
 	SUSCRIPTORES_LOCALIZED = list_create();
 }
 
-void agregarSuscriptor(int id_suscriptor, t_list* lista){
-	list_add(lista, id_suscriptor);
-}
