@@ -64,7 +64,7 @@ int iniciarConexionABroker(){
 	return conexion;
 }
 
-int enviarGetPokemonYRecibirResponse(char *pokemon){
+void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
 	int conexion = iniciarConexionABroker();
 	Serialize_PackAndSend_GET_POKEMON_NoID(conexion,pokemon);
 	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
@@ -75,11 +75,15 @@ int enviarGetPokemonYRecibirResponse(char *pokemon){
 		free(packACK);
 		//cerrar conexion;
 		close(conexion);
-		return id;
+		//return id;
 	}
-	else
-		return -1; //codigo de error
+	/*else
+		return -1; //codigo de error*/
 
+}
+
+void enviarGetXCadaPokemonObjetivo(){
+	dictionary_iterator(OBJETIVO_GLOBAL, (void*)enviarGetPokemonYRecibirResponse);
 }
 
 void iniciarServidorDeGameBoy(pthread_t* servidor) {
@@ -288,32 +292,6 @@ void iniciarVariablesDePlanificacion(){
 	DEADLOCKS_RESUELTOS = 0;
 }
 
-
-/*void iniciarHilos(){
-	pthread_create(&hiloEscucha, NULL, (void*) escucharMensajes, NULL);
-	log_info(TEAM_LOG, "Se creo el hilo Escucha");
-	pthread_create(&hiloConexionBroker, NULL, (void*) conectarseConBroker, NULL);
-	log_info(TEAM_LOG, "Se creo el hilo Conexion Broker");
-}
-*/
-
-/*void escucharMensajes(){
-	int servidor = iniciar_servidor(TEAM_CONFIG.IP_TEAM, TEAM_CONFIG.PUERTO_TEAM,TEAM_LOG);
-	while(1){
-	int cliente = esperar_cliente_con_accept(servidor, TEAM_LOG);
-	log_info ("Se conecto el cliente: %i", cliente);
-	}
-}*/
-
-void conectarseConBroker(){
-	int cliente = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
-	if (cliente == -1){
-		//reintentarConexión(); ////////Ver como hago con TIEMPO_RECONEXION del config
-	}
-	else ;
-		//log_info ("Conexion exitosa");
-}
-
 static void entrenadorDestroy(entrenador *self) {
 	for (int i = 0; self->pokemones[i]!=NULL; i++){
 		free(self->pokemones[i]);
@@ -369,10 +347,11 @@ void agregarTiempo(int cantidad){
 void setObjetivoGlobal(){
 	OBJETIVO_GLOBAL = dictionary_create();
 	int j=0;
+	int unPokemon = 0;
 	entrenador * trainer = list_get(ENTRENADORES_TOTALES, j);
 	while(trainer != NULL){
 		for (int i = 0; trainer->pokemonesObjetivo[i] != NULL; i++){
-			int unPokemon = (int)dictionary_get(OBJETIVO_GLOBAL, trainer->pokemonesObjetivo[i]);
+			unPokemon = (int)dictionary_get(OBJETIVO_GLOBAL, trainer->pokemonesObjetivo[i]);
 			dictionary_put(OBJETIVO_GLOBAL, trainer->pokemonesObjetivo[i], unPokemon + 1);
 		}
 		j++;

@@ -56,7 +56,6 @@ void iniciarConfig();
 void inicializar();
 void crearEntrenadores();
 void escucharMensajes();
-void conectarseConBroker();
 punto crearPunto(char * posiciones); // x|y
 entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObjetivo);
 void crearEstados();
@@ -88,7 +87,8 @@ void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion);
 void* suscribirme(d_message colaDeSuscripcion);
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento);
 void atender(HeaderDelibird header, int cliente, t_log* logger);
-int enviarGetPokemonYRecibirResponse(char *pokemon);
+void enviarGetPokemonYRecibirResponse(char *pokemon, void* value);
+void enviarGetXCadaPokemonObjetivo();
 
 
 ////////VARIABLES PLANIFICACION////////////
