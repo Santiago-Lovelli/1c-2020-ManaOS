@@ -69,6 +69,8 @@ static void entrenadorDestroy(entrenador *self);
 
 /////////FUNCIONES PROPIAS TEAMS/////////////
 int objetivoTerminado();
+int entrenadorMasCercano(punto point);
+int diferenciaEntrePuntos(punto origen, punto destino);
 
 ////////FUNCIONES PLANIFICACION////////////
 proceso* planificarSegun(char* tipoPlanificacion, t_list* procesos);

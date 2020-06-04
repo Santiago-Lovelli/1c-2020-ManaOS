@@ -226,6 +226,31 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	}
 }
 
+int entrenadorMasCercano(punto point){
+	int index = 0;
+	int distanciaMinima = 0;
+	int distanciaAUX = 0;
+	entrenador *entrenadorAUX;
+
+	entrenadorAUX = (entrenador*)list_get(ENTRENADORES_TOTALES,0);
+	distanciaMinima = diferenciaEntrePuntos( entrenadorAUX->posicion , point);
+
+	for(int j = 1; j < list_size(ENTRENADORES_TOTALES); j=j+1){
+		entrenadorAUX = (entrenador*)list_get(ENTRENADORES_TOTALES,j);
+		distanciaAUX = diferenciaEntrePuntos( entrenadorAUX->posicion , point);
+		if(distanciaAUX < distanciaMinima){
+			distanciaMinima = distanciaAUX;
+			index = j;
+		}
+	}
+
+	return index;
+}
+
+int diferenciaEntrePuntos(punto origen, punto destino){
+	return abs( (destino.x - origen.x) + (destino.y - origen.y) );
+}
+
 void finalFeliz(){
 	//destruirObjetivoGlobal();
 	//destruirEstados();
