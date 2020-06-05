@@ -162,7 +162,6 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 
 void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	//es el atender del gamecard, ahora hay que tunearlo para que atienda el team
-
 	switch (header.tipoMensaje) {
 	case d_APPEARED_POKEMON:
 		;
@@ -249,6 +248,16 @@ int entrenadorMasCercano(punto point){
 
 int diferenciaEntrePuntos(punto origen, punto destino){
 	return abs( (destino.x - origen.x) + (destino.y - origen.y) );
+}
+
+bool necesitoEstePokemon(char *pokemon){
+	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
+	return (valor>0);
+}
+
+void descontarDeObjetivoGlobal(char *pokemon){
+	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
+	dictionary_put(OBJETIVO_GLOBAL, pokemon, valor-1);
 }
 
 void finalFeliz(){

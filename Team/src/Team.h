@@ -71,6 +71,8 @@ static void entrenadorDestroy(entrenador *self);
 int objetivoTerminado();
 int entrenadorMasCercano(punto point);
 int diferenciaEntrePuntos(punto origen, punto destino);
+bool necesitoEstePokemon(char *pokemon);
+void descontarDeObjetivoGlobal(char *pokemon);
 
 ////////FUNCIONES PLANIFICACION////////////
 proceso* planificarSegun(char* tipoPlanificacion, t_list* procesos);
