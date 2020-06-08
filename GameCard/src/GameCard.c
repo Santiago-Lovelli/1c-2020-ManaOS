@@ -1,8 +1,8 @@
 #include "GameCard.h"
 #include <dirent.h>
 
-int crearDirectorioEn(char *path){
-	return mkdir(path,0777);
+int crearDirectorioEn(char *path) {
+	return mkdir(path, 0777);
 	//retorna 0 en exito, -1 si fallo
 }
 
@@ -116,6 +116,51 @@ p_pokemonSemaforo* obtenerPokemonSemaforo(char* pokemon) {
 	return list_get(pokemonsEnFiles, indice);
 }
 
+char* obtenerPathDeBloque(char* bloque) {
+	char* montaje = montajeDeArchivo();
+	char* bloq = "/Blocks/";
+	char* bin = ".bin";
+	char* path = malloc(
+			strlen(montaje) + strlen(bloq) + strlen(bloque) + strlen(bin) + 1);
+
+	int desplazamiento = 0;
+
+	memcpy(path + desplazamiento, montaje, strlen(montaje));
+	desplazamiento = desplazamiento + strlen(montaje);
+
+	memcpy(path + desplazamiento, bloq, strlen(bloq));
+	desplazamiento = desplazamiento + strlen(bloq);
+
+	memcpy(path + desplazamiento, bloque, strlen(bloque));
+	desplazamiento = desplazamiento + strlen(bloque);
+
+	memcpy(path + desplazamiento, bin, strlen(bin));
+	desplazamiento = desplazamiento + strlen(bin);
+
+	memcpy(path + desplazamiento, "\0", 1);
+
+	log_info(loggerGeneral, "path en funcion:%s", path);
+
+	return path;
+}
+
+uint32_t esEstaPosicion(char* linea, uint32_t posicionEnX, uint32_t posicionEnY) {
+	char** posicionEnCero = string_split(linea, "=");
+	char** posiciones = string_split(posicionEnCero[0], "-");
+	char* posX = string_itoa(posicionEnX);
+	char* posY = string_itoa(posicionEnY);
+	return strcmp(posiciones[0], posX) == 0 && strcmp(posiciones[1], posY) == 0;
+
+}
+
+uint32_t nuevaCantidad(char* linea, uint32_t cantidad) {
+	char** cantidadEnUno = string_split(linea, "=");
+	uint32_t cantidadEnPokemon = atoi(cantidadEnUno[1]);
+	uint32_t nuevo = cantidad + cantidadEnPokemon;
+	log_info(loggerGeneral, "Cantidad Nueva: %i", nuevo);
+	return nuevo;
+}
+
 void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		uint32_t cantidad) {
 
@@ -126,21 +171,94 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 	p_pokemonSemaforo* semaforoDePokemon = obtenerPokemonSemaforo(pkm);
 
-	pthread_mutex_lock(&semaforoDePokemon->semaforoDePokemon);
-
 	while (1) {
+		pthread_mutex_lock(&semaforoDePokemon->semaforoDePokemon);
 		if (strcmp(metadataDePokemon->inicioOpen, "N") == 0) {
+
 			memcpy(metadataDePokemon->inicioOpen, "Y", strlen("Y"));
+			pthread_mutex_unlock(&semaforoDePokemon->semaforoDePokemon);
 			log_info(loggerGeneral, "Se puede escribir %s", pkm);
+
+			/*----------------------------------------------------------------*/
+			char** bloquesEnUno = string_split(metadataDePokemon->inicioBloques,
+					"\n");
+			char** arrayConBloques = string_get_string_as_array(
+					bloquesEnUno[0]);
+			int i = 0;
+
+			/*-------------------------------Recorriendo bloques---------------------------------*/
+
+			char* megaChar = string_new();
+
+			while (arrayConBloques[i] != NULL) {
+				log_info(loggerGeneral, "bloques %s", arrayConBloques[i]);
+
+				char* pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
+				log_info(loggerGeneral, "path %s", pathBloque);
+
+				int bloque = open(pathBloque, O_RDWR, 0);
+
+				free(pathBloque);
+
+				log_info(loggerGeneral, "Tamanio de bloque %i",
+						metadata.tamanioDeBloque);
+
+				char *bloqueConDatos = mmap(NULL, metadata.tamanioDeBloque,
+				PROT_READ | PROT_WRITE,
+				MAP_SHARED | MAP_FILE, bloque, 0);
+
+				log_info(loggerGeneral, "bloqueConDatos %s", bloqueConDatos);
+
+				string_append(&megaChar, bloqueConDatos);
+
+				i = i + 1;
+			}
+
+			log_info(loggerGeneral, "levantado \n%s", megaChar);
+
+			char** lineasDeBloque = string_split(megaChar, "\n");
+
+			int cantidadDeLineas = 0;
+			int leido = 0;
+			char* cantidadNueva = string_new();
+			while (lineasDeBloque[cantidadDeLineas] != NULL) {
+
+				log_info(loggerGeneral, "lineas %i: %s mide: %i",
+						cantidadDeLineas, lineasDeBloque[cantidadDeLineas],
+						strlen(lineasDeBloque[cantidadDeLineas]));
+
+				if (esEstaPosicion(lineasDeBloque[cantidadDeLineas], posicionX,
+						posicionY)) {
+
+					log_info(loggerGeneral, "Esta en linea: %s",
+							lineasDeBloque[cantidadDeLineas]);
+
+					uint32_t cantidadActual = nuevaCantidad(
+							lineasDeBloque[cantidadDeLineas], cantidad);
+
+					log_info(loggerGeneral, "Nueva Cantidad: %i",
+							cantidadActual);
+					cantidadNueva = string_itoa(cantidadActual);
+					break;
+				}
+
+				leido = leido + strlen(lineasDeBloque[cantidadDeLineas]) + 1;
+				cantidadDeLineas = cantidadDeLineas + 1;
+			}
+
+			log_info(loggerGeneral, "leido: %i",
+					leido);
+
+			/*----------------------------------------------------------------*/
+			sleep(100);
 			break;
 		} else {
+			pthread_mutex_unlock(&semaforoDePokemon->semaforoDePokemon);
 			log_error(loggerGeneral,
 					"El archivo %s ya esta abierto por otro proceso", pkm);
 			sleep(reconectar);
 		}
 	}
-
-	pthread_mutex_unlock(&semaforoDePokemon->semaforoDePokemon);
 
 	/*Agregar la posiciones
 	 * Levanto el primer bloque o todos?
@@ -230,9 +348,10 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 	while (1) {
-		HeaderDelibird headerRecibido = Serialize_RecieveHeader(elemento->cliente);
+		HeaderDelibird headerRecibido = Serialize_RecieveHeader(
+				elemento->cliente);
 		if (headerRecibido.tipoMensaje == -1) {
-			log_error(elemento->log, "Se desconecto el GameBoy\n");
+			log_error(elemento->log, "Se desconecto el Cliente\n");
 			break;
 		}
 		atender(headerRecibido, elemento->cliente, elemento->log);
@@ -261,7 +380,6 @@ void* atenderGameBoy() {
 		p_elementoDeHilo elemento;
 		elemento.cliente = cliente;
 		elemento.log = gameBoyLog;
-
 
 		if (pthread_create(dondeSeAtiende, NULL,
 				(void*) recibirYAtenderUnCliente, &elemento) == 0) {
