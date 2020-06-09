@@ -14,6 +14,15 @@
 
 //Ver como crear lista de listas
 /////////ESTRUCTURA/////////
+
+typedef enum t_estado {
+	t_NEW,
+	t_READY,
+	t_EXEC,
+	t_BLOCKED,
+	t_EXIT
+} t_estado;
+
 typedef struct config{
 	char** POSICIONES_ENTRENADORES;
 	char** POKEMON_ENTRENADORES;
@@ -39,6 +48,7 @@ typedef struct entrenador{
 	punto posicion;
 	char ** pokemones;
 	char ** pokemonesObjetivo;
+	t_estado estado;
 }entrenador;
 
 typedef struct proceso{
@@ -50,6 +60,7 @@ typedef struct {
 	int cliente;
 	t_log* log;
 } p_elementoDeHilo;
+
 
 //////FUNCIONES INICIALES/////////
 void iniciarConfig();
@@ -73,6 +84,9 @@ int entrenadorMasCercano(punto point);
 int diferenciaEntrePuntos(punto origen, punto destino);
 bool necesitoEstePokemon(char *pokemon);
 void descontarDeObjetivoGlobal(char *pokemon);
+void pasarEntrenadorAEstado(int index, t_estado estado);
+bool mismaPosicion(entrenador* e1, entrenador* e2);
+void sacarEntrenadorDeEstadoActual(entrenador* trainer);
 
 ////////FUNCIONES PLANIFICACION////////////
 proceso* planificarSegun(char* tipoPlanificacion, t_list* procesos);

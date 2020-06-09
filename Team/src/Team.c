@@ -14,8 +14,8 @@ int main (void){
 void inicializar(){
 	TEAM_LOG = iniciar_log("Team");
 	iniciarConfig();
-	crearEntrenadores();
 	crearEstados();
+	crearEntrenadores();
 	iniciarVariablesDePlanificacion();
 	for (int i = 0; list_get(ENTRENADORES_TOTALES, i) != NULL; i++){
 		entrenador * entrenador = list_get(ENTRENADORES_TOTALES, i);
@@ -246,6 +246,79 @@ int entrenadorMasCercano(punto point){
 	return index;
 }
 
+bool mismaPosicion(entrenador* e1, entrenador* e2){
+	return ((e1->posicion.x == e2->posicion.x) && (e1->posicion.y == e2->posicion.y));
+}
+
+void eliminarDeListaIndex(int index, t_list* lista){
+	if(index != -1)
+		list_remove(lista,index);
+	else
+		printf("Indice Invalido");
+}
+
+void sacarEntrenadorDeEstadoActual(entrenador* trainer){
+	int index=0;
+	switch(trainer->estado){
+	case t_NEW:;
+		index = list_get_index(EstadoNew, trainer, (void*)mismaPosicion);
+		eliminarDeListaIndex(index,EstadoNew);
+		break;
+	case t_READY:;
+		index = list_get_index(EstadoReady, trainer, (void*)mismaPosicion);
+		eliminarDeListaIndex(index,EstadoReady);
+		break;
+	case t_BLOCKED:;
+		index = list_get_index(EstadoBlock, trainer, (void*)mismaPosicion);
+		eliminarDeListaIndex(index,EstadoBlock);
+		break;
+	case t_EXEC:;
+		if(mismaPosicion(EstadoExec, trainer))
+			EstadoExec = NULL;
+		else
+			printf("Este entrenador NO esta en exec");
+		break;
+	case t_EXIT:;
+		index = list_get_index(EstadoExit, trainer, (void*)mismaPosicion);
+		eliminarDeListaIndex(index,EstadoExit);
+		break;
+	default:;
+		printf("Estado invalido");
+		break;
+	}
+}
+
+void pasarEntrenadorAEstado(int index, t_estado estado){
+	entrenador *entrenadorAUX = (entrenador*)list_get(ENTRENADORES_TOTALES,index);
+	sacarEntrenadorDeEstadoActual(entrenadorAUX);
+	switch(estado){
+	case t_NEW:;
+		entrenadorAUX->estado = t_NEW;
+		list_add(EstadoNew, entrenadorAUX);
+		break;
+	case t_READY:;
+		entrenadorAUX->estado = t_READY;
+		list_add(EstadoReady, entrenadorAUX);
+		break;
+	case t_BLOCKED:;
+		entrenadorAUX->estado = t_BLOCKED;
+		list_add(EstadoBlock, entrenadorAUX);
+		break;
+	case t_EXEC:;
+		entrenadorAUX->estado = t_EXEC;
+		EstadoExec = entrenadorAUX;
+		break;
+	case t_EXIT:;
+		entrenadorAUX->estado = t_EXIT;
+		list_add(EstadoExit, entrenadorAUX);
+		break;
+	default:;
+		printf("Estado invalido");
+		break;
+	}
+
+}
+
 int diferenciaEntrePuntos(punto origen, punto destino){
 	return abs( (destino.x - origen.x) + (destino.y - origen.y) );
 }
@@ -292,6 +365,7 @@ void crearEntrenadores(){
 		char ** pokemonesObjetivo = string_split(TEAM_CONFIG.OBJETIVOS_ENTRENADORES[i], "|");
 		entrenador * entrenador = crearEntrenador(punto, pokemones, pokemonesObjetivo);
 		list_add(ENTRENADORES_TOTALES, entrenador);
+		list_add(EstadoNew, entrenador);
 	}
 }
 
@@ -309,6 +383,7 @@ entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObj
 	newTrainer->posicion = punto;
 	newTrainer->pokemones = pokemones;
 	newTrainer->pokemonesObjetivo = pokemonesObjetivo;
+	newTrainer->estado = t_NEW;
 	return newTrainer;
 }
 
