@@ -343,7 +343,11 @@ bool necesitoEstePokemon(char *pokemon){
 
 void descontarDeObjetivoGlobal(char *pokemon){
 	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
-	dictionary_put(OBJETIVO_GLOBAL, pokemon, valor-1);
+	valor = valor - 1 ;
+	if(valor>0)
+		dictionary_put(OBJETIVO_GLOBAL, pokemon, valor);
+	else
+		dictionary_remove(OBJETIVO_GLOBAL, pokemon);
 }
 
 void finalFeliz(){
@@ -480,4 +484,25 @@ void setObjetivoGlobal(){
 		trainer = list_get(ENTRENADORES_TOTALES, j);
 	}
 	printf("Objetivo global setteado \n");
+}
+
+bool teamCumplioSuObjetivo(){
+	return (( objetivoGlobalCumplido() ) && ( todosLosEntrenadoresCumplieronObjetivo() ));
+}
+
+bool objetivoGlobalCumplido(){
+	return dictionary_is_empty(OBJETIVO_GLOBAL); //asumiendo que vamos a usar dictionary_remove cuando capturemos
+}
+
+bool todosLosEntrenadoresCumplieronObjetivo(){
+	return list_all_satisfy(ENTRENADORES_TOTALES, (void*)entrenadorCumplioObjetivo);
+}
+
+bool entrenadorCumplioObjetivo(entrenador* trainer){
+	return sonLosMismosPokemon(trainer->pokemones,trainer->pokemonesObjetivo);
+}
+
+bool sonLosMismosPokemon(char **pokemons1, char **pokemons2){
+	//TODO
+	return true;
 }

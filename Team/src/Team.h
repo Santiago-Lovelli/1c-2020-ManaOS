@@ -77,6 +77,11 @@ void iniciarVariablesDePlanificacion();
 //////FUNCIONES FINALES/////////
 void finalFeliz();
 static void entrenadorDestroy(entrenador *self);
+bool teamCumplioSuObjetivo();
+bool objetivoGlobalCumplido();
+bool todosLosEntrenadoresCumplieronObjetivo();
+bool entrenadorCumplioObjetivo(entrenador* trainer);
+bool sonLosMismosPokemon(char **pokemons1, char **pokemons2);
 
 /////////FUNCIONES PROPIAS TEAMS/////////////
 int objetivoTerminado();
