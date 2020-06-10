@@ -105,12 +105,6 @@ bool Serialize_PackAndSend(int socketCliente, const void*pack, uint32_t tamPack,
 bool Serialize_PackAndSend_ACK(int socketCliente, uint32_t miId);
 
 /**
-* ESTA FUNCION NOS SIRVE PARA CONTESTAR A UN CATCH
-*/
-
-bool Serialize_PackAndSend_Response_Catch(int socketCliente, uint32_t miId, bool response);
-
-/**
  * ESTA FUNCION NOS SIRVE PARA PEDIR SUSCRIBIRNOS A UNA COLA
  */
 
@@ -229,15 +223,6 @@ void* Serialize_ReceiveAndUnpack(int socketCliente, uint32_t tamanioChar);
 uint32_t Serialize_Unpack_ACK(void *pack);
 
 /**
-* ESTA FUNCION DESEMPAQUETA LA RESPUESTA DE UN
-* PAQUETE ACK, ESTE VALOR REPRESENTARA SI SE
-* PUDO O NO ATRAPAR AL POKEMON
-*/
-
-bool Serialize_Unpack_Response(void *pack);
-
-
-/**
  * ESTA FUNCION DESEMPAQUETA EL ID DEL MENSAJE DE UN
  * PAQUETE VOID* QUE LO CONTENGA
  * NO USAR ESTA FUNCION EN PAQUETES QUE NO
@@ -335,15 +320,6 @@ uint32_t Serialize_Unpack_resultado(void *pack);
  * La intencion de las funciones de desempaquetado pro
  * es facilitar el desempaquetado de los paquetes recibidos
  */
-
-/*
- * ESTA FUNCION DADO LOS PARAMETROS PASADOS POR REFERENCIA Y
- * EL PAQUETE VOID* LLENA ESOS PARAMETROS CON LOS VALORES ADENTRO
- * DEL PAQUETE DE TIPO RESPONSECATCH (SOLO SIRVE PARA ESE TIPO DE PAQUETE)
- */
-
-
-void Serialize_Unpack_ResponseCatch(void *packResponseCatch, uint32_t *idMensaje, bool *respuesta);
 
 /*
  * ESTA FUNCION DADO LOS PARAMETROS PASADOS POR REFERENCIA Y
