@@ -161,7 +161,7 @@ uint32_t nuevaCantidad(char* linea, uint32_t cantidad) {
 	return nuevo;
 }
 
-char* obtenerBloqueConDatosReales(char* numeroDeBloque){
+char* obtenerBloqueConDatosReales(char* numeroDeBloque) {
 	log_info(loggerGeneral, "bloque a escribir: %s", numeroDeBloque);
 
 	char * pathBloque = obtenerPathDeBloque(numeroDeBloque);
@@ -255,7 +255,8 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 					log_info(loggerGeneral, "Esta en linea: %s",
 							lineasDeBloque[cantidadDeLineas]);
 
-					char** cantidadViejaEnUno = string_split(lineasDeBloque[cantidadDeLineas], "=");
+					char** cantidadViejaEnUno = string_split(
+							lineasDeBloque[cantidadDeLineas], "=");
 					cantidadVieja = cantidadViejaEnUno[1];
 
 					uint32_t cantidadActual = nuevaCantidad(
@@ -271,18 +272,17 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				cantidadDeLineas = cantidadDeLineas + 1;
 			}
 
-			log_info(loggerGeneral, "leido: %i",
-					leido);
+			log_info(loggerGeneral, "leido: %i", leido);
 			uint32_t bloquesIntactos = leido / metadata.tamanioDeBloque;
-			log_info(loggerGeneral, "bloquesIntactos: %i",
-					bloquesIntactos);
-			
-			i=0;
+			log_info(loggerGeneral, "bloquesIntactos: %i", bloquesIntactos);
+
+			i = 0;
 
 			uint32_t escrito = 0;
 
 			while (i < bloquesIntactos) {
-				log_info(loggerGeneral, "bloque a escribir: %s", arrayConBloques[i]);
+				log_info(loggerGeneral, "bloque a escribir: %s",
+						arrayConBloques[i]);
 
 				char* pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
 				log_info(loggerGeneral, "path a escribir: %s", pathBloque);
@@ -295,13 +295,15 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				PROT_READ | PROT_WRITE,
 				MAP_SHARED | MAP_FILE, bloque, 0);
 
-				memcpy(bloqueConDatos,megaChar+escrito,metadata.tamanioDeBloque);
+				memcpy(bloqueConDatos, megaChar + escrito,
+						metadata.tamanioDeBloque);
 				escrito = escrito + metadata.tamanioDeBloque;
 
 				i = i + 1;
 			}
 
-			log_info(loggerGeneral, "bloque a escribir: %s", arrayConBloques[i]);
+			log_info(loggerGeneral, "bloque a escribir: %s",
+					arrayConBloques[i]);
 
 			char* pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
 
@@ -317,32 +319,34 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			PROT_READ | PROT_WRITE,
 			MAP_SHARED | MAP_FILE, bloque, 0);
 
-			uint32_t faltante = leido-escrito;
+			uint32_t faltante = leido - escrito;
 
-			memcpy(bloqueConDatos,megaChar+escrito,faltante);
+			memcpy(bloqueConDatos, megaChar + escrito, faltante);
 			escrito = escrito + faltante;
 
-			char** hastaIgual = string_split(lineasDeBloque[cantidadDeLineas], "=");
+			char** hastaIgual = string_split(lineasDeBloque[cantidadDeLineas],
+					"=");
 
-			uint32_t quedaConIgual = strlen(hastaIgual[0])+1;
+			uint32_t quedaConIgual = strlen(hastaIgual[0]) + 1;
 			uint32_t quedaEnBloque = metadata.tamanioDeBloque - faltante;
 
 			uint32_t quedaValor = strlen(cantidadNueva);
 
-			if(quedaEnBloque >= quedaConIgual){
+			if (quedaEnBloque >= quedaConIgual) {
 
-				memcpy(bloqueConDatos,megaChar+escrito,quedaConIgual);
+				memcpy(bloqueConDatos, megaChar + escrito, quedaConIgual);
 				escrito = escrito + quedaConIgual;
 				quedaEnBloque = quedaEnBloque - quedaConIgual;
 
-			}else {
-				memcpy(bloqueConDatos,megaChar+escrito,quedaEnBloque);
+			} else {
+				memcpy(bloqueConDatos, megaChar + escrito, quedaEnBloque);
 				escrito = escrito + quedaEnBloque;
 				quedaEnBloque = 0;
 				uint32_t quedaParaIgual = quedaConIgual - quedaEnBloque;
 
 				/*--Nuevo bloque--*/
-				log_info(loggerGeneral, "bloque a escribir: %s", arrayConBloques[i]);
+				log_info(loggerGeneral, "bloque a escribir: %s",
+						arrayConBloques[i]);
 
 				pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
 				i = i + 1;
@@ -356,28 +360,29 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				PROT_READ | PROT_WRITE,
 				MAP_SHARED | MAP_FILE, bloque, 0);
 
-				memcpy(bloqueConDatos,megaChar+escrito,quedaParaIgual);
+				memcpy(bloqueConDatos, megaChar + escrito, quedaParaIgual);
 				escrito = escrito + quedaParaIgual;
 				quedaEnBloque = quedaEnBloque - quedaParaIgual;
 			}
 
-			if(quedaEnBloque >= quedaValor){
+			if (quedaEnBloque >= quedaValor) {
 
-				memcpy(bloqueConDatos,cantidadNueva,quedaValor);
+				memcpy(bloqueConDatos, cantidadNueva, quedaValor);
 				escrito = escrito + strlen(cantidadVieja);
 				//me estoy salteando la cantidad vieja para cuando lea del megachar
 				quedaEnBloque = quedaEnBloque - quedaValor;
 
-				memcpy(bloqueConDatos,megaChar+escrito,quedaEnBloque);
+				memcpy(bloqueConDatos, megaChar + escrito, quedaEnBloque);
 				escrito = escrito + quedaEnBloque;
 				quedaEnBloque = 0;
 
 			} else {
-				memcpy(bloqueConDatos,cantidadNueva,quedaEnBloque);
+				memcpy(bloqueConDatos, cantidadNueva, quedaEnBloque);
 				quedaValor = quedaValor - quedaEnBloque;
 
 				/*--Nuevo bloque--*/
-				log_info(loggerGeneral, "bloque a escribir: %s", arrayConBloques[i]);
+				log_info(loggerGeneral, "bloque a escribir: %s",
+						arrayConBloques[i]);
 
 				pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
 				i = i + 1;
@@ -391,13 +396,12 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				PROT_READ | PROT_WRITE,
 				MAP_SHARED | MAP_FILE, bloque, 0);
 
-
-				memcpy(bloqueConDatos,cantidadNueva,quedaValor);
+				memcpy(bloqueConDatos, cantidadNueva, quedaValor);
 				escrito = escrito + strlen(cantidadVieja);
 				//me estoy salteando la cantidad vieja para cuando lea del megachar
 				quedaEnBloque = metadata.tamanioDeBloque - quedaValor;
 
-				memcpy(bloqueConDatos,megaChar+escrito,quedaEnBloque);
+				memcpy(bloqueConDatos, megaChar + escrito, quedaEnBloque);
 				escrito = escrito + quedaEnBloque;
 
 				quedaEnBloque = 0;
@@ -405,8 +409,84 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 			//A copiar la info que falta en el archivo
 
+			char** tam = string_split(metadataDePokemon->inicioSize, "\n");
+			uint32_t tamanioOriginal = atoi(tam[0]);
+			uint32_t faltanteDelMegaChar = tamanioOriginal - escrito;
+			char* bloquesNuevos = string_new();
 
-			/*::- Vamos por aca perron -::*/
+			while (escrito <= faltanteDelMegaChar) {
+				if (arrayConBloques[i] != NULL) {
+					char* numeroDeBloqueNuevo = string_itoa(
+							buscar_espacio_en_bitmap(bitmap, loggerGeneral));
+
+					string_append(&bloquesNuevos, numeroDeBloqueNuevo);
+
+					log_info(loggerGeneral, "bloque a escribir: %s",
+							numeroDeBloqueNuevo);
+
+					pathBloque = obtenerPathDeBloque(numeroDeBloqueNuevo);
+					log_info(loggerGeneral, "path a escribir: %s", pathBloque);
+
+					bloque = open(pathBloque, O_RDWR, 0);
+
+					free(pathBloque);
+
+					bloqueConDatos = mmap(NULL, metadata.tamanioDeBloque,
+					PROT_READ | PROT_WRITE,
+					MAP_SHARED | MAP_FILE, bloque, 0);
+
+					quedaEnBloque = metadata.tamanioDeBloque;
+				} else {
+					log_info(loggerGeneral, "bloque a escribir: %s",
+							arrayConBloques[i]);
+
+					pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
+					log_info(loggerGeneral, "path a escribir: %s", pathBloque);
+
+					bloque = open(pathBloque, O_RDWR, 0);
+
+					free(pathBloque);
+
+					bloqueConDatos = mmap(NULL, metadata.tamanioDeBloque,
+					PROT_READ | PROT_WRITE,
+					MAP_SHARED | MAP_FILE, bloque, 0);
+
+					quedaEnBloque = metadata.tamanioDeBloque;
+				}
+
+				if (faltanteDelMegaChar > quedaEnBloque) {
+					memcpy(bloqueConDatos, megaChar + escrito,
+							metadata.tamanioDeBloque);
+					escrito = escrito + metadata.tamanioDeBloque;
+					faltanteDelMegaChar = faltanteDelMegaChar - quedaEnBloque;
+					quedaEnBloque = 0;
+				} else {
+					memcpy(bloqueConDatos, megaChar + escrito,
+							faltanteDelMegaChar);
+					escrito = escrito + faltanteDelMegaChar;
+					faltanteDelMegaChar = 0;
+					quedaEnBloque = quedaEnBloque - faltanteDelMegaChar;
+				}
+
+				i = i + 1;
+			}
+
+			char* metadataPost = string_duplicate("DIRECTORY=N\nSIZE=");
+
+			uint32_t tamanioNuevoFinal = tamanioOriginal + strlen(cantidadVieja) - strlen(cantidadNueva);
+			string_append(&metadataPost,string_itoa(tamanioNuevoFinal));
+			string_append(&metadataPost,"\n");
+			string_append(&metadataPost,"BLOCKS=[");
+			int aux = 0;
+			for (int j = 0; j < i; ++j) {
+				if(arrayConBloques[j] != NULL){
+					string_append(&metadataPost,arrayConBloques[j]);
+				}else{
+					string_append(&metadataPost,&bloquesNuevos[aux]);
+					aux = aux +1;
+				}
+			}
+			string_append(&metadataPost,"]\nOPEN=N");
 
 			/*----------------------------------------------------------------*/
 			sleep(100);
