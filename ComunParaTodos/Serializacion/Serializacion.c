@@ -29,6 +29,15 @@ bool Serialize_PackAndSend_ACK(int socketCliente, uint32_t miId){
 	return resultado;
 }
 
+bool Serialize_PackAndSend_Response_Catch(int socketCliente, uint32_t miId, bool response){
+	void* pack = malloc(sizeof(uint32_t) + sizeof(bool));
+	memcpy(pack, &miId, sizeof(uint32_t));
+	memcpy(pack+sizeof(uint32_t), &response, sizeof(bool));
+	int resultado = Serialize_PackAndSend(socketCliente, pack, (sizeof(uint32_t)+sizeof(bool)), d_RESPONSE_CATCH);
+	free(pack);
+	return resultado;
+}
+
 bool Serialize_PackAndSend_SubscribeQueue(int socketCliente, d_message queue){
 	void* pack = malloc(sizeof(d_message));
 	memcpy(pack, &queue, sizeof(d_message));
@@ -239,6 +248,12 @@ uint32_t Serialize_Unpack_ACK(void *pack) {
 	return response;
 }
 
+bool Serialize_Unpack_Response(void *pack){
+	bool response;
+	memcpy(&response, pack+sizeof(uint32_t), sizeof(bool));
+	return response;
+}
+
 uint32_t Serialize_Unpack_idMensaje(void *pack) {
 	uint32_t response = 0;
 	memcpy(&response, pack, sizeof(uint32_t));
@@ -318,6 +333,11 @@ uint32_t Serialize_Unpack_resultado(void *pack){
 //////////////////////////////////////
 // FUNCIONES PARA DESEMPAQUETAR PRO //
 /////////////////////////////////////
+
+void Serialize_Unpack_ResponseCatch(void *packResponseCatch, uint32_t *idMensaje, bool *respuesta){
+	*idMensaje = Serialize_Unpack_idMensaje(packResponseCatch);
+	*respuesta = Serialize_Unpack_Response(packResponseCatch);
+}
 
 void Serialize_Unpack_NewPokemon(void *packNewPokemon, uint32_t *idMensaje, char **nombre, uint32_t *posX, uint32_t *posY, uint32_t *cantidad){
 	*idMensaje = Serialize_Unpack_idMensaje(packNewPokemon);

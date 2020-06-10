@@ -64,6 +64,27 @@ int iniciarConexionABroker(){
 	return conexion;
 }
 
+void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY){
+	int conexion = iniciarConexionABroker();
+	Serialize_PackAndSend_CATCH_POKEMON_NoID(conexion, pokemon, posX, posY);
+	HeaderDelibird headerResponse = Serialize_RecieveHeader(conexion);
+	if(headerResponse.tipoMensaje == d_RESPONSE_CATCH)
+	{
+		void* packResponse = Serialize_ReceiveAndUnpack(conexion, headerResponse.tamanioMensaje);
+		uint32_t id;
+		bool response;
+		Serialize_Unpack_ResponseCatch(packResponse, &id, &response);
+		free(packResponse);
+		//cerrar conexion;
+		close(conexion);
+		//return id;
+		//return response;
+	}
+	/*else
+		return -1; //codigo de error*/
+
+}
+
 void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
 	int conexion = iniciarConexionABroker();
 	Serialize_PackAndSend_GET_POKEMON_NoID(conexion,pokemon);

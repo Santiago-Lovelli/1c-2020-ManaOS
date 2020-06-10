@@ -105,6 +105,7 @@ void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion);
 void* suscribirme(d_message colaDeSuscripcion);
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento);
 void atender(HeaderDelibird header, int cliente, t_log* logger);
+void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY);
 void enviarGetPokemonYRecibirResponse(char *pokemon, void* value);
 void enviarGetXCadaPokemonObjetivo();
 
