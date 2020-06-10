@@ -91,6 +91,9 @@ bool necesitoEstePokemon(char *pokemon);
 void descontarDeObjetivoGlobal(char *pokemon);
 void pasarEntrenadorAEstado(int index, t_estado estado);
 bool mismaPosicion(entrenador* e1, entrenador* e2);
+bool mismaPosicion2(entrenador* e1, punto e2);
+bool acercar(int *punto1, int punto2);
+bool moveHacia(entrenador* e1, punto destino);
 void sacarEntrenadorDeEstadoActual(entrenador* trainer);
 
 ////////FUNCIONES PLANIFICACION////////////

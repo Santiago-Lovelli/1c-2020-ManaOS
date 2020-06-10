@@ -263,6 +263,31 @@ bool mismaPosicion(entrenador* e1, entrenador* e2){
 	return ((e1->posicion.x == e2->posicion.x) && (e1->posicion.y == e2->posicion.y));
 }
 
+bool mismaPosicion2(entrenador* e1, punto e2){
+	return ((e1->posicion.x == e2.x) && (e1->posicion.y == e2.y));
+}
+
+bool acercar(int *punto1, int punto2){
+	if(*punto1<punto2){
+		*punto1 = *punto1 + 1;
+		return true;
+	}
+	if(*punto1>punto2){
+		*punto1 = *punto1 - 1;
+		return true;
+	}
+	return false;
+}
+
+bool moveHacia(entrenador* e1, punto destino){
+	if(mismaPosicion2(e1,destino))
+		return false;
+	if(!acercar(&e1->posicion.x, destino.x))
+		acercar(&e1->posicion.y, destino.y);
+	return true;
+}
+
+
 void eliminarDeListaIndex(int index, t_list* lista){
 	if(index != -1)
 		list_remove(lista,index);
