@@ -43,9 +43,16 @@ bool existePokemon(char* pokemon) {
 	return indice != (-1);
 }
 
-char *archivoMetadataPokemon(char *path) {
+char *archivoMetadataPokemon(char *path, uint32_t cantidadALevantar) {
 
 	uint32_t tamanio_archivo_de_metadata = tamanio_archivo(path);
+
+	if(cantidadALevantar > tamanio_archivo_de_metadata){
+		tamanio_archivo_de_metadata = cantidadALevantar;
+	}else{
+		tamanio_archivo_de_metadata = tamanio_archivo(path);
+	}
+
 
 	log_info(loggerGeneral, "Tamanio archivo: %i", tamanio_archivo_de_metadata);
 
@@ -63,7 +70,7 @@ char *archivoMetadataPokemon(char *path) {
 char* obtenerOpen(char* pkm) {
 
 	char* path = pathDePokemonMetadata(pkm);
-	char *archivoPokemon = archivoMetadataPokemon(path);
+	char *archivoPokemon = archivoMetadataPokemon(path,NULL);
 	char** separadoPorEnter = string_split(archivoPokemon, "\n");
 	char** abiertoEnUno = string_split(separadoPorEnter[3], "=");
 
@@ -75,7 +82,7 @@ p_metadata* obtenerMetadataEnteraDePokemon(char* unPokemon) {
 	//A futuro hacer refactor para no habrir archivo de metadata tantas veces
 
 	char* path = pathDePokemonMetadata(unPokemon);
-	char *archivoPokemon = archivoMetadataPokemon(path);
+	char *archivoPokemon = archivoMetadataPokemon(path,NULL);
 
 	char** separadoPorEnter = string_split(archivoPokemon, "\n");
 
@@ -177,6 +184,22 @@ char* obtenerBloqueConDatosReales(char* numeroDeBloque) {
 	MAP_SHARED | MAP_FILE, bloque, 0);
 
 	return bloqueConDatos;
+}
+
+void cambiarMetadata(char* unPokemon, char* metadataNueva){
+
+	char* path = pathDePokemonMetadata(unPokemon);
+
+	int cantidadARellenar = tamanio_archivo(path) - strlen(metadataNueva);
+
+	char *archivoPokemon = archivoMetadataPokemon(path, strlen(metadataNueva));
+
+	memcpy(archivoPokemon,metadataNueva,strlen(metadataNueva));
+
+
+	for (int i = 0; i < cantidadARellenar; ++i) {
+		memcpy(archivoPokemon+strlen(metadataNueva)+i,"\0",1);
+	}
 }
 
 void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
@@ -323,6 +346,7 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 			memcpy(bloqueConDatos, megaChar + escrito, faltante);
 			escrito = escrito + faltante;
+			uint32_t escritoEnElBloque = faltante;
 
 			char** hastaIgual = string_split(lineasDeBloque[cantidadDeLineas],
 					"=");
@@ -334,12 +358,13 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 			if (quedaEnBloque >= quedaConIgual) {
 
-				memcpy(bloqueConDatos, megaChar + escrito, quedaConIgual);
+				memcpy(bloqueConDatos+escritoEnElBloque, megaChar + escrito, quedaConIgual);
 				escrito = escrito + quedaConIgual;
 				quedaEnBloque = quedaEnBloque - quedaConIgual;
+				escritoEnElBloque = escritoEnElBloque +quedaConIgual;
 
 			} else {
-				memcpy(bloqueConDatos, megaChar + escrito, quedaEnBloque);
+				memcpy(bloqueConDatos+escritoEnElBloque, megaChar + escrito, quedaEnBloque);
 				escrito = escrito + quedaEnBloque;
 				quedaEnBloque = 0;
 				uint32_t quedaParaIgual = quedaConIgual - quedaEnBloque;
@@ -363,21 +388,24 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				memcpy(bloqueConDatos, megaChar + escrito, quedaParaIgual);
 				escrito = escrito + quedaParaIgual;
 				quedaEnBloque = quedaEnBloque - quedaParaIgual;
+				escritoEnElBloque = quedaParaIgual;
 			}
 
 			if (quedaEnBloque >= quedaValor) {
 
-				memcpy(bloqueConDatos, cantidadNueva, quedaValor);
+				memcpy(bloqueConDatos+escritoEnElBloque, cantidadNueva, quedaValor);
 				escrito = escrito + strlen(cantidadVieja);
+				escritoEnElBloque = escritoEnElBloque + quedaValor;
 				//me estoy salteando la cantidad vieja para cuando lea del megachar
 				quedaEnBloque = quedaEnBloque - quedaValor;
 
-				memcpy(bloqueConDatos, megaChar + escrito, quedaEnBloque);
+				memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito, quedaEnBloque);
 				escrito = escrito + quedaEnBloque;
+				escritoEnElBloque = escritoEnElBloque + quedaEnBloque;
 				quedaEnBloque = 0;
 
 			} else {
-				memcpy(bloqueConDatos, cantidadNueva, quedaEnBloque);
+				memcpy(bloqueConDatos + escritoEnElBloque, cantidadNueva, quedaEnBloque);
 				quedaValor = quedaValor - quedaEnBloque;
 
 				/*--Nuevo bloque--*/
@@ -398,10 +426,11 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 				memcpy(bloqueConDatos, cantidadNueva, quedaValor);
 				escrito = escrito + strlen(cantidadVieja);
+				escritoEnElBloque = quedaValor;
 				//me estoy salteando la cantidad vieja para cuando lea del megachar
 				quedaEnBloque = metadata.tamanioDeBloque - quedaValor;
 
-				memcpy(bloqueConDatos, megaChar + escrito, quedaEnBloque);
+				memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito, quedaEnBloque);
 				escrito = escrito + quedaEnBloque;
 
 				quedaEnBloque = 0;
@@ -411,11 +440,13 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 			char** tam = string_split(metadataDePokemon->inicioSize, "\n");
 			uint32_t tamanioOriginal = atoi(tam[0]);
+			//aca la estoy cagando?
 			uint32_t faltanteDelMegaChar = tamanioOriginal - escrito;
 			char* bloquesNuevos = string_new();
 
-			while (escrito <= faltanteDelMegaChar) {
-				if (arrayConBloques[i] != NULL) {
+			while (escrito < faltanteDelMegaChar) {
+
+				if (arrayConBloques[i] == NULL) {
 					char* numeroDeBloqueNuevo = string_itoa(
 							buscar_espacio_en_bitmap(bitmap, loggerGeneral));
 
@@ -473,20 +504,28 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 			char* metadataPost = string_duplicate("DIRECTORY=N\nSIZE=");
 
-			uint32_t tamanioNuevoFinal = tamanioOriginal + strlen(cantidadVieja) - strlen(cantidadNueva);
-			string_append(&metadataPost,string_itoa(tamanioNuevoFinal));
-			string_append(&metadataPost,"\n");
-			string_append(&metadataPost,"BLOCKS=[");
+			uint32_t tamanioNuevoFinal = tamanioOriginal + strlen(cantidadVieja)
+					- strlen(cantidadNueva);
+			string_append(&metadataPost, string_itoa(tamanioNuevoFinal));
+			string_append(&metadataPost, "\n");
+			string_append(&metadataPost, "BLOCKS=[");
 			int aux = 0;
 			for (int j = 0; j < i; ++j) {
-				if(arrayConBloques[j] != NULL){
-					string_append(&metadataPost,arrayConBloques[j]);
-				}else{
-					string_append(&metadataPost,&bloquesNuevos[aux]);
-					aux = aux +1;
+				if (arrayConBloques[j] != NULL) {
+					string_append(&metadataPost, arrayConBloques[j]);
+					if (arrayConBloques[j+1] != NULL) {
+						string_append(&metadataPost, ",");
+					}
+				} else {
+					string_append(&metadataPost, ",");
+					string_append(&metadataPost, &bloquesNuevos[aux]);
+					aux = aux + 1;
 				}
 			}
-			string_append(&metadataPost,"]\nOPEN=N");
+			string_append(&metadataPost, "]\nOPEN=N");
+
+			cambiarMetadata(pkm,metadataPost);
+
 
 			/*----------------------------------------------------------------*/
 			sleep(100);

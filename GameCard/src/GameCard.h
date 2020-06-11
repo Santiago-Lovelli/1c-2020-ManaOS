@@ -63,7 +63,7 @@ void * obtenerMetadata();
 char* montajeDeArchivo();
 char* pathDePokemonMetadata(char * pokemon);
 bool existePokemon(char* pokemon);
-char *archivoMetadataPokemon(char *path);
+char *archivoMetadataPokemon(char *path, uint32_t cantidadALevantar);
 char* obtenerBloquesDeMetadataPokemon(char* pkm);
 char** obtenerBloquesDeMetadataPokemonEnArray(char* unPokemon);
 char* obtenerDirectory(char* pkm);

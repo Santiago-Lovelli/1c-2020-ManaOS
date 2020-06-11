@@ -31,3 +31,101 @@
 [INFO] 12:39:17:439 GameBoy/(4642:4650): Llego un new pokemon
 [INFO] 12:39:17:439 GameBoy/(4642:4650): Me llego mensaje de 0. Id: 1, Pkm: PIKACHU, x: 5, y: 5, cant: 10
 
+[INFO] 19:41:26:166 GameBoy/(11468:11477): Logger iniciado: GameBoy.log
+
+[INFO] 19:41:26:179 GameBoy/(11468:11477): Puerto GameCard: 8372
+[INFO] 19:41:26:179 GameBoy/(11468:11477): Ip GameCard: 127.0.0.1
+[INFO] 19:41:26:179 GameBoy/(11468:11477): Dentro de iniciar servidor
+[INFO] 19:41:26:179 GameBoy/(11468:11477): Listo para escuchar a mi cliente
+[INFO] 19:41:26:181 GameBoy/(11468:11477): esperando
+[INFO] 19:43:35:301 GameBoy/(11598:11603): Logger iniciado: GameBoy.log
+
+[INFO] 19:43:35:301 GameBoy/(11598:11603): Puerto GameCard: 8372
+[INFO] 19:43:35:301 GameBoy/(11598:11603): Ip GameCard: 127.0.0.1
+[INFO] 19:43:35:301 GameBoy/(11598:11603): Dentro de iniciar servidor
+[INFO] 19:43:35:301 GameBoy/(11598:11603): Listo para escuchar a mi cliente
+[INFO] 19:43:35:301 GameBoy/(11598:11603): esperando
+[INFO] 19:43:44:61 GameBoy/(11634:11643): Logger iniciado: GameBoy.log
+
+[INFO] 19:43:44:61 GameBoy/(11634:11643): Puerto GameCard: 8372
+[INFO] 19:43:44:61 GameBoy/(11634:11643): Ip GameCard: 127.0.0.1
+[INFO] 19:43:44:61 GameBoy/(11634:11643): Dentro de iniciar servidor
+[INFO] 19:43:44:62 GameBoy/(11634:11643): Listo para escuchar a mi cliente
+[INFO] 19:43:44:62 GameBoy/(11634:11643): esperando
+[INFO] 19:43:48:150 GameBoy/(11634:11643): Se conecto un cliente!
+[INFO] 19:43:48:150 GameBoy/(11634:11643): se conecto cliente: 8
+[INFO] 19:43:48:151 GameBoy/(11634:11643): :::: Se creo hilo para cliente ::::
+[INFO] 19:43:48:160 GameBoy/(11634:11643): esperando
+[INFO] 19:43:48:163 GameBoy/(11634:11649): Llego un new pokemon
+[INFO] 19:43:48:163 GameBoy/(11634:11649): Me llego mensaje de 0. Id: 1, Pkm: PIKACHU, x: 6, y: 6, cant: 10
+
+[INFO] 20:21:50:538 GameBoy/(13170:13185): Logger iniciado: GameBoy.log
+
+[INFO] 20:21:50:540 GameBoy/(13170:13185): Puerto GameCard: 8372
+[INFO] 20:21:50:540 GameBoy/(13170:13185): Ip GameCard: 127.0.0.1
+[INFO] 20:21:50:540 GameBoy/(13170:13185): Dentro de iniciar servidor
+[INFO] 20:21:50:540 GameBoy/(13170:13185): Listo para escuchar a mi cliente
+[INFO] 20:21:50:540 GameBoy/(13170:13185): esperando
+[INFO] 20:21:54:776 GameBoy/(13170:13185): Se conecto un cliente!
+[INFO] 20:21:54:776 GameBoy/(13170:13185): se conecto cliente: 9
+[INFO] 20:21:54:778 GameBoy/(13170:13185): :::: Se creo hilo para cliente ::::
+[INFO] 20:21:54:778 GameBoy/(13170:13185): esperando
+[INFO] 20:21:54:791 GameBoy/(13170:13193): Llego un new pokemon
+[INFO] 20:21:54:793 GameBoy/(13170:13193): Me llego mensaje de 0. Id: 1, Pkm: PIKACHU, x: 6, y: 6, cant: 10
+
+[INFO] 20:24:18:581 GameBoy/(13294:13300): Logger iniciado: GameBoy.log
+
+[INFO] 20:24:18:581 GameBoy/(13294:13300): Puerto GameCard: 8372
+[INFO] 20:24:18:581 GameBoy/(13294:13300): Ip GameCard: 127.0.0.1
+[INFO] 20:24:18:581 GameBoy/(13294:13300): Dentro de iniciar servidor
+[INFO] 20:24:18:581 GameBoy/(13294:13300): Listo para escuchar a mi cliente
+[INFO] 20:24:18:581 GameBoy/(13294:13300): esperando
+[INFO] 20:24:24:302 GameBoy/(13294:13300): Se conecto un cliente!
+[INFO] 20:24:24:302 GameBoy/(13294:13300): se conecto cliente: 8
+[INFO] 20:24:24:304 GameBoy/(13294:13300): :::: Se creo hilo para cliente ::::
+[INFO] 20:24:24:304 GameBoy/(13294:13300): esperando
+[INFO] 20:24:24:314 GameBoy/(13294:13306): Llego un new pokemon
+[INFO] 20:24:24:314 GameBoy/(13294:13306): Me llego mensaje de 0. Id: 1, Pkm: PIKACHU, x: 6, y: 6, cant: 10
+
+[INFO] 20:46:08:264 GameBoy/(14689:14700): Logger iniciado: GameBoy.log
+
+[INFO] 20:46:08:264 GameBoy/(14689:14700): Puerto GameCard: 8372
+[INFO] 20:46:08:264 GameBoy/(14689:14700): Ip GameCard: 127.0.0.1
+[INFO] 20:46:08:264 GameBoy/(14689:14700): Dentro de iniciar servidor
+[INFO] 20:46:08:264 GameBoy/(14689:14700): Listo para escuchar a mi cliente
+[INFO] 20:46:08:265 GameBoy/(14689:14700): esperando
+[INFO] 20:46:21:187 GameBoy/(14689:14700): Se conecto un cliente!
+[INFO] 20:46:21:188 GameBoy/(14689:14700): se conecto cliente: 9
+[INFO] 20:46:21:196 GameBoy/(14689:14700): :::: Se creo hilo para cliente ::::
+[INFO] 20:46:21:196 GameBoy/(14689:14700): esperando
+[INFO] 20:46:21:198 GameBoy/(14689:14723): Llego un new pokemon
+[INFO] 20:46:21:199 GameBoy/(14689:14723): Me llego mensaje de 0. Id: 1, Pkm: PIKACHU, x: 6, y: 6, cant: 10
+
+[INFO] 21:03:35:62 GameBoy/(15722:15752): Logger iniciado: GameBoy.log
+
+[INFO] 21:03:35:65 GameBoy/(15722:15752): Puerto GameCard: 8372
+[INFO] 21:03:35:65 GameBoy/(15722:15752): Ip GameCard: 127.0.0.1
+[INFO] 21:03:35:65 GameBoy/(15722:15752): Dentro de iniciar servidor
+[INFO] 21:03:35:66 GameBoy/(15722:15752): Listo para escuchar a mi cliente
+[INFO] 21:03:35:66 GameBoy/(15722:15752): esperando
+[INFO] 21:03:53:788 GameBoy/(15722:15752): Se conecto un cliente!
+[INFO] 21:03:53:788 GameBoy/(15722:15752): se conecto cliente: 8
+[INFO] 21:03:53:788 GameBoy/(15722:15752): :::: Se creo hilo para cliente ::::
+[INFO] 21:03:53:788 GameBoy/(15722:15752): esperando
+[INFO] 21:03:53:802 GameBoy/(15722:15766): Llego un new pokemon
+[INFO] 21:03:53:802 GameBoy/(15722:15766): Me llego mensaje de 0. Id: 1, Pkm: PIKACHU, x: 6, y: 6, cant: 10
+
+[INFO] 21:46:28:264 GameBoy/(17508:17538): Logger iniciado: GameBoy.log
+
+[INFO] 21:46:28:264 GameBoy/(17508:17538): Puerto GameCard: 8372
+[INFO] 21:46:28:264 GameBoy/(17508:17538): Ip GameCard: 127.0.0.1
+[INFO] 21:46:28:264 GameBoy/(17508:17538): Dentro de iniciar servidor
+[INFO] 21:46:28:264 GameBoy/(17508:17538): Listo para escuchar a mi cliente
+[INFO] 21:46:28:264 GameBoy/(17508:17538): esperando
+[INFO] 21:46:39:722 GameBoy/(17508:17538): Se conecto un cliente!
+[INFO] 21:46:39:723 GameBoy/(17508:17538): se conecto cliente: 8
+[INFO] 21:46:39:725 GameBoy/(17508:17538): :::: Se creo hilo para cliente ::::
+[INFO] 21:46:39:725 GameBoy/(17508:17538): esperando
+[INFO] 21:46:39:733 GameBoy/(17508:17547): Llego un new pokemon
+[INFO] 21:46:39:742 GameBoy/(17508:17547): Me llego mensaje de 0. Id: 1, Pkm: PIKACHU, x: 6, y: 6, cant: 10
+
