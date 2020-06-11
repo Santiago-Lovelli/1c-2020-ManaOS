@@ -460,9 +460,6 @@ static void entrenadorDestroy(entrenador *self) {
     free(self->pokemonesObjetivo);
 }
 
-int objetivoTerminado(){
-	return 0;
-}
 
 ////////////Funciones planificacion/////////////
 proceso* planificarSegun(char* tipoPlanificacion, t_list* procesos){

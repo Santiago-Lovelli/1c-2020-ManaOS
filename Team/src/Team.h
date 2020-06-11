@@ -82,25 +82,137 @@ void iniciarVariablesDePlanificacion();
 //////FUNCIONES FINALES/////////
 void finalFeliz();
 static void entrenadorDestroy(entrenador *self);
+
+/*
+ * FUNCION DE CONTROL PARA IDENTIFICAR SI
+ * EL MODULO HA TERMINADO SU FUNCION, DARA TRUE
+ * SI CADA ENTRENADOR CUMPLIO SU OBJETIVO Y ADEMAS
+ * SE CUMPLIO EL OBJETIVO GLOBAL
+ */
+
 bool teamCumplioSuObjetivo();
+
+/*
+ * FUNCION DE CONTROL PARA IDENTIFICAR SI
+ * EL MODULO HA TERMINADO UNA DE SUS FUNCIONES, DARA TRUE
+ * SI SE CONSIGUIERON TODOS LOS POKEMONS DEL OBJETIVO GLOBAL
+ */
+
 bool objetivoGlobalCumplido();
+
+/*
+ * FUNCION DE CONTROL PARA IDENTIFICAR SI
+ * EL MODULO HA TERMINADO UNA DE SUS FUNCIONES, DARA TRUE
+ * SI TODOS LOS ENTRENADORES CUMPLIERON SUS OBJETIVOS
+ */
+
 bool todosLosEntrenadoresCumplieronObjetivo();
+
+/*
+ * FUNCION DE CONTROL PARA IDENTIFICAR SI
+ * EL MODULO HA TERMINADO UNA DE SUS FUNCIONES, DARA TRUE
+ * SI El ENTRENADOR CUMPLIO SU OBJETIVO
+ */
+
 bool entrenadorCumplioObjetivo(entrenador* trainer);
+
+/*
+ * FUNCION QUE DADOS DOS POKEMON RETORNA TRUE SI SON IGUALES
+ */
+
 bool sonLosMismosPokemon(char **pokemons1, char **pokemons2);
 
 /////////FUNCIONES PROPIAS TEAMS/////////////
-int objetivoTerminado();
+
+/*
+ * ESTA FUNCION DADO UN PUNTO DEVUELVE EL
+ * ID (CORRESPONDIENTE A LA LISTA DE ENTRENADORES)
+ * DEL ENTRENADOR MAS CERCANO
+ */
+
 int entrenadorMasCercano(punto point);
+
+/*
+ * ESTA FUNCION DADA DOS PUNTOS NOS DEVUELVE
+ * LA DIFERENCIA ENTRE ELLOS
+ */
+
 int diferenciaEntrePuntos(punto origen, punto destino);
+
+/*
+ * ESTA FUNCION DADO UN POKEMON NOS DEVUELVE
+ * SI ESTE SE ENCUENTRA EN NUESTRO OBJETIVO GLOBAL
+ */
+
 bool necesitoEstePokemon(char *pokemon);
+
+/*
+ * ESTA FUNCION DADO UN POKEMON RESTA UNO DEL
+ * MISMO DE LA CANTIDAD QUE NECESITAMOS EN UN
+ * NUESTRO OBJETIVO GLOBAL
+ */
+
 void descontarDeObjetivoGlobal(char *pokemon);
+
+/*
+ * ESTA FUNCION DADO EL ID DE UN ENTRENADOR
+ * (RESPECTO A LA LISTA TOTAL DE ENTRENADORES)
+ * Y UN ESTADO, PASA EL ENTRENADOR A DICHO ESTADO
+ * MOVIENDOLO TAMBIEN ENTRE LAS LISTAS DE ESTADOS
+ */
+
 void pasarEntrenadorAEstado(int index, t_estado estado);
+
+/*
+ * ESTA FUNCION DADOS DOS ENTRENADORES DEVUELVE
+ * TRUE SI SE ENCUENTRAN EN LA MISMA POSICION
+ */
+
 bool mismaPosicion(entrenador* e1, entrenador* e2);
+
+/*
+ * ESTA FUNCION DADOS UN ENTRENADOR Y UN PUNTO
+ * DEVUELVE TRUE SI SE ENCUENTRAN EN LA MISMA
+ * POSICION
+ */
+
 bool mismaPosicion2(entrenador* e1, punto e2);
+
+/*
+ * ESTA FUNCION DADOS DOS PUNTOS, ACERCA EL PUNTO1
+ * HACIA EL PUNTO 2 MOVIENDOSE DE A UN ESPACIO A LA
+ * VEZ PRIMERO SOBRE EL EJE X Y DESPUES SOBRE EL EJE Y
+ */
+
 bool acercar(int *punto1, int punto2);
+
+/*
+ * ESTA FUNCION DADOS UN ENTRENADOR Y UN PUNTO
+ * ACERCA AL ENTRENADOR  HACIA EL PUNTO 2 MOVIENDOSE
+ *  DE A UN ESPACIO A LA VEZ PRIMERO SOBRE EL EJE X
+ *   Y DESPUES SOBRE EL EJE Y
+ */
+
 bool moveHacia(entrenador* e1, punto destino);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR LO SACA DE
+ * LA LISTA CORRESPONDIENTE A SU ESTADO ACTUAL
+ */
+
 void sacarEntrenadorDeEstadoActual(entrenador* trainer);
+
+/*
+ * ESTA LISTA DADAS DOS TUPLAS DE ID ENTRENADOR, LAS COMPARA
+ */
+
 bool comparadorIDs(tuplaIdEntrenador *tupla1, tuplaIdEntrenador *tupla2);
+
+/*
+ * ESTA FUNCION DADO UN ID NOS DICE SI ES UN ID QUE ESTAMOS
+ * ESPERANDO RESPUESTA
+ */
+
 bool necesitoEsteID(int id);
 
 ////////FUNCIONES PLANIFICACION////////////
@@ -113,16 +225,80 @@ unsigned long int getClockTime();
 void agregarTiempo(int cantidad);
 
 ////////FUNCIONES HILOS////////////
+
+/*
+ * FUNCION PARA CONECTARSE A BROKER
+ * EN CASO DE QUE LA CONEXION FALLA REINTENTA
+ * CADA UNA CANTIDAD X DE SEGUNDOS DEFINIDA POR
+ * ARCHIVO DE CONFIGURACION
+ */
+
 int iniciarConexionABroker();
+
+/*
+ * FUNCION PARA ATENDER EL GAMEBOY
+ */
+
 void iniciarServidorDeGameBoy(pthread_t* servidor);
+
+/*
+ * FUNCION PARA ATENDER EL GAMEBOY
+ */
+
 void* atenderGameBoy();
+
+/*
+ * ESTA FUNCION SE CONECTA A UNA COLA DEL BROKER
+ */
+
 void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion);
+
+/*
+ * ESTA FUNCION DADA UNA COLA DE SUSCRIPCION, MANDA
+ * EL CORRESPONDIENTE MENSAJE AL BROKER
+ */
+
 void* suscribirme(d_message colaDeSuscripcion);
+
+/*
+ * ESTA FUNCION RECIBE UNA CONEXION Y LA ATIENDE
+ */
+
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento);
+
+/*
+ * FUNCION PRINCIPAL DE TEAM, CUANDO NOS LLEGA UN MENSAJE POR SOCKET
+ * ESTA FUNCION LO DIRIJE HACIA LA FUNCION ADECUADA
+ */
+
 void atender(HeaderDelibird header, int cliente, t_log* logger);
+
+/*
+ * ESTA FUNCION DADO UN HEADER DE MENSAJE ACK, RECIBE EL ID
+ * ENVIADO POR EL BROKER Y LO DEVUELVE
+ */
+
 uint32_t recibirResponse(int conexion, HeaderDelibird headerACK);
+
+/*
+ * ESTA FUNCION LE ENVIA UN CATCH DEL POKEMON CORRESPONDIENTE AL BROKER,
+ * RECIBE EL ID CORRESPONDIENTE Y LO AGREGA A LA LISTA DE IDS DESEADOS
+ */
+
 void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch);
+
+/*
+ * ESTA FUNCION LE ENVIA UN GET POKEMON AL BROKER Y ESPERA SU RESPUESTAS
+ */
+
 void enviarGetPokemonYRecibirResponse(char *pokemon, void* value);
+
+/*
+ * ESTA FUNCION LE ENVIA UN GET POKEMON AL BROKER
+ * POR CADA POKEMON PRESENTE NE NUESTRO OBJETIVO
+ * GLOBAL
+ */
+
 void enviarGetXCadaPokemonObjetivo();
 
 
