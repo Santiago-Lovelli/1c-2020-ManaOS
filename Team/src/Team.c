@@ -4,9 +4,9 @@ int main (void){
 	inicializar();
 	list_add_all(EstadoNew, ENTRENADORES_TOTALES);
 	list_add_all(EstadoReady, ENTRENADORES_TOTALES);
-	while(objetivoTerminado() == 0){
-		proceso* procesoAEjecutar = planificarSegun(TEAM_CONFIG.ALGORITMO_PLANIFICACION, EstadoReady);
-	}
+//	while(objetivoTerminado() == 0){
+//		proceso* procesoAEjecutar = planificarSegun(TEAM_CONFIG.ALGORITMO_PLANIFICACION, EstadoReady);
+//	}
 	finalFeliz();
 	return EXIT_SUCCESS;
 }
@@ -85,7 +85,7 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 	Serialize_PackAndSend_CATCH_POKEMON_NoID(conexion, pokemon, posX, posY);
 	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
 	int idEsperado = recibirResponse(conexion, headerACK);
-	tuplaIdEntrenador *tupla;
+	tuplaIdEntrenador *tupla = malloc(sizeof(tuplaIdEntrenador));
 	tupla->idMensaje = idEsperado;
 	tupla->idEntrenador = idEntrenadorQueMandaCatch;
 	list_add(ID_QUE_NECESITO, tupla);
@@ -367,9 +367,13 @@ bool comparadorIDs(tuplaIdEntrenador *tupla1, tuplaIdEntrenador *tupla2){
 }
 
 bool necesitoEsteID(int id){
-	tuplaIdEntrenador* tuplaAux;
+	tuplaIdEntrenador* tuplaAux = malloc(sizeof(tuplaIdEntrenador));
 	tuplaAux->idMensaje = id;
-	list_get_index(ID_QUE_NECESITO, tuplaAux, comparadorIDs);
+	int resultado = list_get_index(ID_QUE_NECESITO, tuplaAux, comparadorIDs);
+	free(tuplaAux);
+	if(resultado == -1)
+		return false;
+	return true;
 }
 
 void descontarDeObjetivoGlobal(char *pokemon){
