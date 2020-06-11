@@ -85,10 +85,11 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 	Serialize_PackAndSend_CATCH_POKEMON_NoID(conexion, pokemon, posX, posY);
 	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
 	int idEsperado = recibirResponse(conexion, headerACK);
-	tuplaIdEntrenador *tupla = malloc(sizeof(tuplaIdEntrenador));
-	tupla->idMensaje = idEsperado;
-	tupla->idEntrenador = idEntrenadorQueMandaCatch;
-	list_add(ID_QUE_NECESITO, tupla);
+	objetoID_QUE_NECESITO *objetoID = malloc(sizeof(objetoID_QUE_NECESITO));
+	objetoID->idMensaje = idEsperado;
+	objetoID->idEntrenador = idEntrenadorQueMandaCatch;
+	objetoID->pokemon = pokemon;
+	list_add(ID_QUE_NECESITO, objetoID);
 }
 
 void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
@@ -221,10 +222,27 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 				&resultadoCaught);
 		log_info(logger, "Me llego mensaje de %i. Id: %i, Result: %i\n",
 				header.tipoMensaje, idMensajeCaught, resultadoCaught);
-
-		// HACER CAUGHT
-
-
+		if(necesitoEsteID(idMensajeCaught)){
+			//seguir
+			objetoID_QUE_NECESITO *objetoID = malloc(sizeof(objetoID_QUE_NECESITO));
+			objetoID->idMensaje = idMensajeCaught;
+			int index = list_get_index(ID_QUE_NECESITO, objetoID, (void*)comparadorIDs);
+			if(resultadoCaught){
+				free(objetoID);
+				objetoID = list_get(ID_QUE_NECESITO, index);
+				entrenador *trainer = list_get(ENTRENADORES_TOTALES, objetoID->idEntrenador);
+				list_remove(ID_QUE_NECESITO, index);
+				list_add(trainer->pokemones, objetoID->pokemon);
+				descontarDeObjetivoGlobal(objetoID->pokemon);
+				free(objetoID);
+			}
+			else{
+				free(objetoID);
+				objetoID = list_get(ID_QUE_NECESITO, index);
+				list_remove(ID_QUE_NECESITO, index);
+				free(objetoID);
+			}
+		}
 		free(packCaughtPokemon);
 		break;
 	default:
@@ -368,15 +386,15 @@ bool necesitoEstePokemon(char *pokemon){
 	return (valor>0);
 }
 
-bool comparadorIDs(tuplaIdEntrenador *tupla1, tuplaIdEntrenador *tupla2){
-	return tupla1->idMensaje == tupla2->idMensaje;
+bool comparadorIDs(objetoID_QUE_NECESITO *objetoID1, objetoID_QUE_NECESITO *objetoID2){
+	return objetoID1->idMensaje == objetoID2->idMensaje;
 }
 
 bool necesitoEsteID(int id){
-	tuplaIdEntrenador* tuplaAux = malloc(sizeof(tuplaIdEntrenador));
-	tuplaAux->idMensaje = id;
-	int resultado = list_get_index(ID_QUE_NECESITO, tuplaAux, comparadorIDs);
-	free(tuplaAux);
+	objetoID_QUE_NECESITO* objetoIDAux = malloc(sizeof(objetoID_QUE_NECESITO));
+	objetoIDAux->idMensaje = id;
+	int resultado = list_get_index(ID_QUE_NECESITO, objetoIDAux, comparadorIDs);
+	free(objetoIDAux);
 	if(resultado == -1)
 		return false;
 	return true;

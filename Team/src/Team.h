@@ -61,10 +61,11 @@ typedef struct {
 	t_log* log;
 } p_elementoDeHilo;
 
-typedef struct tuplaIdEntrenador{
+typedef struct objetoID_QUE_NECESITO{
 	int idMensaje;
 	int idEntrenador;
-}tuplaIdEntrenador;
+	char *pokemon;
+}objetoID_QUE_NECESITO;
 
 
 //////FUNCIONES INICIALES/////////
@@ -215,7 +216,7 @@ void sacarEntrenadorDeEstadoActual(entrenador* trainer);
  * ESTA LISTA DADAS DOS TUPLAS DE ID ENTRENADOR, LAS COMPARA
  */
 
-bool comparadorIDs(tuplaIdEntrenador *tupla1, tuplaIdEntrenador *tupla2);
+bool comparadorIDs(objetoID_QUE_NECESITO *tupla1, objetoID_QUE_NECESITO *tupla2);
 
 /*
  * ESTA FUNCION DADO UN ID NOS DICE SI ES UN ID QUE ESTAMOS
