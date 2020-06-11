@@ -125,12 +125,20 @@ bool sonLosMismosPokemon(char **pokemons1, char **pokemons2);
 /////////FUNCIONES PROPIAS TEAMS/////////////
 
 /*
+ * ESTA FUNCION DADO UN ENTRENADOR RETORNA TRUE
+ * SI ESTE ESTA DISPONIBLE, ES DECIR, NO ESTA EN EXIT
+ * Y AUN PUEDE ATRAPAR POKEMONS
+ */
+
+bool entrenadorEstaDisponible(entrenador* entrenadorAUX);
+
+/*
  * ESTA FUNCION DADO UN PUNTO DEVUELVE EL
  * ID (CORRESPONDIENTE A LA LISTA DE ENTRENADORES)
  * DEL ENTRENADOR MAS CERCANO
  */
 
-int entrenadorMasCercano(punto point);
+int entrenadorMasCercanoDisponible(punto point);
 
 /*
  * ESTA FUNCION DADA DOS PUNTOS NOS DEVUELVE

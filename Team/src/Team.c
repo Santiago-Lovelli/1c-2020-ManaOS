@@ -234,7 +234,11 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	}
 }
 
-int entrenadorMasCercano(punto point){
+bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
+	return (entrenadorAUX->estado != t_EXIT) && (list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo));
+}
+
+int entrenadorMasCercanoDisponible(punto point){
 	int index = 0;
 	int distanciaMinima = 0;
 	int distanciaAUX = 0;
@@ -246,7 +250,7 @@ int entrenadorMasCercano(punto point){
 	for(int j = 1; j < list_size(ENTRENADORES_TOTALES); j=j+1){
 		entrenadorAUX = (entrenador*)list_get(ENTRENADORES_TOTALES,j);
 		distanciaAUX = diferenciaEntrePuntos( entrenadorAUX->posicion , point);
-		if(distanciaAUX < distanciaMinima){
+		if( (distanciaAUX < distanciaMinima) && entrenadorEstaDisponible(entrenadorAUX)){
 			distanciaMinima = distanciaAUX;
 			index = j;
 		}
