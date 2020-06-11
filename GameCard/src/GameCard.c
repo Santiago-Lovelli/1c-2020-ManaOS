@@ -47,12 +47,11 @@ char *archivoMetadataPokemon(char *path, uint32_t cantidadALevantar) {
 
 	uint32_t tamanio_archivo_de_metadata = tamanio_archivo(path);
 
-	if(cantidadALevantar > tamanio_archivo_de_metadata){
+	if (cantidadALevantar > tamanio_archivo_de_metadata) {
 		tamanio_archivo_de_metadata = cantidadALevantar;
-	}else{
+	} else {
 		tamanio_archivo_de_metadata = tamanio_archivo(path);
 	}
-
 
 	log_info(loggerGeneral, "Tamanio archivo: %i", tamanio_archivo_de_metadata);
 
@@ -70,7 +69,7 @@ char *archivoMetadataPokemon(char *path, uint32_t cantidadALevantar) {
 char* obtenerOpen(char* pkm) {
 
 	char* path = pathDePokemonMetadata(pkm);
-	char *archivoPokemon = archivoMetadataPokemon(path,NULL);
+	char *archivoPokemon = archivoMetadataPokemon(path, NULL);
 	char** separadoPorEnter = string_split(archivoPokemon, "\n");
 	char** abiertoEnUno = string_split(separadoPorEnter[3], "=");
 
@@ -82,7 +81,7 @@ p_metadata* obtenerMetadataEnteraDePokemon(char* unPokemon) {
 	//A futuro hacer refactor para no habrir archivo de metadata tantas veces
 
 	char* path = pathDePokemonMetadata(unPokemon);
-	char *archivoPokemon = archivoMetadataPokemon(path,NULL);
+	char *archivoPokemon = archivoMetadataPokemon(path, NULL);
 
 	char** separadoPorEnter = string_split(archivoPokemon, "\n");
 
@@ -186,7 +185,7 @@ char* obtenerBloqueConDatosReales(char* numeroDeBloque) {
 	return bloqueConDatos;
 }
 
-void cambiarMetadata(char* unPokemon, char* metadataNueva){
+void cambiarMetadata(char* unPokemon, char* metadataNueva) {
 
 	char* path = pathDePokemonMetadata(unPokemon);
 
@@ -194,11 +193,10 @@ void cambiarMetadata(char* unPokemon, char* metadataNueva){
 
 	char *archivoPokemon = archivoMetadataPokemon(path, strlen(metadataNueva));
 
-	memcpy(archivoPokemon,metadataNueva,strlen(metadataNueva));
-
+	memcpy(archivoPokemon, metadataNueva, strlen(metadataNueva));
 
 	for (int i = 0; i < cantidadARellenar; ++i) {
-		memcpy(archivoPokemon+strlen(metadataNueva)+i,"\0",1);
+		memcpy(archivoPokemon + strlen(metadataNueva) + i, "\0", 1);
 	}
 }
 
@@ -355,16 +353,19 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			uint32_t quedaEnBloque = metadata.tamanioDeBloque - faltante;
 
 			uint32_t quedaValor = strlen(cantidadNueva);
+			char* bloquesNuevos = string_new();
 
 			if (quedaEnBloque >= quedaConIgual) {
 
-				memcpy(bloqueConDatos+escritoEnElBloque, megaChar + escrito, quedaConIgual);
+				memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito,
+						quedaConIgual);
 				escrito = escrito + quedaConIgual;
 				quedaEnBloque = quedaEnBloque - quedaConIgual;
-				escritoEnElBloque = escritoEnElBloque +quedaConIgual;
+				escritoEnElBloque = escritoEnElBloque + quedaConIgual;
 
 			} else {
-				memcpy(bloqueConDatos+escritoEnElBloque, megaChar + escrito, quedaEnBloque);
+				memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito,
+						quedaEnBloque);
 				escrito = escrito + quedaEnBloque;
 				quedaEnBloque = 0;
 				uint32_t quedaParaIgual = quedaConIgual - quedaEnBloque;
@@ -393,27 +394,50 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 			if (quedaEnBloque >= quedaValor) {
 
-				memcpy(bloqueConDatos+escritoEnElBloque, cantidadNueva, quedaValor);
+				memcpy(bloqueConDatos + escritoEnElBloque, cantidadNueva,
+						quedaValor);
 				escrito = escrito + strlen(cantidadVieja);
 				escritoEnElBloque = escritoEnElBloque + quedaValor;
 				//me estoy salteando la cantidad vieja para cuando lea del megachar
 				quedaEnBloque = quedaEnBloque - quedaValor;
 
-				memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito, quedaEnBloque);
+				memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito,
+						quedaEnBloque);
 				escrito = escrito + quedaEnBloque;
 				escritoEnElBloque = escritoEnElBloque + quedaEnBloque;
 				quedaEnBloque = 0;
 
 			} else {
-				memcpy(bloqueConDatos + escritoEnElBloque, cantidadNueva, quedaEnBloque);
+				memcpy(bloqueConDatos + escritoEnElBloque, cantidadNueva,
+						quedaEnBloque);
 				quedaValor = quedaValor - quedaEnBloque;
 
 				/*--Nuevo bloque--*/
-				log_info(loggerGeneral, "bloque a escribir: %s",
-						arrayConBloques[i]);
 
-				pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
-				i = i + 1;
+				if(arrayConBloques[i] != NULL){
+					log_info(loggerGeneral, "bloque a escribir: %s",
+							arrayConBloques[i]);
+
+					pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
+
+					log_info(loggerGeneral, "bloque a escribir: %s",
+							arrayConBloques[i]);
+					pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
+					i = i + 1;
+				} else {
+					char* numeroDeBloqueNuevo = string_itoa(
+												buscar_espacio_en_bitmap(bitmap, loggerGeneral));
+
+					string_append(&bloquesNuevos, numeroDeBloqueNuevo);
+
+					log_info(loggerGeneral, "bloque a escribir: %s",
+							numeroDeBloqueNuevo);
+
+					pathBloque = obtenerPathDeBloque(numeroDeBloqueNuevo);
+					log_info(loggerGeneral, "path a escribir: %s", pathBloque);
+				}
+
+
 				log_info(loggerGeneral, "path a escribir: %s", pathBloque);
 
 				bloque = open(pathBloque, O_RDWR, 0);
@@ -424,13 +448,14 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				PROT_READ | PROT_WRITE,
 				MAP_SHARED | MAP_FILE, bloque, 0);
 
-				memcpy(bloqueConDatos, cantidadNueva, quedaValor);
+				memcpy(bloqueConDatos, cantidadNueva+strlen(cantidadNueva)-quedaValor, quedaValor);
 				escrito = escrito + strlen(cantidadVieja);
 				escritoEnElBloque = quedaValor;
 				//me estoy salteando la cantidad vieja para cuando lea del megachar
 				quedaEnBloque = metadata.tamanioDeBloque - quedaValor;
 
-				memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito, quedaEnBloque);
+				memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito,
+						quedaEnBloque);
 				escrito = escrito + quedaEnBloque;
 
 				quedaEnBloque = 0;
@@ -442,7 +467,6 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			uint32_t tamanioOriginal = atoi(tam[0]);
 			//aca la estoy cagando?
 			uint32_t faltanteDelMegaChar = tamanioOriginal - escrito;
-			char* bloquesNuevos = string_new();
 
 			while (escrito < faltanteDelMegaChar) {
 
@@ -513,7 +537,7 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			for (int j = 0; j < i; ++j) {
 				if (arrayConBloques[j] != NULL) {
 					string_append(&metadataPost, arrayConBloques[j]);
-					if (arrayConBloques[j+1] != NULL) {
+					if (arrayConBloques[j + 1] != NULL) {
 						string_append(&metadataPost, ",");
 					}
 				} else {
@@ -524,8 +548,7 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			}
 			string_append(&metadataPost, "]\nOPEN=N");
 
-			cambiarMetadata(pkm,metadataPost);
-
+			cambiarMetadata(pkm, metadataPost);
 
 			/*----------------------------------------------------------------*/
 			sleep(100);
@@ -538,14 +561,54 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		}
 	}
 
-	/*Agregar la posiciones
-	 * Levanto el primer bloque o todos?
-	 * Onda, busco en todos juntos o de a un bloque?
-	 * Onda copio todo junto? o solo en el primero?
-	 * mmap por cada archivo, memcpy todos a un mega char*,
-	 * Buscar y despues memcpy a los mmaps de diez hasta que
-	 * me quede uno mas chico a diez y ahi copio todo al ultimo bloque
-	 * */
+}
+
+char* metadataVacia() {
+	return "DIRECTORY=N\nSIZE=0\nBLOCKS=[]\nOPEN=N";
+}
+
+void crearMetadata(char* pkm) {
+	char* path = pathDePokemonMetadata(pkm);
+	FILE *fileMeta;
+	fileMeta = fopen(path, "w");
+	free(fileMeta);
+
+	int meta = open(path, O_RDWR, 0);
+
+	free(path);
+
+	char* metadataCreada = mmap(NULL, strlen(metadataVacia()),
+	PROT_READ | PROT_WRITE,
+	MAP_SHARED | MAP_FILE, meta, 0);
+
+	memcpy(metadataCreada, metadataVacia(), strlen(metadataVacia()));
+}
+
+void crearPokemon(char* pokemon) {
+	char *tallgrass = montajeDeArchivo();
+
+	char* rutaFiles = "/Files/";
+
+	char* path = malloc(
+			strlen(tallgrass) + strlen(rutaFiles) + strlen(pokemon) + 1);
+	int desplazamiento = 0;
+
+	memcpy(path + desplazamiento, tallgrass, strlen(tallgrass));
+	desplazamiento = desplazamiento + strlen(tallgrass);
+	memcpy(path + desplazamiento, rutaFiles, strlen(rutaFiles));
+	desplazamiento = desplazamiento + strlen(rutaFiles);
+	memcpy(path + desplazamiento, pokemon, strlen(pokemon));
+	desplazamiento = desplazamiento + strlen(pokemon);
+
+	log_info(loggerGeneral, "Montaje de path pokemon a crear: %s \n", path);
+
+	if (crearDirectorioEn(path) == -1) {
+		log_error(loggerGeneral, "Error al crear el path %s \n", path);
+		EXIT_FAILURE;
+	}
+
+	crearMetadata(pokemon);
+
 }
 
 void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
@@ -555,8 +618,8 @@ void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 	if (!existe) {
 		log_error(loggerGeneral, "NO existe el pokemon: %s", pkm);
-		puts("**************  A HACER  **************");
-		//Falta: crear toda la estructura
+		crearPokemon(pkm);
+		agregarPosicionA(pkm, posicionX, posicionY, cantidad);
 	} else {
 		log_info(loggerGeneral, "Existe el pokemon %s", pkm);
 		agregarPosicionA(pkm, posicionX, posicionY, cantidad);
