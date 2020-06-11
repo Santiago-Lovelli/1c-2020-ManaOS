@@ -17,6 +17,7 @@ void inicializar(){
 	crearEstados();
 	crearEntrenadores();
 	iniciarVariablesDePlanificacion();
+	ID_QUE_NECESITO = list_create();
 	for (int i = 0; list_get(ENTRENADORES_TOTALES, i) != NULL; i++){
 		entrenador * entrenador = list_get(ENTRENADORES_TOTALES, i);
 		printf("Entrenador en posicion: x = %d, y = %d \n", entrenador->posicion.x, entrenador->posicion.y);
@@ -79,12 +80,15 @@ uint32_t recibirResponse(int conexion, HeaderDelibird headerACK){
 }
 
 
-void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY){
+void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch){
 	int conexion = iniciarConexionABroker();
 	Serialize_PackAndSend_CATCH_POKEMON_NoID(conexion, pokemon, posX, posY);
 	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
-	recibirResponse(conexion, headerACK); //NO ESTOY USANDO ESTE DATO
-
+	int idEsperado = recibirResponse(conexion, headerACK);
+	tuplaIdEntrenador *tupla;
+	tupla->idMensaje = idEsperado;
+	tupla->idEntrenador = idEntrenadorQueMandaCatch;
+	list_add(ID_QUE_NECESITO, tupla);
 }
 
 void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
@@ -190,28 +194,19 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 				header.tipoMensaje, AppearedNombrePokemon,
 				posicionAppearedX, posicionAppearedY);
 
-		//HACER APPEARED
-
+		if(necesitoEstePokemon(AppearedNombrePokemon)){
+			punto posicionPoke;
+			posicionPoke.x = posicionAppearedX;
+			posicionPoke.y = posicionAppearedY;
+			int idEntrenador = entrenadorMasCercano(posicionPoke);
+			//seguir
+		}
 		free(packAppearedPokemon);
 		break;
 	case d_LOCALIZED_POKEMON:
 		;
 		//SERIALIZACION PENDIENTE
 
-			/*log_info(logger, "Llego un catch pokemon");
-
-			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente,
-					header.tamanioMensaje);
-			uint32_t idMensajeCatch, posicionCatchX, posicionCatchY;
-			char *catchNombrePokemon;
-			Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch,
-					&catchNombrePokemon, &posicionCatchX, &posicionCatchY);
-			log_info(logger,
-					"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n",
-					header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
-					posicionCatchX, posicionCatchY);
-			// Se hace lo necesario
-			free(packCatchPokemon);*/
 		break;
 	case d_CAUGHT_POKEMON:
 		;
@@ -226,6 +221,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 				header.tipoMensaje, idMensajeCaught, resultadoCaught);
 
 		// HACER CAUGHT
+
 
 		free(packCaughtPokemon);
 		break;
@@ -364,6 +360,16 @@ int diferenciaEntrePuntos(punto origen, punto destino){
 bool necesitoEstePokemon(char *pokemon){
 	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
 	return (valor>0);
+}
+
+bool comparadorIDs(tuplaIdEntrenador *tupla1, tuplaIdEntrenador *tupla2){
+	return tupla1->idMensaje == tupla2->idMensaje;
+}
+
+bool necesitoEsteID(int id){
+	tuplaIdEntrenador* tuplaAux;
+	tuplaAux->idMensaje = id;
+	list_get_index(ID_QUE_NECESITO, tuplaAux, comparadorIDs);
 }
 
 void descontarDeObjetivoGlobal(char *pokemon){

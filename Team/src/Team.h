@@ -61,6 +61,11 @@ typedef struct {
 	t_log* log;
 } p_elementoDeHilo;
 
+typedef struct tuplaIdEntrenador{
+	int idMensaje;
+	int idEntrenador;
+}tuplaIdEntrenador;
+
 
 //////FUNCIONES INICIALES/////////
 void iniciarConfig();
@@ -95,6 +100,8 @@ bool mismaPosicion2(entrenador* e1, punto e2);
 bool acercar(int *punto1, int punto2);
 bool moveHacia(entrenador* e1, punto destino);
 void sacarEntrenadorDeEstadoActual(entrenador* trainer);
+bool comparadorIDs(tuplaIdEntrenador *tupla1, tuplaIdEntrenador *tupla2);
+bool necesitoEsteID(int id);
 
 ////////FUNCIONES PLANIFICACION////////////
 proceso* planificarSegun(char* tipoPlanificacion, t_list* procesos);
@@ -114,7 +121,7 @@ void* suscribirme(d_message colaDeSuscripcion);
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento);
 void atender(HeaderDelibird header, int cliente, t_log* logger);
 uint32_t recibirResponse(int conexion, HeaderDelibird headerACK);
-void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY);
+void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch);
 void enviarGetPokemonYRecibirResponse(char *pokemon, void* value);
 void enviarGetXCadaPokemonObjetivo();
 
@@ -131,6 +138,7 @@ t_log * TEAM_LOG;
 t_dictionary * OBJETIVO_GLOBAL;
 t_list * ENTRENADORES_TOTALES;
 t_list * POKEMONES_ATRAPADOS;
+t_list * ID_QUE_NECESITO;
 
 ///////Estados//////////
 t_list* EstadoNew;
