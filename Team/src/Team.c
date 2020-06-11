@@ -198,7 +198,9 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 			punto posicionPoke;
 			posicionPoke.x = posicionAppearedX;
 			posicionPoke.y = posicionAppearedY;
-			int idEntrenador = entrenadorMasCercano(posicionPoke);
+			int idEntrenador = entrenadorMasCercanoDisponible(posicionPoke);
+			if(idEntrenador == -1)
+				log_error(logger, "No hay entrenadores disponibles");
 			//seguir
 		}
 		free(packAppearedPokemon);
@@ -239,7 +241,7 @@ bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
 }
 
 int entrenadorMasCercanoDisponible(punto point){
-	int index = 0;
+	int index = -1;
 	int distanciaMinima = 0;
 	int distanciaAUX = 0;
 	entrenador *entrenadorAUX;

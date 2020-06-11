@@ -136,6 +136,7 @@ bool entrenadorEstaDisponible(entrenador* entrenadorAUX);
  * ESTA FUNCION DADO UN PUNTO DEVUELVE EL
  * ID (CORRESPONDIENTE A LA LISTA DE ENTRENADORES)
  * DEL ENTRENADOR MAS CERCANO
+ * RETORNA -1 SI NO HAY NINGUNO DISPONIBLE
  */
 
 int entrenadorMasCercanoDisponible(punto point);
