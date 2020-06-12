@@ -235,7 +235,9 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 	int idEntrenador = entrenadorMasCercanoDisponible(posicionPoke);
 	if(idEntrenador == -1){
 		log_error(logger, "No hay entrenadores disponibles");
+		return;
 	}
+
 	//TODO seguir
 }
 
@@ -262,7 +264,9 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught){
 }
 
 bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
-	return (entrenadorAUX->estado != t_EXIT) && (entrenadorAUX->estado != t_BLOCKED) &&(list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo));
+	return (entrenadorAUX->estado != t_EXIT) &&
+		   (entrenadorAUX->estado != t_READY) &&
+		   (list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo));
 }
 
 int entrenadorMasCercanoDisponible(punto point){
