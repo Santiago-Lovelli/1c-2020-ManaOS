@@ -226,6 +226,14 @@ bool comparadorIDs(objetoID_QUE_NECESITO *tupla1, objetoID_QUE_NECESITO *tupla2)
 bool necesitoEsteID(int id);
 
 /*
+ * Esta funcion dado una posicion de X|Y y un pokemon, planifica
+ * al entrenador mas cercano a capturarlo
+ */
+
+
+void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, t_log* logger);
+
+/*
  * ESTA FUNCION DADO UN ID DE MENSAJE CORRELATIVO Y UN RESULTADO
  * SE ENCARGA DE AVISARLE AL ENTRENADOR EL RESULTADO DE SU CAPTURA
  */

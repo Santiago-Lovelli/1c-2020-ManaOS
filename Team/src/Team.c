@@ -184,25 +184,14 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	case d_APPEARED_POKEMON:
 		;
 		log_info(logger, "Llego un appeared pokemon");
-		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente,
-				header.tamanioMensaje);
+		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 		uint32_t posicionAppearedX, posicionAppearedY;
 		char *AppearedNombrePokemon;
-		Serialize_Unpack_AppearedPokemon_NoID(packAppearedPokemon,
-				&AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
-		log_info(logger,
-				"Me llego mensaje de %i. Pkm: %s, x: %i, y: %i\n",
-				header.tipoMensaje, AppearedNombrePokemon,
-				posicionAppearedX, posicionAppearedY);
+		Serialize_Unpack_AppearedPokemon_NoID(packAppearedPokemon, &AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
+		log_info(logger, "Me llego mensaje de %i. Pkm: %s, x: %i, y: %i\n", header.tipoMensaje, AppearedNombrePokemon, posicionAppearedX, posicionAppearedY);
 
 		if(necesitoEstePokemon(AppearedNombrePokemon)){
-			punto posicionPoke;
-			posicionPoke.x = posicionAppearedX;
-			posicionPoke.y = posicionAppearedY;
-			int idEntrenador = entrenadorMasCercanoDisponible(posicionPoke);
-			if(idEntrenador == -1)
-				log_error(logger, "No hay entrenadores disponibles");
-			//seguir
+			hacerAppeared(AppearedNombrePokemon,posicionAppearedX,posicionAppearedY,logger);
 		}
 		free(packAppearedPokemon);
 		break;
@@ -237,6 +226,17 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		free(packBasura);
 		break;
 	}
+}
+
+void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, t_log* logger){
+	punto posicionPoke;
+	posicionPoke.x = posicionAppearedX;
+	posicionPoke.y = posicionAppearedY;
+	int idEntrenador = entrenadorMasCercanoDisponible(posicionPoke);
+	if(idEntrenador == -1){
+		log_error(logger, "No hay entrenadores disponibles");
+	}
+	//TODO seguir
 }
 
 void hacerCaught(int idMensajeCaught, int resultadoCaught){
