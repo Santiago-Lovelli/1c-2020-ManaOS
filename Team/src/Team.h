@@ -225,6 +225,13 @@ bool comparadorIDs(objetoID_QUE_NECESITO *tupla1, objetoID_QUE_NECESITO *tupla2)
 
 bool necesitoEsteID(int id);
 
+/*
+ * ESTA FUNCION DADO UN ID DE MENSAJE CORRELATIVO Y UN RESULTADO
+ * SE ENCARGA DE AVISARLE AL ENTRENADOR EL RESULTADO DE SU CAPTURA
+ */
+
+void hacerCaught(int idMensajeCaught, int resultadoCaught);
+
 ////////FUNCIONES PLANIFICACION////////////
 proceso* planificarSegun(char* tipoPlanificacion, t_list* procesos);
 proceso* FIFO(t_list* procesos);

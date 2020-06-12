@@ -211,40 +211,25 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		//SERIALIZACION PENDIENTE
 
 		break;
+
 	case d_CAUGHT_POKEMON:
 		;
-		log_info(logger, "Llego un caught pokemon");
-
-		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente,
-				header.tamanioMensaje);
+		log_info(logger, "Llego un Caught Pokemon");
+		//recibimos el resto del paquete
+		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+		//Con estas dos variables desempaquetamos el paquete
 		uint32_t idMensajeCaught, resultadoCaught;
-		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught,
-				&resultadoCaught);
-		log_info(logger, "Me llego mensaje de %i. Id: %i, Result: %i\n",
-				header.tipoMensaje, idMensajeCaught, resultadoCaught);
+		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught, &resultadoCaught);
+		log_info(logger, "Me llego mensaje de %i. Id: %i, Result: %i\n", header.tipoMensaje, idMensajeCaught, resultadoCaught);
+
 		if(necesitoEsteID(idMensajeCaught)){
-			//seguir
-			objetoID_QUE_NECESITO *objetoID = malloc(sizeof(objetoID_QUE_NECESITO));
-			objetoID->idMensaje = idMensajeCaught;
-			int index = list_get_index(ID_QUE_NECESITO, objetoID, (void*)comparadorIDs);
-			if(resultadoCaught){
-				free(objetoID);
-				objetoID = list_get(ID_QUE_NECESITO, index);
-				entrenador *trainer = list_get(ENTRENADORES_TOTALES, objetoID->idEntrenador);
-				list_remove(ID_QUE_NECESITO, index);
-				list_add(trainer->pokemones, objetoID->pokemon);
-				descontarDeObjetivoGlobal(objetoID->pokemon);
-				free(objetoID);
-			}
-			else{
-				free(objetoID);
-				objetoID = list_get(ID_QUE_NECESITO, index);
-				list_remove(ID_QUE_NECESITO, index);
-				free(objetoID);
-			}
+			hacerCaught(idMensajeCaught,resultadoCaught);
 		}
+
 		free(packCaughtPokemon);
+
 		break;
+
 	default:
 		log_error(logger, "Mensaje no entendido: %i\n", header);
 		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
@@ -254,8 +239,30 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	}
 }
 
+void hacerCaught(int idMensajeCaught, int resultadoCaught){
+	objetoID_QUE_NECESITO *objetoID = malloc(sizeof(objetoID_QUE_NECESITO));
+	objetoID->idMensaje = idMensajeCaught;
+	int index = list_get_index(ID_QUE_NECESITO, objetoID, (void*)comparadorIDs);
+	if(resultadoCaught){
+		free(objetoID);
+		objetoID = list_get(ID_QUE_NECESITO, index);
+		entrenador *trainer = list_get(ENTRENADORES_TOTALES, objetoID->idEntrenador);
+		list_remove(ID_QUE_NECESITO, index);
+		list_add(trainer->pokemones, objetoID->pokemon);
+		pasarEntrenadorAEstado(objetoID->idEntrenador, t_READY);
+		descontarDeObjetivoGlobal(objetoID->pokemon);
+		free(objetoID);
+	}
+	else{
+		free(objetoID);
+		objetoID = list_get(ID_QUE_NECESITO, index);
+		list_remove(ID_QUE_NECESITO, index);
+		free(objetoID);
+	}
+}
+
 bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
-	return (entrenadorAUX->estado != t_EXIT) && (list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo));
+	return (entrenadorAUX->estado != t_EXIT) && (entrenadorAUX->estado != t_BLOCKED) &&(list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo));
 }
 
 int entrenadorMasCercanoDisponible(punto point){
