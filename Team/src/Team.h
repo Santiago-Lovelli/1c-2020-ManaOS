@@ -23,6 +23,14 @@ typedef enum t_estado {
 	t_EXIT
 } t_estado;
 
+
+typedef enum t_razonBloqueo {
+	t_NULL,
+	t_DESOCUPADO,
+	t_ESPERANDO_RESPUESTA,
+	t_DEADLOCK
+} t_razonBloqueo;
+
 typedef struct config{
 	char** POSICIONES_ENTRENADORES;
 	char** POKEMON_ENTRENADORES;
@@ -49,6 +57,7 @@ typedef struct entrenador{
 	char ** pokemones;
 	char ** pokemonesObjetivo;
 	t_estado estado;
+	t_razonBloqueo razonBloqueo;
 }entrenador;
 
 typedef struct proceso{
@@ -163,6 +172,15 @@ bool necesitoEstePokemon(char *pokemon);
  */
 
 void descontarDeObjetivoGlobal(char *pokemon);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR Y UNA RAZON
+ * PASA EL ESTADO DE ESTE A BLOQUEADO PARA BLOQUEAR
+ * A UN ENTRENADOR ES IMPORTANTE QUE SE USE ESTA
+ * FUNCION
+ */
+
+void bloquearEntrenador(int idEntrenador, t_razonBloqueo razon);
 
 /*
  * ESTA FUNCION DADO EL ID DE UN ENTRENADOR

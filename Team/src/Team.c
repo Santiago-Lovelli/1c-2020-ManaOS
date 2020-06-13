@@ -89,6 +89,7 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 	objetoID->idMensaje = idEsperado;
 	objetoID->idEntrenador = idEntrenadorQueMandaCatch;
 	objetoID->pokemon = pokemon;
+	bloquearEntrenador(objetoID->idEntrenador, t_ESPERANDO_RESPUESTA);
 	list_add(ID_QUE_NECESITO, objetoID);
 }
 
@@ -239,8 +240,7 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 		log_error(logger, "No hay entrenadores disponibles");
 		return;
 	}
-
-	//TODO seguir
+	pasarEntrenadorAEstado(idEntrenador, t_READY);
 }
 
 void hacerCaught(int idMensajeCaught, int resultadoCaught){
@@ -253,14 +253,15 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught){
 		entrenador *trainer = list_get(ENTRENADORES_TOTALES, objetoID->idEntrenador);
 		list_remove(ID_QUE_NECESITO, index);
 		list_add(trainer->pokemones, objetoID->pokemon);
-		pasarEntrenadorAEstado(objetoID->idEntrenador, t_READY);
 		descontarDeObjetivoGlobal(objetoID->pokemon);
+		trainer->razonBloqueo = t_DESOCUPADO;
 		free(objetoID);
 	}
 	else{
 		free(objetoID);
 		objetoID = list_get(ID_QUE_NECESITO, index);
 		list_remove(ID_QUE_NECESITO, index);
+		bloquearEntrenador(objetoID->idEntrenador, t_DESOCUPADO);
 		free(objetoID);
 	}
 }
@@ -268,7 +269,9 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught){
 bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
 	return (entrenadorAUX->estado != t_EXIT) &&
 		   (entrenadorAUX->estado != t_READY) &&
-		   (list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo));
+		   (list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo)) &&
+		   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA);
+
 }
 
 int entrenadorMasCercanoDisponible(punto point){
@@ -328,8 +331,15 @@ void eliminarDeListaIndex(int index, t_list* lista){
 		printf("Indice Invalido");
 }
 
+void bloquearEntrenador(int idEntrenador, t_razonBloqueo razon){
+	entrenador *trainer = list_get(ENTRENADORES_TOTALES, idEntrenador);
+	trainer->razonBloqueo = razon;
+	pasarEntrenadorAEstado(idEntrenador, t_BLOCKED);
+}
+
 void sacarEntrenadorDeEstadoActual(entrenador* trainer){
 	int index=0;
+	trainer->razonBloqueo = t_NULL;
 	switch(trainer->estado){
 	case t_NEW:;
 		index = list_get_index(EstadoNew, trainer, (void*)mismaPosicion);
@@ -473,6 +483,7 @@ entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObj
 	newTrainer->pokemones = pokemones;
 	newTrainer->pokemonesObjetivo = pokemonesObjetivo;
 	newTrainer->estado = t_NEW;
+	newTrainer->razonBloqueo = t_NULL;
 	return newTrainer;
 }
 
