@@ -59,6 +59,13 @@ typedef enum d_messages {
 	d_SUBSCRIBE_QUEUE
 } d_message;
 
+typedef enum d_process {
+	d_BROKER,
+	d_TEAM,
+	d_GAMECARD,
+	d_SUBSCRIBER
+} d_process;
+
 ////////////////////////
 // Comunicacion Base //
 ///////////////////////
@@ -67,6 +74,12 @@ typedef struct {
 	uint32_t tamanioMensaje;
 	d_message tipoMensaje;
 }__attribute__((packed)) HeaderDelibird; //Esta estructura es de tamaño 8
+
+typedef struct {
+	uint32_t posX;
+	uint32_t posY;
+	uint32_t cantidad;
+}__attribute__((packed)) d_PosCant;
 
 ////////////////
 // FUNCIONES //
@@ -103,10 +116,22 @@ bool Serialize_PackAndSend_SubscribeQueue(int socketCliente, d_message queue);
 bool Serialize_PackAndSend_NEW_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY, uint32_t cantidad);
 
 /**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO NEW_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_NEW_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY, uint32_t cantidad);
+
+/**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO CATCH_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 
 bool Serialize_PackAndSend_CATCH_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO CATCH_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_CATCH_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY);
 
 /**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO GET_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
@@ -115,10 +140,22 @@ bool Serialize_PackAndSend_CATCH_POKEMON(int socketCliente, uint32_t idMensaje,c
 bool Serialize_PackAndSend_GET_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon);
 
 /**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO GET_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_GET_POKEMON_NoID(int socketCliente,const void *pokemon);
+
+/**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO APPEARED_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 
 bool Serialize_PackAndSend_APPEARED_POKEMON(int socketCliente, uint32_t idMensaje,const void *pokemon, uint32_t posX, uint32_t posY);
+
+/**
+ * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO APPEARED_POKEMON SIN EL ID MENSAJE A TRAVES DEL SOCKET ESPECIFICADO
+ */
+
+bool Serialize_PackAndSend_APPEARED_POKEMON_NoID(int socketCliente,const void *pokemon, uint32_t posX, uint32_t posY);
 
 /**
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO CAUGHT_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
@@ -130,7 +167,7 @@ bool Serialize_PackAndSend_CAUGHT_POKEMON(int socketCliente, uint32_t idMensaje,
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO LOCALIZED_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 
-bool Serialize_PackAndSend_LOCALIZED_POKEMON();
+bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensaje, char *pokemon, t_list *poscant);
 
 /**
  * ESTA FUNCION SIRVE COMO UNA ABSTRACCION PARA NO REPETIR LOGICA, SE USA A TRAVES DE
@@ -138,6 +175,13 @@ bool Serialize_PackAndSend_LOCALIZED_POKEMON();
  */
 
 bool Serialize_PackAndSend_CATCHoAPPEARED(int socketCliente, uint32_t idMensaje, const void *pokemon, uint32_t posX, uint32_t posY, d_message tipoMensaje);
+
+/**
+ * ESTA FUNCION SIRVE COMO UNA ABSTRACCION PARA NO REPETIR LOGICA, SE USA A TRAVES DE
+ * LAS FUNCIOENS PACK AND SEND CATCH Y APPEARED EN SUS VERSIONES SIN ID
+ */
+
+bool Serialize_PackAndSend_CATCHoAPPEARED_NoID(int socketCliente, const void *pokemon, uint32_t posX, uint32_t posY, d_message tipoMensaje);
 
 ////////////////////////////
 // FUNCIONES PARA RECIBIR //
@@ -224,6 +268,42 @@ uint32_t Serialize_Unpack_posY(void *pack);
 uint32_t Serialize_Unpack_cantidad(void *pack);
 
 /**
+ * ESTA FUNCION DESEMPAQUETA EL NOMBRE
+ * PAQUETE VOID* QUE LO CONTENGA Y QUE NO TENGA ID
+ * NO USAR ESTA FUNCION EN PAQUETES QUE NO
+ * CONTENGAN DICHO DATO
+ */
+
+char* Serialize_Unpack_pokemonName_NoID(void *buffer);
+
+/**
+ * ESTA FUNCION DESEMPAQUETA LA POS X
+ * PAQUETE VOID* QUE LO CONTENGA Y QUE NO TENGA ID
+ * NO USAR ESTA FUNCION EN PAQUETES QUE NO
+ * CONTENGAN DICHO DATO
+ */
+
+uint32_t Serialize_Unpack_posX_NoID(void *pack);
+
+/**
+ * ESTA FUNCION DESEMPAQUETA LA POS Y
+ * PAQUETE VOID* QUE LO CONTENGA Y QUE NO TENGA ID
+ * NO USAR ESTA FUNCION EN PAQUETES QUE NO
+ * CONTENGAN DICHO DATO
+ */
+
+uint32_t Serialize_Unpack_posY_NoID(void *pack);
+
+/**
+ * ESTA FUNCION DESEMPAQUETA LA CANTIDAD
+ * PAQUETE VOID* QUE LO CONTENGA Y QUE NO TENGA ID
+ * NO USAR ESTA FUNCION EN PAQUETES QUE NO
+ * CONTENGAN DICHO DATO
+ */
+
+uint32_t Serialize_Unpack_cantidad_NoID(void *pack);
+
+/**
  * ESTA FUNCION DESEMPAQUETA EL RESULTADO
  * PAQUETE VOID* QUE LO CONTENGA
  * NO USAR ESTA FUNCION EN PAQUETES QUE NO
@@ -287,6 +367,42 @@ void Serialize_Unpack_CaughtPokemon(void *packCaughtPokemon, uint32_t *idMensaje
  * DEL PAQUETE DE TIPO LOCALIZED_POKEMON (SOLO SIRVE PARA ESE TIPO DE PAQUETE)
  */
 
-void Serialize_Unpack_LocalizedPokemon();
+void Serialize_Unpack_LocalizedPokemon(void *packLocalizedPokemon, uint32_t *idMensaje, char **nombre, t_list **poscant);
+
+/*
+ * ESTA FUNCION DADO LOS PARAMETROS PASADOS POR REFERENCIA Y
+ * EL PAQUETE VOID* LLENA ESOS PARAMETROS CON LOS VALORES ADENTRO
+ * DEL PAQUETE DE TIPO NEW_POKEMON EN SU VERSION
+ * SIN ID (SOLO SIRVE PARA ESE TIPO DE PAQUETE)
+ */
+
+void Serialize_Unpack_NewPokemon_NoID(void *packNewPokemon, char **nombre, uint32_t *posX, uint32_t *posY, uint32_t *cantidad);
+
+/*
+ * ESTA FUNCION DADO LOS PARAMETROS PASADOS POR REFERENCIA Y
+ * EL PAQUETE VOID* LLENA ESOS PARAMETROS CON LOS VALORES ADENTRO
+ * DEL PAQUETE DE TIPO APPEARED_POKEMON EN SU VERSION
+ * SIN ID (SOLO SIRVE PARA ESE TIPO DE PAQUETE)
+ */
+
+void Serialize_Unpack_AppearedPokemon_NoID(void *packAppearedPokemon, char **nombre, uint32_t *posX, uint32_t *posY);
+
+/*
+ * ESTA FUNCION DADO LOS PARAMETROS PASADOS POR REFERENCIA Y
+ * EL PAQUETE VOID* LLENA ESOS PARAMETROS CON LOS VALORES ADENTRO
+ * DEL PAQUETE DE TIPO CATCH_POKEMON EN SU VERSION
+ * SIN ID (SOLO SIRVE PARA ESE TIPO DE PAQUETE)
+ */
+
+void Serialize_Unpack_CatchPokemon_NoID(void *packCatchPokemon, char **nombre, uint32_t *posX, uint32_t *posY);
+
+/*
+ * ESTA FUNCION DADO LOS PARAMETROS PASADOS POR REFERENCIA Y
+ * EL PAQUETE VOID* LLENA ESOS PARAMETROS CON LOS VALORES ADENTRO
+ * DEL PAQUETE DE TIPO GET_POKEMON EN SU VERSION
+ * SIN ID (SOLO SIRVE PARA ESE TIPO DE PAQUETE)
+ */
+
+void Serialize_Unpack_GetPokemon_NoID(void *packGetPokemon, char **nombre);
 
 #endif /* SERIALIZACION_SERIALIZACION_H_ */

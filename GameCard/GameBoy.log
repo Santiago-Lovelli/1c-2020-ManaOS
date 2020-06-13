@@ -1,18 +1,33 @@
-[INFO] 08:48:51:245 GameBoy/(25182:25187): Logger iniciado: GameBoy.log
+[INFO] 17:13:41:739 GameBoy/(9639:9645): Logger iniciado: GameBoy.log
 
-[INFO] 08:48:51:245 GameBoy/(25182:25187): Puerto GameCard: 9123
-[INFO] 08:48:51:245 GameBoy/(25182:25187): Ip GameCard: 127.0.0.1
-[INFO] 08:48:51:245 GameBoy/(25182:25187): Dentro de iniciar servidor
-[INFO] 08:48:51:245 GameBoy/(25182:25187): Listo para escuchar a mi cliente
-[INFO] 08:48:51:245 GameBoy/(25182:25187): esperando
-[INFO] 08:48:51:245 GameBoy/(25182:25187): Se conecto un cliente!
-[INFO] 08:48:51:245 GameBoy/(25182:25187): se conecto cliente: -1
-[INFO] 11:09:35:398 GameBoy/(4940:4945): Logger iniciado: GameBoy.log
+[INFO] 17:13:41:739 GameBoy/(9639:9645): Puerto GameCard: 6969
+[INFO] 17:13:41:740 GameBoy/(9639:9645): Ip GameCard: 127.0.0.1
+[INFO] 17:13:41:740 GameBoy/(9639:9645): Dentro de iniciar servidor
+[INFO] 17:13:41:740 GameBoy/(9639:9645): Listo para escuchar a mi cliente
+[INFO] 17:13:41:740 GameBoy/(9639:9645): esperando
+[INFO] 17:15:33:317 GameBoy/(9761:9766): Logger iniciado: GameBoy.log
 
-[INFO] 11:09:35:398 GameBoy/(4940:4945): Puerto GameCard: 9123
-[INFO] 11:09:35:401 GameBoy/(4940:4945): Ip GameCard: 127.0.0.1
-[INFO] 11:09:35:402 GameBoy/(4940:4945): Dentro de iniciar servidor
-[INFO] 11:09:35:402 GameBoy/(4940:4945): Listo para escuchar a mi cliente
-[INFO] 11:09:35:402 GameBoy/(4940:4945): esperando
-[INFO] 11:10:21:143 GameBoy/(4940:4945): Se conecto un cliente!
-[INFO] 11:10:21:143 GameBoy/(4940:4945): se conecto cliente: 6
+[INFO] 17:15:33:317 GameBoy/(9761:9766): Puerto GameCard: 6969
+[INFO] 17:15:33:317 GameBoy/(9761:9766): Ip GameCard: 127.0.0.1
+[INFO] 17:15:33:317 GameBoy/(9761:9766): Dentro de iniciar servidor
+[INFO] 17:15:33:317 GameBoy/(9761:9766): Listo para escuchar a mi cliente
+[INFO] 17:15:33:317 GameBoy/(9761:9766): esperando
+[INFO] 17:17:26:404 GameBoy/(9898:9903): Logger iniciado: GameBoy.log
+
+[INFO] 17:17:26:404 GameBoy/(9898:9903): Puerto GameCard: 6969
+[INFO] 17:17:26:404 GameBoy/(9898:9903): Ip GameCard: 127.0.0.1
+[INFO] 17:17:26:404 GameBoy/(9898:9903): Dentro de iniciar servidor
+[INFO] 17:17:26:404 GameBoy/(9898:9903): Listo para escuchar a mi cliente
+[INFO] 17:17:26:404 GameBoy/(9898:9903): esperando
+[INFO] 12:39:12:870 GameBoy/(4642:4650): Logger iniciado: GameBoy.log
+
+[INFO] 12:39:12:871 GameBoy/(4642:4650): Puerto GameCard: 6969
+[INFO] 12:39:12:871 GameBoy/(4642:4650): Ip GameCard: 127.0.0.1
+[INFO] 12:39:12:871 GameBoy/(4642:4650): Dentro de iniciar servidor
+[INFO] 12:39:12:871 GameBoy/(4642:4650): Listo para escuchar a mi cliente
+[INFO] 12:39:12:871 GameBoy/(4642:4650): esperando
+[INFO] 12:39:17:438 GameBoy/(4642:4650): Se conecto un cliente!
+[INFO] 12:39:17:438 GameBoy/(4642:4650): se conecto cliente: 8
+[INFO] 12:39:17:439 GameBoy/(4642:4650): Llego un new pokemon
+[INFO] 12:39:17:439 GameBoy/(4642:4650): Me llego mensaje de 0. Id: 1, Pkm: PIKACHU, x: 5, y: 5, cant: 10
+
