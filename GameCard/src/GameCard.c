@@ -167,24 +167,6 @@ uint32_t nuevaCantidad(char* linea, uint32_t cantidad) {
 	return nuevo;
 }
 
-char* obtenerBloqueConDatosReales(char* numeroDeBloque) {
-	log_info(loggerGeneral, "bloque a escribir: %s", numeroDeBloque);
-
-	char * pathBloque = obtenerPathDeBloque(numeroDeBloque);
-
-	log_info(loggerGeneral, "path a escribir: %s", pathBloque);
-
-	int bloque = open(pathBloque, O_RDWR, 0);
-
-	free(pathBloque);
-
-	char* bloqueConDatos = mmap(NULL, metadata.tamanioDeBloque,
-	PROT_READ | PROT_WRITE,
-	MAP_SHARED | MAP_FILE, bloque, 0);
-
-	return bloqueConDatos;
-}
-
 void cambiarMetadata(char* unPokemon, char* metadataNueva) {
 
 	char* path = pathDePokemonMetadata(unPokemon);
@@ -440,6 +422,8 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 				log_info(loggerGeneral, "path a escribir: %s", pathBloque);
 
+				truncate(pathBloque, metadata.tamanioDeBloque);
+
 				bloque = open(pathBloque, O_RDWR, 0);
 
 				free(pathBloque);
@@ -448,7 +432,12 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				PROT_READ | PROT_WRITE,
 				MAP_SHARED | MAP_FILE, bloque, 0);
 
+				log_info(loggerGeneral,"::::::: HAAAAAA :::::\n %s",bloqueConDatos);
+
 				memcpy(bloqueConDatos, cantidadNueva+strlen(cantidadNueva)-quedaValor, quedaValor);
+
+				log_info(loggerGeneral,"::::::: HAAAAAA DOS:::::\n %s",bloqueConDatos);
+
 				escrito = escrito + strlen(cantidadVieja);
 				escritoEnElBloque = quedaValor;
 				//me estoy salteando la cantidad vieja para cuando lea del megachar
@@ -466,7 +455,7 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			char** tam = string_split(metadataDePokemon->inicioSize, "\n");
 			uint32_t tamanioOriginal = atoi(tam[0]);
 			//aca la estoy cagando?
-			uint32_t faltanteDelMegaChar = tamanioOriginal - escrito;
+			uint32_t faltanteDelMegaChar = escrito - tamanioOriginal;
 
 			while (escrito < faltanteDelMegaChar) {
 

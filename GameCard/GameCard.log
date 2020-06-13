@@ -1721,3 +1721,479 @@
 
 [ERROR] 11:31:50:241 GameCard/(26864:26874): No se pudo conectar con el Broken a la cola de: 0
 
+[INFO] 21:10:17:85 GameCard/(30277:30277): Logger iniciado: GameCard.log
+
+[INFO] 21:10:17:88 GameCard/(30277:30277): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 21:10:17:88 GameCard/(30277:30277): Ruta de t_list pokemons: /home/utnso/Escritorio/tall-grass/Files/ 
+
+[INFO] 21:10:17:89 GameCard/(30277:30277): Elemento en index 0: PIKACHU
+
+[INFO] 21:10:17:89 GameCard/(30277:30277): Elemento en index 1: CHARIZARD
+
+[INFO] 21:10:17:89 GameCard/(30277:30277): Montaje de metadata: /home/utnso/Escritorio/tall-grass/Metadata/Metadata.bin 
+
+[INFO] 21:10:17:90 GameCard/(30277:30277): Tamanio archivo: 49
+[INFO] 21:10:17:90 GameCard/(30277:30277): BLOCK_SIZE: 10
+[INFO] 21:10:17:90 GameCard/(30277:30277): BLOCKS: 5192
+[INFO] 21:10:17:90 GameCard/(30277:30277): MAGIC_NUMBER: TALL_GRASS
+[INFO] 21:10:17:90 GameCard/(30277:30277): ESTRUCTURA METADATA: 10, 5192, TALL_GRASS
+[INFO] 21:10:17:90 GameCard/(30277:30277): Montaje de bitmap: /home/utnso/Escritorio/tall-grass/Metadata/Bitmap.bin 
+
+[INFO] 21:10:17:92 GameCard/(30277:30277): cargado: 5192
+[INFO] 21:10:17:92 GameCard/(30277:30277): ::::Bitmap Iniciado::::
+[INFO] 21:10:17:99 GameCard/(30277:30277): ::::Se creo hilo de GameBoy::::
+[INFO] 21:10:17:101 GameCard/(30277:30277): ::::Se creo hilo de suscripcion para: 0::::
+[ERROR] 21:10:17:105 GameCard/(30277:30289): Error de conexion
+
+[INFO] 21:10:17:109 GameCard/(30277:30277): ::::Se creo hilo de suscripcion para: 1::::
+[ERROR] 21:10:17:109 GameCard/(30277:30290): Error de conexion
+
+[ERROR] 21:10:17:112 GameCard/(30277:30290): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:10:17:111 GameCard/(30277:30289): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:10:17:115 GameCard/(30277:30291): Error de conexion
+
+[ERROR] 21:10:17:116 GameCard/(30277:30291): No se pudo conectar con el Broken a la cola de: 2
+
+[INFO] 21:10:17:115 GameCard/(30277:30277): ::::Se creo hilo de suscripcion para: 2::::
+[ERROR] 21:10:27:115 GameCard/(30277:30290): Error de conexion
+
+[ERROR] 21:10:27:115 GameCard/(30277:30289): Error de conexion
+
+[ERROR] 21:10:27:116 GameCard/(30277:30290): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:10:27:116 GameCard/(30277:30289): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:10:27:118 GameCard/(30277:30291): Error de conexion
+
+[ERROR] 21:10:27:118 GameCard/(30277:30291): No se pudo conectar con el Broken a la cola de: 2
+
+[INFO] 21:10:36:185 GameCard/(30277:30332): Existe el pokemon PIKACHU
+[INFO] 21:10:36:185 GameCard/(30277:30332): Montaje de path pokemon metadata: /home/utnso/Escritorio/tall-grass/Files/PIKACHU/Metadata.bin 
+
+[INFO] 21:10:36:185 GameCard/(30277:30332): Tamanio archivo: 39
+[INFO] 21:10:36:185 GameCard/(30277:30332): Mapeado /home/utnso/Escritorio/tall-grass/Files/PIKACHU/Metadata.bin
+[INFO] 21:10:36:185 GameCard/(30277:30332): Se puede escribir PIKACHU
+[INFO] 21:10:36:185 GameCard/(30277:30332): bloques 1
+[INFO] 21:10:36:185 GameCard/(30277:30332): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:10:36:185 GameCard/(30277:30332): path /home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:10:36:185 GameCard/(30277:30332): Tamanio de bloque 10
+[INFO] 21:10:36:185 GameCard/(30277:30332): bloqueConDatos 1-1=10
+3-5
+[INFO] 21:10:36:185 GameCard/(30277:30332): bloques 2
+[INFO] 21:10:36:185 GameCard/(30277:30332): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[INFO] 21:10:36:185 GameCard/(30277:30332): path /home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[INFO] 21:10:36:185 GameCard/(30277:30332): Tamanio de bloque 10
+[INFO] 21:10:36:185 GameCard/(30277:30332): bloqueConDatos =1
+6-6=123
+[INFO] 21:10:36:185 GameCard/(30277:30332): levantado 
+1-1=10
+3-5=1
+6-6=123
+[INFO] 21:10:36:185 GameCard/(30277:30332): lineas 0: 1-1=10 mide: 6
+[INFO] 21:10:36:185 GameCard/(30277:30332): lineas 1: 3-5=1 mide: 5
+[INFO] 21:10:36:185 GameCard/(30277:30332): lineas 2: 6-6=123 mide: 7
+[INFO] 21:10:36:185 GameCard/(30277:30332): Esta en linea: 6-6=123
+[INFO] 21:10:36:185 GameCard/(30277:30332): Cantidad Nueva: 1123
+[INFO] 21:10:36:185 GameCard/(30277:30332): Nueva Cantidad: 1123
+[INFO] 21:10:36:186 GameCard/(30277:30332): leido: 13
+[INFO] 21:10:36:186 GameCard/(30277:30332): bloquesIntactos: 1
+[INFO] 21:10:36:186 GameCard/(30277:30332): bloque a escribir: 1
+[INFO] 21:10:36:186 GameCard/(30277:30332): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:10:36:186 GameCard/(30277:30332): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:10:36:186 GameCard/(30277:30332): bloque a escribir: 2
+[INFO] 21:10:36:186 GameCard/(30277:30332): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[INFO] 21:10:36:186 GameCard/(30277:30332): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[ERROR] 21:10:39:886 GameCard/(30277:30289): Error de conexion
+
+[ERROR] 21:10:39:886 GameCard/(30277:30289): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:10:39:887 GameCard/(30277:30291): Error de conexion
+
+[ERROR] 21:10:39:887 GameCard/(30277:30291): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:10:39:887 GameCard/(30277:30290): Error de conexion
+
+[ERROR] 21:10:39:887 GameCard/(30277:30290): No se pudo conectar con el Broken a la cola de: 1
+
+[INFO] 21:10:42:310 GameCard/(30277:30332): bloque a escribir: 0
+[INFO] 21:10:42:310 GameCard/(30277:30332): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/0.bin
+[INFO] 21:10:42:310 GameCard/(30277:30332): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/0.bin
+[INFO] 21:10:42:310 GameCard/(30277:30332): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/0.bin
+[INFO] 21:10:48:26 GameCard/(30277:30332): ::::::: HAAAAAA :::::
+ 
+[ERROR] 21:10:55:342 GameCard/(30277:30290): Error de conexion
+
+[ERROR] 21:10:55:342 GameCard/(30277:30290): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:10:55:343 GameCard/(30277:30291): Error de conexion
+
+[ERROR] 21:10:55:344 GameCard/(30277:30291): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:10:55:344 GameCard/(30277:30289): Error de conexion
+
+[ERROR] 21:10:55:344 GameCard/(30277:30289): No se pudo conectar con el Broken a la cola de: 0
+
+[INFO] 21:11:54:886 GameCard/(30453:30453): Logger iniciado: GameCard.log
+
+[INFO] 21:11:54:896 GameCard/(30453:30453): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 21:11:54:896 GameCard/(30453:30453): Ruta de t_list pokemons: /home/utnso/Escritorio/tall-grass/Files/ 
+
+[INFO] 21:11:54:896 GameCard/(30453:30453): Elemento en index 0: PIKACHU
+
+[INFO] 21:11:54:896 GameCard/(30453:30453): Elemento en index 1: CHARIZARD
+
+[INFO] 21:11:54:896 GameCard/(30453:30453): Montaje de metadata: /home/utnso/Escritorio/tall-grass/Metadata/Metadata.bin 
+
+[INFO] 21:11:54:896 GameCard/(30453:30453): Tamanio archivo: 49
+[INFO] 21:11:54:896 GameCard/(30453:30453): BLOCK_SIZE: 10
+[INFO] 21:11:54:896 GameCard/(30453:30453): BLOCKS: 5192
+[INFO] 21:11:54:896 GameCard/(30453:30453): MAGIC_NUMBER: TALL_GRASS
+[INFO] 21:11:54:897 GameCard/(30453:30453): ESTRUCTURA METADATA: 10, 5192, TALL_GRASS
+[INFO] 21:11:54:897 GameCard/(30453:30453): Montaje de bitmap: /home/utnso/Escritorio/tall-grass/Metadata/Bitmap.bin 
+
+[INFO] 21:11:54:904 GameCard/(30453:30453): cargado: 5192
+[INFO] 21:11:54:904 GameCard/(30453:30453): ::::Bitmap Iniciado::::
+[INFO] 21:11:54:907 GameCard/(30453:30453): ::::Se creo hilo de GameBoy::::
+[INFO] 21:11:54:908 GameCard/(30453:30453): ::::Se creo hilo de suscripcion para: 0::::
+[ERROR] 21:11:54:908 GameCard/(30453:30463): Error de conexion
+
+[ERROR] 21:11:54:909 GameCard/(30453:30463): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:11:54:909 GameCard/(30453:30464): Error de conexion
+
+[ERROR] 21:11:54:909 GameCard/(30453:30464): No se pudo conectar con el Broken a la cola de: 1
+
+[INFO] 21:11:54:909 GameCard/(30453:30453): ::::Se creo hilo de suscripcion para: 1::::
+[ERROR] 21:11:54:912 GameCard/(30453:30465): Error de conexion
+
+[ERROR] 21:11:54:912 GameCard/(30453:30465): No se pudo conectar con el Broken a la cola de: 2
+
+[INFO] 21:11:54:912 GameCard/(30453:30453): ::::Se creo hilo de suscripcion para: 2::::
+[INFO] 21:11:58:275 GameCard/(30453:30468): Existe el pokemon PIKACHU
+[INFO] 21:11:58:275 GameCard/(30453:30468): Montaje de path pokemon metadata: /home/utnso/Escritorio/tall-grass/Files/PIKACHU/Metadata.bin 
+
+[INFO] 21:11:58:275 GameCard/(30453:30468): Tamanio archivo: 39
+[INFO] 21:11:58:275 GameCard/(30453:30468): Mapeado /home/utnso/Escritorio/tall-grass/Files/PIKACHU/Metadata.bin
+[INFO] 21:11:58:275 GameCard/(30453:30468): Se puede escribir PIKACHU
+[INFO] 21:11:58:275 GameCard/(30453:30468): bloques 1
+[INFO] 21:11:58:275 GameCard/(30453:30468): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:11:58:275 GameCard/(30453:30468): path /home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:11:58:275 GameCard/(30453:30468): Tamanio de bloque 10
+[INFO] 21:11:58:275 GameCard/(30453:30468): bloqueConDatos 1-1=10
+3-5
+[INFO] 21:11:58:275 GameCard/(30453:30468): bloques 2
+[INFO] 21:11:58:275 GameCard/(30453:30468): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[INFO] 21:11:58:275 GameCard/(30453:30468): path /home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[INFO] 21:11:58:275 GameCard/(30453:30468): Tamanio de bloque 10
+[INFO] 21:11:58:275 GameCard/(30453:30468): bloqueConDatos =1
+6-6=123
+[INFO] 21:11:58:275 GameCard/(30453:30468): levantado 
+1-1=10
+3-5=1
+6-6=123
+[INFO] 21:11:58:275 GameCard/(30453:30468): lineas 0: 1-1=10 mide: 6
+[INFO] 21:11:58:275 GameCard/(30453:30468): lineas 1: 3-5=1 mide: 5
+[INFO] 21:11:58:275 GameCard/(30453:30468): lineas 2: 6-6=123 mide: 7
+[INFO] 21:11:58:275 GameCard/(30453:30468): Esta en linea: 6-6=123
+[INFO] 21:11:58:275 GameCard/(30453:30468): Cantidad Nueva: 1123
+[INFO] 21:11:58:275 GameCard/(30453:30468): Nueva Cantidad: 1123
+[INFO] 21:11:58:275 GameCard/(30453:30468): leido: 13
+[INFO] 21:11:58:275 GameCard/(30453:30468): bloquesIntactos: 1
+[INFO] 21:11:58:275 GameCard/(30453:30468): bloque a escribir: 1
+[INFO] 21:11:58:275 GameCard/(30453:30468): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:11:58:275 GameCard/(30453:30468): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:11:58:276 GameCard/(30453:30468): bloque a escribir: 2
+[INFO] 21:11:58:276 GameCard/(30453:30468): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[INFO] 21:11:58:276 GameCard/(30453:30468): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[INFO] 21:12:01:611 GameCard/(30453:30468): bloque a escribir: 0
+[INFO] 21:12:01:612 GameCard/(30453:30468): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/0.bin
+[INFO] 21:12:01:612 GameCard/(30453:30468): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/0.bin
+[INFO] 21:12:01:612 GameCard/(30453:30468): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/0.bin
+[INFO] 21:12:04:324 GameCard/(30453:30468): ::::::: HAAAAAA :::::
+ 3
+[ERROR] 21:12:22:691 GameCard/(30453:30463): Error de conexion
+
+[ERROR] 21:12:22:691 GameCard/(30453:30463): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:12:22:691 GameCard/(30453:30465): Error de conexion
+
+[ERROR] 21:12:22:691 GameCard/(30453:30465): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:12:22:691 GameCard/(30453:30464): Error de conexion
+
+[ERROR] 21:12:22:691 GameCard/(30453:30464): No se pudo conectar con el Broken a la cola de: 1
+
+[INFO] 21:12:24:770 GameCard/(30453:30468): ::::::: HAAAAAA DOS:::::
+ 3
+[ERROR] 21:12:32:811 GameCard/(30453:30464): Error de conexion
+
+[ERROR] 21:12:32:811 GameCard/(30453:30464): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:12:32:811 GameCard/(30453:30465): Error de conexion
+
+[ERROR] 21:12:32:811 GameCard/(30453:30465): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:12:32:811 GameCard/(30453:30463): Error de conexion
+
+[ERROR] 21:12:39:596 GameCard/(30453:30463): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:12:49:777 GameCard/(30453:30464): Error de conexion
+
+[ERROR] 21:12:49:777 GameCard/(30453:30464): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:12:49:777 GameCard/(30453:30463): Error de conexion
+
+[ERROR] 21:12:49:778 GameCard/(30453:30463): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:12:49:777 GameCard/(30453:30465): Error de conexion
+
+[ERROR] 21:12:49:778 GameCard/(30453:30465): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:13:16:881 GameCard/(30453:30463): Error de conexion
+
+[ERROR] 21:13:16:882 GameCard/(30453:30463): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:13:16:882 GameCard/(30453:30465): Error de conexion
+
+[ERROR] 21:13:16:882 GameCard/(30453:30465): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:13:16:883 GameCard/(30453:30464): Error de conexion
+
+[ERROR] 21:13:16:883 GameCard/(30453:30464): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:14:18:852 GameCard/(30453:30464): Error de conexion
+
+[ERROR] 21:14:18:852 GameCard/(30453:30464): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:26:38:77 GameCard/(30453:30465): Error de conexion
+
+[ERROR] 21:26:38:79 GameCard/(30453:30463): Error de conexion
+
+[ERROR] 21:26:38:81 GameCard/(30453:30465): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:26:38:84 GameCard/(30453:30464): Error de conexion
+
+[ERROR] 21:26:38:84 GameCard/(30453:30464): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:26:38:84 GameCard/(30453:30463): No se pudo conectar con el Broken a la cola de: 0
+
+[INFO] 21:26:46:671 GameCard/(30453:30468): bloque a escribir: 0
+[ERROR] 21:26:49:3 GameCard/(30453:30463): Error de conexion
+
+[ERROR] 21:26:49:3 GameCard/(30453:30463): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:26:49:3 GameCard/(30453:30464): Error de conexion
+
+[ERROR] 21:26:49:3 GameCard/(30453:30465): Error de conexion
+
+[ERROR] 21:26:49:4 GameCard/(30453:30465): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:26:49:4 GameCard/(30453:30464): No se pudo conectar con el Broken a la cola de: 1
+
+[INFO] 21:26:50:6 GameCard/(30453:30468): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/0.bin
+[INFO] 21:26:59:576 GameCard/(30453:30468): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/0.bin
+[INFO] 21:27:48:52 GameCard/(30908:30908): Logger iniciado: GameCard.log
+
+[INFO] 21:27:48:54 GameCard/(30908:30908): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 21:27:48:54 GameCard/(30908:30908): Ruta de t_list pokemons: /home/utnso/Escritorio/tall-grass/Files/ 
+
+[INFO] 21:27:48:54 GameCard/(30908:30908): Elemento en index 0: PIKACHU
+
+[INFO] 21:27:48:54 GameCard/(30908:30908): Elemento en index 1: CHARIZARD
+
+[INFO] 21:27:48:55 GameCard/(30908:30908): Montaje de metadata: /home/utnso/Escritorio/tall-grass/Metadata/Metadata.bin 
+
+[INFO] 21:27:48:55 GameCard/(30908:30908): Tamanio archivo: 49
+[INFO] 21:27:48:55 GameCard/(30908:30908): BLOCK_SIZE: 10
+[INFO] 21:27:48:55 GameCard/(30908:30908): BLOCKS: 5192
+[INFO] 21:27:48:55 GameCard/(30908:30908): MAGIC_NUMBER: TALL_GRASS
+[INFO] 21:27:48:55 GameCard/(30908:30908): ESTRUCTURA METADATA: 10, 5192, TALL_GRASS
+[INFO] 21:27:48:55 GameCard/(30908:30908): Montaje de bitmap: /home/utnso/Escritorio/tall-grass/Metadata/Bitmap.bin 
+
+[INFO] 21:27:48:59 GameCard/(30908:30908): cargado: 5192
+[INFO] 21:27:48:60 GameCard/(30908:30908): ::::Bitmap Iniciado::::
+[INFO] 21:27:48:63 GameCard/(30908:30908): ::::Se creo hilo de GameBoy::::
+[INFO] 21:27:48:66 GameCard/(30908:30908): ::::Se creo hilo de suscripcion para: 0::::
+[ERROR] 21:27:48:67 GameCard/(30908:30923): Error de conexion
+
+[ERROR] 21:27:48:67 GameCard/(30908:30923): No se pudo conectar con el Broken a la cola de: 0
+
+[INFO] 21:27:48:69 GameCard/(30908:30908): ::::Se creo hilo de suscripcion para: 1::::
+[ERROR] 21:27:48:70 GameCard/(30908:30924): Error de conexion
+
+[ERROR] 21:27:48:73 GameCard/(30908:30924): No se pudo conectar con el Broken a la cola de: 1
+
+[INFO] 21:27:48:74 GameCard/(30908:30908): ::::Se creo hilo de suscripcion para: 2::::
+[ERROR] 21:27:48:76 GameCard/(30908:30925): Error de conexion
+
+[ERROR] 21:27:48:76 GameCard/(30908:30925): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:27:58:69 GameCard/(30908:30923): Error de conexion
+
+[ERROR] 21:27:58:70 GameCard/(30908:30923): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:27:58:74 GameCard/(30908:30924): Error de conexion
+
+[ERROR] 21:27:58:75 GameCard/(30908:30924): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:27:58:76 GameCard/(30908:30925): Error de conexion
+
+[ERROR] 21:27:58:76 GameCard/(30908:30925): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:28:08:71 GameCard/(30908:30923): Error de conexion
+
+[ERROR] 21:28:08:71 GameCard/(30908:30923): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:28:08:76 GameCard/(30908:30924): Error de conexion
+
+[ERROR] 21:28:08:76 GameCard/(30908:30924): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:28:08:77 GameCard/(30908:30925): Error de conexion
+
+[ERROR] 21:28:08:77 GameCard/(30908:30925): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:28:18:77 GameCard/(30908:30924): Error de conexion
+
+[ERROR] 21:28:18:78 GameCard/(30908:30924): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:28:18:78 GameCard/(30908:30923): Error de conexion
+
+[ERROR] 21:28:18:78 GameCard/(30908:30923): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:28:18:80 GameCard/(30908:30925): Error de conexion
+
+[ERROR] 21:28:18:81 GameCard/(30908:30925): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:28:28:81 GameCard/(30908:30923): Error de conexion
+
+[ERROR] 21:28:28:82 GameCard/(30908:30923): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:28:28:82 GameCard/(30908:30924): Error de conexion
+
+[ERROR] 21:28:28:82 GameCard/(30908:30924): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:28:28:83 GameCard/(30908:30925): Error de conexion
+
+[ERROR] 21:28:28:83 GameCard/(30908:30925): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:28:38:83 GameCard/(30908:30924): Error de conexion
+
+[ERROR] 21:28:38:84 GameCard/(30908:30923): Error de conexion
+
+[ERROR] 21:28:38:85 GameCard/(30908:30924): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:28:38:85 GameCard/(30908:30923): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:28:38:86 GameCard/(30908:30925): Error de conexion
+
+[ERROR] 21:28:38:86 GameCard/(30908:30925): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:28:48:87 GameCard/(30908:30923): Error de conexion
+
+[ERROR] 21:28:48:87 GameCard/(30908:30924): Error de conexion
+
+[ERROR] 21:28:48:87 GameCard/(30908:30923): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:28:48:88 GameCard/(30908:30924): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:28:48:88 GameCard/(30908:30925): Error de conexion
+
+[ERROR] 21:28:48:88 GameCard/(30908:30925): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:28:58:89 GameCard/(30908:30924): Error de conexion
+
+[ERROR] 21:28:58:89 GameCard/(30908:30923): Error de conexion
+
+[ERROR] 21:28:58:89 GameCard/(30908:30924): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:28:58:89 GameCard/(30908:30923): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:28:58:108 GameCard/(30908:30925): Error de conexion
+
+[ERROR] 21:28:58:108 GameCard/(30908:30925): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:29:08:90 GameCard/(30908:30923): Error de conexion
+
+[ERROR] 21:29:08:91 GameCard/(30908:30924): Error de conexion
+
+[ERROR] 21:29:08:91 GameCard/(30908:30923): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:29:08:91 GameCard/(30908:30924): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:29:08:109 GameCard/(30908:30925): Error de conexion
+
+[ERROR] 21:29:08:109 GameCard/(30908:30925): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:29:18:92 GameCard/(30908:30924): Error de conexion
+
+[ERROR] 21:29:18:93 GameCard/(30908:30923): Error de conexion
+
+[ERROR] 21:29:18:93 GameCard/(30908:30924): No se pudo conectar con el Broken a la cola de: 1
+
+[ERROR] 21:29:18:93 GameCard/(30908:30923): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:29:18:109 GameCard/(30908:30925): Error de conexion
+
+[ERROR] 21:29:18:110 GameCard/(30908:30925): No se pudo conectar con el Broken a la cola de: 2
+
+[INFO] 21:29:22:940 GameCard/(30908:30972): Existe el pokemon PIKACHU
+[INFO] 21:29:22:941 GameCard/(30908:30972): Montaje de path pokemon metadata: /home/utnso/Escritorio/tall-grass/Files/PIKACHU/Metadata.bin 
+
+[INFO] 21:29:22:942 GameCard/(30908:30972): Tamanio archivo: 39
+[INFO] 21:29:22:943 GameCard/(30908:30972): Mapeado /home/utnso/Escritorio/tall-grass/Files/PIKACHU/Metadata.bin
+[INFO] 21:29:22:943 GameCard/(30908:30972): Se puede escribir PIKACHU
+[INFO] 21:29:22:943 GameCard/(30908:30972): bloques 1
+[INFO] 21:29:22:943 GameCard/(30908:30972): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:29:22:943 GameCard/(30908:30972): path /home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:29:22:943 GameCard/(30908:30972): Tamanio de bloque 10
+[INFO] 21:29:22:943 GameCard/(30908:30972): bloqueConDatos 1-1=10
+3-5
+[INFO] 21:29:22:943 GameCard/(30908:30972): bloques 2
+[INFO] 21:29:22:943 GameCard/(30908:30972): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[INFO] 21:29:22:943 GameCard/(30908:30972): path /home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[INFO] 21:29:22:943 GameCard/(30908:30972): Tamanio de bloque 10
+[INFO] 21:29:22:944 GameCard/(30908:30972): bloqueConDatos =1
+6-6=123
+[INFO] 21:29:22:944 GameCard/(30908:30972): levantado 
+1-1=10
+3-5=1
+6-6=123
+[INFO] 21:29:22:944 GameCard/(30908:30972): lineas 0: 1-1=10 mide: 6
+[INFO] 21:29:22:944 GameCard/(30908:30972): lineas 1: 3-5=1 mide: 5
+[INFO] 21:29:22:944 GameCard/(30908:30972): lineas 2: 6-6=123 mide: 7
+[INFO] 21:29:22:944 GameCard/(30908:30972): Esta en linea: 6-6=123
+[INFO] 21:29:22:944 GameCard/(30908:30972): Cantidad Nueva: 1123
+[INFO] 21:29:22:944 GameCard/(30908:30972): Nueva Cantidad: 1123
+[INFO] 21:29:22:944 GameCard/(30908:30972): leido: 13
+[INFO] 21:29:22:944 GameCard/(30908:30972): bloquesIntactos: 1
+[INFO] 21:29:22:944 GameCard/(30908:30972): bloque a escribir: 1
+[INFO] 21:29:22:944 GameCard/(30908:30972): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:29:22:944 GameCard/(30908:30972): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/1.bin
+[INFO] 21:29:22:944 GameCard/(30908:30972): bloque a escribir: 2
+[INFO] 21:29:22:944 GameCard/(30908:30972): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[INFO] 21:29:22:944 GameCard/(30908:30972): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/2.bin
+[INFO] 21:29:27:538 GameCard/(30908:30972): bloque a escribir: 0
+[INFO] 21:29:27:538 GameCard/(30908:30972): path en funcion:/home/utnso/Escritorio/tall-grass/Blocks/0.bin
+[INFO] 21:29:27:538 GameCard/(30908:30972): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/0.bin
+[INFO] 21:29:27:538 GameCard/(30908:30972): path a escribir: /home/utnso/Escritorio/tall-grass/Blocks/0.bin
+[INFO] 21:29:30:939 GameCard/(30908:30972): ::::::: HAAAAAA :::::
+ 3
+[INFO] 21:29:30:939 GameCard/(30908:30972): ::::::: HAAAAAA DOS:::::
+ 3
+[ERROR] 21:29:30:941 GameCard/(30908:30923): Error de conexion
+
+[ERROR] 21:29:30:941 GameCard/(30908:30925): Error de conexion
+
+[ERROR] 21:29:30:941 GameCard/(30908:30923): No se pudo conectar con el Broken a la cola de: 0
+
+[ERROR] 21:29:30:941 GameCard/(30908:30924): Error de conexion
+
+[ERROR] 21:29:30:942 GameCard/(30908:30925): No se pudo conectar con el Broken a la cola de: 2
+
+[ERROR] 21:29:30:942 GameCard/(30908:30924): No se pudo conectar con el Broken a la cola de: 1
+
