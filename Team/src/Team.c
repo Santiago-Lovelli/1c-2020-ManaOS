@@ -85,7 +85,7 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 	Serialize_PackAndSend_CATCH_POKEMON_NoID(conexion, pokemon, posX, posY);
 	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
 	int idEsperado = recibirResponse(conexion, headerACK);
-	objetoID_QUE_NECESITO *objetoID = malloc(sizeof(objetoID_QUE_NECESITO));
+	objetoID_QUE_NECESITO *objetoID = malloc(2*sizeof(int) + strlen(pokemon)+1);
 	objetoID->idMensaje = idEsperado;
 	objetoID->idEntrenador = idEntrenadorQueMandaCatch;
 	objetoID->pokemon = pokemon;
@@ -240,6 +240,7 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 		log_error(logger, "No hay entrenadores disponibles");
 		return;
 	}
+	darMision(idEntrenador,pokemon,posicionPoke);
 	pasarEntrenadorAEstado(idEntrenador, t_READY);
 }
 
@@ -255,6 +256,7 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught){
 		list_add(trainer->pokemones, objetoID->pokemon);
 		descontarDeObjetivoGlobal(objetoID->pokemon);
 		trainer->razonBloqueo = t_DESOCUPADO;
+		sacarMision(objetoID->idEntrenador);
 		free(objetoID);
 	}
 	else{
@@ -262,6 +264,7 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught){
 		objetoID = list_get(ID_QUE_NECESITO, index);
 		list_remove(ID_QUE_NECESITO, index);
 		bloquearEntrenador(objetoID->idEntrenador, t_DESOCUPADO);
+		sacarMision(objetoID->idEntrenador);
 		free(objetoID);
 	}
 }
@@ -270,7 +273,8 @@ bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
 	return (entrenadorAUX->estado != t_EXIT) &&
 		   (entrenadorAUX->estado != t_READY) &&
 		   (list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo)) &&
-		   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA);
+		   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA) &&
+		   (entrenadorAUX->mision == NULL);
 
 }
 
@@ -400,6 +404,21 @@ void pasarEntrenadorAEstado(int index, t_estado estado){
 
 }
 
+void sacarMision(int idEntrenador){
+	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
+	free(trainer->mision);
+	trainer->mision = NULL;
+}
+
+void darMision(int idEntrenador, char* pokemon, punto point){
+	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
+	t_mision *mision = malloc(sizeof(punto) + strlen(pokemon) +1);
+	mision->point = point;
+	mision->pokemon = pokemon;
+	trainer->mision = mision;
+
+}
+
 int diferenciaEntrePuntos(punto origen, punto destino){
 	return abs( (destino.x - origen.x) + (destino.y - origen.y) );
 }
@@ -484,6 +503,7 @@ entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObj
 	newTrainer->pokemonesObjetivo = pokemonesObjetivo;
 	newTrainer->estado = t_NEW;
 	newTrainer->razonBloqueo = t_NULL;
+	newTrainer->mision = NULL;
 	return newTrainer;
 }
 

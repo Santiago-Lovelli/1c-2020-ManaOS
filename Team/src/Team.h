@@ -52,12 +52,18 @@ typedef struct punto{
 	int y;
 }punto;
 
+typedef struct t_mision {
+	char* pokemon;
+	punto point;
+}t_mision;
+
 typedef struct entrenador{
 	punto posicion;
 	char ** pokemones;
 	char ** pokemonesObjetivo;
 	t_estado estado;
 	t_razonBloqueo razonBloqueo;
+	t_mision *mision;
 }entrenador;
 
 typedef struct proceso{
@@ -172,6 +178,20 @@ bool necesitoEstePokemon(char *pokemon);
  */
 
 void descontarDeObjetivoGlobal(char *pokemon);
+
+/*
+ * ESTA FUNCION DADO EL ID DE UN ENTRENADOR, LE
+ * SACA SU MISION ACTUAL DEJANDOLA EN NULL
+ */
+
+void sacarMision(int idEntrenador);
+
+/*
+ * ESTA FUNCION DADO UN ID ENTRENADOR, UN POKEMON Y
+ * UNA POSICION; LE ASIGNA ESA MISION A ESE ENTRENADOR
+ */
+
+void darMision(int idEntrenador, char* pokemon, punto point);
 
 /*
  * ESTA FUNCION DADO UN ENTRENADOR Y UNA RAZON
