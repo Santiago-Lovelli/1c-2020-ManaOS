@@ -277,6 +277,38 @@ uint32_t Serialize_Unpack_cantidad(void *pack) {
 	return response;
 }
 
+char* Serialize_Unpack_pokemonName_NoID(void *buffer) {
+	uint32_t tamPokemon = 0;
+	memcpy(&tamPokemon, buffer, sizeof(uint32_t));
+	char *pokemon = malloc(tamPokemon);
+	memcpy(pokemon,buffer+sizeof(uint32_t),tamPokemon);
+	return pokemon;
+}
+
+uint32_t Serialize_Unpack_posX_NoID(void *pack) {
+	uint32_t response = 0;
+	uint32_t tamPokemon = 0;
+	memcpy(&tamPokemon, pack, sizeof(uint32_t));
+	memcpy(&response, pack + sizeof(uint32_t) + tamPokemon , sizeof(uint32_t));
+	return response;
+}
+
+uint32_t Serialize_Unpack_posY_NoID(void *pack) {
+	uint32_t response = 0;
+	uint32_t tamPokemon = 0;
+	memcpy(&tamPokemon, pack, sizeof(uint32_t));
+	memcpy(&response, pack + (2*sizeof(uint32_t)) + tamPokemon , sizeof(uint32_t));
+	return response;
+}
+
+uint32_t Serialize_Unpack_cantidad_NoID(void *pack) {
+	uint32_t response = 0;
+	uint32_t tamPokemon = 0;
+	memcpy(&tamPokemon, pack, sizeof(uint32_t));
+	memcpy(&response, pack + (3*sizeof(uint32_t)) + tamPokemon , sizeof(uint32_t));
+	return response;
+}
+
 uint32_t Serialize_Unpack_resultado(void *pack){
 	uint32_t resultado = 0;
 	memcpy(&resultado, pack+sizeof(uint32_t), sizeof(uint32_t));
@@ -308,8 +340,10 @@ void Serialize_Unpack_GetPokemon(void *packGetPokemon, uint32_t *idMensaje, char
 }
 
 void Serialize_Unpack_AppearedPokemon(void *packAppearedPokemon, uint32_t *idMensaje, char **nombre, uint32_t *posX, uint32_t *posY){
-	Serialize_Unpack_CatchPokemon(packAppearedPokemon,idMensaje,nombre,posX,posY); //revisar
-	//Uso la misma funcion porque los paquetes son identicos, la separo en otra para que no sea confuso
+	*idMensaje = Serialize_Unpack_idMensaje(packAppearedPokemon);
+	*nombre = Serialize_Unpack_pokemonName(packAppearedPokemon);
+	*posX = Serialize_Unpack_posX(packAppearedPokemon);
+	*posY = Serialize_Unpack_posY(packAppearedPokemon);
 }
 
 void Serialize_Unpack_CaughtPokemon(void *packCaughtPokemon, uint32_t *idMensaje, uint32_t *resultado){
@@ -332,6 +366,32 @@ void Serialize_Unpack_LocalizedPokemon(void *packLocalizedPokemon, uint32_t *idM
 	}
 	//pendiente
 }
+
+void Serialize_Unpack_NewPokemon_NoID(void *packNewPokemon, char **nombre, uint32_t *posX, uint32_t *posY, uint32_t *cantidad){
+	*nombre = Serialize_Unpack_pokemonName_NoID(packNewPokemon);
+	*posX = Serialize_Unpack_posX_NoID(packNewPokemon);
+	*posY = Serialize_Unpack_posY_NoID(packNewPokemon);
+	*cantidad = Serialize_Unpack_cantidad_NoID(packNewPokemon);
+}
+
+
+void Serialize_Unpack_AppearedPokemon_NoID(void *packAppearedPokemon, char **nombre, uint32_t *posX, uint32_t *posY){
+	*nombre = Serialize_Unpack_pokemonName_NoID(packAppearedPokemon);
+	*posX = Serialize_Unpack_posX_NoID(packAppearedPokemon);
+	*posY = Serialize_Unpack_posY_NoID(packAppearedPokemon);
+}
+
+void Serialize_Unpack_CatchPokemon_NoID(void *packCatchPokemon, char **nombre, uint32_t *posX, uint32_t *posY){
+	*nombre = Serialize_Unpack_pokemonName_NoID(packCatchPokemon);
+	*posX = Serialize_Unpack_posX_NoID(packCatchPokemon);
+	*posY = Serialize_Unpack_posY_NoID(packCatchPokemon);
+}
+
+void Serialize_Unpack_GetPokemon_NoID(void *packGetPokemon, char **nombre){
+	*nombre = Serialize_Unpack_pokemonName_NoID(packGetPokemon);
+}
+
+
 
 
 
