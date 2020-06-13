@@ -68,8 +68,15 @@ char* obtenerBloquesDeMetadataPokemon(char* pkm);
 char** obtenerBloquesDeMetadataPokemonEnArray(char* unPokemon);
 char* obtenerDirectory(char* pkm);
 uint32_t obtenerSizeDePokemon(char* pkm);
-
+char* obtenerPathDeBloque(char* bloque);
 
 int indiceDePokemonEnLista(char* pkm);
+/*
+ * Retorna un void* mmapeado al bloque de datos con un tamanio pasado, si el tamanio es nulo
+ * reserva el tamanio que le pasan, si es 0 reserva el tamanio total del bloque
+ * */
+void* mmapeadoBloquePropio(t_log* log, uint32_t tamanioDeseado, char* numeroDeBloque);
+
+
 
 #endif /* GAMECARD_H_ */

@@ -26,29 +26,3 @@ int tamanio_archivo_en_bloques(uint32_t tamanio){
 		return tamanio/sizeof(Bloque);
 	}return (tamanio/sizeof(Bloque))+1;
 }
-
-void* mmapeadoBloquePropio(t_log* log, uint32_t tamanioDeseado, char* numeroDeBloque) {
-	log_info(log, "bloque a escribir: %s", numeroDeBloque);
-
-	char * pathBloque = obtenerPathDeBloque(numeroDeBloque);
-
-	log_info(log, "path a escribir: %s", pathBloque);
-
-	uint32_t tamanio_archivo_de_metadata = 0;
-
-	if(tamanioDeseado == 0){
-		tamanio_archivo_de_metadata = tamanio_archivo(pathBloque);
-	}else{
-		tamanio_archivo_de_metadata = tamanioDeseado;
-	}
-
-	int bloque = open(pathBloque, O_RDWR, 0);
-
-	free(pathBloque);
-
-	void* bloqueConDatos = mmap(NULL, tamanio_archivo_de_metadata,
-	PROT_READ | PROT_WRITE,
-	MAP_SHARED | MAP_FILE, bloque, 0);
-
-	return bloqueConDatos;
-}

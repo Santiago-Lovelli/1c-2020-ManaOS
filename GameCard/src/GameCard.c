@@ -43,6 +43,33 @@ bool existePokemon(char* pokemon) {
 	return indice != (-1);
 }
 
+void* mmapeadoBloquePropio(t_log* log, uint32_t tamanioDeseado,
+		char* numeroDeBloque) {
+	log_info(log, "bloque a escribir: %s", numeroDeBloque);
+
+	char * pathBloque = obtenerPathDeBloque(numeroDeBloque);
+
+	log_info(log, "path a escribir: %s", pathBloque);
+
+	uint32_t tamanio_archivo_de_metadata = 0;
+
+	if (tamanioDeseado == 0) {
+		tamanio_archivo_de_metadata = tamanio_archivo(pathBloque);
+	} else {
+		tamanio_archivo_de_metadata = tamanioDeseado;
+	}
+
+	int bloque = open(pathBloque, O_RDWR, 0);
+
+	free(pathBloque);
+
+	void* bloqueConDatos = mmap(NULL, tamanio_archivo_de_metadata,
+	PROT_READ | PROT_WRITE,
+	MAP_SHARED | MAP_FILE, bloque, 0);
+
+	return bloqueConDatos;
+}
+
 char *archivoMetadataPokemon(char *path, uint32_t cantidadALevantar) {
 
 	uint32_t tamanio_archivo_de_metadata = tamanio_archivo(path);
@@ -396,7 +423,7 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 				/*--Nuevo bloque--*/
 
-				if(arrayConBloques[i] != NULL){
+				if (arrayConBloques[i] != NULL) {
 					log_info(loggerGeneral, "bloque a escribir: %s",
 							arrayConBloques[i]);
 
@@ -408,7 +435,7 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 					i = i + 1;
 				} else {
 					char* numeroDeBloqueNuevo = string_itoa(
-												buscar_espacio_en_bitmap(bitmap, loggerGeneral));
+							buscar_espacio_en_bitmap(bitmap, loggerGeneral));
 
 					string_append(&bloquesNuevos, numeroDeBloqueNuevo);
 
@@ -418,7 +445,6 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 					pathBloque = obtenerPathDeBloque(numeroDeBloqueNuevo);
 					log_info(loggerGeneral, "path a escribir: %s", pathBloque);
 				}
-
 
 				log_info(loggerGeneral, "path a escribir: %s", pathBloque);
 
@@ -432,11 +458,15 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				PROT_READ | PROT_WRITE,
 				MAP_SHARED | MAP_FILE, bloque, 0);
 
-				log_info(loggerGeneral,"::::::: HAAAAAA :::::\n %s",bloqueConDatos);
+				log_info(loggerGeneral, "::::::: HAAAAAA :::::\n %s",
+						bloqueConDatos);
 
-				memcpy(bloqueConDatos, cantidadNueva+strlen(cantidadNueva)-quedaValor, quedaValor);
+				memcpy(bloqueConDatos,
+						cantidadNueva + strlen(cantidadNueva) - quedaValor,
+						quedaValor);
 
-				log_info(loggerGeneral,"::::::: HAAAAAA DOS:::::\n %s",bloqueConDatos);
+				log_info(loggerGeneral, "::::::: HAAAAAA DOS:::::\n %s",
+						bloqueConDatos);
 
 				escrito = escrito + strlen(cantidadVieja);
 				escritoEnElBloque = quedaValor;
