@@ -191,8 +191,10 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		log_info(logger, "Me llego mensaje de %i. Pkm: %s, x: %i, y: %i\n", header.tipoMensaje, AppearedNombrePokemon, posicionAppearedX, posicionAppearedY);
 
 		if(necesitoEstePokemon(AppearedNombrePokemon)){
+			printf("Necesito este pokemon!!! \n ");
 			hacerAppeared(AppearedNombrePokemon,posicionAppearedX,posicionAppearedY,logger);
 		}
+		else{ printf("No necesito este pokemon!!! \n "); }
 		free(packAppearedPokemon);
 		break;
 	case d_LOCALIZED_POKEMON:
