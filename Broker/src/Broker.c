@@ -127,19 +127,30 @@ void suscribir(uint32_t variable, int cliente){
 	}
 }
 
-void enviarMensajeNewASuscriptores (void* paquete, t_list* lista){
-	uint32_t posX, posY, cantidad; //idMensaje
+void enviarMensajeNewASuscriptores (void *paquete, t_list* lista){
+	mensajeConID mensaje;
+	memoriaInterna cache;
+	cache.suscriptoresConMensajeEnviado = list_create();
+	uint32_t posX, posY, cantidad;
 	char *pokemon;
 	Serialize_Unpack_NewPokemon_NoID(paquete, &pokemon, &posX, &posY, &cantidad);
 	log_info(LOGGER_GENERAL,"Me llego mensaje new Pkm: %s, x: %i, y: %i, cant: %i\n", pokemon, posX, posY, cantidad);
+	mensaje = agregarIDMensaje (paquete);
 	int lenght = list_size(lista);
 	for (int i = 0; i<lenght; i++){
 		int socketCliente = list_get(lista, i);
-		Serialize_PackAndSend_NEW_POKEMON_NoID(socketCliente, pokemon, posX, posY, cantidad);
-		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i", socketCliente);
+		Serialize_PackAndSend_NEW_POKEMON(socketCliente, mensaje.id, pokemon, posX, posY, cantidad);
+		log_info (LOGGER_GENERAL, "Se envió el mensaje %i al suscriptor %i", mensaje.id, socketCliente);
+		list_add (cache.suscriptoresConMensajeEnviado, &socketCliente);
 	}
+	cache.idMensaje = mensaje.id;
+	cache.tipoMensaje = d_NEW_POKEMON;
+	list_add(MEMORIA_CACHE, &cache);
 	log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
+	memoriaInterna *resultado = list_get(MEMORIA_CACHE,0);
+	list_get(resultado->suscriptoresConMensajeEnviado,0);
 }
+
 
 void enviarMensajeCatchASuscriptores (void* paquete, t_list* lista){
 	uint32_t posicionCatchX, posicionCatchY;
@@ -220,7 +231,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -240,5 +251,17 @@ void ListsInit () {
 	SUSCRIPTORES_CATCH = list_create();
 	SUSCRIPTORES_CAUGHT = list_create();
 	SUSCRIPTORES_LOCALIZED = list_create();
+	IDs = list_create();
+	MEMORIA_CACHE = list_create();
+}
+
+
+mensajeConID agregarIDMensaje (void* paquete){
+	mensajeConID mensaje;
+	mensaje.pack = paquete;
+	mensaje.id = rand()%10;//asigna un valor aleatorio a partir del 1.
+	//Agregar los IDs a una lista y verificar que no se repitan, en caso de que lo hagan, volver a llamar a la función
+	log_info (LOGGER_GENERAL, "Se asigno el id %i\n", mensaje.id);
+	return mensaje;
 }
 

@@ -228,7 +228,7 @@ void cumplirPedido(int argc, char *argv[]){
 }
 
 void iniciarConfiguracion(){
-	t_config* archivo_de_configuracion = config_create("/home/utnso/tp-2020-1c-ManaOS-/Gameboy/Gameboy.config");
+	t_config* archivo_de_configuracion = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Gameboy/Gameboy.config");
 	puertoBroker = config_get_string_value(archivo_de_configuracion, "PUERTO_BROKER");
 	ipBroker = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
 	puertoTeam = config_get_string_value(archivo_de_configuracion, "PUERTO_TEAM");
@@ -252,10 +252,10 @@ void atenderMensajes (HeaderDelibird headerRecibido, int socket){
 	case d_NEW_POKEMON:
 		log_info(logger, "Llego un new pokemon");
 		void* packNewPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
-		uint32_t posicionNewX,posicionNewY,newCantidad;
+		uint32_t posicionNewX,posicionNewY,newCantidad, id;
 		char *newNombrePokemon;
-		Serialize_Unpack_NewPokemon_NoID(packNewPokemon, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
-		log_info(logger,"Me llego mensaje de %i. Pkm: %s, x: %i, y: %i, cant: %i\n", socket, newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
+		Serialize_Unpack_NewPokemon(packNewPokemon, &id, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
+		log_info(logger,"Me llego mensaje de %i. Pkm: %s, x: %i, y: %i, cant: %i. ID Mensaje: %i\n", socket, newNombrePokemon, posicionNewX, posicionNewY, newCantidad, id);
 		free(packNewPokemon);
 		break;
 	case d_CATCH_POKEMON:

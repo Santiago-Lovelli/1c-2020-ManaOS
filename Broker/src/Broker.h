@@ -39,10 +39,14 @@ enum queueName {
 typedef struct memoriaInterna {
 	int idMensaje;
 	d_message tipoMensaje;
-	t_list* suscriptoresConMensaje;
+	t_list* suscriptoresConMensajeEnviado;
 	t_list* suscriptoresConACK;
 }memoriaInterna;
 
+typedef struct mensajeConID{
+	void *pack;
+	int id;
+}mensajeConID;
 
 ///////FUNCIONES INICIALIZACION/////////
 void Init();
@@ -62,6 +66,7 @@ void enviarMensajeGetASuscriptores (void* paquete, t_list* lista);
 void enviarMensajeAppearedASuscriptores (void* paquete, t_list* lista);
 void enviarMensajeCaughtASuscriptores (void* paquete, t_list* lista);
 void enviarMensajeLocalizedASuscriptores (void* paquete, t_list* lista);
+mensajeConID agregarIDMensaje (void* paquete);
 
 
 ////////VARIABLES GLOBALES//////////
@@ -79,6 +84,8 @@ t_list* SUSCRIPTORES_GET;
 t_list* SUSCRIPTORES_CATCH;
 t_list* SUSCRIPTORES_CAUGHT;
 t_list* SUSCRIPTORES_LOCALIZED;
+t_list* IDs; // si es que usamos el rand
+t_list* MEMORIA_CACHE;
 
 #endif /* BROKER_H_ */
 
