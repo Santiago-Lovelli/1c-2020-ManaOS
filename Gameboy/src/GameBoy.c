@@ -78,8 +78,8 @@ void Subscribe_Queue(char *argv[]){
 	log_info(logger,"COLA DE MENSAJES: %s ", argv[2] );
 	log_info(logger, "TIEMPO", atoi(argv[3]));
 	int conexion = conectarA("BROKER");
-
 	Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));
+	EsperarClientes();
 }
 
 int obtenerNroMensaje(char *actual){
@@ -219,7 +219,7 @@ void cumplirPedido(int argc, char *argv[]){
 }
 
 void iniciarConfiguracion(){
-	t_config* archivo_de_configuracion = config_create("../Gameboy.config");
+	t_config* archivo_de_configuracion = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Gameboy/Gameboy.config");
 	puertoBroker = config_get_string_value(archivo_de_configuracion, "PUERTO_BROKER");
 	ipBroker = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
 	puertoTeam = config_get_string_value(archivo_de_configuracion, "PUERTO_TEAM");
@@ -230,12 +230,39 @@ void iniciarConfiguracion(){
 
 void iniciarEstructuras(){
 	iniciarConfiguracion();
-	logger = iniciar_log("GameBoy");
+	logger = iniciar_log("GameBoy"); /////////////////////////////////////
+	iniciar_servidor("127.0.0.1", "8081", logger);
 	log_info(logger,"PUERTO BROKER: %s IP BROKER: %s\n", puertoBroker, ipBroker);
 	log_info(logger,"PUERTO TEAM: %s IP TEAM: %s\n", puertoTeam, ipTeam);
 	log_info(logger,"PUERTO GAMECARD: %s IP GAMECARD: %s\n", puertoGameCard, ipGamecard);
 }
+void EsperarClientes(){
+	int server = iniciar_servidor("127.0.0.1", "8081", logger);
+	while(1){
+		int cliente = esperar_cliente_con_accept(server, logger);
+		puts("Se conectó el cliente %i\n", cliente);
+		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(cliente);
+		if(headerRecibido.tipoMensaje == -1){
+		log_error(logger, "Se desconecto el cliente %i: \n", cliente);
+		break;
+		}
+		antenderMensajes(headerRecibido, cliente);
+	}
 
+void atenderMensajes (HeaderDelibird headerRecibido, int socket){
+	switch (headerRecibido.tipoMensaje){
+	case d_NEW_POKEMON:
+	log_info(logger, "Llego un new pokemon");
+	void* packNewPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+	uint32_t idMensajeNew,posicionNewX,posicionNewY,newCantidad;
+	char *newNombrePokemon;
+	Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
+	log_info(logger,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n", socket,idMensajeNew,newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
+	free(packNewPokemon);
+	break;
+	////LO MISMO
+	}
+}
 int main(int argc, char *argv[]) {
 	iniciarEstructuras();
 	cumplirPedido(argc,argv);
