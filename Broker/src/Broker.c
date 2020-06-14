@@ -14,26 +14,17 @@ void EsperarClientes(){
 		log_info(LOGGER_OBLIGATORIO, "Se conecto un cliente: %i", cliente);
 		pthread_t* hiloDeAtencion = malloc(sizeof(pthread_t));
 		pthread_create(hiloDeAtencion, NULL, AtenderCliente, cliente);
-		/*int pthreadResponse = pthread_create(hiloDeAtencion, NULL, AtenderCliente, cliente);
-			if(pthreadResponse == 0){
-				pthread_detach(*hiloDeAtencion);
-				log_info(LOGGER_GENERAL,"Se creo el hilo de atencion de cliente sin problema, cliente: %i", cliente);
-			}else{
-				log_error(LOGGER_GENERAL,"No se pudo crear el hilo de atencion de cliente, cliente: %i", cliente);
-			}
-			*/
 	}
 }
 
 void* AtenderCliente(void* cliente) {
 	while(1){
-		puts("Llegué a atender un cliente lince!");
 		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(cliente);
 		if(headerRecibido.tipoMensaje == -1){
 			log_error(LOGGER_GENERAL, "Se desconecto el cliente %i: \n", cliente);
-			break;
+			return (NULL);
 		}
-		ActuarAnteMensaje(headerRecibido,cliente);
+		ActuarAnteMensaje(headerRecibido, cliente);
 	}
 }
 
@@ -42,10 +33,10 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 		case d_NEW_POKEMON:
 			log_info(LOGGER_GENERAL, "Llego un new pokemon");
 			void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t idMensajeNew,posicionNewX,posicionNewY,newCantidad;
+			uint32_t posicionNewX,posicionNewY,newCantidad;
 			char *newNombrePokemon;
-			Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
-			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n", cliente,idMensajeNew,newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
+			Serialize_Unpack_NewPokemon_NoID(packNewPokemon, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
+			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Pkm: %s, x: %i, y: %i, cant: %i\n", cliente, newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
 			enviarMensajeNewASuscriptores (packNewPokemon, SUSCRIPTORES_NEW);
 			free(packNewPokemon);
 			break;
@@ -133,29 +124,29 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 void suscribir(uint32_t variable, int cliente){
 	switch (variable){
 	case d_NEW_POKEMON:
-		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i\n a la cola de NEW", cliente);
+		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de NEW", cliente);
 		list_add (SUSCRIPTORES_NEW, cliente);
 		break;
 	case d_CATCH_POKEMON:
-		log_info (LOGGER_GENERAL, "Se agrego el suscritor %i\n a la cola de CATCH", cliente);
+		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de CATCH", cliente);
 		list_add (SUSCRIPTORES_CATCH, cliente);
 		break;
 	case d_GET_POKEMON:
-			log_info (LOGGER_GENERAL, "Se agrego el suscritor %i\n a la cola de GET", cliente);
-			list_add (SUSCRIPTORES_GET, cliente);
-			break;
+		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de GET", cliente);
+		list_add (SUSCRIPTORES_GET, cliente);
+		break;
 	case d_APPEARED_POKEMON:
-			log_info (LOGGER_GENERAL, "Se agrego el suscritor %i\n a la cola de Appeared", cliente);
-			list_add (SUSCRIPTORES_APPEARED, cliente);
-			break;
+		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de Appeared", cliente);
+		list_add (SUSCRIPTORES_APPEARED, cliente);
+		break;
 	case d_CAUGHT_POKEMON:
-			log_info (LOGGER_GENERAL, "Se agrego el suscritor %i\n a la cola de Caught", cliente);
-			list_add (SUSCRIPTORES_CAUGHT, cliente);
-			break;
+		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de Caught", cliente);
+		list_add (SUSCRIPTORES_CAUGHT, cliente);
+		break;
 	case d_LOCALIZED_POKEMON:
-			log_info (LOGGER_GENERAL, "Se agrego el suscritor %i\n a la cola de Localized", cliente);
-			list_add (SUSCRIPTORES_LOCALIZED, cliente);
-			break;
+		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de Localized", cliente);
+		list_add (SUSCRIPTORES_LOCALIZED, cliente);
+		break;
 	default:
 		log_info (LOGGER_GENERAL, "No se suscribio");
 		break;
@@ -163,15 +154,30 @@ void suscribir(uint32_t variable, int cliente){
 }
 
 void* enviarMensajeNewASuscriptores (void* paquete, t_list* lista){
-	uint32_t idMensaje, posX, posY, cantidad;
-	const void *pokemon;
+	uint32_t posX, posY, cantidad; //idMensaje
+	char *pokemon;
+	Serialize_Unpack_NewPokemon_NoID(paquete, &pokemon, &posX, &posY, &cantidad);
+
+	int lenght = list_size(lista);
+	//for (int i = 0; i<lenght; i++){
 	while (!list_is_empty(lista)){
-	int socketCliente = lista->head->data;
-	Serialize_PackAndSend_NEW_POKEMON(socketCliente, idMensaje, pokemon, posX, posY, cantidad);
+		//int socketCliente = list_get(lista, i);
+		int socketCliente = lista->head->data;
+		log_info(LOGGER_GENERAL, "Se notificara al socket %i", socketCliente);
+		Serialize_PackAndSend_NEW_POKEMON_NoID(socketCliente, pokemon, posX, posY, cantidad);
+		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i", socketCliente);
+		lista = lista->head->next;
+	}
+
+	log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
+	/*while (!list_is_empty(lista)){
+	int socketCliente = (int)lista->head->data;
+	log_info("Se notificara al socket %i \n", socketCliente);
+	Serialize_PackAndSend_NEW_POKEMON_NoID(socketCliente, pokemon, posX, posY, cantidad);
 	log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
 	lista = lista->head->next;
-}
-	log_info(LOGGER_GENERAL, "No hay suscriptores");
+	}*/
+
 }
 
 ///////FUNCIONES DE INIT///////////
@@ -184,7 +190,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");

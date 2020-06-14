@@ -79,7 +79,14 @@ void Subscribe_Queue(char *argv[]){
 	log_info(logger, "TIEMPO", atoi(argv[3]));
 	int conexion = conectarA("BROKER");
 	Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));
-	EsperarClientes();
+	while(1){
+		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(conexion);
+		if(headerRecibido.tipoMensaje == -1){
+			log_error(logger, "Se desconecto el broker %i: \n", conexion);
+			break;
+		}
+		atenderMensajes(headerRecibido, conexion);
+	}
 }
 
 int obtenerNroMensaje(char *actual){
@@ -153,6 +160,17 @@ void cumplirPedido(int argc, char *argv[]){
 		log_info(logger, "Argumentos insuficientes");
 		return;
 	}
+
+	if( string_equals_ignore_case(argv[1],"SUSCRIPTOR") ){
+		if(argc < 4){
+			log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
+			return;
+		}
+		log_info(logger,"RECIBI EL PEDIDO: %s PARA LA COLA DE MENSAJES: %s", argv[1], argv[2]);
+		Subscribe_Queue(argv);
+		return;
+	}
+
 	switch( obtenerNroMensaje(argv[2]) ) {
 
 	case d_NEW_POKEMON:;
@@ -204,22 +222,13 @@ void cumplirPedido(int argc, char *argv[]){
 		Get_pokemon(argv);
 		break;
 	default:;
-		if( string_equals_ignore_case(argv[1],"SUSCRIPTOR") ){
-			if(argc < 4){
-				log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
-				break;
-			}
-			log_info(logger,"RECIBI EL PEDIDO: %s PARA LA COLA DE MENSAJES: %s", argv[1], argv[2]);
-			Subscribe_Queue(argv);
-			break;
-		}
 		log_info(logger,"DEFAULT");
 		break;
 	}
 }
 
 void iniciarConfiguracion(){
-	t_config* archivo_de_configuracion = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Gameboy/Gameboy.config");
+	t_config* archivo_de_configuracion = config_create("/home/utnso/tp-2020-1c-ManaOS-/Gameboy/Gameboy.config");
 	puertoBroker = config_get_string_value(archivo_de_configuracion, "PUERTO_BROKER");
 	ipBroker = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
 	puertoTeam = config_get_string_value(archivo_de_configuracion, "PUERTO_TEAM");
@@ -236,33 +245,59 @@ void iniciarEstructuras(){
 	log_info(logger,"PUERTO TEAM: %s IP TEAM: %s\n", puertoTeam, ipTeam);
 	log_info(logger,"PUERTO GAMECARD: %s IP GAMECARD: %s\n", puertoGameCard, ipGamecard);
 }
-void EsperarClientes(){
-	int server = iniciar_servidor("127.0.0.1", "8081", logger);
-	while(1){
-		int cliente = esperar_cliente_con_accept(server, logger);
-		puts("Se conectó el cliente %i\n", cliente);
-		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(cliente);
-		if(headerRecibido.tipoMensaje == -1){
-		log_error(logger, "Se desconecto el cliente %i: \n", cliente);
-		break;
-		}
-		antenderMensajes(headerRecibido, cliente);
-	}
 
 void atenderMensajes (HeaderDelibird headerRecibido, int socket){
+	log_info(logger, "atendiendo mensaje...");
 	switch (headerRecibido.tipoMensaje){
 	case d_NEW_POKEMON:
-	log_info(logger, "Llego un new pokemon");
-	void* packNewPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
-	uint32_t idMensajeNew,posicionNewX,posicionNewY,newCantidad;
-	char *newNombrePokemon;
-	Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
-	log_info(logger,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n", socket,idMensajeNew,newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
-	free(packNewPokemon);
-	break;
-	////LO MISMO
+		log_info(logger, "Llego un new pokemon");
+		void* packNewPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+		uint32_t posicionNewX,posicionNewY,newCantidad;
+		char *newNombrePokemon;
+		Serialize_Unpack_NewPokemon_NoID(packNewPokemon, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
+		log_info(logger,"Me llego mensaje de %i. Pkm: %s, x: %i, y: %i, cant: %i\n", socket, newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
+		free(packNewPokemon);
+		break;
+	case d_CATCH_POKEMON:
+		log_info(logger, "Llego un catch pokemon");
+		void* packCatchPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+		uint32_t idMensajeCatch,posicionCatchX,posicionCatchY;
+		char *catchNombrePokemon;
+		Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
+		log_info(logger,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n", headerRecibido.tipoMensaje, idMensajeCatch, catchNombrePokemon, posicionCatchX, posicionCatchY);
+		free(packCatchPokemon);
+		break;
+	case d_GET_POKEMON:
+		log_info(logger, "Llego un get pokemon");
+		void* packGetPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+		uint32_t idMensajeGet;
+		char *getNombrePokemon;
+		Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet, &getNombrePokemon);
+		log_info(logger,"Me llego mensaje de %i. Id: %i, Pkm: %s\n", headerRecibido.tipoMensaje, idMensajeGet, getNombrePokemon);
+		free(packGetPokemon);
+		break;
+	case d_APPEARED_POKEMON:
+		log_info(logger, "Llego un appeared pokemon");
+		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+		uint32_t idMensajeAppeared, posicionX, posicionY;
+		char *nombrePokemon;
+		Serialize_Unpack_AppearedPokemon(packAppearedPokemon, &idMensajeAppeared, &nombrePokemon, &posicionX, &posicionY);
+		log_info(logger,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n", headerRecibido.tipoMensaje, idMensajeAppeared, nombrePokemon, posicionX, posicionY);
+		free(packAppearedPokemon);
+		break;
+	case d_CAUGHT_POKEMON:
+		log_info(logger, "Llego un caught pokemon");
+		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+		uint32_t idMensajeCaught, resultado;
+		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught, &resultado);
+		log_info(logger,"Me llego mensaje de %i. Id: %i, Resultado: %i\n", headerRecibido.tipoMensaje, idMensajeCaught, resultado);
+		free(packCaughtPokemon);
+		break;
+	//case d_LOCALIZED_POKEMON:
+	default: log_info(logger, "Llego cualquiera");
 	}
 }
+
 int main(int argc, char *argv[]) {
 	iniciarEstructuras();
 	cumplirPedido(argc,argv);

@@ -1,0 +1,2006 @@
+[INFO] 17:30:14:389 Broker/(12199:12199): Logger iniciado: Broker.log
+
+[INFO] 17:30:33:489 Broker/(12199:12199): Configuracion broker levantada!
+[INFO] 17:30:39:833 Broker/(12199:12199): Dentro de iniciar servidor
+[INFO] 17:30:39:834 Broker/(12199:12199): Listo para escuchar a mi cliente
+[INFO] 17:30:39:834 Broker/(12199:12199): esperando
+[INFO] 20:43:35:903 Broker/(7196:7196): Logger iniciado: Broker.log
+
+[INFO] 20:43:35:905 Broker/(7196:7196): Configuracion broker levantada!
+[INFO] 20:43:35:911 Broker/(7196:7196): Dentro de iniciar servidor
+[INFO] 20:43:35:911 Broker/(7196:7196): Listo para escuchar a mi cliente
+[INFO] 20:43:35:911 Broker/(7196:7196): esperando
+[INFO] 17:00:16:34 Broker/(5789:5789): Logger iniciado: Broker.log
+
+[INFO] 15:10:06:735 Broker/(3825:3825): Logger iniciado: Broker.log
+
+[INFO] 20:12:40:265 Broker/(9079:9079): Logger iniciado: Broker.log
+
+[INFO] 22:24:15:385 Broker/(12367:12367): Logger iniciado: Broker.log
+
+[INFO] 22:25:03:243 Broker/(12386:12386): Logger iniciado: Broker.log
+
+[INFO] 22:25:30:351 Broker/(12419:12419): Logger iniciado: Broker.log
+
+[INFO] 22:26:19:106 Broker/(12467:12467): Logger iniciado: Broker.log
+
+[INFO] 22:26:19:106 Broker/(12467:12467): Configuracion broker levantada!
+[INFO] 22:26:19:107 Broker/(12467:12467): Dentro de iniciar servidor
+[INFO] 22:26:19:108 Broker/(12467:12467): Listo para escuchar a mi cliente
+[INFO] 22:26:19:108 Broker/(12467:12467): esperando
+[INFO] 22:32:19:196 Broker/(12467:12467): Se conecto un cliente!
+[INFO] 22:32:19:196 Broker/(12467:12467): Se conecto un cliente: 6
+[INFO] 22:32:19:196 Broker/(12467:12467): esperando
+[INFO] 22:32:19:196 Broker/(12467:12505): Llego un Subscribe
+[INFO] 22:32:19:196 Broker/(12467:12505): No se suscribio
+[INFO] 22:34:42:771 Broker/(12552:12552): Logger iniciado: Broker.log
+
+[INFO] 22:34:42:771 Broker/(12552:12552): Configuracion broker levantada!
+[INFO] 22:34:42:772 Broker/(12552:12552): Dentro de iniciar servidor
+[INFO] 22:34:42:772 Broker/(12552:12552): Listo para escuchar a mi cliente
+[INFO] 22:34:42:772 Broker/(12552:12552): esperando
+[INFO] 22:34:42:772 Broker/(12552:12552): Se conecto un cliente!
+[INFO] 22:34:42:772 Broker/(12552:12552): Se conecto un cliente: -1
+[INFO] 22:34:42:772 Broker/(12552:12552): esperando
+[INFO] 22:34:42:772 Broker/(12552:12552): Se conecto un cliente!
+[INFO] 22:34:42:772 Broker/(12552:12552): Se conecto un cliente: -1
+[INFO] 22:34:42:773 Broker/(12552:12552): esperando
+[INFO] 22:34:42:776 Broker/(12552:12552): Se conecto un cliente!
+[INFO] 22:34:42:776 Broker/(12552:12552): Se conecto un cliente: -1
+[INFO] 22:34:42:776 Broker/(12552:12562): Llego un new pokemon
+[INFO] 22:34:42:776 Broker/(12552:12563): Llego un new pokemon
+[INFO] 22:34:42:777 Broker/(12552:12564): Llego un new pokemon
+[ERROR] 22:35:31:265 Broker/(12467:12505): Se desconecto el cliente 6: 
+
+[INFO] 22:35:50:158 Broker/(12597:12597): Logger iniciado: Broker.log
+
+[INFO] 22:35:50:158 Broker/(12597:12597): Configuracion broker levantada!
+[INFO] 22:35:50:158 Broker/(12597:12597): Dentro de iniciar servidor
+[INFO] 22:35:50:158 Broker/(12597:12597): Listo para escuchar a mi cliente
+[INFO] 22:35:50:158 Broker/(12597:12597): esperando
+[INFO] 22:36:10:338 Broker/(12597:12597): Se conecto un cliente!
+[INFO] 22:36:10:338 Broker/(12597:12597): Se conecto un cliente: 6
+[INFO] 22:36:10:340 Broker/(12597:12597): esperando
+[INFO] 22:36:10:340 Broker/(12597:12612): Llego un Subscribe
+[INFO] 22:36:10:340 Broker/(12597:12612): No se suscribio
+[INFO] 22:37:13:404 Broker/(12640:12640): Logger iniciado: Broker.log
+
+[INFO] 22:37:13:404 Broker/(12640:12640): Configuracion broker levantada!
+[INFO] 22:37:13:404 Broker/(12640:12640): Dentro de iniciar servidor
+[INFO] 22:37:13:404 Broker/(12640:12640): Listo para escuchar a mi cliente
+[INFO] 22:37:13:404 Broker/(12640:12640): esperando
+[INFO] 22:37:13:404 Broker/(12640:12640): Se conecto un cliente!
+[INFO] 22:37:13:404 Broker/(12640:12640): Se conecto un cliente: -1
+[INFO] 22:37:13:405 Broker/(12640:12640): esperando
+[INFO] 22:37:13:405 Broker/(12640:12640): Se conecto un cliente!
+[INFO] 22:37:13:405 Broker/(12640:12640): Se conecto un cliente: -1
+[INFO] 22:37:13:405 Broker/(12640:12647): Llego un new pokemon
+[INFO] 22:37:13:408 Broker/(12640:12648): Llego un new pokemon
+[INFO] 22:37:42:898 Broker/(12677:12677): Logger iniciado: Broker.log
+
+[INFO] 22:37:42:899 Broker/(12677:12677): Configuracion broker levantada!
+[INFO] 22:37:42:899 Broker/(12677:12677): Dentro de iniciar servidor
+[INFO] 22:37:42:900 Broker/(12677:12677): Listo para escuchar a mi cliente
+[INFO] 22:37:42:900 Broker/(12677:12677): esperando
+[INFO] 22:38:02:674 Broker/(12677:12677): Se conecto un cliente!
+[INFO] 22:38:02:674 Broker/(12677:12677): Se conecto un cliente: 6
+[INFO] 22:38:02:675 Broker/(12677:12692): Llego un Subscribe
+[INFO] 22:38:02:675 Broker/(12677:12677): esperando
+[INFO] 22:40:08:636 Broker/(12759:12759): Logger iniciado: Broker.log
+
+[INFO] 22:40:08:637 Broker/(12759:12759): Configuracion broker levantada!
+[INFO] 22:40:08:637 Broker/(12759:12759): Dentro de iniciar servidor
+[INFO] 22:40:08:637 Broker/(12759:12759): Listo para escuchar a mi cliente
+[INFO] 22:40:08:637 Broker/(12759:12759): esperando
+[INFO] 22:42:21:549 Broker/(12814:12814): Logger iniciado: Broker.log
+
+[INFO] 22:42:21:549 Broker/(12814:12814): Configuracion broker levantada!
+[INFO] 22:42:21:549 Broker/(12814:12814): Dentro de iniciar servidor
+[INFO] 22:42:21:549 Broker/(12814:12814): Listo para escuchar a mi cliente
+[INFO] 22:42:21:550 Broker/(12814:12814): esperando
+[INFO] 22:42:21:550 Broker/(12814:12814): Se conecto un cliente!
+[INFO] 22:42:21:550 Broker/(12814:12814): Se conecto un cliente: -1
+[INFO] 22:42:21:551 Broker/(12814:12826): Llego un new pokemon
+[INFO] 22:44:58:416 Broker/(12900:12900): Logger iniciado: Broker.log
+
+[INFO] 22:44:58:416 Broker/(12900:12900): Configuracion broker levantada!
+[INFO] 22:44:58:416 Broker/(12900:12900): Dentro de iniciar servidor
+[INFO] 22:44:58:416 Broker/(12900:12900): Listo para escuchar a mi cliente
+[INFO] 22:44:58:416 Broker/(12900:12900): esperando
+[INFO] 22:44:58:416 Broker/(12900:12900): Se conecto un cliente!
+[INFO] 22:44:58:416 Broker/(12900:12900): Se conecto un cliente: -1
+[INFO] 22:44:58:417 Broker/(12900:12900): esperando
+[INFO] 22:44:58:417 Broker/(12900:12900): Se conecto un cliente!
+[INFO] 22:44:58:417 Broker/(12900:12900): Se conecto un cliente: -1
+[INFO] 22:44:58:417 Broker/(12900:12900): esperando
+[INFO] 22:44:58:417 Broker/(12900:12900): Se conecto un cliente!
+[INFO] 22:44:58:417 Broker/(12900:12900): Se conecto un cliente: -1
+[INFO] 22:44:58:417 Broker/(12900:12900): esperando
+[INFO] 22:44:58:417 Broker/(12900:12906): Llego un new pokemon
+[INFO] 22:44:59:291 Broker/(12759:12759): Se conecto un cliente!
+[INFO] 22:44:59:292 Broker/(12759:12759): Se conecto un cliente: 6
+[INFO] 22:44:59:293 Broker/(12759:12759): esperando
+[INFO] 22:44:59:293 Broker/(12759:12911): Llego un Subscribe
+[INFO] 22:46:58:572 Broker/(12759:12911): No se suscribio
+[ERROR] 23:09:54:128 Broker/(12759:12911): Se desconecto el cliente 6: 
+
+[INFO] 23:14:13:569 Broker/(13434:13434): Logger iniciado: Broker.log
+
+[INFO] 23:14:57:649 Broker/(13502:13502): Logger iniciado: Broker.log
+
+[INFO] 23:14:57:650 Broker/(13502:13502): Configuracion broker levantada!
+[INFO] 23:14:57:651 Broker/(13502:13502): Dentro de iniciar servidor
+[INFO] 23:14:57:651 Broker/(13502:13502): Listo para escuchar a mi cliente
+[INFO] 23:14:57:651 Broker/(13502:13502): esperando
+[INFO] 23:19:00:28 Broker/(13789:13789): Logger iniciado: Broker.log
+
+[INFO] 23:19:00:28 Broker/(13789:13789): Configuracion broker levantada!
+[INFO] 23:19:00:28 Broker/(13789:13789): Dentro de iniciar servidor
+[INFO] 23:19:00:28 Broker/(13789:13789): Listo para escuchar a mi cliente
+[INFO] 23:19:00:28 Broker/(13789:13789): esperando
+[INFO] 23:19:00:28 Broker/(13789:13789): Se conecto un cliente!
+[INFO] 23:19:00:28 Broker/(13789:13789): Se conecto un cliente: -1
+[INFO] 23:19:00:28 Broker/(13789:13789): esperando
+[INFO] 23:19:00:29 Broker/(13789:13789): Se conecto un cliente!
+[INFO] 23:19:00:29 Broker/(13789:13795): Llego un new pokemon
+[INFO] 23:19:00:29 Broker/(13789:13789): Se conecto un cliente: -1
+[INFO] 23:19:18:697 Broker/(13809:13809): Logger iniciado: Broker.log
+
+[INFO] 23:19:18:698 Broker/(13809:13809): Configuracion broker levantada!
+[INFO] 23:19:18:698 Broker/(13809:13809): Dentro de iniciar servidor
+[INFO] 23:19:18:698 Broker/(13809:13809): Listo para escuchar a mi cliente
+[INFO] 23:19:18:698 Broker/(13809:13809): esperando
+[INFO] 23:21:36:951 Broker/(13809:13809): Se conecto un cliente!
+[INFO] 23:21:36:951 Broker/(13809:13809): Se conecto un cliente: 6
+[INFO] 23:21:36:952 Broker/(13809:13809): esperando
+[INFO] 23:21:36:952 Broker/(13809:13838): Llego un Subscribe
+[INFO] 23:21:36:952 Broker/(13809:13838): No se suscribio
+[ERROR] 23:21:38:231 Broker/(13809:13838): Se desconecto el cliente 6: 
+
+[INFO] 23:23:52:45 Broker/(13932:13932): Logger iniciado: Broker.log
+
+[INFO] 23:23:52:45 Broker/(13932:13932): Configuracion broker levantada!
+[INFO] 23:23:52:45 Broker/(13932:13932): Dentro de iniciar servidor
+[INFO] 23:23:52:46 Broker/(13932:13932): Listo para escuchar a mi cliente
+[INFO] 23:23:52:46 Broker/(13932:13932): esperando
+[INFO] 23:23:52:46 Broker/(13932:13932): Se conecto un cliente!
+[INFO] 23:23:52:46 Broker/(13932:13932): Se conecto un cliente: -1
+[INFO] 23:23:52:46 Broker/(13932:13932): esperando
+[INFO] 23:23:52:46 Broker/(13932:13932): Se conecto un cliente!
+[INFO] 23:23:52:46 Broker/(13932:13932): Se conecto un cliente: -1
+[INFO] 23:23:52:47 Broker/(13932:13932): esperando
+[INFO] 23:23:52:47 Broker/(13932:13932): Se conecto un cliente!
+[INFO] 23:23:52:47 Broker/(13932:13932): Se conecto un cliente: -1
+[INFO] 23:23:52:47 Broker/(13932:13938): Llego un new pokemon
+[INFO] 23:28:33:800 Broker/(13809:13809): Se conecto un cliente!
+[INFO] 23:28:33:800 Broker/(13809:13809): Se conecto un cliente: 7
+[INFO] 23:28:33:801 Broker/(13809:13809): esperando
+[INFO] 23:28:33:801 Broker/(13809:13994): Llego un Subscribe
+[INFO] 23:28:33:801 Broker/(13809:13994): No se suscribio
+[ERROR] 23:28:36:185 Broker/(13809:13994): Se desconecto el cliente 7: 
+
+[INFO] 23:29:48:310 Broker/(13809:13809): Se conecto un cliente!
+[INFO] 23:29:48:310 Broker/(13809:13809): Se conecto un cliente: 8
+[INFO] 23:29:48:311 Broker/(13809:13809): esperando
+[INFO] 23:29:48:312 Broker/(13809:14012): Llego un Subscribe
+[INFO] 23:29:48:312 Broker/(13809:14012): No se suscribio
+[ERROR] 23:29:48:575 Broker/(13809:14012): Se desconecto el cliente 8: 
+
+[INFO] 23:44:25:372 Broker/(14428:14428): Logger iniciado: Broker.log
+
+[INFO] 23:44:25:373 Broker/(14428:14428): Configuracion broker levantada!
+[INFO] 23:44:25:373 Broker/(14428:14428): Dentro de iniciar servidor
+[INFO] 23:44:25:373 Broker/(14428:14428): Listo para escuchar a mi cliente
+[INFO] 23:44:25:373 Broker/(14428:14428): esperando
+[INFO] 23:44:25:373 Broker/(14428:14428): Se conecto un cliente!
+[INFO] 23:44:25:373 Broker/(14428:14428): Se conecto un cliente: -1
+[INFO] 23:44:25:373 Broker/(14428:14428): esperando
+[INFO] 23:44:25:373 Broker/(14428:14428): Se conecto un cliente!
+[INFO] 23:44:25:373 Broker/(14428:14428): Se conecto un cliente: -1
+[INFO] 23:44:25:374 Broker/(14428:14434): Llego un new pokemon
+[INFO] 23:45:24:766 Broker/(14448:14448): Logger iniciado: Broker.log
+
+[INFO] 23:45:24:767 Broker/(14448:14448): Configuracion broker levantada!
+[INFO] 23:45:24:767 Broker/(14448:14448): Dentro de iniciar servidor
+[INFO] 23:45:24:767 Broker/(14448:14448): Listo para escuchar a mi cliente
+[INFO] 23:45:24:767 Broker/(14448:14448): esperando
+[INFO] 23:45:30:779 Broker/(14448:14448): Se conecto un cliente!
+[INFO] 23:45:30:779 Broker/(14448:14448): Se conecto un cliente: 6
+[INFO] 23:45:30:780 Broker/(14448:14448): esperando
+[INFO] 23:45:30:780 Broker/(14448:14455): Llego un Subscribe
+[INFO] 23:45:30:780 Broker/(14448:14455): Se agrego el suscriptor 6
+ a la cola de NEW
+[ERROR] 23:45:30:780 Broker/(14448:14455): Se desconecto el cliente 6: 
+
+[INFO] 23:50:39:752 Broker/(14622:14622): Logger iniciado: Broker.log
+
+[INFO] 23:50:39:753 Broker/(14622:14622): Configuracion broker levantada!
+[INFO] 23:50:39:753 Broker/(14622:14622): Dentro de iniciar servidor
+[INFO] 23:50:39:753 Broker/(14622:14622): Listo para escuchar a mi cliente
+[INFO] 23:50:39:753 Broker/(14622:14622): esperando
+[INFO] 23:50:39:753 Broker/(14622:14622): Se conecto un cliente!
+[INFO] 23:50:39:753 Broker/(14622:14622): Se conecto un cliente: -1
+[INFO] 23:50:39:753 Broker/(14622:14622): esperando
+[INFO] 23:50:39:753 Broker/(14622:14622): Se conecto un cliente!
+[INFO] 23:50:39:753 Broker/(14622:14622): Se conecto un cliente: -1
+[INFO] 23:50:39:754 Broker/(14622:14628): Llego un new pokemon
+[INFO] 23:51:04:454 Broker/(14640:14640): Logger iniciado: Broker.log
+
+[INFO] 23:51:04:454 Broker/(14640:14640): Configuracion broker levantada!
+[INFO] 23:51:04:454 Broker/(14640:14640): Dentro de iniciar servidor
+[INFO] 23:51:04:454 Broker/(14640:14640): Listo para escuchar a mi cliente
+[INFO] 23:51:04:454 Broker/(14640:14640): esperando
+[INFO] 23:51:04:454 Broker/(14640:14640): Se conecto un cliente!
+[INFO] 23:51:04:454 Broker/(14640:14640): Se conecto un cliente: -1
+[INFO] 23:51:04:455 Broker/(14640:14640): esperando
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente!
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente: -1
+[INFO] 23:51:04:455 Broker/(14640:14640): esperando
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente!
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente: -1
+[INFO] 23:51:04:455 Broker/(14640:14640): esperando
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente!
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente: -1
+[INFO] 23:51:04:455 Broker/(14640:14640): esperando
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente!
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente: -1
+[INFO] 23:51:04:455 Broker/(14640:14640): esperando
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente!
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente: -1
+[INFO] 23:51:04:455 Broker/(14640:14640): esperando
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente!
+[INFO] 23:51:04:455 Broker/(14640:14640): Se conecto un cliente: -1
+[INFO] 23:51:04:456 Broker/(14640:14646): Llego un new pokemon
+[INFO] 23:51:25:8 Broker/(14665:14665): Logger iniciado: Broker.log
+
+[INFO] 23:51:25:8 Broker/(14665:14665): Configuracion broker levantada!
+[INFO] 23:51:25:8 Broker/(14665:14665): Dentro de iniciar servidor
+[INFO] 23:51:25:8 Broker/(14665:14665): Listo para escuchar a mi cliente
+[INFO] 23:51:25:8 Broker/(14665:14665): esperando
+[INFO] 23:51:31:359 Broker/(14665:14665): Se conecto un cliente!
+[INFO] 23:51:31:359 Broker/(14665:14665): Se conecto un cliente: 6
+[INFO] 23:51:31:359 Broker/(14665:14665): esperando
+[INFO] 23:51:31:359 Broker/(14665:14673): Llego un Subscribe
+[INFO] 23:51:31:359 Broker/(14665:14673): Se agrego el suscriptor 6
+ a la cola de NEW
+[ERROR] 23:51:33:830 Broker/(14665:14673): Se desconecto el cliente 6: 
+
+[INFO] 00:01:07:117 Broker/(14761:14761): Logger iniciado: Broker.log
+
+[INFO] 00:01:07:118 Broker/(14761:14761): Configuracion broker levantada!
+[INFO] 00:01:07:118 Broker/(14761:14761): Dentro de iniciar servidor
+[INFO] 00:01:07:118 Broker/(14761:14761): Listo para escuchar a mi cliente
+[INFO] 00:01:07:118 Broker/(14761:14761): esperando
+[INFO] 00:01:07:118 Broker/(14761:14761): Se conecto un cliente!
+[INFO] 00:01:07:118 Broker/(14761:14761): Se conecto un cliente: -1
+[INFO] 00:01:07:118 Broker/(14761:14761): esperando
+[INFO] 00:01:07:118 Broker/(14761:14761): Se conecto un cliente!
+[INFO] 00:01:07:118 Broker/(14761:14761): Se conecto un cliente: -1
+[INFO] 00:01:07:118 Broker/(14761:14761): esperando
+[INFO] 00:01:07:118 Broker/(14761:14761): Se conecto un cliente!
+[INFO] 00:01:07:118 Broker/(14761:14761): Se conecto un cliente: -1
+[INFO] 00:01:07:119 Broker/(14761:14761): esperando
+[INFO] 00:01:07:119 Broker/(14761:14761): Se conecto un cliente!
+[INFO] 00:01:07:119 Broker/(14761:14761): Se conecto un cliente: -1
+[INFO] 00:01:07:119 Broker/(14761:14769): Llego un new pokemon
+[INFO] 00:01:07:119 Broker/(14761:14761): esperando
+[INFO] 00:01:07:119 Broker/(14761:14761): Se conecto un cliente!
+[INFO] 00:01:07:120 Broker/(14761:14761): Se conecto un cliente: -1
+[INFO] 00:01:32:319 Broker/(14784:14784): Logger iniciado: Broker.log
+
+[INFO] 00:01:32:319 Broker/(14784:14784): Configuracion broker levantada!
+[INFO] 00:01:32:319 Broker/(14784:14784): Dentro de iniciar servidor
+[INFO] 00:01:32:319 Broker/(14784:14784): Listo para escuchar a mi cliente
+[INFO] 00:01:32:319 Broker/(14784:14784): esperando
+[INFO] 00:05:10:357 Broker/(14924:14924): Logger iniciado: Broker.log
+
+[INFO] 00:05:10:357 Broker/(14924:14924): Configuracion broker levantada!
+[INFO] 00:05:10:358 Broker/(14924:14924): Dentro de iniciar servidor
+[INFO] 00:05:10:358 Broker/(14924:14924): Listo para escuchar a mi cliente
+[INFO] 00:05:10:358 Broker/(14924:14924): esperando
+[INFO] 00:07:04:320 Broker/(14975:14975): Logger iniciado: Broker.log
+
+[INFO] 00:07:04:320 Broker/(14975:14975): Configuracion broker levantada!
+[INFO] 00:07:04:320 Broker/(14975:14975): Dentro de iniciar servidor
+[INFO] 00:07:04:320 Broker/(14975:14975): Listo para escuchar a mi cliente
+[INFO] 00:07:04:320 Broker/(14975:14975): esperando
+[INFO] 00:07:04:320 Broker/(14975:14975): Se conecto un cliente!
+[INFO] 00:07:04:321 Broker/(14975:14975): Se conecto un cliente: -1
+[INFO] 00:07:04:321 Broker/(14975:14975): esperando
+[INFO] 00:07:04:321 Broker/(14975:14975): Se conecto un cliente!
+[INFO] 00:07:04:321 Broker/(14975:14975): Se conecto un cliente: -1
+[INFO] 00:07:04:321 Broker/(14975:14975): esperando
+[INFO] 00:07:04:321 Broker/(14975:14975): Se conecto un cliente!
+[INFO] 00:07:04:321 Broker/(14975:14975): Se conecto un cliente: -1
+[INFO] 00:07:04:321 Broker/(14975:14981): Llego un new pokemon
+[INFO] 00:07:04:322 Broker/(14975:14975): esperando
+[INFO] 00:07:16:215 Broker/(14924:14924): Se conecto un cliente!
+[INFO] 00:07:16:215 Broker/(14924:14924): Se conecto un cliente: 6
+[INFO] 00:07:16:215 Broker/(14924:14924): esperando
+[INFO] 00:07:16:215 Broker/(14924:15014): Llego un Subscribe
+[INFO] 00:07:16:215 Broker/(14924:15014): Se agrego el suscriptor 6
+ a la cola de NEW
+[ERROR] 00:07:17:370 Broker/(14924:15014): Se desconecto el cliente 6: 
+
+[INFO] 00:11:20:479 Broker/(15155:15155): Logger iniciado: Broker.log
+
+[INFO] 00:11:20:479 Broker/(15155:15155): Configuracion broker levantada!
+[INFO] 00:11:20:479 Broker/(15155:15155): Dentro de iniciar servidor
+[INFO] 00:11:20:479 Broker/(15155:15155): Listo para escuchar a mi cliente
+[INFO] 00:11:20:479 Broker/(15155:15155): esperando
+[INFO] 00:11:20:479 Broker/(15155:15155): Se conecto un cliente!
+[INFO] 00:11:20:479 Broker/(15155:15155): Se conecto un cliente: -1
+[INFO] 00:11:20:480 Broker/(15155:15155): esperando
+[INFO] 00:11:20:480 Broker/(15155:15155): Se conecto un cliente!
+[INFO] 00:11:20:480 Broker/(15155:15155): Se conecto un cliente: -1
+[INFO] 00:11:20:480 Broker/(15155:15155): esperando
+[INFO] 00:11:20:480 Broker/(15155:15155): Se conecto un cliente!
+[INFO] 00:11:20:480 Broker/(15155:15161): Llego un new pokemon
+[INFO] 00:11:20:480 Broker/(15155:15155): Se conecto un cliente: -1
+[INFO] 00:11:20:480 Broker/(15155:15162): Llego un new pokemon
+[INFO] 00:11:30:539 Broker/(14924:14924): Se conecto un cliente!
+[INFO] 00:11:30:539 Broker/(14924:14924): Se conecto un cliente: 7
+[INFO] 00:11:30:539 Broker/(14924:14924): esperando
+[INFO] 00:11:30:539 Broker/(14924:15166): Llego un Subscribe
+[INFO] 00:11:30:539 Broker/(14924:15166): Se agrego el suscriptor 7
+ a la cola de NEW
+[ERROR] 00:11:30:689 Broker/(14924:15166): Se desconecto el cliente 7: 
+
+[INFO] 00:22:41:627 Broker/(15427:15427): Logger iniciado: Broker.log
+
+[INFO] 00:22:41:628 Broker/(15427:15427): Configuracion broker levantada!
+[INFO] 00:22:41:628 Broker/(15427:15427): Dentro de iniciar servidor
+[INFO] 00:22:41:629 Broker/(15427:15427): Listo para escuchar a mi cliente
+[INFO] 00:22:41:629 Broker/(15427:15427): esperando
+[INFO] 00:22:45:240 Broker/(15427:15427): Se conecto un cliente!
+[INFO] 00:22:45:240 Broker/(15427:15427): Se conecto un cliente: 6
+[INFO] 00:22:45:240 Broker/(15427:15427): esperando
+[INFO] 00:22:45:241 Broker/(15427:15434): Llego un Subscribe
+[INFO] 00:22:45:241 Broker/(15427:15434): Se agrego el suscriptor 6
+ a la cola de NEW
+[ERROR] 00:22:48:285 Broker/(15427:15434): Se desconecto el cliente 6: 
+
+[INFO] 00:23:57:440 Broker/(15472:15472): Logger iniciado: Broker.log
+
+[INFO] 00:23:57:440 Broker/(15472:15472): Configuracion broker levantada!
+[INFO] 00:23:59:309 Broker/(15472:15472): Dentro de iniciar servidor
+[INFO] 00:23:59:309 Broker/(15472:15472): Listo para escuchar a mi cliente
+[INFO] 00:24:13:301 Broker/(15472:15472): esperando
+[INFO] 00:25:51:947 Broker/(15555:15555): Logger iniciado: Broker.log
+
+[INFO] 00:25:51:947 Broker/(15555:15555): Configuracion broker levantada!
+[INFO] 00:25:51:948 Broker/(15555:15555): Dentro de iniciar servidor
+[INFO] 00:25:51:948 Broker/(15555:15555): Listo para escuchar a mi cliente
+[INFO] 00:25:51:948 Broker/(15555:15555): esperando
+[INFO] 00:25:51:948 Broker/(15555:15555): Se conecto un cliente!
+[INFO] 00:25:51:948 Broker/(15555:15555): Se conecto un cliente: -1
+[INFO] 00:25:51:948 Broker/(15555:15555): esperando
+[INFO] 00:25:51:948 Broker/(15555:15555): Se conecto un cliente!
+[INFO] 00:25:51:948 Broker/(15555:15555): Se conecto un cliente: -1
+[INFO] 00:25:51:948 Broker/(15555:15555): esperando
+[INFO] 00:25:51:948 Broker/(15555:15561): Llego un new pokemon
+[INFO] 00:25:51:948 Broker/(15555:15555): Se conecto un cliente!
+[INFO] 00:25:51:948 Broker/(15555:15555): Se conecto un cliente: -1
+[INFO] 00:26:14:657 Broker/(15574:15574): Logger iniciado: Broker.log
+
+[INFO] 00:26:14:658 Broker/(15574:15574): Configuracion broker levantada!
+[INFO] 00:26:14:658 Broker/(15574:15574): Dentro de iniciar servidor
+[INFO] 00:26:14:658 Broker/(15574:15574): Listo para escuchar a mi cliente
+[INFO] 00:26:14:658 Broker/(15574:15574): esperando
+[INFO] 00:26:14:658 Broker/(15574:15574): Se conecto un cliente!
+[INFO] 00:26:14:658 Broker/(15574:15574): Se conecto un cliente: -1
+[INFO] 00:26:14:658 Broker/(15574:15574): esperando
+[INFO] 00:26:14:658 Broker/(15574:15574): Se conecto un cliente!
+[INFO] 00:26:14:658 Broker/(15574:15574): Se conecto un cliente: -1
+[INFO] 00:26:14:658 Broker/(15574:15580): Llego un new pokemon
+[INFO] 00:26:26:274 Broker/(15593:15593): Logger iniciado: Broker.log
+
+[INFO] 00:26:26:274 Broker/(15593:15593): Configuracion broker levantada!
+[INFO] 00:26:26:274 Broker/(15593:15593): Dentro de iniciar servidor
+[INFO] 00:26:26:274 Broker/(15593:15593): Listo para escuchar a mi cliente
+[INFO] 00:26:26:274 Broker/(15593:15593): esperando
+[INFO] 00:26:26:274 Broker/(15593:15593): Se conecto un cliente!
+[INFO] 00:26:26:274 Broker/(15593:15593): Se conecto un cliente: -1
+[INFO] 00:26:26:274 Broker/(15593:15593): esperando
+[INFO] 00:26:26:275 Broker/(15593:15593): Se conecto un cliente!
+[INFO] 00:26:26:275 Broker/(15593:15593): Se conecto un cliente: -1
+[INFO] 00:26:26:275 Broker/(15593:15593): esperando
+[INFO] 00:26:26:275 Broker/(15593:15593): Se conecto un cliente!
+[INFO] 00:26:26:275 Broker/(15593:15600): Llego un new pokemon
+[INFO] 00:27:26:596 Broker/(15620:15620): Logger iniciado: Broker.log
+
+[INFO] 00:27:26:597 Broker/(15620:15620): Configuracion broker levantada!
+[INFO] 00:27:26:597 Broker/(15620:15620): Dentro de iniciar servidor
+[INFO] 00:27:26:597 Broker/(15620:15620): Listo para escuchar a mi cliente
+[INFO] 00:27:26:597 Broker/(15620:15620): esperando
+[INFO] 00:28:09:104 Broker/(15634:15634): Logger iniciado: Broker.log
+
+[INFO] 00:28:09:105 Broker/(15634:15634): Configuracion broker levantada!
+[INFO] 00:28:09:105 Broker/(15634:15634): Dentro de iniciar servidor
+[INFO] 00:28:09:105 Broker/(15634:15634): Listo para escuchar a mi cliente
+[INFO] 00:28:09:105 Broker/(15634:15634): esperando
+[INFO] 00:28:26:803 Broker/(15634:15634): Se conecto un cliente!
+[INFO] 00:28:26:803 Broker/(15634:15634): Se conecto un cliente: 6
+[INFO] 00:28:26:803 Broker/(15634:15634): esperando
+[INFO] 00:28:26:803 Broker/(15634:15644): Llego un Subscribe
+[INFO] 00:28:26:803 Broker/(15634:15644): Se agrego el suscriptor 6
+ a la cola de NEW
+[INFO] 00:30:30:289 Broker/(15634:15634): Se conecto un cliente!
+[INFO] 00:30:30:289 Broker/(15634:15634): Se conecto un cliente: 7
+[INFO] 00:30:30:289 Broker/(15634:15634): esperando
+[INFO] 00:30:30:290 Broker/(15634:15758): Llego un new pokemon
+[INFO] 00:41:53:669 Broker/(15853:15853): Logger iniciado: Broker.log
+
+[INFO] 00:41:53:670 Broker/(15853:15853): Configuracion broker levantada!
+[INFO] 00:41:53:671 Broker/(15853:15853): Dentro de iniciar servidor
+[INFO] 00:41:53:671 Broker/(15853:15853): Listo para escuchar a mi cliente
+[INFO] 00:41:53:671 Broker/(15853:15853): esperando
+[INFO] 00:41:58:438 Broker/(15853:15853): Se conecto un cliente!
+[INFO] 00:41:58:438 Broker/(15853:15853): Se conecto un cliente: 6
+[INFO] 00:41:58:439 Broker/(15853:15853): esperando
+[INFO] 00:41:58:440 Broker/(15853:15863): Llego un Subscribe
+[INFO] 00:41:58:440 Broker/(15853:15863): Se agrego el suscriptor 6
+ a la cola de NEW
+[INFO] 00:42:07:335 Broker/(15853:15853): Se conecto un cliente!
+[INFO] 00:42:07:335 Broker/(15853:15853): Se conecto un cliente: 7
+[INFO] 00:42:07:336 Broker/(15853:15866): Llego un new pokemon
+[INFO] 00:42:07:337 Broker/(15853:15853): esperando
+[INFO] 00:43:23:832 Broker/(15909:15909): Logger iniciado: Broker.log
+
+[INFO] 00:43:23:833 Broker/(15909:15909): Configuracion broker levantada!
+[INFO] 00:43:23:833 Broker/(15909:15909): Dentro de iniciar servidor
+[INFO] 00:43:23:833 Broker/(15909:15909): Listo para escuchar a mi cliente
+[INFO] 00:43:23:833 Broker/(15909:15909): esperando
+[INFO] 00:43:23:833 Broker/(15909:15909): Se conecto un cliente!
+[INFO] 00:43:23:833 Broker/(15909:15909): Se conecto un cliente: -1
+[INFO] 00:43:23:834 Broker/(15909:15909): esperando
+[INFO] 00:43:23:834 Broker/(15909:15909): Se conecto un cliente!
+[INFO] 00:43:23:834 Broker/(15909:15909): Se conecto un cliente: -1
+[INFO] 00:43:23:834 Broker/(15909:15916): Llego un new pokemon
+[INFO] 00:43:32:909 Broker/(15909:15909): esperando
+[INFO] 00:43:32:909 Broker/(15909:15909): Se conecto un cliente!
+[INFO] 00:43:32:909 Broker/(15909:15909): Se conecto un cliente: -1
+[INFO] 00:43:32:909 Broker/(15909:15917): Llego un new pokemon
+[INFO] 00:43:32:910 Broker/(15909:15921): Llego un new pokemon
+[INFO] 04:50:36:572 Broker/(16353:16353): Logger iniciado: Broker.log
+
+[INFO] 04:50:36:574 Broker/(16353:16353): Configuracion broker levantada!
+[INFO] 04:50:41:108 Broker/(16353:16353): Dentro de iniciar servidor
+[INFO] 04:50:41:108 Broker/(16353:16353): Listo para escuchar a mi cliente
+[INFO] 04:50:42:987 Broker/(16353:16353): esperando
+[INFO] 04:51:09:306 Broker/(16353:16353): Se conecto un cliente!
+[INFO] 04:51:09:307 Broker/(16353:16353): Se conecto un cliente: 6
+[INFO] 04:51:09:307 Broker/(16353:16371): Llego un Subscribe
+[INFO] 04:51:09:307 Broker/(16353:16353): esperando
+[INFO] 04:51:09:307 Broker/(16353:16371): Se agrego el suscriptor 6
+ a la cola de NEW
+[INFO] 04:51:39:264 Broker/(16353:16353): Se conecto un cliente!
+[INFO] 04:51:39:264 Broker/(16353:16353): Se conecto un cliente: 7
+[INFO] 04:51:39:270 Broker/(16353:16353): esperando
+[INFO] 04:51:39:270 Broker/(16353:16375): Llego un new pokemon
+[INFO] 04:58:50:705 Broker/(16594:16594): Logger iniciado: Broker.log
+
+[INFO] 04:58:50:705 Broker/(16594:16594): Configuracion broker levantada!
+[INFO] 04:58:50:705 Broker/(16594:16594): Dentro de iniciar servidor
+[INFO] 04:58:50:705 Broker/(16594:16594): Listo para escuchar a mi cliente
+[INFO] 04:58:50:705 Broker/(16594:16594): esperando
+[INFO] 04:59:11:612 Broker/(16594:16594): Se conecto un cliente!
+[INFO] 04:59:11:612 Broker/(16594:16594): Se conecto un cliente: 6
+[INFO] 04:59:11:613 Broker/(16594:16594): esperando
+[INFO] 04:59:11:613 Broker/(16594:16649): Llego un Subscribe
+[INFO] 04:59:11:613 Broker/(16594:16649): Se agrego el suscriptor 6
+ a la cola de NEW
+[INFO] 04:59:21:311 Broker/(16594:16594): Se conecto un cliente!
+[INFO] 04:59:21:311 Broker/(16594:16594): Se conecto un cliente: 7
+[INFO] 04:59:21:313 Broker/(16594:16594): esperando
+[INFO] 04:59:21:313 Broker/(16594:16652): Llego un new pokemon
+[INFO] 04:59:26:779 Broker/(16594:16652): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 04:59:30:54 Broker/(16594:16652): Se envió el mensaje al suscriptor 6
+
+[INFO] 05:02:41:759 Broker/(16728:16728): Logger iniciado: Broker.log
+
+[INFO] 05:02:41:759 Broker/(16728:16728): Configuracion broker levantada!
+[INFO] 05:02:41:759 Broker/(16728:16728): Dentro de iniciar servidor
+[INFO] 05:02:41:759 Broker/(16728:16728): Listo para escuchar a mi cliente
+[INFO] 05:02:41:759 Broker/(16728:16728): esperando
+[INFO] 05:02:44:102 Broker/(16728:16728): Se conecto un cliente!
+[INFO] 05:02:44:102 Broker/(16728:16728): Se conecto un cliente: 6
+[INFO] 05:02:44:102 Broker/(16728:16728): esperando
+[INFO] 05:02:44:103 Broker/(16728:16743): Llego un Subscribe
+[INFO] 05:02:44:104 Broker/(16728:16743): Se agrego el suscriptor 6
+ a la cola de NEW
+[INFO] 05:02:49:551 Broker/(16728:16728): Se conecto un cliente!
+[INFO] 05:02:49:551 Broker/(16728:16728): Se conecto un cliente: 7
+[INFO] 05:02:49:552 Broker/(16728:16745): Llego un new pokemon
+[INFO] 05:02:49:552 Broker/(16728:16745): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 05:02:49:553 Broker/(16728:16728): esperando
+[INFO] 05:08:52:99 Broker/(16902:16902): Logger iniciado: Broker.log
+
+[INFO] 05:08:52:99 Broker/(16902:16902): Configuracion broker levantada!
+[INFO] 05:08:52:99 Broker/(16902:16902): Dentro de iniciar servidor
+[INFO] 05:08:52:99 Broker/(16902:16902): Listo para escuchar a mi cliente
+[INFO] 05:08:52:99 Broker/(16902:16902): esperando
+[INFO] 05:08:55:898 Broker/(16902:16902): Se conecto un cliente!
+[INFO] 05:08:55:898 Broker/(16902:16902): Se conecto un cliente: 6
+[INFO] 05:08:55:898 Broker/(16902:16902): esperando
+[INFO] 05:08:55:898 Broker/(16902:16910): Llego un Subscribe
+[INFO] 05:08:55:898 Broker/(16902:16910): Se agrego el suscriptor 6
+ a la cola de NEW
+[INFO] 05:09:03:654 Broker/(16902:16902): Se conecto un cliente!
+[INFO] 05:09:03:654 Broker/(16902:16902): Se conecto un cliente: 7
+[INFO] 05:09:03:654 Broker/(16902:16902): esperando
+[INFO] 05:09:03:654 Broker/(16902:16912): Llego un new pokemon
+[INFO] 05:09:03:654 Broker/(16902:16912): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 05:09:03:654 Broker/(16902:16912): Se envió el mensaje al suscriptor 6
+
+[INFO] 05:27:26:287 Broker/(17132:17132): Logger iniciado: Broker.log
+
+[INFO] 05:27:26:288 Broker/(17132:17132): Configuracion broker levantada!
+[INFO] 05:27:26:288 Broker/(17132:17132): Dentro de iniciar servidor
+[INFO] 05:27:26:288 Broker/(17132:17132): Listo para escuchar a mi cliente
+[INFO] 05:27:26:288 Broker/(17132:17132): esperando
+[INFO] 05:27:32:546 Broker/(17132:17132): Se conecto un cliente!
+[INFO] 05:27:32:547 Broker/(17132:17132): Se conecto un cliente: 6
+[INFO] 05:27:32:547 Broker/(17132:17132): esperando
+[INFO] 05:27:32:562 Broker/(17132:17140): Llego un Subscribe
+[INFO] 05:27:32:562 Broker/(17132:17140): Se agrego el suscriptor 6
+ a la cola de NEW
+[ERROR] 05:27:33:436 Broker/(17132:17140): Se desconecto el cliente 6: 
+
+[INFO] 05:34:27:374 Broker/(17393:17393): Logger iniciado: Broker.log
+
+[INFO] 05:34:27:374 Broker/(17393:17393): Configuracion broker levantada!
+[INFO] 05:34:27:375 Broker/(17393:17393): Dentro de iniciar servidor
+[INFO] 05:34:27:375 Broker/(17393:17393): Listo para escuchar a mi cliente
+[INFO] 05:34:27:375 Broker/(17393:17393): esperando
+[INFO] 05:35:20:800 Broker/(17445:17445): Logger iniciado: Broker.log
+
+[INFO] 05:35:20:800 Broker/(17445:17445): Configuracion broker levantada!
+[INFO] 05:35:20:801 Broker/(17445:17445): Dentro de iniciar servidor
+[INFO] 05:35:20:801 Broker/(17445:17445): Listo para escuchar a mi cliente
+[INFO] 05:35:20:801 Broker/(17445:17445): esperando
+[INFO] 05:35:26:648 Broker/(17445:17445): Se conecto un cliente!
+[INFO] 05:35:26:648 Broker/(17445:17445): Se conecto un cliente: 6
+[INFO] 05:35:26:649 Broker/(17445:17445): esperando
+[INFO] 05:35:26:649 Broker/(17445:17451): Llego un Subscribe
+[INFO] 05:35:26:649 Broker/(17445:17451): Se agrego el suscriptor 6
+ a la cola de NEW
+[ERROR] 05:35:26:843 Broker/(17445:17451): Se desconecto el cliente 6: 
+
+[INFO] 13:56:45:323 Broker/(18256:18256): Logger iniciado: Broker.log
+
+[INFO] 13:56:45:330 Broker/(18256:18256): Configuracion broker levantada!
+[INFO] 13:56:45:330 Broker/(18256:18256): Dentro de iniciar servidor
+[INFO] 13:56:45:330 Broker/(18256:18256): Listo para escuchar a mi cliente
+[INFO] 13:56:45:330 Broker/(18256:18256): esperando
+[INFO] 13:56:45:330 Broker/(18256:18256): Se conecto un cliente!
+[INFO] 13:56:45:330 Broker/(18256:18256): Se conecto un cliente: -1
+[INFO] 13:56:45:330 Broker/(18256:18256): esperando
+[INFO] 13:56:45:330 Broker/(18256:18256): Se conecto un cliente!
+[INFO] 13:56:45:331 Broker/(18256:18256): Se conecto un cliente: -1
+[INFO] 13:56:45:331 Broker/(18256:18256): esperando
+[INFO] 13:56:45:331 Broker/(18256:18261): Llego un new pokemon
+[INFO] 13:56:45:331 Broker/(18256:18256): Se conecto un cliente!
+[INFO] 13:56:45:331 Broker/(18256:18256): Se conecto un cliente: -1
+[INFO] 13:57:11:654 Broker/(18275:18275): Logger iniciado: Broker.log
+
+[INFO] 13:57:11:654 Broker/(18275:18275): Configuracion broker levantada!
+[INFO] 13:57:11:654 Broker/(18275:18275): Dentro de iniciar servidor
+[INFO] 13:57:11:654 Broker/(18275:18275): Listo para escuchar a mi cliente
+[INFO] 13:57:11:654 Broker/(18275:18275): esperando
+[INFO] 13:57:17:771 Broker/(18275:18275): Se conecto un cliente!
+[INFO] 13:57:17:771 Broker/(18275:18275): Se conecto un cliente: 6
+[INFO] 13:57:17:771 Broker/(18275:18275): esperando
+[INFO] 13:57:17:771 Broker/(18275:18281): Llego un Subscribe
+[INFO] 13:57:17:771 Broker/(18275:18281): Se agrego el suscriptor 6
+ a la cola de NEW
+[INFO] 13:57:48:471 Broker/(18275:18275): Se conecto un cliente!
+[INFO] 13:57:48:471 Broker/(18275:18275): Se conecto un cliente: 7
+[INFO] 13:57:48:472 Broker/(18275:18275): esperando
+[INFO] 13:57:48:472 Broker/(18275:18287): Llego un new pokemon
+[INFO] 13:57:48:472 Broker/(18275:18287): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 13:57:48:472 Broker/(18275:18287): Se envió el mensaje al suscriptor 6
+
+[INFO] 13:59:27:559 Broker/(18319:18319): Logger iniciado: Broker.log
+
+[INFO] 13:59:27:560 Broker/(18319:18319): Configuracion broker levantada!
+[INFO] 13:59:27:560 Broker/(18319:18319): Dentro de iniciar servidor
+[INFO] 13:59:27:560 Broker/(18319:18319): Listo para escuchar a mi cliente
+[INFO] 13:59:27:560 Broker/(18319:18319): esperando
+[INFO] 13:59:35:522 Broker/(18319:18319): Se conecto un cliente!
+[INFO] 13:59:35:522 Broker/(18319:18319): Se conecto un cliente: 6
+[INFO] 13:59:35:522 Broker/(18319:18319): esperando
+[INFO] 13:59:35:523 Broker/(18319:18328): Llego un Subscribe
+[INFO] 13:59:35:523 Broker/(18319:18328): Se agrego el suscriptor 6
+ a la cola de NEW
+[INFO] 13:59:44:866 Broker/(18319:18319): Se conecto un cliente!
+[INFO] 13:59:44:866 Broker/(18319:18319): Se conecto un cliente: 7
+[INFO] 13:59:44:867 Broker/(18319:18319): esperando
+[INFO] 13:59:44:867 Broker/(18319:18330): Llego un new pokemon
+[INFO] 13:59:44:867 Broker/(18319:18330): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 13:59:44:867 Broker/(18319:18330): Se envió el mensaje al suscriptor 6
+
+[INFO] 14:00:27:199 Broker/(18376:18376): Logger iniciado: Broker.log
+
+[INFO] 14:00:27:199 Broker/(18376:18376): Configuracion broker levantada!
+[INFO] 14:00:27:199 Broker/(18376:18376): Dentro de iniciar servidor
+[INFO] 14:00:27:199 Broker/(18376:18376): Listo para escuchar a mi cliente
+[INFO] 14:00:27:199 Broker/(18376:18376): esperando
+[INFO] 14:00:31:186 Broker/(18376:18376): Se conecto un cliente!
+[INFO] 14:00:31:186 Broker/(18376:18376): Se conecto un cliente: 6
+[INFO] 14:00:31:186 Broker/(18376:18376): esperando
+[INFO] 14:00:31:186 Broker/(18376:18384): Llego un Subscribe
+[INFO] 14:00:31:186 Broker/(18376:18384): Se agrego el suscriptor 6
+ a la cola de NEW
+[INFO] 14:02:33:722 Broker/(18438:18438): Logger iniciado: Broker.log
+
+[INFO] 14:02:33:723 Broker/(18438:18438): Configuracion broker levantada!
+[INFO] 14:02:33:723 Broker/(18438:18438): Dentro de iniciar servidor
+[INFO] 14:02:33:723 Broker/(18438:18438): Listo para escuchar a mi cliente
+[INFO] 14:02:33:723 Broker/(18438:18438): esperando
+[INFO] 14:02:33:723 Broker/(18438:18438): Se conecto un cliente!
+[INFO] 14:02:33:723 Broker/(18438:18438): Se conecto un cliente: -1
+[INFO] 14:02:33:723 Broker/(18438:18438): esperando
+[INFO] 14:02:33:723 Broker/(18438:18438): Se conecto un cliente!
+[INFO] 14:02:33:723 Broker/(18438:18438): Se conecto un cliente: -1
+[INFO] 14:02:33:723 Broker/(18438:18438): esperando
+[INFO] 14:02:33:723 Broker/(18438:18438): Se conecto un cliente!
+[INFO] 14:02:33:723 Broker/(18438:18438): Se conecto un cliente: -1
+[INFO] 14:02:33:724 Broker/(18438:18438): esperando
+[INFO] 14:02:33:724 Broker/(18438:18438): Se conecto un cliente!
+[INFO] 14:02:33:724 Broker/(18438:18438): Se conecto un cliente: -1
+[INFO] 14:02:33:724 Broker/(18438:18443): Llego un new pokemon
+[INFO] 14:02:33:725 Broker/(18438:18438): esperando
+[INFO] 14:02:33:725 Broker/(18438:18438): Se conecto un cliente!
+[INFO] 14:02:33:725 Broker/(18438:18438): Se conecto un cliente: -1
+[INFO] 14:02:47:911 Broker/(18457:18457): Logger iniciado: Broker.log
+
+[INFO] 14:02:47:911 Broker/(18457:18457): Configuracion broker levantada!
+[INFO] 14:02:47:912 Broker/(18457:18457): Dentro de iniciar servidor
+[INFO] 14:02:47:912 Broker/(18457:18457): Listo para escuchar a mi cliente
+[INFO] 14:02:47:912 Broker/(18457:18457): esperando
+[INFO] 14:02:47:912 Broker/(18457:18457): Se conecto un cliente!
+[INFO] 14:02:47:912 Broker/(18457:18457): Se conecto un cliente: -1
+[INFO] 14:02:47:912 Broker/(18457:18457): esperando
+[INFO] 14:02:47:912 Broker/(18457:18457): Se conecto un cliente!
+[INFO] 14:02:47:912 Broker/(18457:18457): Se conecto un cliente: -1
+[INFO] 14:02:47:912 Broker/(18457:18457): esperando
+[INFO] 14:02:47:912 Broker/(18457:18457): Se conecto un cliente!
+[INFO] 14:02:47:912 Broker/(18457:18462): Llego un new pokemon
+[INFO] 14:02:56:985 Broker/(18474:18474): Logger iniciado: Broker.log
+
+[INFO] 14:02:56:985 Broker/(18474:18474): Configuracion broker levantada!
+[INFO] 14:02:56:985 Broker/(18474:18474): Dentro de iniciar servidor
+[INFO] 14:02:56:985 Broker/(18474:18474): Listo para escuchar a mi cliente
+[INFO] 14:02:56:985 Broker/(18474:18474): esperando
+[INFO] 14:02:56:985 Broker/(18474:18474): Se conecto un cliente!
+[INFO] 14:02:56:985 Broker/(18474:18474): Se conecto un cliente: -1
+[INFO] 14:02:56:986 Broker/(18474:18474): esperando
+[INFO] 14:02:56:986 Broker/(18474:18474): Se conecto un cliente!
+[INFO] 14:02:56:986 Broker/(18474:18474): Se conecto un cliente: -1
+[INFO] 14:02:56:986 Broker/(18474:18479): Llego un new pokemon
+[INFO] 14:02:56:986 Broker/(18474:18474): esperando
+[INFO] 14:02:56:986 Broker/(18474:18474): Se conecto un cliente!
+[INFO] 14:02:56:986 Broker/(18474:18474): Se conecto un cliente: -1
+[INFO] 14:03:35:355 Broker/(18493:18493): Logger iniciado: Broker.log
+
+[INFO] 14:03:35:356 Broker/(18493:18493): Configuracion broker levantada!
+[INFO] 14:03:35:356 Broker/(18493:18493): Dentro de iniciar servidor
+[INFO] 14:03:35:356 Broker/(18493:18493): Listo para escuchar a mi cliente
+[INFO] 14:03:35:356 Broker/(18493:18493): esperando
+[INFO] 14:03:44:81 Broker/(18493:18493): Se conecto un cliente!
+[INFO] 14:03:44:81 Broker/(18493:18493): Se conecto un cliente: 6
+[INFO] 14:03:44:81 Broker/(18493:18493): esperando
+[INFO] 14:03:44:81 Broker/(18493:18500): Llego un Subscribe
+[INFO] 14:03:44:81 Broker/(18493:18500): Se agrego el suscriptor 6
+ a la cola de NEW
+[INFO] 14:04:24:181 Broker/(18493:18493): Se conecto un cliente!
+[INFO] 14:04:24:181 Broker/(18493:18493): Se conecto un cliente: 7
+[INFO] 14:04:24:182 Broker/(18493:18493): esperando
+[INFO] 14:04:24:182 Broker/(18493:18512): Llego un new pokemon
+[INFO] 14:04:24:182 Broker/(18493:18512): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:04:24:182 Broker/(18493:18512): Se envió el mensaje al suscriptor 6
+
+[INFO] 14:10:28:443 Broker/(18684:18684): Logger iniciado: Broker.log
+
+[INFO] 14:10:28:443 Broker/(18684:18684): Configuracion broker levantada!
+[INFO] 14:10:28:444 Broker/(18684:18684): Dentro de iniciar servidor
+[INFO] 14:10:28:444 Broker/(18684:18684): Listo para escuchar a mi cliente
+[INFO] 14:10:28:444 Broker/(18684:18684): esperando
+[INFO] 14:10:34:36 Broker/(18684:18684): Se conecto un cliente!
+[INFO] 14:10:34:36 Broker/(18684:18684): Se conecto un cliente: 6
+[INFO] 14:10:34:36 Broker/(18684:18684): esperando
+[INFO] 14:10:34:36 Broker/(18684:18692): Llego un Subscribe
+[INFO] 14:10:34:36 Broker/(18684:18692): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:10:37:839 Broker/(18684:18684): Se conecto un cliente!
+[INFO] 14:10:37:839 Broker/(18684:18684): Se conecto un cliente: 7
+[INFO] 14:10:37:840 Broker/(18684:18684): esperando
+[INFO] 14:10:37:842 Broker/(18684:18694): Llego un new pokemon
+[INFO] 14:10:37:842 Broker/(18684:18694): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:10:37:842 Broker/(18684:18694): Se envió el mensaje al suscriptor 6
+
+[ERROR] 14:10:37:842 Broker/(18684:18692): Se desconecto el cliente 6: 
+
+[INFO] 14:22:05:666 Broker/(19038:19038): Logger iniciado: Broker.log
+
+[INFO] 14:22:05:667 Broker/(19038:19038): Configuracion broker levantada!
+[INFO] 14:22:05:668 Broker/(19038:19038): Dentro de iniciar servidor
+[INFO] 14:22:05:668 Broker/(19038:19038): Listo para escuchar a mi cliente
+[INFO] 14:22:05:668 Broker/(19038:19038): esperando
+[INFO] 14:22:16:930 Broker/(19038:19038): Se conecto un cliente!
+[INFO] 14:22:16:930 Broker/(19038:19038): Se conecto un cliente: 6
+[INFO] 14:22:16:931 Broker/(19038:19038): esperando
+[INFO] 14:22:16:931 Broker/(19038:19044): Llego un Subscribe
+[INFO] 14:22:16:931 Broker/(19038:19044): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:22:22:969 Broker/(19038:19038): Se conecto un cliente!
+[INFO] 14:22:22:969 Broker/(19038:19038): Se conecto un cliente: 7
+[INFO] 14:22:22:970 Broker/(19038:19038): esperando
+[INFO] 14:22:22:970 Broker/(19038:19046): Llego un new pokemon
+[INFO] 14:22:22:971 Broker/(19038:19046): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:22:22:971 Broker/(19038:19046): Se envió el mensaje al suscriptor 6
+
+[INFO] 14:23:14:163 Broker/(19099:19099): Logger iniciado: Broker.log
+
+[INFO] 14:23:14:163 Broker/(19099:19099): Configuracion broker levantada!
+[INFO] 14:23:14:167 Broker/(19099:19099): Dentro de iniciar servidor
+[INFO] 14:23:14:168 Broker/(19099:19099): Listo para escuchar a mi cliente
+[INFO] 14:23:14:168 Broker/(19099:19099): esperando
+[INFO] 14:23:17:445 Broker/(19099:19099): Se conecto un cliente!
+[INFO] 14:23:17:446 Broker/(19099:19099): Se conecto un cliente: 6
+[INFO] 14:23:17:446 Broker/(19099:19099): esperando
+[INFO] 14:23:17:446 Broker/(19099:19105): Llego un Subscribe
+[INFO] 14:23:17:446 Broker/(19099:19105): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:23:26:414 Broker/(19099:19099): Se conecto un cliente!
+[INFO] 14:23:26:414 Broker/(19099:19099): Se conecto un cliente: 7
+[INFO] 14:23:26:414 Broker/(19099:19099): esperando
+[INFO] 14:23:26:422 Broker/(19099:19107): Llego un new pokemon
+[INFO] 14:23:26:422 Broker/(19099:19107): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:23:26:422 Broker/(19099:19107): Se envió el mensaje al suscriptor 6
+
+[INFO] 14:48:20:542 Broker/(19550:19550): Logger iniciado: Broker.log
+
+[INFO] 14:48:20:544 Broker/(19550:19550): Configuracion broker levantada!
+[INFO] 14:48:20:564 Broker/(19550:19550): Dentro de iniciar servidor
+[INFO] 14:48:20:565 Broker/(19550:19550): Listo para escuchar a mi cliente
+[INFO] 14:48:20:565 Broker/(19550:19550): esperando
+[INFO] 14:48:26:716 Broker/(19550:19550): Se conecto un cliente!
+[INFO] 14:48:26:716 Broker/(19550:19550): Se conecto un cliente: 6
+[INFO] 14:48:26:716 Broker/(19550:19550): esperando
+[INFO] 14:48:26:716 Broker/(19550:19558): Llego un Subscribe
+[INFO] 14:48:26:716 Broker/(19550:19558): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:48:50:740 Broker/(19550:19550): Se conecto un cliente!
+[INFO] 14:48:50:740 Broker/(19550:19550): Se conecto un cliente: 7
+[INFO] 14:48:50:741 Broker/(19550:19550): esperando
+[INFO] 14:48:50:741 Broker/(19550:19563): Llego un new pokemon
+[INFO] 14:48:50:741 Broker/(19550:19563): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:48:50:741 Broker/(19550:19563): Se envió el mensaje al suscriptor 6
+
+[INFO] 14:51:08:862 Broker/(19676:19676): Logger iniciado: Broker.log
+
+[INFO] 14:51:08:862 Broker/(19676:19676): Configuracion broker levantada!
+[INFO] 14:51:08:862 Broker/(19676:19676): Dentro de iniciar servidor
+[INFO] 14:51:08:862 Broker/(19676:19676): Listo para escuchar a mi cliente
+[INFO] 14:51:08:862 Broker/(19676:19676): esperando
+[INFO] 14:51:18:437 Broker/(19676:19676): Se conecto un cliente!
+[INFO] 14:51:18:437 Broker/(19676:19676): Se conecto un cliente: 6
+[INFO] 14:51:18:437 Broker/(19676:19676): esperando
+[INFO] 14:51:18:437 Broker/(19676:19682): Llego un Subscribe
+[INFO] 14:51:18:437 Broker/(19676:19682): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:51:22:940 Broker/(19676:19676): Se conecto un cliente!
+[INFO] 14:51:22:940 Broker/(19676:19676): Se conecto un cliente: 7
+[INFO] 14:51:22:940 Broker/(19676:19676): esperando
+[INFO] 14:51:22:941 Broker/(19676:19684): Llego un new pokemon
+[INFO] 14:51:22:941 Broker/(19676:19684): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:51:22:942 Broker/(19676:19684): Se envió el mensaje al suscriptor 6
+
+[INFO] 14:53:06:442 Broker/(19739:19739): Logger iniciado: Broker.log
+
+[INFO] 14:53:06:442 Broker/(19739:19739): Configuracion broker levantada!
+[INFO] 14:53:06:442 Broker/(19739:19739): Dentro de iniciar servidor
+[INFO] 14:53:06:443 Broker/(19739:19739): Listo para escuchar a mi cliente
+[INFO] 14:53:06:443 Broker/(19739:19739): esperando
+[INFO] 14:53:08:192 Broker/(19739:19739): Se conecto un cliente!
+[INFO] 14:53:08:192 Broker/(19739:19739): Se conecto un cliente: 6
+[INFO] 14:53:08:192 Broker/(19739:19739): esperando
+[INFO] 14:53:08:192 Broker/(19739:19745): Llego un Subscribe
+[INFO] 14:53:08:192 Broker/(19739:19745): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:53:11:239 Broker/(19739:19739): Se conecto un cliente!
+[INFO] 14:53:11:239 Broker/(19739:19739): Se conecto un cliente: 7
+[INFO] 14:53:11:239 Broker/(19739:19739): esperando
+[INFO] 14:53:11:239 Broker/(19739:19748): Llego un new pokemon
+[INFO] 14:53:11:239 Broker/(19739:19748): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:53:11:239 Broker/(19739:19748): Se envió el mensaje al suscriptor 6
+
+[INFO] 14:54:48:35 Broker/(19772:19772): Logger iniciado: Broker.log
+
+[INFO] 14:54:48:35 Broker/(19772:19772): Configuracion broker levantada!
+[INFO] 14:54:48:37 Broker/(19772:19772): Dentro de iniciar servidor
+[INFO] 14:54:48:37 Broker/(19772:19772): Listo para escuchar a mi cliente
+[INFO] 14:54:48:38 Broker/(19772:19772): esperando
+[INFO] 14:57:18:231 Broker/(19821:19821): Logger iniciado: Broker.log
+
+[INFO] 14:57:18:232 Broker/(19821:19821): Configuracion broker levantada!
+[INFO] 14:57:18:232 Broker/(19821:19821): Dentro de iniciar servidor
+[INFO] 14:57:18:232 Broker/(19821:19821): Listo para escuchar a mi cliente
+[INFO] 14:57:18:232 Broker/(19821:19821): esperando
+[INFO] 14:57:21:843 Broker/(19821:19821): Se conecto un cliente!
+[INFO] 14:57:21:843 Broker/(19821:19821): Se conecto un cliente: 6
+[INFO] 14:57:21:843 Broker/(19821:19821): esperando
+[INFO] 14:57:21:844 Broker/(19821:19830): Llego un new pokemon
+[INFO] 14:57:21:844 Broker/(19821:19830): Me llego mensaje de 6. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:57:21:844 Broker/(19821:19830): No hay suscriptores
+[ERROR] 14:57:21:844 Broker/(19821:19830): Se desconecto el cliente 6: 
+
+[INFO] 14:57:27:375 Broker/(19821:19821): Se conecto un cliente!
+[INFO] 14:57:27:375 Broker/(19821:19821): Se conecto un cliente: 7
+[INFO] 14:57:27:376 Broker/(19821:19821): esperando
+[INFO] 14:57:27:376 Broker/(19821:19832): Llego un new pokemon
+[INFO] 14:57:27:376 Broker/(19821:19832): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:57:27:376 Broker/(19821:19832): No hay suscriptores
+[ERROR] 14:57:27:376 Broker/(19821:19832): Se desconecto el cliente 7: 
+
+[INFO] 14:57:28:605 Broker/(19821:19821): Se conecto un cliente!
+[INFO] 14:57:28:605 Broker/(19821:19821): Se conecto un cliente: 8
+[INFO] 14:57:28:605 Broker/(19821:19821): esperando
+[INFO] 14:57:28:605 Broker/(19821:19834): Llego un new pokemon
+[INFO] 14:57:28:605 Broker/(19821:19834): Me llego mensaje de 8. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:57:28:605 Broker/(19821:19834): No hay suscriptores
+[ERROR] 14:57:28:605 Broker/(19821:19834): Se desconecto el cliente 8: 
+
+[INFO] 14:57:29:431 Broker/(19821:19821): Se conecto un cliente!
+[INFO] 14:57:29:431 Broker/(19821:19821): Se conecto un cliente: 9
+[INFO] 14:57:29:431 Broker/(19821:19821): esperando
+[INFO] 14:57:29:431 Broker/(19821:19836): Llego un new pokemon
+[INFO] 14:57:29:432 Broker/(19821:19836): Me llego mensaje de 9. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:57:29:432 Broker/(19821:19836): No hay suscriptores
+[ERROR] 14:57:29:432 Broker/(19821:19836): Se desconecto el cliente 9: 
+
+[INFO] 14:58:24:920 Broker/(19874:19874): Logger iniciado: Broker.log
+
+[INFO] 14:58:24:920 Broker/(19874:19874): Configuracion broker levantada!
+[INFO] 14:58:24:920 Broker/(19874:19874): Dentro de iniciar servidor
+[INFO] 14:58:24:920 Broker/(19874:19874): Listo para escuchar a mi cliente
+[INFO] 14:58:24:920 Broker/(19874:19874): esperando
+[INFO] 14:58:31:853 Broker/(19874:19874): Se conecto un cliente!
+[INFO] 14:58:31:853 Broker/(19874:19874): Se conecto un cliente: 6
+[INFO] 14:58:37:760 Broker/(19874:19886): Llego un Subscribe
+[INFO] 14:58:37:760 Broker/(19874:19874): esperando
+[INFO] 14:58:37:761 Broker/(19874:19886): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:58:51:307 Broker/(19874:19874): Se conecto un cliente!
+[INFO] 14:58:51:307 Broker/(19874:19874): Se conecto un cliente: 7
+[INFO] 14:58:51:309 Broker/(19874:19894): Llego un new pokemon
+[INFO] 14:58:51:309 Broker/(19874:19874): esperando
+[INFO] 14:58:51:310 Broker/(19874:19894): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:59:16:244 Broker/(19874:19894): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:12:31:629 Broker/(20404:20404): Logger iniciado: Broker.log
+
+[INFO] 15:12:31:630 Broker/(20404:20404): Configuracion broker levantada!
+[INFO] 15:12:31:632 Broker/(20404:20404): Dentro de iniciar servidor
+[INFO] 15:12:31:632 Broker/(20404:20404): Listo para escuchar a mi cliente
+[INFO] 15:12:31:632 Broker/(20404:20404): esperando
+[INFO] 15:12:35:684 Broker/(20404:20404): Se conecto un cliente!
+[INFO] 15:12:35:684 Broker/(20404:20404): Se conecto un cliente: 6
+[INFO] 15:12:35:685 Broker/(20404:20416): Llego un Subscribe
+[INFO] 15:12:35:685 Broker/(20404:20416): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 15:12:35:685 Broker/(20404:20404): esperando
+[INFO] 15:12:42:105 Broker/(20404:20404): Se conecto un cliente!
+[INFO] 15:12:42:105 Broker/(20404:20404): Se conecto un cliente: 7
+[INFO] 15:12:42:107 Broker/(20404:20404): esperando
+[INFO] 15:12:42:107 Broker/(20404:20420): Llego un new pokemon
+[INFO] 15:12:42:107 Broker/(20404:20420): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:13:01:96 Broker/(20404:20420): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:13:04:464 Broker/(20404:20420): No hay mas suscriptores! 
+
+[ERROR] 15:13:04:464 Broker/(20404:20420): Se desconecto el cliente 7: 
+
+[INFO] 15:13:10:903 Broker/(20404:20404): Se conecto un cliente!
+[INFO] 15:13:10:903 Broker/(20404:20404): Se conecto un cliente: 8
+[INFO] 15:13:10:904 Broker/(20404:20404): esperando
+[INFO] 15:13:10:904 Broker/(20404:20438): Llego un new pokemon
+[INFO] 15:13:10:904 Broker/(20404:20438): Me llego mensaje de 8. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:13:20:906 Broker/(20404:20438): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:13:20:906 Broker/(20404:20438): No hay mas suscriptores! 
+
+[ERROR] 15:13:20:906 Broker/(20404:20438): Se desconecto el cliente 8: 
+
+[INFO] 15:13:28:145 Broker/(20404:20404): Se conecto un cliente!
+[INFO] 15:13:28:145 Broker/(20404:20404): Se conecto un cliente: 9
+[INFO] 15:13:28:146 Broker/(20404:20404): esperando
+[INFO] 15:13:28:146 Broker/(20404:20443): Llego un new pokemon
+[INFO] 15:13:28:147 Broker/(20404:20443): Me llego mensaje de 9. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:13:28:147 Broker/(20404:20443): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:13:28:147 Broker/(20404:20443): No hay mas suscriptores! 
+
+[ERROR] 15:13:28:147 Broker/(20404:20443): Se desconecto el cliente 9: 
+
+[INFO] 15:13:30:672 Broker/(20404:20404): Se conecto un cliente!
+[INFO] 15:13:30:672 Broker/(20404:20404): Se conecto un cliente: 10
+[INFO] 15:13:30:674 Broker/(20404:20404): esperando
+[INFO] 15:13:30:674 Broker/(20404:20445): Llego un new pokemon
+[INFO] 15:13:30:674 Broker/(20404:20445): Me llego mensaje de 10. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:13:30:674 Broker/(20404:20445): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:13:30:674 Broker/(20404:20445): No hay mas suscriptores! 
+
+[ERROR] 15:13:30:674 Broker/(20404:20445): Se desconecto el cliente 10: 
+
+[INFO] 15:13:31:108 Broker/(20404:20404): Se conecto un cliente!
+[INFO] 15:13:31:108 Broker/(20404:20404): Se conecto un cliente: 11
+[INFO] 15:13:31:109 Broker/(20404:20404): esperando
+[INFO] 15:13:31:110 Broker/(20404:20447): Llego un new pokemon
+[INFO] 15:13:31:110 Broker/(20404:20447): Me llego mensaje de 11. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:13:31:110 Broker/(20404:20447): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:13:31:110 Broker/(20404:20447): No hay mas suscriptores! 
+
+[ERROR] 15:13:31:110 Broker/(20404:20447): Se desconecto el cliente 11: 
+
+[INFO] 15:13:31:456 Broker/(20404:20404): Se conecto un cliente!
+[INFO] 15:13:31:457 Broker/(20404:20404): Se conecto un cliente: 12
+[INFO] 15:13:31:457 Broker/(20404:20404): esperando
+[INFO] 15:13:31:458 Broker/(20404:20449): Llego un new pokemon
+[INFO] 15:13:31:458 Broker/(20404:20449): Me llego mensaje de 12. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:13:31:458 Broker/(20404:20449): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:13:31:458 Broker/(20404:20449): No hay mas suscriptores! 
+
+[ERROR] 15:13:31:458 Broker/(20404:20449): Se desconecto el cliente 12: 
+
+[INFO] 15:13:31:864 Broker/(20404:20404): Se conecto un cliente!
+[INFO] 15:13:31:864 Broker/(20404:20404): Se conecto un cliente: 13
+[INFO] 15:13:31:865 Broker/(20404:20404): esperando
+[INFO] 15:13:31:865 Broker/(20404:20451): Llego un new pokemon
+[INFO] 15:13:31:865 Broker/(20404:20451): Me llego mensaje de 13. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:13:31:865 Broker/(20404:20451): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:13:31:865 Broker/(20404:20451): No hay mas suscriptores! 
+
+[ERROR] 15:13:31:865 Broker/(20404:20451): Se desconecto el cliente 13: 
+
+[INFO] 15:13:32:297 Broker/(20404:20404): Se conecto un cliente!
+[INFO] 15:13:32:297 Broker/(20404:20404): Se conecto un cliente: 14
+[INFO] 15:13:32:298 Broker/(20404:20404): esperando
+[INFO] 15:13:32:298 Broker/(20404:20453): Llego un new pokemon
+[INFO] 15:13:32:298 Broker/(20404:20453): Me llego mensaje de 14. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:13:32:298 Broker/(20404:20453): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:13:32:298 Broker/(20404:20453): No hay mas suscriptores! 
+
+[ERROR] 15:13:32:298 Broker/(20404:20453): Se desconecto el cliente 14: 
+
+[INFO] 15:17:08:173 Broker/(20540:20540): Logger iniciado: Broker.log
+
+[INFO] 15:17:08:177 Broker/(20540:20540): Configuracion broker levantada!
+[INFO] 15:17:08:178 Broker/(20540:20540): Dentro de iniciar servidor
+[INFO] 15:17:08:178 Broker/(20540:20540): Listo para escuchar a mi cliente
+[INFO] 15:17:08:178 Broker/(20540:20540): esperando
+[INFO] 15:17:08:178 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:178 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:178 Broker/(20540:20540): esperando
+[INFO] 15:17:08:178 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:178 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:179 Broker/(20540:20540): esperando
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:179 Broker/(20540:20540): esperando
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:179 Broker/(20540:20540): esperando
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:179 Broker/(20540:20540): esperando
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:179 Broker/(20540:20540): esperando
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:179 Broker/(20540:20540): esperando
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:179 Broker/(20540:20540): esperando
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:179 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:180 Broker/(20540:20540): esperando
+[INFO] 15:17:08:180 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:180 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:180 Broker/(20540:20540): esperando
+[INFO] 15:17:08:180 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:180 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:180 Broker/(20540:20540): esperando
+[INFO] 15:17:08:180 Broker/(20540:20540): Se conecto un cliente!
+[INFO] 15:17:08:180 Broker/(20540:20540): Se conecto un cliente: -1
+[INFO] 15:17:08:180 Broker/(20540:20540): esperando
+[INFO] 15:17:08:180 Broker/(20540:20545): Llego un new pokemon
+[INFO] 15:17:16:594 Broker/(20568:20568): Logger iniciado: Broker.log
+
+[INFO] 15:17:16:595 Broker/(20568:20568): Configuracion broker levantada!
+[INFO] 15:17:16:595 Broker/(20568:20568): Dentro de iniciar servidor
+[INFO] 15:17:16:595 Broker/(20568:20568): Listo para escuchar a mi cliente
+[INFO] 15:17:16:595 Broker/(20568:20568): esperando
+[INFO] 15:17:16:595 Broker/(20568:20568): Se conecto un cliente!
+[INFO] 15:17:16:595 Broker/(20568:20568): Se conecto un cliente: -1
+[INFO] 15:17:16:595 Broker/(20568:20568): esperando
+[INFO] 15:17:16:595 Broker/(20568:20568): Se conecto un cliente!
+[INFO] 15:17:16:595 Broker/(20568:20568): Se conecto un cliente: -1
+[INFO] 15:17:16:595 Broker/(20568:20574): Llego un new pokemon
+[INFO] 15:17:16:596 Broker/(20568:20568): esperando
+[INFO] 15:17:40:915 Broker/(20588:20588): Logger iniciado: Broker.log
+
+[INFO] 15:17:40:916 Broker/(20588:20588): Configuracion broker levantada!
+[INFO] 15:17:40:916 Broker/(20588:20588): Dentro de iniciar servidor
+[INFO] 15:17:40:916 Broker/(20588:20588): Listo para escuchar a mi cliente
+[INFO] 15:17:40:916 Broker/(20588:20588): esperando
+[INFO] 15:17:40:916 Broker/(20588:20588): Se conecto un cliente!
+[INFO] 15:17:40:916 Broker/(20588:20588): Se conecto un cliente: -1
+[INFO] 15:17:40:916 Broker/(20588:20588): esperando
+[INFO] 15:17:40:916 Broker/(20588:20588): Se conecto un cliente!
+[INFO] 15:17:40:916 Broker/(20588:20588): Se conecto un cliente: -1
+[INFO] 15:17:40:917 Broker/(20588:20588): esperando
+[INFO] 15:17:40:917 Broker/(20588:20588): Se conecto un cliente!
+[INFO] 15:17:40:917 Broker/(20588:20588): Se conecto un cliente: -1
+[INFO] 15:17:40:917 Broker/(20588:20594): Llego un new pokemon
+[INFO] 15:17:40:917 Broker/(20588:20593): Llego un new pokemon
+[INFO] 15:17:40:918 Broker/(20588:20588): esperando
+[INFO] 15:17:51:297 Broker/(20607:20607): Logger iniciado: Broker.log
+
+[INFO] 15:17:51:297 Broker/(20607:20607): Configuracion broker levantada!
+[INFO] 15:17:51:297 Broker/(20607:20607): Dentro de iniciar servidor
+[INFO] 15:17:51:297 Broker/(20607:20607): Listo para escuchar a mi cliente
+[INFO] 15:17:51:298 Broker/(20607:20607): esperando
+[INFO] 15:17:51:298 Broker/(20607:20607): Se conecto un cliente!
+[INFO] 15:17:51:298 Broker/(20607:20607): Se conecto un cliente: -1
+[INFO] 15:17:51:298 Broker/(20607:20607): esperando
+[INFO] 15:17:51:298 Broker/(20607:20607): Se conecto un cliente!
+[INFO] 15:17:51:298 Broker/(20607:20607): Se conecto un cliente: -1
+[INFO] 15:17:51:298 Broker/(20607:20612): Llego un new pokemon
+[INFO] 15:17:51:298 Broker/(20607:20607): esperando
+[INFO] 15:18:14:522 Broker/(20627:20627): Logger iniciado: Broker.log
+
+[INFO] 15:18:14:522 Broker/(20627:20627): Configuracion broker levantada!
+[INFO] 15:18:14:522 Broker/(20627:20627): Dentro de iniciar servidor
+[INFO] 15:18:14:522 Broker/(20627:20627): Listo para escuchar a mi cliente
+[INFO] 15:18:14:522 Broker/(20627:20627): esperando
+[INFO] 15:18:25:856 Broker/(20627:20627): Se conecto un cliente!
+[INFO] 15:18:25:856 Broker/(20627:20627): Se conecto un cliente: 6
+[INFO] 15:18:25:856 Broker/(20627:20627): esperando
+[INFO] 15:18:25:857 Broker/(20627:20633): Llego un Subscribe
+[INFO] 15:18:25:857 Broker/(20627:20633): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 15:18:30:837 Broker/(20627:20627): Se conecto un cliente!
+[INFO] 15:18:30:837 Broker/(20627:20627): Se conecto un cliente: 7
+[INFO] 15:18:30:838 Broker/(20627:20627): esperando
+[INFO] 15:18:30:838 Broker/(20627:20635): Llego un new pokemon
+[INFO] 15:18:30:838 Broker/(20627:20635): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:18:30:838 Broker/(20627:20635): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:18:30:838 Broker/(20627:20635): No hay mas suscriptores! 
+
+[ERROR] 15:18:30:838 Broker/(20627:20635): Se desconecto el cliente 7: 
+
+[INFO] 15:18:33:284 Broker/(20627:20627): Se conecto un cliente!
+[INFO] 15:18:33:284 Broker/(20627:20627): Se conecto un cliente: 8
+[INFO] 15:18:33:285 Broker/(20627:20627): esperando
+[INFO] 15:18:33:285 Broker/(20627:20637): Llego un new pokemon
+[INFO] 15:18:33:285 Broker/(20627:20637): Me llego mensaje de 8. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:18:33:285 Broker/(20627:20637): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:18:33:285 Broker/(20627:20637): No hay mas suscriptores! 
+
+[ERROR] 15:18:33:285 Broker/(20627:20637): Se desconecto el cliente 8: 
+
+[INFO] 15:18:37:334 Broker/(20627:20627): Se conecto un cliente!
+[INFO] 15:18:37:334 Broker/(20627:20627): Se conecto un cliente: 9
+[INFO] 15:18:37:334 Broker/(20627:20627): esperando
+[INFO] 15:18:37:335 Broker/(20627:20639): Llego un new pokemon
+[INFO] 15:18:37:335 Broker/(20627:20639): Me llego mensaje de 9. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:18:37:335 Broker/(20627:20639): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:18:37:335 Broker/(20627:20639): No hay mas suscriptores! 
+
+[ERROR] 15:18:37:335 Broker/(20627:20639): Se desconecto el cliente 9: 
+
+[ERROR] 15:18:47:489 Broker/(20627:20633): Se desconecto el cliente 6: 
+
+[INFO] 15:18:55:19 Broker/(20627:20627): Se conecto un cliente!
+[INFO] 15:18:55:19 Broker/(20627:20627): Se conecto un cliente: 10
+[INFO] 15:18:55:20 Broker/(20627:20627): esperando
+[INFO] 15:18:55:20 Broker/(20627:20643): Llego un new pokemon
+[INFO] 15:18:55:20 Broker/(20627:20643): Me llego mensaje de 10. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:18:55:20 Broker/(20627:20643): Se envió el mensaje al suscriptor 6
+
+[INFO] 15:18:55:20 Broker/(20627:20643): No hay mas suscriptores! 
+
+[ERROR] 15:18:55:20 Broker/(20627:20643): Se desconecto el cliente 10: 
+
+[INFO] 15:19:00:541 Broker/(20627:20627): Se conecto un cliente!
+[INFO] 15:19:00:541 Broker/(20627:20627): Se conecto un cliente: 11
+[INFO] 15:19:00:542 Broker/(20627:20627): esperando
+[INFO] 15:19:00:542 Broker/(20627:20645): Llego un Subscribe
+[INFO] 15:19:00:542 Broker/(20627:20645): Se agrego el suscriptor 11 a la cola de NEW 
+
+[ERROR] 15:19:03:881 Broker/(20627:20645): Se desconecto el cliente 11: 
+
+[INFO] 15:33:41:766 Broker/(21055:21055): Logger iniciado: Broker.log
+
+[INFO] 15:33:41:771 Broker/(21055:21055): Configuracion broker levantada!
+[INFO] 15:33:41:772 Broker/(21055:21055): Dentro de iniciar servidor
+[INFO] 15:33:41:772 Broker/(21055:21055): Listo para escuchar a mi cliente
+[INFO] 15:33:41:772 Broker/(21055:21055): esperando
+[INFO] 15:33:47:179 Broker/(21055:21055): Se conecto un cliente!
+[INFO] 15:33:47:180 Broker/(21055:21055): Se conecto un cliente: 6
+[INFO] 15:33:47:180 Broker/(21055:21055): esperando
+[INFO] 15:33:47:180 Broker/(21055:21063): Llego un new pokemon
+[INFO] 15:34:45:787 Broker/(21081:21081): Logger iniciado: Broker.log
+
+[INFO] 15:34:45:787 Broker/(21081:21081): Configuracion broker levantada!
+[INFO] 15:34:45:788 Broker/(21081:21081): Dentro de iniciar servidor
+[INFO] 15:34:45:788 Broker/(21081:21081): Listo para escuchar a mi cliente
+[INFO] 15:34:45:788 Broker/(21081:21081): esperando
+[INFO] 15:34:51:911 Broker/(21081:21081): Se conecto un cliente!
+[INFO] 15:34:51:911 Broker/(21081:21081): Se conecto un cliente: 6
+[INFO] 15:34:51:911 Broker/(21081:21081): esperando
+[INFO] 15:34:51:912 Broker/(21081:21087): Llego un new pokemon
+[INFO] 15:37:02:300 Broker/(21155:21155): Logger iniciado: Broker.log
+
+[INFO] 15:37:02:301 Broker/(21155:21155): Configuracion broker levantada!
+[INFO] 15:37:02:301 Broker/(21155:21155): Dentro de iniciar servidor
+[INFO] 15:37:02:301 Broker/(21155:21155): Listo para escuchar a mi cliente
+[INFO] 15:37:02:301 Broker/(21155:21155): esperando
+[INFO] 15:37:10:864 Broker/(21155:21155): Se conecto un cliente!
+[INFO] 15:37:10:864 Broker/(21155:21155): Se conecto un cliente: 6
+[INFO] 15:37:10:864 Broker/(21155:21155): esperando
+[INFO] 15:37:10:864 Broker/(21155:21162): Llego un new pokemon
+[INFO] 15:37:39:92 Broker/(21173:21173): Logger iniciado: Broker.log
+
+[INFO] 15:37:39:92 Broker/(21173:21173): Configuracion broker levantada!
+[INFO] 15:37:39:92 Broker/(21173:21173): Dentro de iniciar servidor
+[INFO] 15:37:39:92 Broker/(21173:21173): Listo para escuchar a mi cliente
+[INFO] 15:37:39:92 Broker/(21173:21173): esperando
+[INFO] 15:37:50:897 Broker/(21173:21173): Se conecto un cliente!
+[INFO] 15:37:50:897 Broker/(21173:21173): Se conecto un cliente: 6
+[INFO] 15:37:50:897 Broker/(21173:21173): esperando
+[INFO] 15:37:50:898 Broker/(21173:21181): Llego un new pokemon
+[INFO] 15:40:00:125 Broker/(21214:21214): Logger iniciado: Broker.log
+
+[INFO] 15:40:00:125 Broker/(21214:21214): Configuracion broker levantada!
+[INFO] 15:40:00:125 Broker/(21214:21214): Dentro de iniciar servidor
+[INFO] 15:40:00:125 Broker/(21214:21214): Listo para escuchar a mi cliente
+[INFO] 15:40:00:125 Broker/(21214:21214): esperando
+[INFO] 15:40:10:511 Broker/(21214:21214): Se conecto un cliente!
+[INFO] 15:40:10:511 Broker/(21214:21214): Se conecto un cliente: 6
+[INFO] 15:40:10:511 Broker/(21214:21214): esperando
+[INFO] 15:40:10:511 Broker/(21214:21221): Llego un new pokemon
+[INFO] 15:41:21:731 Broker/(21263:21263): Logger iniciado: Broker.log
+
+[INFO] 15:41:21:733 Broker/(21263:21263): Configuracion broker levantada!
+[INFO] 15:41:21:733 Broker/(21263:21263): Dentro de iniciar servidor
+[INFO] 15:41:21:733 Broker/(21263:21263): Listo para escuchar a mi cliente
+[INFO] 15:41:21:733 Broker/(21263:21263): esperando
+[INFO] 15:41:36:55 Broker/(21263:21263): Se conecto un cliente!
+[INFO] 15:41:36:55 Broker/(21263:21263): Se conecto un cliente: 6
+[INFO] 15:41:40:916 Broker/(21263:21263): esperando
+[INFO] 15:46:03:715 Broker/(21397:21397): Logger iniciado: Broker.log
+
+[INFO] 15:46:03:720 Broker/(21397:21397): Configuracion broker levantada!
+[INFO] 15:46:03:721 Broker/(21397:21397): Dentro de iniciar servidor
+[INFO] 15:46:03:721 Broker/(21397:21397): Listo para escuchar a mi cliente
+[INFO] 15:46:03:721 Broker/(21397:21397): esperando
+[INFO] 15:46:09:768 Broker/(21397:21397): Se conecto un cliente!
+[INFO] 15:46:09:768 Broker/(21397:21397): Se conecto un cliente: 6
+[INFO] 15:46:09:768 Broker/(21397:21397): esperando
+[INFO] 15:46:09:769 Broker/(21397:21404): Llego un new pokemon
+[INFO] 15:48:51:979 Broker/(21475:21475): Logger iniciado: Broker.log
+
+[INFO] 15:48:51:983 Broker/(21475:21475): Configuracion broker levantada!
+[INFO] 15:48:51:988 Broker/(21475:21475): Dentro de iniciar servidor
+[INFO] 15:48:51:988 Broker/(21475:21475): Listo para escuchar a mi cliente
+[INFO] 15:48:51:988 Broker/(21475:21475): esperando
+[INFO] 15:48:57:866 Broker/(21475:21475): Se conecto un cliente!
+[INFO] 15:48:57:867 Broker/(21475:21475): Se conecto un cliente: 6
+[INFO] 15:48:57:867 Broker/(21475:21475): esperando
+[INFO] 15:48:57:867 Broker/(21475:21483): Llego un new pokemon
+[INFO] 15:49:48:973 Broker/(21503:21503): Logger iniciado: Broker.log
+
+[INFO] 15:49:48:973 Broker/(21503:21503): Configuracion broker levantada!
+[INFO] 15:49:48:973 Broker/(21503:21503): Dentro de iniciar servidor
+[INFO] 15:49:48:973 Broker/(21503:21503): Listo para escuchar a mi cliente
+[INFO] 15:49:48:973 Broker/(21503:21503): esperando
+[INFO] 15:50:09:838 Broker/(21503:21503): Se conecto un cliente!
+[INFO] 15:50:09:838 Broker/(21503:21503): Se conecto un cliente: 6
+[INFO] 15:50:09:838 Broker/(21503:21503): esperando
+[INFO] 15:50:09:838 Broker/(21503:21512): Llego un new pokemon
+[INFO] 15:50:58:614 Broker/(21537:21537): Logger iniciado: Broker.log
+
+[INFO] 15:50:58:614 Broker/(21537:21537): Configuracion broker levantada!
+[INFO] 15:50:58:614 Broker/(21537:21537): Dentro de iniciar servidor
+[INFO] 15:50:58:614 Broker/(21537:21537): Listo para escuchar a mi cliente
+[INFO] 15:50:58:614 Broker/(21537:21537): esperando
+[INFO] 15:51:02:440 Broker/(21537:21537): Se conecto un cliente!
+[INFO] 15:51:02:441 Broker/(21537:21537): Se conecto un cliente: 6
+[INFO] 15:51:02:441 Broker/(21537:21537): esperando
+[INFO] 15:51:02:441 Broker/(21537:21544): Llego un new pokemon
+[INFO] 15:51:36:660 Broker/(21579:21579): Logger iniciado: Broker.log
+
+[INFO] 15:51:36:661 Broker/(21579:21579): Configuracion broker levantada!
+[INFO] 15:51:36:661 Broker/(21579:21579): Dentro de iniciar servidor
+[INFO] 15:51:36:661 Broker/(21579:21579): Listo para escuchar a mi cliente
+[INFO] 15:51:36:661 Broker/(21579:21579): esperando
+[INFO] 15:51:44:214 Broker/(21579:21579): Se conecto un cliente!
+[INFO] 15:51:44:214 Broker/(21579:21579): Se conecto un cliente: 6
+[INFO] 15:51:44:214 Broker/(21579:21579): esperando
+[INFO] 14:00:26:862 Broker/(3578:3578): Logger iniciado: Broker.log
+
+[INFO] 14:00:26:864 Broker/(3578:3578): Configuracion broker levantada!
+[INFO] 14:00:26:865 Broker/(3578:3578): Dentro de iniciar servidor
+[INFO] 14:00:26:865 Broker/(3578:3578): Listo para escuchar a mi cliente
+[INFO] 14:00:26:865 Broker/(3578:3578): esperando
+[INFO] 14:00:32:772 Broker/(3578:3578): Se conecto un cliente!
+[INFO] 14:00:32:772 Broker/(3578:3578): Se conecto un cliente: 6
+[INFO] 14:00:32:773 Broker/(3578:3578): esperando
+[INFO] 14:00:32:773 Broker/(3578:3584): Llego un new pokemon
+[INFO] 14:01:30:468 Broker/(3879:3879): Logger iniciado: Broker.log
+
+[INFO] 14:01:30:468 Broker/(3879:3879): Configuracion broker levantada!
+[INFO] 14:01:30:468 Broker/(3879:3879): Dentro de iniciar servidor
+[INFO] 14:01:30:469 Broker/(3879:3879): Listo para escuchar a mi cliente
+[INFO] 14:01:30:469 Broker/(3879:3879): esperando
+[INFO] 14:01:43:428 Broker/(3879:3879): Se conecto un cliente!
+[INFO] 14:01:43:428 Broker/(3879:3879): Se conecto un cliente: 6
+[INFO] 14:01:43:429 Broker/(3879:3879): esperando
+[INFO] 14:01:43:429 Broker/(3879:3888): Llego un new pokemon
+[INFO] 14:04:06:709 Broker/(4017:4017): Logger iniciado: Broker.log
+
+[INFO] 14:04:06:710 Broker/(4017:4017): Configuracion broker levantada!
+[INFO] 14:04:06:710 Broker/(4017:4017): Dentro de iniciar servidor
+[INFO] 14:04:06:710 Broker/(4017:4017): Listo para escuchar a mi cliente
+[INFO] 14:04:06:710 Broker/(4017:4017): esperando
+[INFO] 14:04:15:716 Broker/(4017:4017): Se conecto un cliente!
+[INFO] 14:04:15:716 Broker/(4017:4017): Se conecto un cliente: 6
+[INFO] 14:04:15:716 Broker/(4017:4017): esperando
+[INFO] 14:04:15:716 Broker/(4017:4023): Llego un new pokemon
+[INFO] 14:11:57:370 Broker/(4230:4230): Logger iniciado: Broker.log
+
+[INFO] 14:11:57:370 Broker/(4230:4230): Configuracion broker levantada!
+[INFO] 14:11:57:371 Broker/(4230:4230): Dentro de iniciar servidor
+[INFO] 14:11:57:371 Broker/(4230:4230): Listo para escuchar a mi cliente
+[INFO] 14:11:57:371 Broker/(4230:4230): esperando
+[INFO] 14:12:42:661 Broker/(4230:4230): Se conecto un cliente!
+[INFO] 14:12:42:661 Broker/(4230:4230): Se conecto un cliente: 6
+[INFO] 14:12:42:662 Broker/(4230:4230): esperando
+[INFO] 14:12:42:662 Broker/(4230:4244): Llego un new pokemon
+[INFO] 14:16:26:975 Broker/(4416:4416): Logger iniciado: Broker.log
+
+[INFO] 14:16:26:975 Broker/(4416:4416): Configuracion broker levantada!
+[INFO] 14:16:26:975 Broker/(4416:4416): Dentro de iniciar servidor
+[INFO] 14:16:26:975 Broker/(4416:4416): Listo para escuchar a mi cliente
+[INFO] 14:16:26:975 Broker/(4416:4416): esperando
+[INFO] 14:16:31:479 Broker/(4416:4416): Se conecto un cliente!
+[INFO] 14:16:31:479 Broker/(4416:4416): Se conecto un cliente: 6
+[INFO] 14:16:31:479 Broker/(4416:4416): esperando
+[INFO] 14:16:31:479 Broker/(4416:4422): Llego un new pokemon
+[INFO] 14:19:46:128 Broker/(4553:4553): Logger iniciado: Broker.log
+
+[INFO] 14:19:46:129 Broker/(4553:4553): Configuracion broker levantada!
+[INFO] 14:19:46:129 Broker/(4553:4553): Dentro de iniciar servidor
+[INFO] 14:19:46:129 Broker/(4553:4553): Listo para escuchar a mi cliente
+[INFO] 14:19:46:129 Broker/(4553:4553): esperando
+[INFO] 14:19:55:919 Broker/(4553:4553): Se conecto un cliente!
+[INFO] 14:19:55:919 Broker/(4553:4553): Se conecto un cliente: 6
+[INFO] 14:19:55:919 Broker/(4553:4553): esperando
+[INFO] 14:19:55:919 Broker/(4553:4561): Llego un Subscribe
+[INFO] 14:19:55:919 Broker/(4553:4561): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:20:24:461 Broker/(4553:4553): Se conecto un cliente!
+[INFO] 14:20:24:461 Broker/(4553:4553): Se conecto un cliente: 7
+[INFO] 14:20:24:462 Broker/(4553:4553): esperando
+[INFO] 14:20:24:462 Broker/(4553:4567): Llego un new pokemon
+[INFO] 14:20:24:462 Broker/(4553:4567): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:20:24:462 Broker/(4553:4567): Se envió el mensaje al suscriptor -1219575100
+
+[INFO] 14:20:24:462 Broker/(4553:4567): Se envió el mensaje al suscriptor 0
+
+[INFO] 14:20:24:462 Broker/(4553:4567): No hay mas suscriptores! 
+
+[ERROR] 14:20:24:462 Broker/(4553:4567): Se desconecto el cliente 7: 
+
+[ERROR] 14:20:42:957 Broker/(4553:4561): Se desconecto el cliente 6: 
+
+[INFO] 14:21:12:194 Broker/(4719:4719): Logger iniciado: Broker.log
+
+[INFO] 14:21:12:194 Broker/(4719:4719): Configuracion broker levantada!
+[INFO] 14:21:12:195 Broker/(4719:4719): Dentro de iniciar servidor
+[INFO] 14:21:12:195 Broker/(4719:4719): Listo para escuchar a mi cliente
+[INFO] 14:21:12:195 Broker/(4719:4719): esperando
+[INFO] 14:21:12:195 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:195 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:195 Broker/(4719:4719): esperando
+[INFO] 14:21:12:195 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:195 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:195 Broker/(4719:4719): esperando
+[INFO] 14:21:12:195 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:195 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:195 Broker/(4719:4719): esperando
+[INFO] 14:21:12:195 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:196 Broker/(4719:4719): esperando
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:196 Broker/(4719:4719): esperando
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:196 Broker/(4719:4719): esperando
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:196 Broker/(4719:4719): esperando
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:196 Broker/(4719:4719): esperando
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:196 Broker/(4719:4719): esperando
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:196 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:197 Broker/(4719:4719): esperando
+[INFO] 14:21:12:197 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:197 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:197 Broker/(4719:4719): esperando
+[INFO] 14:21:12:197 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:197 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:197 Broker/(4719:4719): esperando
+[INFO] 14:21:12:197 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:197 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:197 Broker/(4719:4719): esperando
+[INFO] 14:21:12:197 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:197 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:197 Broker/(4719:4719): esperando
+[INFO] 14:21:12:197 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:198 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:198 Broker/(4719:4719): esperando
+[INFO] 14:21:12:198 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:198 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:198 Broker/(4719:4719): esperando
+[INFO] 14:21:12:198 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:198 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:198 Broker/(4719:4719): esperando
+[INFO] 14:21:12:198 Broker/(4719:4719): Se conecto un cliente!
+[INFO] 14:21:12:198 Broker/(4719:4719): Se conecto un cliente: -1
+[INFO] 14:21:12:198 Broker/(4719:4731): Llego un new pokemon
+[INFO] 14:21:12:198 Broker/(4719:4730): Llego un new pokemon
+[INFO] 14:21:38:648 Broker/(4773:4773): Logger iniciado: Broker.log
+
+[INFO] 14:21:38:648 Broker/(4773:4773): Configuracion broker levantada!
+[INFO] 14:21:38:648 Broker/(4773:4773): Dentro de iniciar servidor
+[INFO] 14:21:38:649 Broker/(4773:4773): Listo para escuchar a mi cliente
+[INFO] 14:21:38:649 Broker/(4773:4773): esperando
+[INFO] 14:21:43:473 Broker/(4773:4773): Se conecto un cliente!
+[INFO] 14:21:43:473 Broker/(4773:4773): Se conecto un cliente: 6
+[INFO] 14:21:43:473 Broker/(4773:4773): esperando
+[INFO] 14:21:43:473 Broker/(4773:4779): Llego un Subscribe
+[INFO] 14:21:43:473 Broker/(4773:4779): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:21:57:575 Broker/(4773:4773): Se conecto un cliente!
+[INFO] 14:21:57:575 Broker/(4773:4773): Se conecto un cliente: 7
+[INFO] 14:21:57:576 Broker/(4773:4773): esperando
+[INFO] 14:21:57:576 Broker/(4773:4781): Llego un new pokemon
+[INFO] 14:21:57:576 Broker/(4773:4781): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:21:57:576 Broker/(4773:4781): Se envió el mensaje al suscriptor -1219185980
+
+[INFO] 14:21:57:576 Broker/(4773:4781): No hay mas suscriptores! 
+
+[ERROR] 14:21:57:576 Broker/(4773:4781): Se desconecto el cliente 7: 
+
+[ERROR] 14:22:58:634 Broker/(4773:4779): Se desconecto el cliente 6: 
+
+[INFO] 14:23:56:298 Broker/(4894:4894): Logger iniciado: Broker.log
+
+[INFO] 14:23:56:298 Broker/(4894:4894): Configuracion broker levantada!
+[INFO] 14:23:56:299 Broker/(4894:4894): Dentro de iniciar servidor
+[INFO] 14:23:56:299 Broker/(4894:4894): Listo para escuchar a mi cliente
+[INFO] 14:23:56:299 Broker/(4894:4894): esperando
+[INFO] 14:23:56:300 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:300 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:300 Broker/(4894:4894): esperando
+[INFO] 14:23:56:301 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:301 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:301 Broker/(4894:4894): esperando
+[INFO] 14:23:56:301 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:301 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:301 Broker/(4894:4894): esperando
+[INFO] 14:23:56:301 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:301 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:301 Broker/(4894:4894): esperando
+[INFO] 14:23:56:302 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:302 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:302 Broker/(4894:4894): esperando
+[INFO] 14:23:56:302 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:302 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:302 Broker/(4894:4894): esperando
+[INFO] 14:23:56:302 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:302 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:302 Broker/(4894:4894): esperando
+[INFO] 14:23:56:302 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:302 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:302 Broker/(4894:4894): esperando
+[INFO] 14:23:56:303 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:303 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:303 Broker/(4894:4894): esperando
+[INFO] 14:23:56:303 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:303 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:303 Broker/(4894:4894): esperando
+[INFO] 14:23:56:303 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:303 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:303 Broker/(4894:4894): esperando
+[INFO] 14:23:56:303 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:303 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:303 Broker/(4894:4894): esperando
+[INFO] 14:23:56:304 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:304 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:304 Broker/(4894:4894): esperando
+[INFO] 14:23:56:304 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:304 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:305 Broker/(4894:4903): Llego un new pokemon
+[INFO] 14:23:56:305 Broker/(4894:4904): Llego un new pokemon
+[INFO] 14:23:56:305 Broker/(4894:4905): Llego un new pokemon
+[INFO] 14:23:56:305 Broker/(4894:4902): Llego un new pokemon
+[INFO] 14:23:56:305 Broker/(4894:4906): Llego un new pokemon
+[INFO] 14:23:56:305 Broker/(4894:4901): Llego un new pokemon
+[INFO] 14:23:56:305 Broker/(4894:4907): Llego un new pokemon
+[INFO] 14:23:56:305 Broker/(4894:4908): Llego un new pokemon
+[INFO] 14:23:56:305 Broker/(4894:4900): Llego un new pokemon
+[INFO] 14:23:56:305 Broker/(4894:4909): Llego un new pokemon
+[INFO] 14:23:56:306 Broker/(4894:4910): Llego un new pokemon
+[INFO] 14:23:56:306 Broker/(4894:4894): esperando
+[INFO] 14:23:56:306 Broker/(4894:4910): Me llego mensaje de -1. Pkm: h, x: 0, y: 0, cant: 0
+
+[INFO] 14:23:56:306 Broker/(4894:4904): Me llego mensaje de -1. Pkm: @, x: 909457971, y: 0, cant: 37
+
+[INFO] 14:23:56:306 Broker/(4894:4905): Me llego mensaje de -1. Pkm: @, x: 909457971, y: 0, cant: 37
+
+[INFO] 14:23:56:306 Broker/(4894:4902): Me llego mensaje de -1. Pkm: @, x: 909457971, y: 0, cant: 37
+
+[INFO] 14:23:56:306 Broker/(4894:4904): No hay mas suscriptores! 
+
+[INFO] 14:23:56:306 Broker/(4894:4904): Llego un new pokemon
+[INFO] 14:23:56:306 Broker/(4894:4905): No hay mas suscriptores! 
+
+[INFO] 14:23:56:306 Broker/(4894:4905): Llego un new pokemon
+[INFO] 14:23:56:307 Broker/(4894:4910): No hay mas suscriptores! 
+
+[ERROR] 14:23:56:307 Broker/(4894:4912): Mensaje no entendido: -1329593160
+
+[INFO] 14:23:56:307 Broker/(4894:4901): Me llego mensaje de -1. Pkm: , x: 0, y: 0, cant: 0
+
+[INFO] 14:23:56:307 Broker/(4894:4894): Se conecto un cliente!
+[INFO] 14:23:56:307 Broker/(4894:4894): Se conecto un cliente: -1
+[INFO] 14:23:56:307 Broker/(4894:4901): No hay mas suscriptores! 
+
+[ERROR] 14:23:56:307 Broker/(4894:4911): Mensaje no entendido: -1216956472
+
+[INFO] 14:23:56:308 Broker/(4894:4902): No hay mas suscriptores! 
+
+[INFO] 14:23:56:308 Broker/(4894:4902): Llego un new pokemon
+[INFO] 14:23:56:308 Broker/(4894:4901): Llego un new pokemon
+[ERROR] 14:23:56:308 Broker/(4894:4911): Mensaje no entendido: -1216956488
+
+[INFO] 14:23:56:309 Broker/(4894:4907): Me llego mensaje de -1. Pkm: �, x: 0, y: 0, cant: 0
+
+[INFO] 14:23:56:309 Broker/(4894:4907): No hay mas suscriptores! 
+
+[INFO] 14:23:56:309 Broker/(4894:4902): Me llego mensaje de -1. Pkm: H, x: 0, y: 0, cant: 0
+
+[INFO] 14:23:56:309 Broker/(4894:4910): Llego un new pokemon
+[INFO] 14:24:14:920 Broker/(4941:4941): Logger iniciado: Broker.log
+
+[INFO] 14:24:14:920 Broker/(4941:4941): Configuracion broker levantada!
+[INFO] 14:24:14:920 Broker/(4941:4941): Dentro de iniciar servidor
+[INFO] 14:24:14:920 Broker/(4941:4941): Listo para escuchar a mi cliente
+[INFO] 14:24:14:920 Broker/(4941:4941): esperando
+[INFO] 14:24:21:64 Broker/(4941:4941): Se conecto un cliente!
+[INFO] 14:24:21:65 Broker/(4941:4941): Se conecto un cliente: 6
+[INFO] 14:24:21:65 Broker/(4941:4941): esperando
+[INFO] 14:24:21:65 Broker/(4941:4948): Llego un Subscribe
+[INFO] 14:24:21:65 Broker/(4941:4948): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:24:24:38 Broker/(4941:4941): Se conecto un cliente!
+[INFO] 14:24:24:39 Broker/(4941:4941): Se conecto un cliente: 7
+[INFO] 14:24:24:40 Broker/(4941:4941): esperando
+[INFO] 14:24:24:40 Broker/(4941:4952): Llego un new pokemon
+[INFO] 14:24:24:40 Broker/(4941:4952): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:24:24:40 Broker/(4941:4952): Se envió el mensaje al suscriptor 6
+
+[INFO] 14:24:24:40 Broker/(4941:4952): No hay mas suscriptores! 
+
+[ERROR] 14:24:24:40 Broker/(4941:4952): Se desconecto el cliente 7: 
+
+[ERROR] 14:25:10:856 Broker/(4941:4948): Se desconecto el cliente 6: 
+
+[INFO] 14:26:05:903 Broker/(4941:4941): Se conecto un cliente!
+[INFO] 14:26:05:903 Broker/(4941:4941): Se conecto un cliente: 8
+[INFO] 14:26:05:904 Broker/(4941:4941): esperando
+[INFO] 14:26:05:904 Broker/(4941:4987): Llego un Subscribe
+[INFO] 14:26:05:904 Broker/(4941:4987): Se agrego el suscriptor 8 a la cola de NEW 
+
+[INFO] 14:26:10:864 Broker/(4941:4941): Se conecto un cliente!
+[INFO] 14:26:10:864 Broker/(4941:4941): Se conecto un cliente: 9
+[INFO] 14:26:10:865 Broker/(4941:4941): esperando
+[INFO] 14:26:10:865 Broker/(4941:5004): Llego un new pokemon
+[INFO] 14:26:10:865 Broker/(4941:5004): Me llego mensaje de 9. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:26:10:865 Broker/(4941:5004): Se envió el mensaje al suscriptor 6
+
+[INFO] 14:26:10:865 Broker/(4941:5004): Se envió el mensaje al suscriptor 8
+
+[INFO] 14:26:10:865 Broker/(4941:5004): No hay mas suscriptores! 
+
+[ERROR] 14:26:10:865 Broker/(4941:5004): Se desconecto el cliente 9: 
+
+[ERROR] 14:26:21:584 Broker/(4941:4987): Se desconecto el cliente 8: 
+
+[INFO] 14:38:43:400 Broker/(5271:5271): Logger iniciado: Broker.log
+
+[INFO] 14:38:43:400 Broker/(5271:5271): Configuracion broker levantada!
+[INFO] 14:38:43:400 Broker/(5271:5271): Dentro de iniciar servidor
+[INFO] 14:38:43:400 Broker/(5271:5271): Listo para escuchar a mi cliente
+[INFO] 14:38:43:400 Broker/(5271:5271): esperando
+[INFO] 14:38:47:468 Broker/(5271:5271): Se conecto un cliente!
+[INFO] 14:38:47:468 Broker/(5271:5271): Se conecto un cliente: 6
+[INFO] 14:38:47:469 Broker/(5271:5271): esperando
+[INFO] 14:38:47:469 Broker/(5271:5278): Llego un Subscribe
+[INFO] 14:38:47:469 Broker/(5271:5278): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:38:51:645 Broker/(5271:5271): Se conecto un cliente!
+[INFO] 14:38:51:645 Broker/(5271:5271): Se conecto un cliente: 7
+[INFO] 14:38:51:646 Broker/(5271:5271): esperando
+[INFO] 14:38:51:646 Broker/(5271:5280): Llego un new pokemon
+[INFO] 14:38:51:646 Broker/(5271:5280): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:38:51:646 Broker/(5271:5280): Se envió el mensaje al suscriptor 6
+
+[INFO] 14:38:51:646 Broker/(5271:5280): No hay mas suscriptores! 
+
+[ERROR] 14:38:51:646 Broker/(5271:5280): Se desconecto el cliente 7: 
+
+[ERROR] 14:41:23:625 Broker/(5271:5278): Se desconecto el cliente 6: 
+
+[INFO] 14:42:55:470 Broker/(5375:5375): Logger iniciado: Broker.log
+
+[INFO] 14:42:55:470 Broker/(5375:5375): Configuracion broker levantada!
+[INFO] 14:42:55:470 Broker/(5375:5375): Dentro de iniciar servidor
+[INFO] 14:42:55:470 Broker/(5375:5375): Listo para escuchar a mi cliente
+[INFO] 14:42:55:470 Broker/(5375:5375): esperando
+[INFO] 14:43:19:781 Broker/(5375:5375): Se conecto un cliente!
+[INFO] 14:43:19:782 Broker/(5375:5375): Se conecto un cliente: 6
+[INFO] 14:43:19:782 Broker/(5375:5375): esperando
+[INFO] 14:43:19:782 Broker/(5375:5386): Llego un Subscribe
+[INFO] 14:43:19:782 Broker/(5375:5386): Se agrego el suscriptor 6 a la cola de NEW 
+
+[INFO] 14:43:22:577 Broker/(5375:5375): Se conecto un cliente!
+[INFO] 14:43:22:577 Broker/(5375:5375): Se conecto un cliente: 7
+[INFO] 14:43:22:578 Broker/(5375:5375): esperando
+[INFO] 14:43:22:578 Broker/(5375:5388): Llego un new pokemon
+[INFO] 14:43:22:578 Broker/(5375:5388): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:43:22:578 Broker/(5375:5388): Se notificara al socket 6 
+
+[INFO] 14:43:22:578 Broker/(5375:5388): Se envió el mensaje al suscriptor 6
+
+[INFO] 14:43:22:578 Broker/(5375:5388): No hay mas suscriptores! 
+
+[ERROR] 14:43:22:578 Broker/(5375:5388): Se desconecto el cliente 7: 
+
+[INFO] 14:44:18:604 Broker/(5441:5441): Logger iniciado: Broker.log
+
+[INFO] 14:44:18:605 Broker/(5441:5441): Configuracion broker levantada!
+[INFO] 14:44:18:605 Broker/(5441:5441): Dentro de iniciar servidor
+[INFO] 14:44:18:605 Broker/(5441:5441): Listo para escuchar a mi cliente
+[INFO] 14:44:18:605 Broker/(5441:5441): esperando
+[INFO] 14:44:18:605 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:605 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:605 Broker/(5441:5441): esperando
+[INFO] 14:44:18:605 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:605 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:605 Broker/(5441:5441): esperando
+[INFO] 14:44:18:605 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:605 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:606 Broker/(5441:5441): esperando
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:606 Broker/(5441:5441): esperando
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:606 Broker/(5441:5441): esperando
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:606 Broker/(5441:5441): esperando
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:606 Broker/(5441:5441): esperando
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:606 Broker/(5441:5441): esperando
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:606 Broker/(5441:5441): esperando
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:606 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:607 Broker/(5441:5441): esperando
+[INFO] 14:44:18:607 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:607 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:607 Broker/(5441:5441): esperando
+[INFO] 14:44:18:607 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:607 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:607 Broker/(5441:5441): esperando
+[INFO] 14:44:18:607 Broker/(5441:5441): Se conecto un cliente!
+[INFO] 14:44:18:607 Broker/(5441:5441): Se conecto un cliente: -1
+[INFO] 14:44:18:607 Broker/(5441:5447): Llego un new pokemon
+[INFO] 14:44:18:607 Broker/(5441:5448): Llego un new pokemon
+[INFO] 14:44:18:607 Broker/(5441:5449): Llego un new pokemon
+[INFO] 14:44:18:607 Broker/(5441:5450): Llego un new pokemon
+[INFO] 14:44:18:607 Broker/(5441:5451): Llego un new pokemon
+[INFO] 14:44:18:607 Broker/(5441:5452): Llego un new pokemon
+[INFO] 14:44:18:607 Broker/(5441:5453): Llego un new pokemon
+[INFO] 14:44:18:607 Broker/(5441:5454): Llego un new pokemon
+[INFO] 14:44:18:607 Broker/(5441:5446): Llego un new pokemon
+[INFO] 14:44:18:607 Broker/(5441:5455): Llego un new pokemon
+[INFO] 14:44:18:607 Broker/(5441:5456): Llego un new pokemon
+[INFO] 14:44:18:607 Broker/(5441:5457): Llego un new pokemon
+[INFO] 14:44:18:609 Broker/(5441:5447): Me llego mensaje de -1. Pkm: @, x: 942750260, y: 0, cant: 37
+
+[INFO] 14:44:18:610 Broker/(5441:5447): No hay mas suscriptores! 
+
+[INFO] 14:44:18:610 Broker/(5441:5447): Llego un new pokemon
+[INFO] 14:44:18:610 Broker/(5441:5446): Me llego mensaje de -1. Pkm: h, x: 0, y: 0, cant: 0
+
+[INFO] 14:44:18:610 Broker/(5441:5449): Me llego mensaje de -1. Pkm: H, x: 942750260, y: 2003136000, cant: 21
+
+[INFO] 14:44:18:610 Broker/(5441:5449): No hay mas suscriptores! 
+
+[INFO] 14:44:18:610 Broker/(5441:5449): Llego un new pokemon
+[INFO] 14:44:18:610 Broker/(5441:5447): Me llego mensaje de -1. Pkm: H, x: 0, y: 0, cant: 0
+
+[INFO] 14:44:18:610 Broker/(5441:5447): No hay mas suscriptores! 
+
+[INFO] 14:44:29:256 Broker/(5487:5487): Logger iniciado: Broker.log
+
+[INFO] 14:44:29:256 Broker/(5487:5487): Configuracion broker levantada!
+[INFO] 14:44:29:256 Broker/(5487:5487): Dentro de iniciar servidor
+[INFO] 14:44:29:257 Broker/(5487:5487): Listo para escuchar a mi cliente
+[INFO] 14:44:29:257 Broker/(5487:5487): esperando
+[INFO] 14:44:29:257 Broker/(5487:5487): Se conecto un cliente!
+[INFO] 14:44:29:257 Broker/(5487:5487): Se conecto un cliente: -1
+[INFO] 14:44:29:257 Broker/(5487:5487): esperando
+[INFO] 14:44:29:257 Broker/(5487:5487): Se conecto un cliente!
+[INFO] 14:44:29:257 Broker/(5487:5487): Se conecto un cliente: -1
+[INFO] 14:44:29:257 Broker/(5487:5492): Llego un new pokemon
+[INFO] 14:44:42:625 Broker/(5521:5521): Logger iniciado: Broker.log
+
+[INFO] 14:44:42:625 Broker/(5521:5521): Configuracion broker levantada!
+[INFO] 14:44:42:625 Broker/(5521:5521): Dentro de iniciar servidor
+[INFO] 14:44:42:626 Broker/(5521:5521): Listo para escuchar a mi cliente
+[INFO] 14:44:42:626 Broker/(5521:5521): esperando
+[INFO] 14:44:42:626 Broker/(5521:5521): Se conecto un cliente!
+[INFO] 14:44:42:626 Broker/(5521:5521): Se conecto un cliente: -1
+[INFO] 14:44:42:626 Broker/(5521:5521): esperando
+[INFO] 14:44:42:626 Broker/(5521:5521): Se conecto un cliente!
+[INFO] 14:44:42:626 Broker/(5521:5521): Se conecto un cliente: -1
+[INFO] 14:44:42:626 Broker/(5521:5521): esperando
+[INFO] 14:44:42:626 Broker/(5521:5521): Se conecto un cliente!
+[INFO] 14:44:42:626 Broker/(5521:5521): Se conecto un cliente: -1
+[INFO] 14:44:42:626 Broker/(5521:5521): esperando
+[INFO] 14:44:42:626 Broker/(5521:5521): Se conecto un cliente!
+[INFO] 14:44:42:627 Broker/(5521:5521): Se conecto un cliente: -1
+[INFO] 14:44:42:627 Broker/(5521:5521): esperando
+[INFO] 14:44:42:627 Broker/(5521:5521): Se conecto un cliente!
+[INFO] 14:44:42:627 Broker/(5521:5521): Se conecto un cliente: -1
+[INFO] 14:44:42:627 Broker/(5521:5527): Llego un new pokemon
+[INFO] 14:44:42:627 Broker/(5521:5526): Llego un new pokemon
+[INFO] 14:45:10:550 Broker/(5585:5585): Logger iniciado: Broker.log
+
+[INFO] 14:45:10:550 Broker/(5585:5585): Configuracion broker levantada!
+[INFO] 14:45:10:551 Broker/(5585:5585): Dentro de iniciar servidor
+[INFO] 14:45:10:551 Broker/(5585:5585): Listo para escuchar a mi cliente
+[INFO] 14:45:10:551 Broker/(5585:5585): esperando
+[INFO] 14:45:10:551 Broker/(5585:5585): Se conecto un cliente!
+[INFO] 14:45:10:551 Broker/(5585:5585): Se conecto un cliente: -1
+[INFO] 14:45:10:551 Broker/(5585:5585): esperando
+[INFO] 14:45:10:551 Broker/(5585:5585): Se conecto un cliente!
+[INFO] 14:45:10:551 Broker/(5585:5585): Se conecto un cliente: -1
+[INFO] 14:45:10:551 Broker/(5585:5585): esperando
+[INFO] 14:45:10:551 Broker/(5585:5590): Llego un new pokemon
+[INFO] 14:45:10:551 Broker/(5585:5591): Llego un new pokemon
+[INFO] 14:45:10:551 Broker/(5585:5585): Se conecto un cliente!
+[INFO] 14:45:46:286 Broker/(5647:5647): Logger iniciado: Broker.log
+
+[INFO] 14:45:46:286 Broker/(5647:5647): Configuracion broker levantada!
+[INFO] 14:45:46:286 Broker/(5647:5647): Dentro de iniciar servidor
+[INFO] 14:45:46:286 Broker/(5647:5647): Listo para escuchar a mi cliente
+[INFO] 14:45:46:286 Broker/(5647:5647): esperando
+[INFO] 14:45:51:442 Broker/(5647:5647): Se conecto un cliente!
+[INFO] 14:45:51:442 Broker/(5647:5647): Se conecto un cliente: 6
+[INFO] 14:45:51:442 Broker/(5647:5647): esperando
+[INFO] 14:45:51:442 Broker/(5647:5653): Llego un Subscribe
+[INFO] 14:45:51:442 Broker/(5647:5653): Se agrego el suscriptor 6 a la cola de NEW
+[INFO] 14:45:59:404 Broker/(5647:5647): Se conecto un cliente!
+[INFO] 14:45:59:404 Broker/(5647:5647): Se conecto un cliente: 7
+[INFO] 14:45:59:405 Broker/(5647:5647): esperando
+[INFO] 14:45:59:405 Broker/(5647:5656): Llego un new pokemon
+[INFO] 14:45:59:406 Broker/(5647:5656): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:45:59:406 Broker/(5647:5656): Se notificara al socket 6
+[INFO] 14:45:59:406 Broker/(5647:5656): Se envió el mensaje al suscriptor 6
+[INFO] 14:45:59:406 Broker/(5647:5656): No hay mas suscriptores! 
+
+[ERROR] 14:45:59:406 Broker/(5647:5656): Se desconecto el cliente 7: 
+
+[INFO] 14:47:57:711 Broker/(5647:5647): Se conecto un cliente!
+[INFO] 14:47:57:711 Broker/(5647:5647): Se conecto un cliente: 8
+[INFO] 14:47:57:711 Broker/(5647:5647): esperando
+[INFO] 14:47:57:711 Broker/(5647:5694): Llego un new pokemon
+[INFO] 14:47:57:712 Broker/(5647:5694): Me llego mensaje de 8. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:47:57:712 Broker/(5647:5694): Se notificara al socket 6
+[INFO] 14:47:57:712 Broker/(5647:5694): Se envió el mensaje al suscriptor 6
+[INFO] 14:47:57:712 Broker/(5647:5694): No hay mas suscriptores! 
+
+[ERROR] 14:47:57:712 Broker/(5647:5694): Se desconecto el cliente 8: 
+
+[INFO] 14:47:58:411 Broker/(5647:5647): Se conecto un cliente!
+[INFO] 14:47:58:411 Broker/(5647:5647): Se conecto un cliente: 9
+[INFO] 14:47:58:411 Broker/(5647:5647): esperando
+[INFO] 14:47:58:412 Broker/(5647:5696): Llego un new pokemon
+[INFO] 14:47:58:412 Broker/(5647:5696): Me llego mensaje de 9. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:47:58:412 Broker/(5647:5696): Se notificara al socket 6
+[INFO] 14:47:58:412 Broker/(5647:5696): Se envió el mensaje al suscriptor 6
+[INFO] 14:47:58:412 Broker/(5647:5696): No hay mas suscriptores! 
+
+[ERROR] 14:47:58:412 Broker/(5647:5696): Se desconecto el cliente 9: 
+
+[INFO] 14:47:58:981 Broker/(5647:5647): Se conecto un cliente!
+[INFO] 14:47:58:981 Broker/(5647:5647): Se conecto un cliente: 10
+[INFO] 14:47:58:981 Broker/(5647:5647): esperando
+[INFO] 14:47:58:982 Broker/(5647:5698): Llego un new pokemon
+[INFO] 14:47:58:982 Broker/(5647:5698): Me llego mensaje de 10. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:47:58:982 Broker/(5647:5698): Se notificara al socket 6
+[INFO] 14:47:58:982 Broker/(5647:5698): Se envió el mensaje al suscriptor 6
+[INFO] 14:47:58:982 Broker/(5647:5698): No hay mas suscriptores! 
+
+[ERROR] 14:47:58:982 Broker/(5647:5698): Se desconecto el cliente 10: 
+
+[INFO] 14:47:59:512 Broker/(5647:5647): Se conecto un cliente!
+[INFO] 14:47:59:512 Broker/(5647:5647): Se conecto un cliente: 11
+[INFO] 14:47:59:512 Broker/(5647:5647): esperando
+[INFO] 14:47:59:512 Broker/(5647:5700): Llego un new pokemon
+[INFO] 14:47:59:513 Broker/(5647:5700): Me llego mensaje de 11. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:47:59:513 Broker/(5647:5700): Se notificara al socket 6
+[INFO] 14:47:59:513 Broker/(5647:5700): Se envió el mensaje al suscriptor 6
+[INFO] 14:47:59:513 Broker/(5647:5700): No hay mas suscriptores! 
+
+[ERROR] 14:47:59:513 Broker/(5647:5700): Se desconecto el cliente 11: 
+
+[INFO] 14:48:00:810 Broker/(5647:5647): Se conecto un cliente!
+[INFO] 14:48:00:810 Broker/(5647:5647): Se conecto un cliente: 12
+[INFO] 14:48:00:811 Broker/(5647:5647): esperando
+[INFO] 14:48:00:811 Broker/(5647:5702): Llego un new pokemon
+[INFO] 14:48:00:811 Broker/(5647:5702): Me llego mensaje de 12. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:48:00:811 Broker/(5647:5702): Se notificara al socket 6
+[INFO] 14:48:00:811 Broker/(5647:5702): Se envió el mensaje al suscriptor 6
+[INFO] 14:48:00:811 Broker/(5647:5702): No hay mas suscriptores! 
+
+[ERROR] 14:48:00:811 Broker/(5647:5702): Se desconecto el cliente 12: 
+
+[ERROR] 14:50:07:498 Broker/(5647:5653): Se desconecto el cliente 6: 
+
+[INFO] 14:50:20:907 Broker/(5872:5872): Logger iniciado: Broker.log
+
+[INFO] 14:50:20:908 Broker/(5872:5872): Configuracion broker levantada!
+[INFO] 14:50:20:908 Broker/(5872:5872): Dentro de iniciar servidor
+[INFO] 14:50:20:908 Broker/(5872:5872): Listo para escuchar a mi cliente
+[INFO] 14:50:20:908 Broker/(5872:5872): esperando
+[INFO] 14:50:24:80 Broker/(5872:5872): Se conecto un cliente!
+[INFO] 14:50:24:80 Broker/(5872:5872): Se conecto un cliente: 6
+[INFO] 14:50:24:80 Broker/(5872:5872): esperando
+[INFO] 14:50:24:80 Broker/(5872:5879): Llego un Subscribe
+[INFO] 14:50:24:80 Broker/(5872:5879): Se agrego el suscriptor 6 a la cola de NEW
+[INFO] 14:50:26:955 Broker/(5872:5872): Se conecto un cliente!
+[INFO] 14:50:26:955 Broker/(5872:5872): Se conecto un cliente: 7
+[INFO] 14:50:26:956 Broker/(5872:5872): esperando
+[INFO] 14:50:26:957 Broker/(5872:5883): Llego un new pokemon
+[INFO] 14:50:26:957 Broker/(5872:5883): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:50:26:957 Broker/(5872:5883): Se notificara al socket 6
+[INFO] 14:50:26:957 Broker/(5872:5883): Se envió el mensaje al suscriptor 6
+[INFO] 14:50:26:957 Broker/(5872:5883): No hay mas suscriptores! 
+
+[ERROR] 14:50:26:957 Broker/(5872:5883): Se desconecto el cliente 7: 
+
+[INFO] 14:51:28:233 Broker/(5872:5872): Se conecto un cliente!
+[INFO] 14:51:28:233 Broker/(5872:5872): Se conecto un cliente: 8
+[INFO] 14:51:28:234 Broker/(5872:5872): esperando
+[INFO] 14:51:28:234 Broker/(5872:6009): Llego un Subscribe
+[INFO] 14:51:28:234 Broker/(5872:6009): Se agrego el suscriptor 8 a la cola de NEW
+[INFO] 14:51:37:603 Broker/(5872:5872): Se conecto un cliente!
+[INFO] 14:51:37:603 Broker/(5872:5872): Se conecto un cliente: 9
+[INFO] 14:51:37:604 Broker/(5872:5872): esperando
+[INFO] 14:51:37:604 Broker/(5872:6011): Llego un new pokemon
+[INFO] 14:51:37:604 Broker/(5872:6011): Me llego mensaje de 9. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 14:51:37:604 Broker/(5872:6011): Se notificara al socket 6
+[INFO] 14:51:37:604 Broker/(5872:6011): Se envió el mensaje al suscriptor 6
+[INFO] 14:51:37:604 Broker/(5872:6011): Se notificara al socket 8
+[INFO] 14:51:37:604 Broker/(5872:6011): Se envió el mensaje al suscriptor 8
+[INFO] 14:51:37:605 Broker/(5872:6011): No hay mas suscriptores! 
+
+[ERROR] 14:51:37:605 Broker/(5872:6011): Se desconecto el cliente 9: 
+
+[ERROR] 15:21:53:990 Broker/(5872:6009): Se desconecto el cliente 8: 
+
+[ERROR] 15:21:57:47 Broker/(5872:5879): Se desconecto el cliente 6: 
+
+[INFO] 15:22:40:199 Broker/(6822:6822): Logger iniciado: Broker.log
+
+[INFO] 15:22:40:199 Broker/(6822:6822): Configuracion broker levantada!
+[INFO] 15:22:40:199 Broker/(6822:6822): Dentro de iniciar servidor
+[INFO] 15:22:40:200 Broker/(6822:6822): Listo para escuchar a mi cliente
+[INFO] 15:22:40:200 Broker/(6822:6822): esperando
+[INFO] 15:22:40:200 Broker/(6822:6822): Se conecto un cliente!
+[INFO] 15:22:40:200 Broker/(6822:6822): Se conecto un cliente: -1
+[INFO] 15:22:40:200 Broker/(6822:6822): esperando
+[INFO] 15:22:40:200 Broker/(6822:6822): Se conecto un cliente!
+[INFO] 15:22:40:200 Broker/(6822:6822): Se conecto un cliente: -1
+[INFO] 15:22:40:201 Broker/(6822:6822): esperando
+[INFO] 15:22:40:201 Broker/(6822:6822): Se conecto un cliente!
+[INFO] 15:22:40:201 Broker/(6822:6822): Se conecto un cliente: -1
+[INFO] 15:22:40:201 Broker/(6822:6822): esperando
+[INFO] 15:22:40:201 Broker/(6822:6822): Se conecto un cliente!
+[INFO] 15:22:40:201 Broker/(6822:6822): Se conecto un cliente: -1
+[INFO] 15:22:40:201 Broker/(6822:6829): Llego un new pokemon
+[INFO] 15:22:40:202 Broker/(6822:6822): esperando
+[INFO] 15:22:40:202 Broker/(6822:6822): Se conecto un cliente!
+[INFO] 15:22:40:202 Broker/(6822:6822): Se conecto un cliente: -1
+[INFO] 15:22:40:202 Broker/(6822:6822): esperando
+[INFO] 15:22:40:202 Broker/(6822:6822): Se conecto un cliente!
+[INFO] 15:23:33:183 Broker/(6863:6863): Logger iniciado: Broker.log
+
+[INFO] 15:23:33:183 Broker/(6863:6863): Configuracion broker levantada!
+[INFO] 15:23:33:183 Broker/(6863:6863): Dentro de iniciar servidor
+[INFO] 15:23:33:183 Broker/(6863:6863): Listo para escuchar a mi cliente
+[INFO] 15:23:33:183 Broker/(6863:6863): esperando
+[INFO] 15:23:44:945 Broker/(6863:6863): Se conecto un cliente!
+[INFO] 15:23:44:945 Broker/(6863:6863): Se conecto un cliente: 6
+[INFO] 15:23:44:946 Broker/(6863:6863): esperando
+[INFO] 15:23:44:946 Broker/(6863:6871): Llego un Subscribe
+[INFO] 15:23:44:946 Broker/(6863:6871): Se agrego el suscriptor 6 a la cola de NEW
+[ERROR] 15:23:54:900 Broker/(6863:6871): Se desconecto el cliente 6: 
+
+[INFO] 15:24:08:64 Broker/(6898:6898): Logger iniciado: Broker.log
+
+[INFO] 15:24:08:64 Broker/(6898:6898): Configuracion broker levantada!
+[INFO] 15:24:08:64 Broker/(6898:6898): Dentro de iniciar servidor
+[INFO] 15:24:08:64 Broker/(6898:6898): Listo para escuchar a mi cliente
+[INFO] 15:24:08:64 Broker/(6898:6898): esperando
+[INFO] 15:24:27:948 Broker/(6898:6898): Se conecto un cliente!
+[INFO] 15:24:27:948 Broker/(6898:6898): Se conecto un cliente: 6
+[INFO] 15:24:27:948 Broker/(6898:6898): esperando
+[INFO] 15:24:27:949 Broker/(6898:6909): Llego un Subscribe
+[INFO] 15:24:27:949 Broker/(6898:6909): Se agrego el suscriptor 6 a la cola de NEW
+[INFO] 15:24:36:967 Broker/(6898:6898): Se conecto un cliente!
+[INFO] 15:24:36:967 Broker/(6898:6898): Se conecto un cliente: 7
+[INFO] 15:24:36:967 Broker/(6898:6898): esperando
+[INFO] 15:24:36:967 Broker/(6898:6913): Llego un Subscribe
+[INFO] 15:24:36:967 Broker/(6898:6913): Se agrego el suscriptor 7 a la cola de NEW
+[INFO] 15:24:42:695 Broker/(6898:6898): Se conecto un cliente!
+[INFO] 15:24:42:695 Broker/(6898:6898): Se conecto un cliente: 8
+[INFO] 15:24:42:695 Broker/(6898:6898): esperando
+[INFO] 15:24:42:695 Broker/(6898:6915): Llego un new pokemon
+[INFO] 15:24:42:696 Broker/(6898:6915): Me llego mensaje de 8. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:24:42:696 Broker/(6898:6915): Se notificara al socket 6
+[INFO] 15:24:42:696 Broker/(6898:6915): Se envió el mensaje al suscriptor 6
+[INFO] 15:24:42:696 Broker/(6898:6915): Se notificara al socket 7
+[INFO] 15:24:42:696 Broker/(6898:6915): Se envió el mensaje al suscriptor 7
+[INFO] 15:24:42:696 Broker/(6898:6915): No hay mas suscriptores! 
+
+[ERROR] 15:24:42:696 Broker/(6898:6915): Se desconecto el cliente 8: 
+
+[ERROR] 15:25:08:68 Broker/(6898:6913): Se desconecto el cliente 7: 
+
+[ERROR] 15:25:29:815 Broker/(6898:6909): Se desconecto el cliente 6: 
+
+[INFO] 15:28:25:126 Broker/(7066:7066): Logger iniciado: Broker.log
+
+[INFO] 15:28:25:127 Broker/(7066:7066): Configuracion broker levantada!
+[INFO] 15:28:25:127 Broker/(7066:7066): Dentro de iniciar servidor
+[INFO] 15:28:25:127 Broker/(7066:7066): Listo para escuchar a mi cliente
+[INFO] 15:28:25:127 Broker/(7066:7066): esperando
+[INFO] 15:28:30:26 Broker/(7066:7066): Se conecto un cliente!
+[INFO] 15:28:30:26 Broker/(7066:7066): Se conecto un cliente: 6
+[INFO] 15:28:30:26 Broker/(7066:7066): esperando
+[INFO] 15:28:30:27 Broker/(7066:7075): Llego un Subscribe
+[INFO] 15:28:30:27 Broker/(7066:7075): Se agrego el suscriptor 6 a la cola de NEW
+[INFO] 15:28:33:603 Broker/(7066:7066): Se conecto un cliente!
+[INFO] 15:28:33:603 Broker/(7066:7066): Se conecto un cliente: 7
+[INFO] 15:28:33:603 Broker/(7066:7066): esperando
+[INFO] 15:28:33:603 Broker/(7066:7077): Llego un new pokemon
+[INFO] 15:28:33:604 Broker/(7066:7077): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:28:33:604 Broker/(7066:7077): Se notificara al socket 6
+[INFO] 15:28:33:604 Broker/(7066:7077): Se envió el mensaje al suscriptor 6
+[INFO] 15:29:10:761 Broker/(7090:7090): Logger iniciado: Broker.log
+
+[INFO] 15:29:10:761 Broker/(7090:7090): Configuracion broker levantada!
+[INFO] 15:29:10:761 Broker/(7090:7090): Dentro de iniciar servidor
+[INFO] 15:29:10:761 Broker/(7090:7090): Listo para escuchar a mi cliente
+[INFO] 15:29:10:761 Broker/(7090:7090): esperando
+[INFO] 15:29:10:761 Broker/(7090:7090): Se conecto un cliente!
+[INFO] 15:29:10:761 Broker/(7090:7090): Se conecto un cliente: -1
+[INFO] 15:29:10:761 Broker/(7090:7090): esperando
+[INFO] 15:29:10:761 Broker/(7090:7090): Se conecto un cliente!
+[INFO] 15:29:10:761 Broker/(7090:7090): Se conecto un cliente: -1
+[INFO] 15:29:10:762 Broker/(7090:7095): Llego un new pokemon
+[INFO] 15:30:21:586 Broker/(7135:7135): Logger iniciado: Broker.log
+
+[INFO] 15:30:21:586 Broker/(7135:7135): Configuracion broker levantada!
+[INFO] 15:30:21:586 Broker/(7135:7135): Dentro de iniciar servidor
+[INFO] 15:30:21:587 Broker/(7135:7135): Listo para escuchar a mi cliente
+[INFO] 15:30:21:587 Broker/(7135:7135): esperando
+[INFO] 15:30:25:366 Broker/(7135:7135): Se conecto un cliente!
+[INFO] 15:30:25:366 Broker/(7135:7135): Se conecto un cliente: 6
+[INFO] 15:30:25:366 Broker/(7135:7157): Llego un Subscribe
+[INFO] 15:30:25:367 Broker/(7135:7157): Se agrego el suscriptor 6 a la cola de NEW
+[INFO] 15:30:25:366 Broker/(7135:7135): esperando
+[INFO] 15:30:31:284 Broker/(7135:7135): Se conecto un cliente!
+[INFO] 15:30:31:285 Broker/(7135:7135): Se conecto un cliente: 7
+[INFO] 15:30:31:286 Broker/(7135:7135): esperando
+[INFO] 15:30:31:286 Broker/(7135:7161): Llego un new pokemon
+[INFO] 15:30:31:286 Broker/(7135:7161): Me llego mensaje de 7. Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 15:30:31:286 Broker/(7135:7161): Se notificara al socket 6
+[INFO] 15:30:40:174 Broker/(7135:7161): Se envió el mensaje al suscriptor 6

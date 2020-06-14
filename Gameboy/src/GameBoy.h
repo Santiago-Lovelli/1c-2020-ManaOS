@@ -39,6 +39,7 @@ int conectarA(char *actual);
 void cumplirPedido(int argc, char *argv[]);
 void iniciarConfiguracion();
 void iniciarEstructuras();
+void atenderMensajes (HeaderDelibird headerRecibido, int socket);
 
 
 #endif /* GAMEBOY_H_ */
