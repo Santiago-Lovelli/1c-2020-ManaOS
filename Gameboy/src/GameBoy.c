@@ -261,19 +261,18 @@ void atenderMensajes (HeaderDelibird headerRecibido, int socket){
 	case d_CATCH_POKEMON:
 		log_info(logger, "Llego un catch pokemon");
 		void* packCatchPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
-		uint32_t idMensajeCatch,posicionCatchX,posicionCatchY;
+		uint32_t posicionCatchX,posicionCatchY;
 		char *catchNombrePokemon;
-		Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
-		log_info(logger,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n", headerRecibido.tipoMensaje, idMensajeCatch, catchNombrePokemon, posicionCatchX, posicionCatchY);
+		Serialize_Unpack_CatchPokemon_NoID(packCatchPokemon, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
+		log_info(logger,"Me llego mensaje catch: Pkm: %s, x: %i, y: %i\n", catchNombrePokemon, posicionCatchX, posicionCatchY);
 		free(packCatchPokemon);
 		break;
 	case d_GET_POKEMON:
 		log_info(logger, "Llego un get pokemon");
 		void* packGetPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
-		uint32_t idMensajeGet;
 		char *getNombrePokemon;
-		Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet, &getNombrePokemon);
-		log_info(logger,"Me llego mensaje de %i. Id: %i, Pkm: %s\n", headerRecibido.tipoMensaje, idMensajeGet, getNombrePokemon);
+		Serialize_Unpack_GetPokemon_NoID(packGetPokemon, &getNombrePokemon);
+		log_info(logger,"Me llego mensaje get: Pkm: %s\n", getNombrePokemon);
 		free(packGetPokemon);
 		break;
 	case d_APPEARED_POKEMON:

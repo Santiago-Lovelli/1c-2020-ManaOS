@@ -33,85 +33,59 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 		case d_NEW_POKEMON:
 			log_info(LOGGER_GENERAL, "Llego un new pokemon");
 			void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t posicionNewX,posicionNewY,newCantidad;
-			char *newNombrePokemon;
-			Serialize_Unpack_NewPokemon_NoID(packNewPokemon, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
-			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Pkm: %s, x: %i, y: %i, cant: %i\n", cliente, newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
 			enviarMensajeNewASuscriptores (packNewPokemon, SUSCRIPTORES_NEW);
 			free(packNewPokemon);
 			break;
 		case d_CATCH_POKEMON:
 			log_info(LOGGER_GENERAL, "Llego un catch pokemon");
-
 			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t idMensajeCatch,posicionCatchX,posicionCatchY;
-			char *catchNombrePokemon;
-			Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
-			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n", header.tipoMensaje,idMensajeCatch,catchNombrePokemon, posicionCatchX, posicionCatchY);
-			// Se hace lo necesario
+			enviarMensajeCatchASuscriptores (packCatchPokemon, SUSCRIPTORES_CATCH);
 			free(packCatchPokemon);
 			break;
 		case d_GET_POKEMON:
 			log_info(LOGGER_GENERAL, "Llego un get pokemon");
-
 			void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t idMensajeGet;
-			char *getNombrePokemon;
-			Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet, &getNombrePokemon);
-			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Id: %i, Pkm: %s\n", header.tipoMensaje, idMensajeGet, getNombrePokemon);
-			// Se hace lo necesario
+			enviarMensajeGetASuscriptores (packGetPokemon, SUSCRIPTORES_GET);
 			free(packGetPokemon);
 			break;
 		case d_APPEARED_POKEMON:
 			log_info(LOGGER_GENERAL, "Llego un appeared pokemon");
-
 			void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t idMensajeAppeared, posicionX, posicionY;
-			char *nombrePokemon;
-			Serialize_Unpack_AppearedPokemon(packAppearedPokemon, &idMensajeAppeared, &nombrePokemon, &posicionX, &posicionY);
-			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n", header.tipoMensaje, idMensajeAppeared, nombrePokemon, posicionX, posicionY);
-			// Se hace lo necesario
+			enviarMensajeAppearedASuscriptores (packAppearedPokemon, SUSCRIPTORES_APPEARED);
 			free(packAppearedPokemon);
 			break;
 		case d_CAUGHT_POKEMON:
 			log_info(LOGGER_GENERAL, "Llego un caught pokemon");
-
 			void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t idMensajeCaught, resultado;
-			Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught, &resultado);
-			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Id: %i, Resultado: %i\n", header.tipoMensaje, idMensajeCaught, resultado);
-			// Se hace lo necesario
+			enviarMensajeCaughtASuscriptores (packCaughtPokemon, SUSCRIPTORES_CAUGHT);
 			free(packCaughtPokemon);
 			break;
-		/*case d_LOCALIZED_POKEMON:
+		case d_LOCALIZED_POKEMON:
 			log_info(LOGGER_GENERAL, "Llego un localized pokemon");
-
 			void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t idMensajeLocalized;
+			/*uint32_t idMensajeLocalized;
 			char *localizedNombrePokemon;
-			Serialize_Unpack_LocalizedPokemon(packGetPokemon, &idMensajeGet, &getNombrePokemon);
-			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Id: %i, Pkm: %s\n", header.tipoMensaje, idMensajeGet, getNombrePokemon);
-			// Se hace lo necesario
-			free(packGetPokemon);
+			t_list * poscant;
+			Serialize_Unpack_LocalizedPokemon(packLocalizedPokemon, &idMensajeLocalized, localizedNombrePokemon,poscant);
+			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Id: %i, Pkm: %s\n", cliente, idMensajeGet, getNombrePokemon);
+			enviarMensajeLocalizedASuscriptores (packLocalizedPokemon, SUSCRIPTORES_LOCALIZED);
+			free(packLocalizedPokemon);*/
 			break;
-		*/
 		case d_ACK:
 			log_info(LOGGER_GENERAL, "Llego un acknowledged");
-			break;
-
-			/*
 			void* packAcknowledge = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			uint32_t idMensajeCaught, resultado;
-			Serialize_Unpack_ACK();
-			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Id: %i, Resultado: %i\n", header.tipoMensaje, idMensajeCaught, resultado);
-			// Se hace lo necesario
-			free(packCaughtPokemon);
-			*/
+			uint32_t idMensajeACK, resultadoACK;
+			Serialize_Unpack_ACK(packAcknowledge);
+			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Id: %i, Resultado: %i\n", cliente, idMensajeACK, resultadoACK);
+			Serialize_PackAndSend_ACK(cliente, idMensajeACK); ///definir nosotros el id
+			free(packAcknowledge);
+			break;
 		case d_SUBSCRIBE_QUEUE:
 			log_info(LOGGER_GENERAL, "Llego un Subscribe");
 			void * recibir = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			uint32_t variable = Serialize_Unpack_ACK(recibir);
 			suscribir(variable, cliente);
+			free(recibir);
 			break;
 		default:
 			log_error(LOGGER_GENERAL, "Mensaje no entendido: %i\n", header);
@@ -153,32 +127,88 @@ void suscribir(uint32_t variable, int cliente){
 	}
 }
 
-void* enviarMensajeNewASuscriptores (void* paquete, t_list* lista){
+void enviarMensajeNewASuscriptores (void* paquete, t_list* lista){
 	uint32_t posX, posY, cantidad; //idMensaje
 	char *pokemon;
 	Serialize_Unpack_NewPokemon_NoID(paquete, &pokemon, &posX, &posY, &cantidad);
-
+	log_info(LOGGER_GENERAL,"Me llego mensaje new Pkm: %s, x: %i, y: %i, cant: %i\n", pokemon, posX, posY, cantidad);
 	int lenght = list_size(lista);
-	//for (int i = 0; i<lenght; i++){
-	while (!list_is_empty(lista)){
-		//int socketCliente = list_get(lista, i);
-		int socketCliente = lista->head->data;
-		log_info(LOGGER_GENERAL, "Se notificara al socket %i", socketCliente);
+	for (int i = 0; i<lenght; i++){
+		int socketCliente = list_get(lista, i);
 		Serialize_PackAndSend_NEW_POKEMON_NoID(socketCliente, pokemon, posX, posY, cantidad);
 		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i", socketCliente);
-		lista = lista->head->next;
 	}
-
 	log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
-	/*while (!list_is_empty(lista)){
-	int socketCliente = (int)lista->head->data;
-	log_info("Se notificara al socket %i \n", socketCliente);
-	Serialize_PackAndSend_NEW_POKEMON_NoID(socketCliente, pokemon, posX, posY, cantidad);
-	log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
-	lista = lista->head->next;
-	}*/
-
 }
+
+void enviarMensajeCatchASuscriptores (void* paquete, t_list* lista){
+	uint32_t posicionCatchX, posicionCatchY;
+	char *catchNombrePokemon;
+	Serialize_Unpack_CatchPokemon_NoID(paquete, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
+	log_info(LOGGER_GENERAL,"Me llego mensaje catch, Pkm: %s, x: %i, y: %i\n", catchNombrePokemon, posicionCatchX, posicionCatchY);
+	int lenght = list_size(lista);
+	for (int i = 0; i<lenght; i++){
+		int socketCliente = list_get(lista, i);
+		Serialize_PackAndSend_CATCH_POKEMON_NoID(socketCliente, catchNombrePokemon, posicionCatchX, posicionCatchY);
+		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
+}
+	log_info(LOGGER_GENERAL, "No hay suscriptores");
+}
+
+void enviarMensajeGetASuscriptores (void* paquete, t_list* lista){
+	uint32_t idMensajeGet;
+	char *getNombrePokemon;
+	Serialize_Unpack_GetPokemon_NoID(paquete, &getNombrePokemon);
+	log_info(LOGGER_GENERAL,"Me llego mensaje get, Pkm: %s\n", getNombrePokemon);
+	int lenght = list_size(lista);
+	for (int i = 0; i<lenght; i++){
+		int socketCliente = list_get(lista, i);
+		Serialize_PackAndSend_GET_POKEMON_NoID(socketCliente, getNombrePokemon);
+		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
+	}
+	log_info(LOGGER_GENERAL, "No hay suscriptores");
+}
+
+void enviarMensajeAppearedASuscriptores (void* paquete, t_list* lista){
+	uint32_t idMensajeAppeared, posicionX, posicionY;
+	char *nombrePokemon;
+	Serialize_Unpack_AppearedPokemon(paquete, &idMensajeAppeared, &nombrePokemon, &posicionX, &posicionY);
+	log_info(LOGGER_GENERAL,"Me llego mensaje appeared Id: %i, Pkm: %s, x: %i, y: %i\n", idMensajeAppeared, nombrePokemon, posicionX, posicionY);
+	int lenght = list_size(lista);
+	for (int i = 0; i<lenght; i++){
+		int socketCliente = list_get(lista, i);
+		Serialize_PackAndSend_APPEARED_POKEMON(socketCliente, &idMensajeAppeared, nombrePokemon, posicionX, posicionY);
+		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
+	}
+	log_info(LOGGER_GENERAL, "No hay suscriptores");
+}
+
+void enviarMensajeCaughtASuscriptores (void* paquete, t_list* lista){
+	uint32_t idMensajeCaught, resultado;
+	Serialize_Unpack_CaughtPokemon(paquete, idMensajeCaught, resultado);
+	log_info(LOGGER_GENERAL,"Me llego mensaje caught Id: %i, Resultado: %i\n", idMensajeCaught, resultado);
+	int lenght = list_size(lista);
+	for (int i = 0; i<lenght; i++){
+		int socketCliente = list_get(lista, i);
+		Serialize_PackAndSend_CAUGHT_POKEMON(socketCliente, idMensajeCaught, resultado); ////hacer funcion sin id
+		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
+	}
+	log_info(LOGGER_GENERAL, "No hay suscriptores");
+}
+
+/*void enviarMensajeLocalizedASuscriptores (void* paquete, t_list* lista){
+	uint32_t idMensaje;
+	char *pokemon;
+	t_list* poscant;
+	int lenght = list_size(lista);
+	for (int i = 0; i<lenght; i++){
+		int socketCliente = list_get(lista, i);
+		Serialize_PackAndSend_LOCALIZED_POKEMON(socketCliente, idMensaje, pokemon, poscant); //hacer funcion sin id
+		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
+	}
+	log_info(LOGGER_GENERAL, "No hay suscriptores");
+}*/
+
 
 ///////FUNCIONES DE INIT///////////
 void Init(){
