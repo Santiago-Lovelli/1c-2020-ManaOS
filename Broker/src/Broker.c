@@ -165,11 +165,11 @@ void suscribir(uint32_t variable, int cliente){
 void* enviarMensajeNewASuscriptores (void* paquete, t_list* lista){
 	uint32_t idMensaje, posX, posY, cantidad;
 	const void *pokemon;
-	while (lista->elements_count == 0){
+	while (!list_is_empty(lista)){
 	int socketCliente = lista->head->data;
 	Serialize_PackAndSend_NEW_POKEMON(socketCliente, idMensaje, pokemon, posX, posY, cantidad);
 	log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
-	lista->head->next;
+	lista = lista->head->next;
 }
 	log_info(LOGGER_GENERAL, "No hay suscriptores");
 }
