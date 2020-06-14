@@ -57,6 +57,11 @@ void ActuarAnteMensaje();
 //////FUNCIONES VARIAS//////////
 void suscribir (uint32_t variable, int cliente);
 void* enviarMensajeNewASuscriptores (void* paquete, t_list* SUSCRIPTORES_NEW);
+void* enviarMensajeCatchASuscriptores (void* paquete, t_list* lista);
+void* enviarMensajeGetASuscriptores (void* paquete, t_list* lista);
+void* enviarMensajeAppearedASuscriptores (void* paquete, t_list* lista);
+void* enviarMensajeCaughtASuscriptores (void* paquete, t_list* lista);
+void* enviarMensajeLocalizedASuscriptores (void* paquete, t_list* lista);
 
 
 ////////VARIABLES GLOBALES//////////
