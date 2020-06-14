@@ -14,7 +14,7 @@ void New_pokemon(char *argv[]){
 	log_info(logger,"POSX: %i ", atoi( argv[4] ) );
 	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
 	log_info(logger,"CANTIDAD: %i ", atoi( argv[6] ) );
-	log_info(logger,"IDMENSAJE: %i ", atoi( argv[7] ) );
+	//log_info(logger,"IDMENSAJE: %i ", atoi( argv[7] ) );
 	int conexion = conectarA(argv[1]);
 	d_process procesoActual = obtenerNroProceso(argv[1]);
 	if( procesoActual == d_BROKER)
@@ -28,7 +28,7 @@ void Appeared_pokemon(char *argv[]){
 	log_info(logger,"POKEMON: %s ", argv[3] );
 	log_info(logger,"POSX: %i ", atoi( argv[4] ) );
 	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
-	log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
+	//log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
 	int conexion = conectarA(argv[1]);
 	d_process procesoActual = obtenerNroProceso(argv[1]);
 	if( procesoActual == d_BROKER)
@@ -42,9 +42,14 @@ void Catch_pokemon(char *argv[]){
 	log_info(logger,"POKEMON: %s ", argv[3] );
 	log_info(logger,"POSX: %i ", atoi( argv[4] ) );
 	log_info(logger,"POSY: %i ", atoi( argv[5] ) );
-	log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
+	//log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
 	int conexion = conectarA(argv[1]);
-	Serialize_PackAndSend_CATCH_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoi(argv[4]), atoi(argv[5]) );
+	d_process procesoActual = obtenerNroProceso(argv[1]);
+	if( procesoActual == d_BROKER)
+		Serialize_PackAndSend_CATCH_POKEMON_NoID(conexion,argv[3], atoi(argv[4]), atoi(argv[5]) );
+	else if ( procesoActual == d_GAMECARD)
+		Serialize_PackAndSend_CATCH_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoi(argv[4]), atoi(argv[5]) );
+
 }
 
 void Caught_pokemon(char *argv[]){
@@ -61,7 +66,11 @@ void Get_pokemon(char *argv[]){
 	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
 	log_info(logger,"POKEMON: %s ", argv[3] );
 	int conexion = conectarA(argv[1]);
-	Serialize_PackAndSend_GET_POKEMON_NoID(conexion, argv[3]);
+	d_process procesoActual = obtenerNroProceso(argv[1]);
+	if( procesoActual == d_BROKER)
+		Serialize_PackAndSend_GET_POKEMON_NoID(conexion, argv[3]);
+	else if ( procesoActual == d_GAMECARD)
+		Serialize_PackAndSend_GET_POKEMON(conexion, atoi(argv[4]), argv[3] );
 }
 
 void Subscribe_Queue(char *argv[]){
@@ -147,7 +156,7 @@ void cumplirPedido(int argc, char *argv[]){
 	switch( obtenerNroMensaje(argv[2]) ) {
 
 	case d_NEW_POKEMON:;
-		if(argc < 8){
+		if(argc < 7){
 		    log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
 		    break;
 		}
@@ -156,7 +165,7 @@ void cumplirPedido(int argc, char *argv[]){
 		break;
 
 	case d_APPEARED_POKEMON:;
-	    if(argc < 7){
+	    if(argc < 6){
 	    	log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
 	    	break;
 	    }
@@ -165,7 +174,7 @@ void cumplirPedido(int argc, char *argv[]){
 		break;
 
 	case d_CATCH_POKEMON:;
-		if(argc < 7){
+		if(argc < 6){
 			log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
 			break;
 		}
