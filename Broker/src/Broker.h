@@ -54,8 +54,9 @@ void EsperarClientes();
 void* AtenderCliente();
 void ActuarAnteMensaje();
 
-//////SUSCRIPCION//////////
-void agregarSuscriptor();
+//////FUNCIONES VARIAS//////////
+void suscribir (uint32_t variable, int cliente);
+void* enviarMensajeNewASuscriptores (void* paquete, t_list* SUSCRIPTORES_NEW);
 
 
 ////////VARIABLES GLOBALES//////////

@@ -41,13 +41,12 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 	switch (header.tipoMensaje) {
 		case d_NEW_POKEMON:
 			log_info(LOGGER_GENERAL, "Llego un new pokemon");
-
 			void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			uint32_t idMensajeNew,posicionNewX,posicionNewY,newCantidad;
 			char *newNombrePokemon;
 			Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
-			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n", header.tipoMensaje,idMensajeNew,newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
-			// Se hace lo necesario
+			log_info(LOGGER_GENERAL,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n", cliente,idMensajeNew,newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
+			enviarMensajeNewASuscriptores (packNewPokemon, SUSCRIPTORES_NEW);
 			free(packNewPokemon);
 			break;
 		case d_CATCH_POKEMON:
@@ -119,6 +118,9 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			*/
 		case d_SUBSCRIBE_QUEUE:
 			log_info(LOGGER_GENERAL, "Llego un Subscribe");
+			void * recibir = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+			uint32_t variable = Serialize_Unpack_ACK(recibir);
+			suscribir(variable, cliente);
 			break;
 		default:
 			log_error(LOGGER_GENERAL, "Mensaje no entendido: %i\n", header);
@@ -126,6 +128,50 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			free(packBasura);
 			break;
 	}
+}
+
+void suscribir(uint32_t variable, int cliente){
+	switch (variable){
+	case d_NEW_POKEMON:
+		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i\n a la cola de NEW", cliente);
+		list_add (SUSCRIPTORES_NEW, cliente);
+		break;
+	case d_CATCH_POKEMON:
+		log_info (LOGGER_GENERAL, "Se agrego el suscritor %i\n a la cola de CATCH", cliente);
+		list_add (SUSCRIPTORES_CATCH, cliente);
+		break;
+	case d_GET_POKEMON:
+			log_info (LOGGER_GENERAL, "Se agrego el suscritor %i\n a la cola de GET", cliente);
+			list_add (SUSCRIPTORES_GET, cliente);
+			break;
+	case d_APPEARED_POKEMON:
+			log_info (LOGGER_GENERAL, "Se agrego el suscritor %i\n a la cola de Appeared", cliente);
+			list_add (SUSCRIPTORES_APPEARED, cliente);
+			break;
+	case d_CAUGHT_POKEMON:
+			log_info (LOGGER_GENERAL, "Se agrego el suscritor %i\n a la cola de Caught", cliente);
+			list_add (SUSCRIPTORES_CAUGHT, cliente);
+			break;
+	case d_LOCALIZED_POKEMON:
+			log_info (LOGGER_GENERAL, "Se agrego el suscritor %i\n a la cola de Localized", cliente);
+			list_add (SUSCRIPTORES_LOCALIZED, cliente);
+			break;
+	default:
+		log_info (LOGGER_GENERAL, "No se suscribio");
+		break;
+	}
+}
+
+void* enviarMensajeNewASuscriptores (void* paquete, t_list* lista){
+	uint32_t idMensaje, posX, posY, cantidad;
+	const void *pokemon;
+	while (lista->elements_count == 0){
+	int socketCliente = lista->head->data;
+	Serialize_PackAndSend_NEW_POKEMON(socketCliente, idMensaje, pokemon, posX, posY, cantidad);
+	log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
+	lista->head->next;
+}
+	log_info(LOGGER_GENERAL, "No hay suscriptores");
 }
 
 ///////FUNCIONES DE INIT///////////
@@ -160,6 +206,3 @@ void ListsInit () {
 	SUSCRIPTORES_LOCALIZED = list_create();
 }
 
-void agregarSuscriptor(int id_suscriptor, t_list* lista){
-	list_add(lista, id_suscriptor);
-}
