@@ -64,12 +64,10 @@ typedef struct entrenador{
 	t_estado estado;
 	t_razonBloqueo razonBloqueo;
 	t_mision *mision;
+	int ciclosCPUAEjecutar;
+	int ciclosCPUEjecutados;
 }entrenador;
 
-typedef struct proceso{
-	entrenador* entrenador;
-	int ciclosUsados;
-}proceso;
 
 typedef struct {
 	int cliente;
@@ -279,11 +277,20 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 void hacerCaught(int idMensajeCaught, int resultadoCaught);
 
 ////////FUNCIONES PLANIFICACION////////////
-proceso* planificarSegun(char* tipoPlanificacion, t_list* procesos);
-proceso* FIFO(t_list* procesos);
-proceso* RR(t_list* procesos);
-proceso* SJFCD(t_list* procesos);
-proceso* SJFSD(t_list* procesos);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR PASADO POR ID, EN BASE A SU MISION ACTUAL
+ * CALCULA LA CANTIDAD DE RAFAGAS QUE LE VA A TOMAR REALIZARLA Y LA GUARDA
+ * DENTRO DEL MISMO ENTRENADOR, LA MISMA VARIA SI ES UN INTERCAMBIO, NUNCA
+ * USAR ESTA FUNCION EN ENTRENADORES QUE NO TIENEN UNA MISION ASIGNADA
+ */
+
+void calcularRafagasCPUAEjecutar(int idEntrenador, bool esIntercambio);
+void planificarSegun(char* tipoPlanificacion);
+void FIFO();
+void RR();
+void SJFCD();
+void SJFSD();
 unsigned long int getClockTime();
 void agregarTiempo(int cantidad);
 

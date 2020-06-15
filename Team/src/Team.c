@@ -241,6 +241,7 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 		return;
 	}
 	darMision(idEntrenador,pokemon,posicionPoke);
+	calcularRafagasCPUAEjecutar(idEntrenador, false);
 	pasarEntrenadorAEstado(idEntrenador, t_READY);
 }
 
@@ -420,7 +421,7 @@ void darMision(int idEntrenador, char* pokemon, punto point){
 }
 
 int diferenciaEntrePuntos(punto origen, punto destino){
-	return abs( (destino.x - origen.x) + (destino.y - origen.y) );
+	return abs( abs(destino.x - origen.x) + abs(destino.y - origen.y) );
 }
 
 bool necesitoEstePokemon(char *pokemon){
@@ -504,6 +505,8 @@ entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObj
 	newTrainer->estado = t_NEW;
 	newTrainer->razonBloqueo = t_NULL;
 	newTrainer->mision = NULL;
+	newTrainer->ciclosCPUAEjecutar = 0;
+	newTrainer->ciclosCPUEjecutados = 0;
 	return newTrainer;
 }
 
@@ -534,32 +537,31 @@ static void entrenadorDestroy(entrenador *self) {
 
 
 ////////////Funciones planificacion/////////////
-proceso* planificarSegun(char* tipoPlanificacion, t_list* procesos){
+void planificarSegun(char* tipoPlanificacion){
 	if(string_equals_ignore_case(tipoPlanificacion, "FIFO")){
-		return FIFO(procesos);
+		return FIFO();
 	}
 	if(string_equals_ignore_case(tipoPlanificacion, "RR")){
-		return RR(procesos);
+		return RR();
 	}
 	if(string_equals_ignore_case(tipoPlanificacion, "SJFCD")){
-		return SJFCD(procesos);
+		return SJFCD();
 	}
 	if(string_equals_ignore_case(tipoPlanificacion, "SJFSD")){
-		return SJFSD(procesos);
+		return SJFSD();
 	}
-	return NULL;
+	return;
 }
-proceso* FIFO(t_list* procesos){
+void FIFO(){
 	printf("Holis, me llamaron? Soy FIFO");
-	return list_remove(procesos, 0);
 }
-proceso* RR(t_list* procesos){
+void RR(){
 	printf("Holis, me llamaron? Soy RR");
 }
-proceso* SJFCD(t_list* procesos){
+void SJFCD(){
 	printf("Holis, me llamaron? Soy SJFCD");
 }
-proceso* SJFSD(t_list* procesos){
+void SJFSD(){
 	printf("Holis, me llamaron? Soy SJFSD");
 }
 unsigned long int getClockTime(){
@@ -568,6 +570,18 @@ unsigned long int getClockTime(){
 
 void agregarTiempo(int cantidad){
 	CLOCK += cantidad;
+}
+
+void calcularRafagasCPUAEjecutar(int idEntrenador, bool esIntercambio){
+	entrenador* trainer = list_get(ENTRENADORES_TOTALES, idEntrenador);
+	if(trainer->mision == NULL)
+		return;
+	int distancia = diferenciaEntrePuntos(trainer->posicion, trainer->mision->point);
+	if(esIntercambio)
+		distancia = distancia +5;
+	else
+		distancia = distancia +1;
+	trainer->ciclosCPUAEjecutar = distancia;
 }
 
 void setObjetivoGlobal(){
