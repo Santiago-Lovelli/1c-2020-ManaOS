@@ -240,8 +240,8 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 		log_error(logger, "No hay entrenadores disponibles");
 		return;
 	}
-	darMision(idEntrenador,pokemon,posicionPoke);
-	calcularRafagasCPUAEjecutar(idEntrenador, false);
+	darMision(idEntrenador,pokemon,posicionPoke,false);
+	calcularRafagasCPUAEjecutar(idEntrenador);
 	pasarEntrenadorAEstado(idEntrenador, t_READY);
 }
 
@@ -411,11 +411,12 @@ void sacarMision(int idEntrenador){
 	trainer->mision = NULL;
 }
 
-void darMision(int idEntrenador, char* pokemon, punto point){
+void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio){
 	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
-	t_mision *mision = malloc(sizeof(punto) + strlen(pokemon) +1);
+	t_mision *mision = malloc(sizeof(punto) + strlen(pokemon) +1 + sizeof(bool));
 	mision->point = point;
 	mision->pokemon = pokemon;
+	mision->esIntercambio = esIntercambio;
 	trainer->mision = mision;
 
 }
@@ -572,12 +573,12 @@ void agregarTiempo(int cantidad){
 	CLOCK += cantidad;
 }
 
-void calcularRafagasCPUAEjecutar(int idEntrenador, bool esIntercambio){
+void calcularRafagasCPUAEjecutar(int idEntrenador){
 	entrenador* trainer = list_get(ENTRENADORES_TOTALES, idEntrenador);
 	if(trainer->mision == NULL)
 		return;
 	int distancia = diferenciaEntrePuntos(trainer->posicion, trainer->mision->point);
-	if(esIntercambio)
+	if(trainer->mision->esIntercambio)
 		distancia = distancia +5;
 	else
 		distancia = distancia +1;

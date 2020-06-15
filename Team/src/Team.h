@@ -55,6 +55,7 @@ typedef struct punto{
 typedef struct t_mision {
 	char* pokemon;
 	punto point;
+	bool esIntercambio;
 }t_mision;
 
 typedef struct entrenador{
@@ -185,11 +186,12 @@ void descontarDeObjetivoGlobal(char *pokemon);
 void sacarMision(int idEntrenador);
 
 /*
- * ESTA FUNCION DADO UN ID ENTRENADOR, UN POKEMON Y
- * UNA POSICION; LE ASIGNA ESA MISION A ESE ENTRENADOR
+ * ESTA FUNCION DADO UN ID ENTRENADOR, UN POKEMON
+ * UNA POSICION Y SI ES UN INTERCAMBIO
+ * LE ASIGNA ESA MISION A ESE ENTRENADOR
  */
 
-void darMision(int idEntrenador, char* pokemon, punto point);
+void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio);
 
 /*
  * ESTA FUNCION DADO UN ENTRENADOR Y UNA RAZON
@@ -285,7 +287,7 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught);
  * USAR ESTA FUNCION EN ENTRENADORES QUE NO TIENEN UNA MISION ASIGNADA
  */
 
-void calcularRafagasCPUAEjecutar(int idEntrenador, bool esIntercambio);
+void calcularRafagasCPUAEjecutar(int idEntrenador);
 void planificarSegun(char* tipoPlanificacion);
 void FIFO();
 void RR();
