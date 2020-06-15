@@ -288,7 +288,19 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught);
  */
 
 void calcularRafagasCPUAEjecutar(int idEntrenador);
+
+/*
+ * ESTA FUNCION DADO UN TIPO DE PLANIFICACION LLAMA
+ * A LA FUNCION CORRESPONDIENTE
+ */
+
 void planificarSegun(char* tipoPlanificacion);
+
+/*
+ * ESTA FUNCION PLANIFICA LOS ENTRENADORES
+ * EN ESTADO READY EN FORMA FIFO
+ */
+
 void FIFO();
 void RR();
 void SJFCD();
@@ -379,6 +391,7 @@ unsigned long int CLOCK;
 int CAMBIOS_DE_CONTEXTO_REALIZADOS;
 int DEADLOCKS_PRODUCIDOS;
 int DEADLOCKS_RESUELTOS;
+int CICLOS_TOTALES;
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;

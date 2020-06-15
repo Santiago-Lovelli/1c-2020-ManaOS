@@ -539,23 +539,42 @@ static void entrenadorDestroy(entrenador *self) {
 
 ////////////Funciones planificacion/////////////
 void planificarSegun(char* tipoPlanificacion){
-	if(string_equals_ignore_case(tipoPlanificacion, "FIFO")){
-		return FIFO();
-	}
-	if(string_equals_ignore_case(tipoPlanificacion, "RR")){
-		return RR();
-	}
-	if(string_equals_ignore_case(tipoPlanificacion, "SJFCD")){
-		return SJFCD();
-	}
-	if(string_equals_ignore_case(tipoPlanificacion, "SJFSD")){
-		return SJFSD();
-	}
-	return;
+	if(string_equals_ignore_case(tipoPlanificacion, "FIFO"))
+		FIFO();
+	if(string_equals_ignore_case(tipoPlanificacion, "RR"))
+		RR();
+	if(string_equals_ignore_case(tipoPlanificacion, "SJFCD"))
+		SJFCD();
+	if(string_equals_ignore_case(tipoPlanificacion, "SJFSD"))
+		SJFSD();
 }
+
 void FIFO(){
-	printf("Holis, me llamaron? Soy FIFO");
+	entrenador* trainer;
+	int index;
+	CICLOS_TOTALES = 0;
+	while(!objetivoGlobalCumplido()){
+		while(list_is_empty(EstadoReady)){
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		trainer = list_get(EstadoReady, 0);
+		index = list_get_index(ENTRENADORES_TOTALES, trainer, (void*)mismaPosicion);
+		while( moveHacia(trainer, trainer->mision->point) ){
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		if(trainer->mision->esIntercambio){
+			printf("falta");//TODO
+			sleep(5*TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		else{
+			enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, index);
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		trainer->ciclosCPUEjecutados = trainer->ciclosCPUAEjecutar;
+		CICLOS_TOTALES = CICLOS_TOTALES + trainer->ciclosCPUEjecutados;
+	}
 }
+
 void RR(){
 	printf("Holis, me llamaron? Soy RR");
 }
