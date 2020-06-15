@@ -51,11 +51,10 @@ void* mmapeadoBloquePropio(t_log* log, uint32_t tamanioDeseado,
 
 	log_info(log, "path a escribir: %s", pathBloque);
 
-	uint32_t tamanio_archivo_de_metadata = 0;
+	uint32_t tamanio_archivo_de_metadata = tamanio_archivo(pathBloque);
 
-	if (tamanioDeseado == 0) {
-		tamanio_archivo_de_metadata = tamanio_archivo(pathBloque);
-	} else {
+	if (tamanioDeseado > tamanio_archivo_de_metadata) {
+		truncate(pathBloque, tamanioDeseado);
 		tamanio_archivo_de_metadata = tamanioDeseado;
 	}
 
@@ -72,11 +71,10 @@ void* mmapeadoBloquePropio(t_log* log, uint32_t tamanioDeseado,
 
 char *archivoMetadataPokemon(char *path, uint32_t cantidadALevantar) {
 
-	uint32_t tamanio_archivo_de_metadata = tamanio_archivo(path);
+	int tamanio_archivo_de_metadata = tamanio_archivo(path);
 
 	if (cantidadALevantar > tamanio_archivo_de_metadata) {
-		tamanio_archivo_de_metadata = cantidadALevantar;
-	} else {
+		truncate(path, cantidadALevantar);
 		tamanio_archivo_de_metadata = tamanio_archivo(path);
 	}
 
@@ -209,6 +207,24 @@ void cambiarMetadata(char* unPokemon, char* metadataNueva) {
 	}
 }
 
+char* obtenerBloqueReservadoEnChar() {
+	pthread_mutex_lock(&bitSem);
+	int bloqueReservado = buscar_espacio_en_bitmap(bitmap, loggerGeneral);
+
+	if (bloqueReservado == -1) {
+		log_error(loggerGeneral, "Error al buscar un nuevo bloque");
+		EXIT_FAILURE;
+	} else {
+		ocupar_bloque_en_bitmap(bloqueReservado, bitmap);
+	}
+
+	pthread_mutex_unlock(&bitSem);
+
+	char* numeroDeBloqueNuevo = string_itoa(bloqueReservado);
+
+	return numeroDeBloqueNuevo;
+}
+
 void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		uint32_t cantidad) {
 
@@ -241,19 +257,8 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			while (arrayConBloques[i] != NULL) {
 				log_info(loggerGeneral, "bloques %s", arrayConBloques[i]);
 
-				char* pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
-				log_info(loggerGeneral, "path %s", pathBloque);
-
-				int bloque = open(pathBloque, O_RDWR, 0);
-
-				free(pathBloque);
-
-				log_info(loggerGeneral, "Tamanio de bloque %i",
-						metadata.tamanioDeBloque);
-
-				char *bloqueConDatos = mmap(NULL, metadata.tamanioDeBloque,
-				PROT_READ | PROT_WRITE,
-				MAP_SHARED | MAP_FILE, bloque, 0);
+				char *bloqueConDatos = mmapeadoBloquePropio(loggerGeneral,
+						metadata.tamanioDeBloque, arrayConBloques[i]);
 
 				log_info(loggerGeneral, "bloqueConDatos %s", bloqueConDatos);
 
@@ -271,7 +276,9 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 			char* cantidadNueva;
 
-			char* cantidadVieja;
+			char* cantidadVieja = string_new();
+
+			char* bloquesNuevos = string_new();
 
 			while (lineasDeBloque[cantidadDeLineas] != NULL) {
 
@@ -302,6 +309,28 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				cantidadDeLineas = cantidadDeLineas + 1;
 			}
 
+			if (lineasDeBloque[cantidadDeLineas] == NULL) {
+
+				string_append(&cantidadVieja, "0");
+
+				char* lineaHastaIgual = string_new();
+				if(leido != 0){
+					string_append(&lineaHastaIgual, "\n");
+				}
+				string_append(&lineaHastaIgual, string_itoa(posicionX));
+				string_append(&lineaHastaIgual, "-");
+				string_append(&lineaHastaIgual, string_itoa(posicionY));
+				string_append(&lineaHastaIgual, "=0");
+
+				string_append(&megaChar, lineaHastaIgual);
+
+				lineasDeBloque = string_split(megaChar, "\n");
+
+				cantidadNueva = string_itoa(cantidad);
+				leido=leido+1;
+
+			}
+
 			log_info(loggerGeneral, "leido: %i", leido);
 			uint32_t bloquesIntactos = leido / metadata.tamanioDeBloque;
 			log_info(loggerGeneral, "bloquesIntactos: %i", bloquesIntactos);
@@ -311,19 +340,9 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			uint32_t escrito = 0;
 
 			while (i < bloquesIntactos) {
-				log_info(loggerGeneral, "bloque a escribir: %s",
-						arrayConBloques[i]);
 
-				char* pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
-				log_info(loggerGeneral, "path a escribir: %s", pathBloque);
-
-				int bloque = open(pathBloque, O_RDWR, 0);
-
-				free(pathBloque);
-
-				char *bloqueConDatos = mmap(NULL, metadata.tamanioDeBloque,
-				PROT_READ | PROT_WRITE,
-				MAP_SHARED | MAP_FILE, bloque, 0);
+				char* bloqueConDatos = mmapeadoBloquePropio(loggerGeneral,
+						metadata.tamanioDeBloque, arrayConBloques[i]);
 
 				memcpy(bloqueConDatos, megaChar + escrito,
 						metadata.tamanioDeBloque);
@@ -331,23 +350,19 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 				i = i + 1;
 			}
+			char *bloqueConDatos;
+			if(arrayConBloques[i] != NULL){
+				bloqueConDatos = mmapeadoBloquePropio(loggerGeneral,
+						metadata.tamanioDeBloque, arrayConBloques[i]);
+				i = i + 1;
+			}else{
+				char* numero = obtenerBloqueReservadoEnChar();
 
-			log_info(loggerGeneral, "bloque a escribir: %s",
-					arrayConBloques[i]);
+				string_append(&bloquesNuevos, numero);
 
-			char* pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
-
-			i = i + 1;
-
-			log_info(loggerGeneral, "path a escribir: %s", pathBloque);
-
-			int bloque = open(pathBloque, O_RDWR, 0);
-
-			free(pathBloque);
-
-			char *bloqueConDatos = mmap(NULL, metadata.tamanioDeBloque,
-			PROT_READ | PROT_WRITE,
-			MAP_SHARED | MAP_FILE, bloque, 0);
+				bloqueConDatos = mmapeadoBloquePropio(loggerGeneral,
+						metadata.tamanioDeBloque, numero);
+			}
 
 			uint32_t faltante = leido - escrito;
 
@@ -362,7 +377,7 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			uint32_t quedaEnBloque = metadata.tamanioDeBloque - faltante;
 
 			uint32_t quedaValor = strlen(cantidadNueva);
-			char* bloquesNuevos = string_new();
+
 
 			if (quedaEnBloque >= quedaConIgual) {
 
@@ -376,25 +391,23 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito,
 						quedaEnBloque);
 				escrito = escrito + quedaEnBloque;
-				quedaEnBloque = 0;
 				uint32_t quedaParaIgual = quedaConIgual - quedaEnBloque;
+				quedaEnBloque = 0;
+				if(arrayConBloques[i] != NULL){
+					bloqueConDatos = mmapeadoBloquePropio(loggerGeneral,
+							metadata.tamanioDeBloque, arrayConBloques[i]);
 
-				/*--Nuevo bloque--*/
-				log_info(loggerGeneral, "bloque a escribir: %s",
-						arrayConBloques[i]);
+					i = i + 1;
+				} else {
+					char* numero = obtenerBloqueReservadoEnChar();
 
-				pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
-				i = i + 1;
-				log_info(loggerGeneral, "path a escribir: %s", pathBloque);
+					string_append(&bloquesNuevos, numero);
 
-				bloque = open(pathBloque, O_RDWR, 0);
+					bloqueConDatos = mmapeadoBloquePropio(loggerGeneral,
+							metadata.tamanioDeBloque, numero);
+				}
 
-				free(pathBloque);
-
-				bloqueConDatos = mmap(NULL, metadata.tamanioDeBloque,
-				PROT_READ | PROT_WRITE,
-				MAP_SHARED | MAP_FILE, bloque, 0);
-
+				quedaEnBloque = metadata.tamanioDeBloque;
 				memcpy(bloqueConDatos, megaChar + escrito, quedaParaIgual);
 				escrito = escrito + quedaParaIgual;
 				quedaEnBloque = quedaEnBloque - quedaParaIgual;
@@ -409,60 +422,45 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				escritoEnElBloque = escritoEnElBloque + quedaValor;
 				//me estoy salteando la cantidad vieja para cuando lea del megachar
 				quedaEnBloque = quedaEnBloque - quedaValor;
-
-				memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito,
-						quedaEnBloque);
-				escrito = escrito + quedaEnBloque;
-				escritoEnElBloque = escritoEnElBloque + quedaEnBloque;
-				quedaEnBloque = 0;
+				if(escrito<leido){
+					memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito,
+							quedaEnBloque);
+					escrito = escrito + quedaEnBloque;
+					escritoEnElBloque = escritoEnElBloque + quedaEnBloque;
+					quedaEnBloque = 0;
+				}
 
 			} else {
 				memcpy(bloqueConDatos + escritoEnElBloque, cantidadNueva,
 						quedaEnBloque);
 				quedaValor = quedaValor - quedaEnBloque;
 
-				/*--Nuevo bloque--*/
+				char* bloqueAlevantar;
 
 				if (arrayConBloques[i] != NULL) {
-					log_info(loggerGeneral, "bloque a escribir: %s",
-							arrayConBloques[i]);
+					bloqueAlevantar = arrayConBloques[i];
 
-					pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
-
-					log_info(loggerGeneral, "bloque a escribir: %s",
-							arrayConBloques[i]);
-					pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
 					i = i + 1;
 				} else {
-					char* numeroDeBloqueNuevo = string_itoa(
-							buscar_espacio_en_bitmap(bitmap, loggerGeneral));
+
+					char* numeroDeBloqueNuevo = obtenerBloqueReservadoEnChar();
 
 					string_append(&bloquesNuevos, numeroDeBloqueNuevo);
 
-					log_info(loggerGeneral, "bloque a escribir: %s",
-							numeroDeBloqueNuevo);
-
-					pathBloque = obtenerPathDeBloque(numeroDeBloqueNuevo);
-					log_info(loggerGeneral, "path a escribir: %s", pathBloque);
+					bloqueAlevantar = numeroDeBloqueNuevo;
 				}
 
-				log_info(loggerGeneral, "path a escribir: %s", pathBloque);
-
-				truncate(pathBloque, metadata.tamanioDeBloque);
-
-				bloque = open(pathBloque, O_RDWR, 0);
-
-				free(pathBloque);
-
-				bloqueConDatos = mmap(NULL, metadata.tamanioDeBloque,
-				PROT_READ | PROT_WRITE,
-				MAP_SHARED | MAP_FILE, bloque, 0);
+				bloqueConDatos = mmapeadoBloquePropio(loggerGeneral,
+						metadata.tamanioDeBloque, bloqueAlevantar);
 
 				log_info(loggerGeneral, "::::::: HAAAAAA :::::\n %s",
 						bloqueConDatos);
 
-				memcpy(bloqueConDatos,
-						cantidadNueva + strlen(cantidadNueva) - quedaValor,
+				int desplazamiento = strlen(cantidadNueva) - quedaValor;
+
+				log_info(loggerGeneral, "%i", desplazamiento);
+
+				memcpy(bloqueConDatos, cantidadNueva + desplazamiento,
 						quedaValor);
 
 				log_info(loggerGeneral, "::::::: HAAAAAA DOS:::::\n %s",
@@ -473,57 +471,44 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				//me estoy salteando la cantidad vieja para cuando lea del megachar
 				quedaEnBloque = metadata.tamanioDeBloque - quedaValor;
 
-				memcpy(bloqueConDatos + escritoEnElBloque, megaChar + escrito,
-						quedaEnBloque);
-				escrito = escrito + quedaEnBloque;
+				int faltanteDelMegaChar = strlen(megaChar) - escrito;
 
-				quedaEnBloque = 0;
+				if (quedaEnBloque >= faltanteDelMegaChar) {
+					memcpy(bloqueConDatos + escritoEnElBloque,
+							megaChar + escrito, faltanteDelMegaChar);
+					escrito = escrito + faltanteDelMegaChar;
+					quedaEnBloque = quedaEnBloque - faltanteDelMegaChar;
+				} else {
+					memcpy(bloqueConDatos + escritoEnElBloque,
+							megaChar + escrito, quedaEnBloque);
+					escrito = escrito + quedaEnBloque;
+					quedaEnBloque = 0;
+				}
+
 			}
 
 			//A copiar la info que falta en el archivo
 
-			char** tam = string_split(metadataDePokemon->inicioSize, "\n");
-			uint32_t tamanioOriginal = atoi(tam[0]);
-			//aca la estoy cagando?
-			uint32_t faltanteDelMegaChar = escrito - tamanioOriginal;
+			uint32_t tamanioOriginal = strlen(megaChar);
+			int faltanteDelMegaChar = tamanioOriginal - escrito;
 
-			while (escrito < faltanteDelMegaChar) {
+			while (faltanteDelMegaChar > 0) {
 
 				if (arrayConBloques[i] == NULL) {
-					char* numeroDeBloqueNuevo = string_itoa(
-							buscar_espacio_en_bitmap(bitmap, loggerGeneral));
+					char* numeroDeBloqueNuevo = obtenerBloqueReservadoEnChar();
 
 					string_append(&bloquesNuevos, numeroDeBloqueNuevo);
 
-					log_info(loggerGeneral, "bloque a escribir: %s",
-							numeroDeBloqueNuevo);
-
-					pathBloque = obtenerPathDeBloque(numeroDeBloqueNuevo);
-					log_info(loggerGeneral, "path a escribir: %s", pathBloque);
-
-					bloque = open(pathBloque, O_RDWR, 0);
-
-					free(pathBloque);
-
-					bloqueConDatos = mmap(NULL, metadata.tamanioDeBloque,
-					PROT_READ | PROT_WRITE,
-					MAP_SHARED | MAP_FILE, bloque, 0);
+					bloqueConDatos = mmapeadoBloquePropio(loggerGeneral,
+							metadata.tamanioDeBloque, numeroDeBloqueNuevo);
 
 					quedaEnBloque = metadata.tamanioDeBloque;
 				} else {
 					log_info(loggerGeneral, "bloque a escribir: %s",
 							arrayConBloques[i]);
 
-					pathBloque = obtenerPathDeBloque(arrayConBloques[i]);
-					log_info(loggerGeneral, "path a escribir: %s", pathBloque);
-
-					bloque = open(pathBloque, O_RDWR, 0);
-
-					free(pathBloque);
-
-					bloqueConDatos = mmap(NULL, metadata.tamanioDeBloque,
-					PROT_READ | PROT_WRITE,
-					MAP_SHARED | MAP_FILE, bloque, 0);
+					bloqueConDatos = mmapeadoBloquePropio(loggerGeneral,
+							metadata.tamanioDeBloque, arrayConBloques[i]);
 
 					quedaEnBloque = metadata.tamanioDeBloque;
 				}
@@ -547,20 +532,24 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 			char* metadataPost = string_duplicate("DIRECTORY=N\nSIZE=");
 
-			uint32_t tamanioNuevoFinal = tamanioOriginal + strlen(cantidadVieja)
-					- strlen(cantidadNueva);
+			uint32_t tamanioNuevoFinal = tamanioOriginal + strlen(cantidadNueva)
+					- strlen(cantidadVieja);
 			string_append(&metadataPost, string_itoa(tamanioNuevoFinal));
 			string_append(&metadataPost, "\n");
 			string_append(&metadataPost, "BLOCKS=[");
 			int aux = 0;
-			for (int j = 0; j < i; ++j) {
+			uint32_t bloquesTotales = ceil(
+					(float) tamanioNuevoFinal / metadata.tamanioDeBloque);
+			for (int j = 0; j < bloquesTotales; ++j) {
 				if (arrayConBloques[j] != NULL) {
 					string_append(&metadataPost, arrayConBloques[j]);
 					if (arrayConBloques[j + 1] != NULL) {
 						string_append(&metadataPost, ",");
 					}
 				} else {
-					string_append(&metadataPost, ",");
+					if(cantidadDeLineas != 0){
+						string_append(&metadataPost, ",");
+					}
 					string_append(&metadataPost, &bloquesNuevos[aux]);
 					aux = aux + 1;
 				}
@@ -570,7 +559,6 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			cambiarMetadata(pkm, metadataPost);
 
 			/*----------------------------------------------------------------*/
-			sleep(100);
 			break;
 		} else {
 			pthread_mutex_unlock(&semaforoDePokemon->semaforoDePokemon);
@@ -636,13 +624,12 @@ void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	bool existe = existePokemon(pkm);
 
 	if (!existe) {
-		log_error(loggerGeneral, "NO existe el pokemon: %s", pkm);
+		log_error(loggerGeneral, "NO existe el pokemon... pero se esta creando: %s", pkm);
 		crearPokemon(pkm);
-		agregarPosicionA(pkm, posicionX, posicionY, cantidad);
 	} else {
 		log_info(loggerGeneral, "Existe el pokemon %s", pkm);
-		agregarPosicionA(pkm, posicionX, posicionY, cantidad);
 	}
+		agregarPosicionA(pkm, posicionX, posicionY, cantidad);
 }
 
 void atender(HeaderDelibird header, int cliente, t_log* logger) {
@@ -978,6 +965,33 @@ void cargarListaAtual() {
 	}
 }
 
+char* pathBlock() {
+	char* path = string_new();
+	string_append(&path, montajeDeArchivo());
+	string_append(&path, "/Blocks/");
+	return path;
+}
+
+void iniciarBloques() {
+	char* rutaBlock = pathBlock();
+	for (int i = 0; i < metadata.bloques; ++i) {
+		char* path = string_new();
+		string_append(&path, rutaBlock);
+		string_append(&path, string_itoa(i));
+		string_append(&path, ".bin");
+
+		log_info(loggerGeneral, "path: %s", path);
+
+		FILE *block;
+		block = fopen(path, "a");
+		free(block);
+
+		truncate(path, metadata.tamanioDeBloque);
+
+		free(path);
+	}
+}
+
 void finalizar() {
 	log_destroy(loggerGeneral);
 	config_destroy(archivo_de_configuracion);
@@ -988,7 +1002,15 @@ int main(void) {
 	levantarLogYArchivoDeConfiguracion();
 	cargarListaAtual();
 	cargarMetadata();
-	iniciarBitmap();
+	iniciarBloques();
+	levantarBitmap();
+
+//	bitarray_clean_bit(bitmap,7);
+//	bitarray_clean_bit(bitmap,8);
+//	bitarray_clean_bit(bitmap,9);
+//	sleep(100);
+
+	pthread_mutex_init(&bitSem, NULL);
 
 	pthread_t* servidor = malloc(sizeof(pthread_t));
 	iniciarServidorDeGameBoy(servidor);

@@ -17,6 +17,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <Lista/lista.h>
+#include <math.h>
 
 t_log * loggerGeneral;
 t_config *archivo_de_configuracion;
@@ -47,7 +48,7 @@ typedef struct {
 
 m_metadata metadata;
 t_bitarray * bitmap;
-
+pthread_mutex_t bitSem;
 
 int crearDirectorioEn(char *path);
 void* atenderGameboy();
