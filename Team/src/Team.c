@@ -81,7 +81,16 @@ uint32_t recibirResponse(int conexion, HeaderDelibird headerACK){
 
 
 void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch){
-	int conexion = iniciarConexionABroker();
+	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+	if(conexion == -1){
+		log_error(TEAM_LOG,"No se pudo conectar con el Broker");
+		entrenador *trainer = list_get(ENTRENADORES_TOTALES, idEntrenadorQueMandaCatch);
+		list_add(trainer->pokemones, pokemon);
+		descontarDeObjetivoGlobal(pokemon);
+		trainer->razonBloqueo = t_DESOCUPADO;
+		sacarMision(idEntrenadorQueMandaCatch);
+		//comportamiento Default es asumir que el pokemon pudo atraparse
+	}
 	Serialize_PackAndSend_CATCH_POKEMON_NoID(conexion, pokemon, posX, posY);
 	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
 	int idEsperado = recibirResponse(conexion, headerACK);
@@ -94,7 +103,11 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 }
 
 void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
-	int conexion = iniciarConexionABroker();
+	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+	if(conexion == -1){
+		log_error(TEAM_LOG,"No se pudo conectar con el Broker");
+		return; //comportamiento Default es asumir que el pokemon no esta
+	}
 	Serialize_PackAndSend_GET_POKEMON_NoID(conexion,pokemon);
 	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
 	recibirResponse(conexion, headerACK); //NO ESTOY USANDO ESTE DATO
