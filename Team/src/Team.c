@@ -28,8 +28,7 @@ void inicializar(){
 			printf("Pokemon objetivo n° %d es un: %s \n", j, entrenador->pokemonesObjetivo[j]);
 		}
 	}
-	//cargarEstadoNew(); //
-	setObjetivoGlobal(); //
+	setObjetivoGlobal();
 	log_info (TEAM_LOG, "TEAM OK");
 	//iniciarHilos();
 	pthread_t* servidor = malloc(sizeof(pthread_t));
@@ -360,16 +359,13 @@ void sacarEntrenadorDeEstadoActual(entrenador* trainer){
 	trainer->razonBloqueo = t_NULL;
 	switch(trainer->estado){
 	case t_NEW:;
-		index = list_get_index(EstadoNew, trainer, (void*)mismaPosicion);
-		eliminarDeListaIndex(index,EstadoNew);
+		eliminarDeListaIndex(trainer->tid,EstadoNew);
 		break;
 	case t_READY:;
-		index = list_get_index(EstadoReady, trainer, (void*)mismaPosicion);
-		eliminarDeListaIndex(index,EstadoReady);
+		eliminarDeListaIndex(trainer->tid,EstadoReady);
 		break;
 	case t_BLOCKED:;
-		index = list_get_index(EstadoBlock, trainer, (void*)mismaPosicion);
-		eliminarDeListaIndex(index,EstadoBlock);
+		eliminarDeListaIndex(trainer->tid,EstadoBlock);
 		break;
 	case t_EXEC:;
 		if(mismaPosicion(EstadoExec, trainer))
@@ -378,8 +374,7 @@ void sacarEntrenadorDeEstadoActual(entrenador* trainer){
 			printf("Este entrenador NO esta en exec");
 		break;
 	case t_EXIT:;
-		index = list_get_index(EstadoExit, trainer, (void*)mismaPosicion);
-		eliminarDeListaIndex(index,EstadoExit);
+		eliminarDeListaIndex(trainer->tid,EstadoExit);
 		break;
 	default:;
 		printf("Estado invalido");
@@ -492,6 +487,7 @@ void iniciarConfig(){
 
 void crearEntrenadores(){
 	ENTRENADORES_TOTALES = list_create();
+	AUX_ID_TRAINER = 0;
 	for (int i = 0; TEAM_CONFIG.POSICIONES_ENTRENADORES[i] != NULL; i++){
 		punto punto = crearPunto(TEAM_CONFIG.POSICIONES_ENTRENADORES[i]);
 		char ** pokemones = string_split(TEAM_CONFIG.POKEMON_ENTRENADORES[i], "|");
@@ -513,6 +509,7 @@ punto crearPunto(char * posiciones){
 
 entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObjetivo){
 	entrenador * newTrainer = malloc(sizeof(entrenador));
+	newTrainer->tid = AUX_ID_TRAINER;
 	newTrainer->posicion = punto;
 	newTrainer->pokemones = pokemones;
 	newTrainer->pokemonesObjetivo = pokemonesObjetivo;
@@ -521,6 +518,7 @@ entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObj
 	newTrainer->mision = NULL;
 	newTrainer->ciclosCPUAEjecutar = 0;
 	newTrainer->ciclosCPUEjecutados = 0;
+	AUX_ID_TRAINER = AUX_ID_TRAINER + 1 ;
 	return newTrainer;
 }
 
@@ -571,7 +569,6 @@ void FIFO(){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
 		trainer = list_get(EstadoReady, 0);
-		index = list_get_index(ENTRENADORES_TOTALES, trainer, (void*)mismaPosicion);
 		while( moveHacia(trainer, trainer->mision->point) ){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
@@ -580,7 +577,7 @@ void FIFO(){
 			sleep(5*TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
 		else{
-			enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, index);
+			enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
 		trainer->ciclosCPUEjecutados = trainer->ciclosCPUAEjecutar;

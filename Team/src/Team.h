@@ -59,6 +59,7 @@ typedef struct t_mision {
 }t_mision;
 
 typedef struct entrenador{
+	int tid; //trainer ID jeje soy re gracioso
 	punto posicion;
 	char ** pokemones;
 	char ** pokemonesObjetivo;
@@ -400,6 +401,7 @@ t_dictionary * OBJETIVO_GLOBAL;
 t_list * ENTRENADORES_TOTALES;
 t_list * POKEMONES_ATRAPADOS;
 t_list * ID_QUE_NECESITO;
+int AUX_ID_TRAINER;
 
 ///////Estados//////////
 t_list* EstadoNew;
