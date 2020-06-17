@@ -429,6 +429,26 @@ void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio)
 
 }
 
+void cumplirMision(entrenador* trainer){
+	while( !entrenadorCumplioObjetivo(trainer) ){
+		//wait semaforomision?
+		//wait sem de plani?
+		while( moveHacia(trainer, trainer->mision->point) ){
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		if(trainer->mision->esIntercambio){
+			printf("falta");//TODO
+			sleep(5*TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		else{
+			enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		trainer->ciclosCPUEjecutados = trainer->ciclosCPUAEjecutar;
+		CICLOS_TOTALES = CICLOS_TOTALES + trainer->ciclosCPUEjecutados;
+	}
+}
+
 int diferenciaEntrePuntos(punto origen, punto destino){
 	return abs( abs(destino.x - origen.x) + abs(destino.y - origen.y) );
 }

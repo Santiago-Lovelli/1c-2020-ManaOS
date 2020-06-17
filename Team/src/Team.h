@@ -195,6 +195,13 @@ void sacarMision(int idEntrenador);
 void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio);
 
 /*
+ * ESTA FUNCION DADO EL ENTRENADOR PASADO POR PARAMETROS
+ * CUMPLE SU MISION Y SE QUEDA A LA ESPERA DE OTRA
+ */
+
+void cumplirMision(entrenador* trainer);
+
+/*
  * ESTA FUNCION DADO UN ENTRENADOR Y UNA RAZON
  * PASA EL ESTADO DE ESTE A BLOQUEADO PARA BLOQUEAR
  * A UN ENTRENADOR ES IMPORTANTE QUE SE USE ESTA
