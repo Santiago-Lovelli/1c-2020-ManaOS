@@ -225,7 +225,68 @@ char* obtenerBloqueReservadoEnChar() {
 	return numeroDeBloqueNuevo;
 }
 
-void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
+int minimo(int unNumero, int otroNumero){
+	if(unNumero<otroNumero){
+		return unNumero;
+	}
+	return otroNumero;
+}
+
+int maximo(int unNumero, int otroNumero){
+	if(unNumero>otroNumero){
+		return unNumero;
+	}
+	return otroNumero;
+}
+
+char* leerBloques(char** bloques, uint32_t tamanio){
+	char* leido= malloc(tamanio);
+	int i = 0;
+	int desplazamiento = 0;
+	while (bloques[i] != NULL) {
+		log_info(loggerGeneral, "bloques %s", bloques[i]);
+
+		char *bloqueConDatos = mmapeadoBloquePropio(loggerGeneral,
+				metadata.tamanioDeBloque, bloques[i]);
+
+		log_info(loggerGeneral, "bloqueConDatos %s", bloqueConDatos);
+		if(tamanio - desplazamiento < metadata.tamanioDeBloque){
+			memcpy(leido+desplazamiento,bloqueConDatos,tamanio - desplazamiento);
+			desplazamiento = desplazamiento + tamanio - desplazamiento;
+		} else{
+			memcpy(leido+desplazamiento,bloqueConDatos,metadata.tamanioDeBloque);
+			desplazamiento = desplazamiento + metadata.tamanioDeBloque;
+		}
+		i = i + 1;
+	}
+
+	log_info(loggerGeneral, "El archivo del pokemon es:\n%s", leido);
+
+	return leido;
+}
+
+int numeroDeLineas(char **lineasDeBloque, int posicionX, int posicionY){
+	int cantidadDeLineas = 0;
+	while (lineasDeBloque[cantidadDeLineas] != NULL) {
+
+		log_info(loggerGeneral, "lineas %i: %s mide: %i",
+				cantidadDeLineas, lineasDeBloque[cantidadDeLineas],
+				strlen(lineasDeBloque[cantidadDeLineas]));
+
+		if (esEstaPosicion(lineasDeBloque[cantidadDeLineas], posicionX,
+				posicionY)) {
+
+			log_info(loggerGeneral, "Esta en linea: %s",
+					lineasDeBloque[cantidadDeLineas]);
+			return cantidadDeLineas;
+		}
+		cantidadDeLineas = cantidadDeLineas + 1;
+	}
+	log_info(loggerGeneral, "No se ha encontrado la posicion");
+	return -1;
+}
+
+void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		uint32_t cantidad) {
 
 	p_metadata* metadataDePokemon = obtenerMetadataEnteraDePokemon(pkm);
@@ -248,73 +309,26 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 					"\n");
 			char** arrayConBloques = string_get_string_as_array(
 					bloquesEnUno[0]);
-			int i = 0;
 
 			/*-------------------------------Recorriendo bloques---------------------------------*/
+			char** tamEnCero = string_split(metadataDePokemon->inicioSize, "\n");
+			int tamanioDelPokemon = atoi(tamEnCero[0]);
 
-			char* megaChar = string_new();
-
-			while (arrayConBloques[i] != NULL) {
-				log_info(loggerGeneral, "bloques %s", arrayConBloques[i]);
-
-				char *bloqueConDatos = mmapeadoBloquePropio(loggerGeneral,
-						metadata.tamanioDeBloque, arrayConBloques[i]);
-
-				log_info(loggerGeneral, "bloqueConDatos %s", bloqueConDatos);
-
-				string_append(&megaChar, bloqueConDatos);
-
-				i = i + 1;
-			}
-
-			log_info(loggerGeneral, "levantado \n%s", megaChar);
+			char* megaChar = leerBloques(arrayConBloques,tamanioDelPokemon);
 
 			char** lineasDeBloque = string_split(megaChar, "\n");
 
 			int cantidadDeLineas = 0;
+
 			int leido = 0;
+			char* lineaConDePosicion = string_new();
 
-			char* cantidadNueva;
+			cantidadDeLineas = numeroDeLineas(lineasDeBloque,posicionX, posicionY);
 
-			char* cantidadVieja = string_new();
-
-			char* bloquesNuevos = string_new();
-
-			while (lineasDeBloque[cantidadDeLineas] != NULL) {
-
-				log_info(loggerGeneral, "lineas %i: %s mide: %i",
-						cantidadDeLineas, lineasDeBloque[cantidadDeLineas],
-						strlen(lineasDeBloque[cantidadDeLineas]));
-
-				if (esEstaPosicion(lineasDeBloque[cantidadDeLineas], posicionX,
-						posicionY)) {
-
-					log_info(loggerGeneral, "Esta en linea: %s",
-							lineasDeBloque[cantidadDeLineas]);
-
-					char** cantidadViejaEnUno = string_split(
-							lineasDeBloque[cantidadDeLineas], "=");
-					cantidadVieja = cantidadViejaEnUno[1];
-
-					uint32_t cantidadActual = nuevaCantidad(
-							lineasDeBloque[cantidadDeLineas], cantidad);
-
-					log_info(loggerGeneral, "Nueva Cantidad: %i",
-							cantidadActual);
-					cantidadNueva = string_itoa(cantidadActual);
-					break;
-				}
-
-				leido = leido + strlen(lineasDeBloque[cantidadDeLineas]) + 1;
-				cantidadDeLineas = cantidadDeLineas + 1;
-			}
-
-			if (lineasDeBloque[cantidadDeLineas] == NULL) {
-
-				string_append(&cantidadVieja, "0");
+			if (cantidadDeLineas == -1) {
 
 				char* lineaHastaIgual = string_new();
-				if(leido != 0){
+				if(tamanioDelPokemon != 0){
 					string_append(&lineaHastaIgual, "\n");
 				}
 				string_append(&lineaHastaIgual, string_itoa(posicionX));
@@ -322,22 +336,61 @@ void agregarPosicionA(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				string_append(&lineaHastaIgual, string_itoa(posicionY));
 				string_append(&lineaHastaIgual, "=0");
 
+				string_append(&lineaConDePosicion, lineaHastaIgual);
+
 				string_append(&megaChar, lineaHastaIgual);
 
 				lineasDeBloque = string_split(megaChar, "\n");
 
-				cantidadNueva = string_itoa(cantidad);
-				leido=leido+1;
+				cantidadDeLineas = numeroDeLineas(lineasDeBloque,posicionX, posicionY);
+			}
+
+			/*
+			 * REFACTOR
+			 *
+			 * */
+
+			int contadorDeBloque = 0;
+			int escritoEnBloque = 0;
+			int faltanteEnBloque = 0;
+			char* bloqueAEscribir;
+			char* bloquesNuevos = string_new();
+			int escrito = 0;
+			int faltaEscribirDelOriginal = tamanioDelPokemon;
+			int tamanioALevantar;
+
+			for (int lineaActual = 0; lineaActual <= cantidadDeLineas; ++lineaActual) {
+
+				if(escritoEnBloque == metadata.tamanioDeBloque){
+
+					if(arrayConBloques[contadorDeBloque] != NULL){
+
+						tamanioALevantar = minimo(metadata.tamanioDeBloque, faltaEscribirDelOriginal);
+
+						bloqueAEscribir = mmapeadoBloquePropio(loggerGeneral, tamanioALevantar,arrayConBloques[contadorDeBloque]);
+
+					} else {
+						//nuevo bloque
+					}
+				}
+
+
+				memcpy(bloqueAEscribir+escritoEnBloque,megaChar+escrito,strlen(lineasDeBloque[lineaActual]));
+
 
 			}
 
-			log_info(loggerGeneral, "leido: %i", leido);
+			/*
+			 * FIN DE REFACTOR
+			 *
+			 * */
+
 			uint32_t bloquesIntactos = leido / metadata.tamanioDeBloque;
 			log_info(loggerGeneral, "bloquesIntactos: %i", bloquesIntactos);
 
-			i = 0;
-
 			uint32_t escrito = 0;
+
+			int i = 0;
 
 			while (i < bloquesIntactos) {
 
@@ -629,7 +682,7 @@ void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	} else {
 		log_info(loggerGeneral, "Existe el pokemon %s", pkm);
 	}
-		agregarPosicionA(pkm, posicionX, posicionY, cantidad);
+		agregarPokemonesNuevos(pkm, posicionX, posicionY, cantidad);
 }
 
 void atender(HeaderDelibird header, int cliente, t_log* logger) {
