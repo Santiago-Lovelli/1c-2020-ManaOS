@@ -581,28 +581,7 @@ void planificarSegun(char* tipoPlanificacion){
 }
 
 void FIFO(){
-	entrenador* trainer;
-	int index;
-	CICLOS_TOTALES = 0;
-	while(!objetivoGlobalCumplido()){
-		while(list_is_empty(EstadoReady)){
-			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
-		}
-		trainer = list_get(EstadoReady, 0);
-		while( moveHacia(trainer, trainer->mision->point) ){
-			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
-		}
-		if(trainer->mision->esIntercambio){
-			printf("falta");//TODO
-			sleep(5*TEAM_CONFIG.RETARDO_CICLO_CPU);
-		}
-		else{
-			enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
-			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
-		}
-		trainer->ciclosCPUEjecutados = trainer->ciclosCPUAEjecutar;
-		CICLOS_TOTALES = CICLOS_TOTALES + trainer->ciclosCPUEjecutados;
-	}
+	printf("Holis, me llamaron? Soy FIFO");
 }
 
 void RR(){
