@@ -433,7 +433,9 @@ void cumplirMision(entrenador* trainer){
 	while( !entrenadorCumplioObjetivo(trainer) ){
 		//wait semaforomision?
 		//wait sem de plani?
+		printf("Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
 		while( moveHacia(trainer, trainer->mision->point) ){
+			printf("Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
 		if(trainer->mision->esIntercambio){
@@ -441,6 +443,7 @@ void cumplirMision(entrenador* trainer){
 			sleep(5*TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
 		else{
+			printf("Le voy a tirar una pokebola a %s \n", trainer->mision->pokemon);
 			enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
@@ -583,7 +586,6 @@ void planificarSegun(char* tipoPlanificacion){
 void FIFO(){
 	printf("Holis, me llamaron? Soy FIFO");
 }
-
 void RR(){
 	printf("Holis, me llamaron? Soy RR");
 }
