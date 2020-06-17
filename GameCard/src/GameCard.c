@@ -357,28 +357,38 @@ void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			char* bloquesNuevos = string_new();
 			int escrito = 0;
 			int faltaEscribirDelOriginal = tamanioDelPokemon;
-			int tamanioALevantar;
+			int escritoDeLinea = 0;
 
 			for (int lineaActual = 0; lineaActual <= cantidadDeLineas; ++lineaActual) {
+				while(escritoDeLinea < strlen(lineasDeBloque[lineaActual])){
 
-				if(escritoEnBloque == metadata.tamanioDeBloque){
+					if(escritoEnBloque == metadata.tamanioDeBloque){
 
-					if(arrayConBloques[contadorDeBloque] != NULL){
+						if(arrayConBloques[contadorDeBloque] != NULL){
+							bloqueAEscribir = mmapeadoBloquePropio(loggerGeneral, metadata.tamanioDeBloque,arrayConBloques[contadorDeBloque]);
+						} else {
+							char* numero = obtenerBloqueReservadoEnChar();
+							string_append(&bloquesNuevos, numero);
+							bloqueAEscribir = mmapeadoBloquePropio(loggerGeneral,
+									metadata.tamanioDeBloque, numero);
+						}
 
-						tamanioALevantar = minimo(metadata.tamanioDeBloque, faltaEscribirDelOriginal);
-
-						bloqueAEscribir = mmapeadoBloquePropio(loggerGeneral, tamanioALevantar,arrayConBloques[contadorDeBloque]);
-
-					} else {
-						//nuevo bloque
+						escritoEnBloque = 0;
+						faltanteEnBloque = metadata.tamanioDeBloque;
 					}
+
+					int aEscribir = minimo(strlen(lineasDeBloque[lineaActual]) - escritoDeLinea,faltanteEnBloque);
+
+					memcpy(bloqueAEscribir+escritoEnBloque,megaChar+escrito,aEscribir);
+
+					escritoEnBloque = escritoEnBloque + aEscribir;
+					escrito = escrito + aEscribir;
+					escritoDeLinea = escritoDeLinea + aEscribir;
 				}
-
-
-				memcpy(bloqueAEscribir+escritoEnBloque,megaChar+escrito,strlen(lineasDeBloque[lineaActual]));
-
-
 			}
+
+			char** lineaSeparadaPorIgual = string_split(lineasDeBloque[cantidadDeLineas],"=");
+			int cantidadVieja = atoi(lineaSeparadaPorIgual[1]);
 
 			/*
 			 * FIN DE REFACTOR
