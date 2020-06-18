@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include "Logger/Logger.h"
-
+#include <semaphore.h>
 //Ver como crear lista de listas
 /////////ESTRUCTURA/////////
 
@@ -68,6 +68,7 @@ typedef struct entrenador{
 	t_mision *mision;
 	int ciclosCPUAEjecutar;
 	int ciclosCPUEjecutados;
+	sem_t semaforoDeEntrenador;
 }entrenador;
 
 
@@ -288,6 +289,14 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught);
 
 ////////FUNCIONES PLANIFICACION////////////
 
+
+/*
+ * ESTA FUNCION CREA EL HILO QUE ESTARA
+ * EJECUTANDO EL ALGORITMO
+ */
+
+void crear_hilo_planificacion();
+
 /*
  * ESTA FUNCION DADO UN ENTRENADOR PASADO POR ID, EN BASE A SU MISION ACTUAL
  * CALCULA LA CANTIDAD DE RAFAGAS QUE LE VA A TOMAR REALIZARLA Y LA GUARDA
@@ -303,6 +312,12 @@ void calcularRafagasCPUAEjecutar(int idEntrenador);
  */
 
 void planificarSegun(char* tipoPlanificacion);
+
+/* ESTA FUNCION DADO UN ENTRENADOR SUMA LA CANTIDAD
+ * ciclos EN SUS RAFAGAS EJECUTADAS
+ */
+
+void sumarXCiclos(entrenador *trainer, int ciclos);
 
 /*
  * ESTA FUNCION PLANIFICA LOS ENTRENADORES
@@ -400,6 +415,7 @@ int CAMBIOS_DE_CONTEXTO_REALIZADOS;
 int DEADLOCKS_PRODUCIDOS;
 int DEADLOCKS_RESUELTOS;
 int CICLOS_TOTALES;
+sem_t semaforoTermine;
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;
@@ -418,6 +434,7 @@ entrenador* EstadoExec;
 t_list* EstadoExit;
 
 /////////HILOS///////////
+pthread_t hiloPlanificacion;
 pthread_t hiloEscucha;
 pthread_t hiloConexionBroker;
 #endif /* TEAM_H_ */
