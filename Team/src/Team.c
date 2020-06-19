@@ -94,7 +94,7 @@ void sumarPokemon(entrenador* trainer, char* pokemon){
 void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch){
 	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
 	if(conexion == -1){
-		log_error(TEAM_LOG,"No se pudo conectar con el Broker");
+		log_error(TEAM_LOG,"No se pudo conectar con el Broker. Se procede con comportamiento DEFAULT");
 		entrenador *trainer = list_get(ENTRENADORES_TOTALES, idEntrenadorQueMandaCatch);
 		sumarPokemon(trainer,pokemon);
 		descontarDeObjetivoGlobal(pokemon);
@@ -118,7 +118,7 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
 	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
 	if(conexion == -1){
-		log_error(TEAM_LOG,"No se pudo conectar con el Broker");
+		log_error(TEAM_LOG,"No se pudo conectar con el Broker. Se procede con comportamiento DEFAULT");
 		return; //comportamiento Default es asumir que el pokemon no esta
 	}
 	Serialize_PackAndSend_GET_POKEMON_NoID(conexion,pokemon);
@@ -210,7 +210,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	switch (header.tipoMensaje) {
 	case d_APPEARED_POKEMON:
 		;
-		log_info(logger, "Llego un appeared pokemon");
+		log_info(logger, "Llego un APPEARED POKEMON");
 		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 		uint32_t posicionAppearedX, posicionAppearedY;
 		char *AppearedNombrePokemon;
@@ -232,7 +232,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 
 	case d_CAUGHT_POKEMON:
 		;
-		log_info(logger, "Llego un Caught Pokemon");
+		log_info(logger, "Llego un CAUGHT POKEMON");
 		//recibimos el resto del paquete
 		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 		//Con estas dos variables desempaquetamos el paquete
@@ -458,9 +458,9 @@ void cumplirMision(entrenador* trainer){
 		if(trainer->mision != NULL){
 			sem_wait(&(trainer->semaforoDeEntrenador));
 			printf("Hola soy el entrenador %i \n", trainer->tid);
-			printf("Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
+			log_info(TEAM_LOG,"Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
 			while( moveHacia(trainer, trainer->mision->point) ){
-				printf("Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
+				log_info(TEAM_LOG,"Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
 				sumarXCiclos(trainer,1);
 				sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 			}
@@ -470,7 +470,7 @@ void cumplirMision(entrenador* trainer){
 				sleep(5*TEAM_CONFIG.RETARDO_CICLO_CPU);
 			}
 			else{
-				printf("Le voy a tirar una pokebola a %s \n", trainer->mision->pokemon);
+				log_info(TEAM_LOG,"Se va a intentar atrapar a: %s \n En la posicion: x:%i y:%i", trainer->mision->pokemon, trainer->posicion.x, trainer->posicion.y);
 				sumarXCiclos(trainer,1);
 				enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
 				sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
@@ -625,6 +625,7 @@ void FIFO(){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
 		entrenador *trainer = list_get(EstadoReady,0);
+		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
 	}
