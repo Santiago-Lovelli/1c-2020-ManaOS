@@ -63,6 +63,7 @@ typedef struct entrenador{
 	punto posicion;
 	char ** pokemones;
 	char ** pokemonesObjetivo;
+	int pokemonesAtrapados;
 	t_estado estado;
 	t_razonBloqueo razonBloqueo;
 	t_mision *mision;
@@ -179,6 +180,13 @@ bool necesitoEstePokemon(char *pokemon);
  */
 
 void descontarDeObjetivoGlobal(char *pokemon);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR Y UNA LISTA SACA
+ * AL MISMO DE LA LISTA
+ */
+
+void eliminarDeListaEntrenador(entrenador  *trainer, t_list* lista);
 
 /*
  * ESTA FUNCION DADO EL ID DE UN ENTRENADOR, LE

@@ -1,7 +1,5 @@
 #include "Team.h"
 
-//TODO Un entrenador arranca con pokemons ya atrapados, corregir.
-
 int main (void){
 	inicializar();
 	list_add_all(EstadoNew, ENTRENADORES_TOTALES);
@@ -91,6 +89,7 @@ uint32_t recibirResponse(int conexion, HeaderDelibird headerACK){
 void sumarPokemon(entrenador* trainer, char* pokemon){
 	int index = damePosicionFinalDoblePuntero(trainer->pokemones);
 	trainer->pokemones[index+1] = pokemon;
+	trainer->pokemonesAtrapados = trainer->pokemonesAtrapados +1;
 }
 
 void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch){
@@ -100,7 +99,7 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 		entrenador *trainer = list_get(ENTRENADORES_TOTALES, idEntrenadorQueMandaCatch);
 		sumarPokemon(trainer,pokemon);
 		descontarDeObjetivoGlobal(pokemon);
-		trainer->razonBloqueo = t_DESOCUPADO;
+		bloquearEntrenador(trainer->tid,t_DESOCUPADO);
 		sacarMision(idEntrenadorQueMandaCatch);
 		//comportamiento Default es asumir que el pokemon pudo atraparse
 	}
@@ -301,7 +300,7 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught){
 bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
 	return (entrenadorAUX->estado != t_EXIT) &&
 		   (entrenadorAUX->estado != t_READY) &&
-		   (list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo)) &&
+		   (entrenadorAUX->pokemonesAtrapados != list_size(entrenadorAUX->pokemonesObjetivo)) &&
 		   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA) &&
 		   (entrenadorAUX->mision == NULL);
 
@@ -359,9 +358,11 @@ bool moveHacia(entrenador* e1, punto destino){
 }
 
 
-void eliminarDeListaIndex(int index, t_list* lista){
-	if(index != -1)
+void eliminarDeListaEntrenador(entrenador  *trainer, t_list* lista){
+	if(trainer->tid != -1){
+		int index = list_get_index(lista, trainer, (void*)mismaPosicion);
 		list_remove(lista,index);
+	}
 	else
 		printf("Indice Invalido");
 }
@@ -377,13 +378,13 @@ void sacarEntrenadorDeEstadoActual(entrenador* trainer){
 	trainer->razonBloqueo = t_NULL;
 	switch(trainer->estado){
 	case t_NEW:;
-		eliminarDeListaIndex(trainer->tid,EstadoNew);
+		eliminarDeListaEntrenador(trainer,EstadoNew);
 		break;
 	case t_READY:;
-		eliminarDeListaIndex(trainer->tid,EstadoReady);
+		eliminarDeListaEntrenador(trainer,EstadoReady);
 		break;
 	case t_BLOCKED:;
-		eliminarDeListaIndex(trainer->tid,EstadoBlock);
+		eliminarDeListaEntrenador(trainer,EstadoBlock);
 		break;
 	case t_EXEC:;
 		if(mismaPosicion(EstadoExec, trainer))
@@ -392,7 +393,7 @@ void sacarEntrenadorDeEstadoActual(entrenador* trainer){
 			printf("Este entrenador NO esta en exec");
 		break;
 	case t_EXIT:;
-		eliminarDeListaIndex(trainer->tid,EstadoExit);
+		eliminarDeListaEntrenador(trainer,EstadoExit);
 		break;
 	default:;
 		printf("Estado invalido");
@@ -569,6 +570,7 @@ entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObj
 	newTrainer->posicion = punto;
 	newTrainer->pokemones = pokemones;
 	newTrainer->pokemonesObjetivo = pokemonesObjetivo;
+	newTrainer->pokemonesAtrapados = 0;
 	newTrainer->estado = t_NEW;
 	newTrainer->razonBloqueo = t_NULL;
 	newTrainer->mision = NULL;
