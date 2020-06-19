@@ -89,7 +89,6 @@ uint32_t recibirResponse(int conexion, HeaderDelibird headerACK){
 void sumarPokemon(entrenador* trainer, char* pokemon){
 	int index = damePosicionFinalDoblePuntero(trainer->pokemones);
 	trainer->pokemones[index+1] = pokemon;
-	trainer->pokemonesAtrapados = trainer->pokemonesAtrapados +1;
 }
 
 void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch){
@@ -300,7 +299,7 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught){
 bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
 	return (entrenadorAUX->estado != t_EXIT) &&
 		   (entrenadorAUX->estado != t_READY) &&
-		   (entrenadorAUX->pokemonesAtrapados != list_size(entrenadorAUX->pokemonesObjetivo)) &&
+		   (list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo)) &&
 		   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA) &&
 		   (entrenadorAUX->mision == NULL);
 
@@ -570,7 +569,6 @@ entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObj
 	newTrainer->posicion = punto;
 	newTrainer->pokemones = pokemones;
 	newTrainer->pokemonesObjetivo = pokemonesObjetivo;
-	newTrainer->pokemonesAtrapados = 0;
 	newTrainer->estado = t_NEW;
 	newTrainer->razonBloqueo = t_NULL;
 	newTrainer->mision = NULL;

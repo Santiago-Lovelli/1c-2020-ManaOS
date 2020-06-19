@@ -63,7 +63,6 @@ typedef struct entrenador{
 	punto posicion;
 	char ** pokemones;
 	char ** pokemonesObjetivo;
-	int pokemonesAtrapados;
 	t_estado estado;
 	t_razonBloqueo razonBloqueo;
 	t_mision *mision;
