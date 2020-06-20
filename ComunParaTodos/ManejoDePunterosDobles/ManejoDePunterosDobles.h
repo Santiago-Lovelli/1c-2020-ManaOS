@@ -1,6 +1,6 @@
 
 #include <stdlib.h>
-#include<stdint.h>
+#include <stdint.h>
 
 #ifndef MANEJOSDEPUNTEROS_H_
 #define MANEJOSDEPUNTEROS_H_

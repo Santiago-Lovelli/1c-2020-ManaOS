@@ -18,6 +18,8 @@
 #include <errno.h>
 #include <Lista/lista.h>
 #include <math.h>
+#include <ManejoDePunterosDobles/ManejoDePunterosDobles.h>
+#include <commons/collections/queue.h>
 
 t_log * loggerGeneral;
 t_config *archivo_de_configuracion;

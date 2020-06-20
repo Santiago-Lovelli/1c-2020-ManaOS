@@ -1,4 +1,5 @@
 #include "ManejoDePunterosDobles.h"
+#include <commons/string.h>
 
 uint32_t damePosicionFinalDoblePuntero(char **puntero){
 	uint32_t contador = 0;
@@ -15,4 +16,3 @@ void liberarDoblePuntero(char **puntero){
 	}
 	free(puntero);
 }
-
