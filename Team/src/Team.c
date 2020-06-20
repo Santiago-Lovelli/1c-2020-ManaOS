@@ -471,6 +471,7 @@ void cumplirMision(entrenador* trainer){
 	while( !entrenadorCumplioObjetivo(trainer) ){
 		if(trainer->mision != NULL){
 			sem_wait(&(trainer->semaforoDeEntrenador));
+			trainer->ciclosCPUEjecutados = 0;
 			printf("Hola soy el entrenador %i \n", trainer->tid);
 			log_info(TEAM_LOG,"Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
 			while( moveHacia(trainer, trainer->mision->point) ){
@@ -621,6 +622,7 @@ void ponerAlFinalDeLista(entrenador *trainer, t_list *lista){
 	int index = list_get_index(lista,trainer, (void*)mismaPosicion);
 	list_remove(lista,index);
 	list_add(lista,trainer);
+	trainer->ciclosCPUEjecutados = 0;
 }
 
 ////////////Funciones planificacion/////////////
