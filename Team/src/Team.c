@@ -473,9 +473,9 @@ void cumplirMision(entrenador* trainer){
 			sem_wait(&(trainer->semaforoDeEntrenador));
 			trainer->ciclosCPUEjecutados = 0;
 			printf("Hola soy el entrenador %i \n", trainer->tid);
-			log_info(TEAM_LOG,"Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
+			log_info(TEAM_LOG,"\n Mi posicion inicial es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
 			while( moveHacia(trainer, trainer->mision->point) ){
-				log_info(TEAM_LOG,"Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
+				log_info(TEAM_LOG,"\n Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
 				sumarXCiclos(trainer,1);
 			}
 			if(trainer->mision->esIntercambio){
@@ -485,7 +485,7 @@ void cumplirMision(entrenador* trainer){
 				}
 			}
 			else{
-				log_info(TEAM_LOG,"Se va a intentar atrapar a: %s \n En la posicion: x:%i y:%i", trainer->mision->pokemon, trainer->posicion.x, trainer->posicion.y);
+				log_info(TEAM_LOG,"\n Se va a intentar atrapar a: %s \n En la posicion: x:%i y:%i", trainer->mision->pokemon, trainer->posicion.x, trainer->posicion.y);
 				enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
 				sumarXCiclos(trainer,1);
 			}
@@ -659,7 +659,7 @@ void RR(){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
 		entrenador *trainer = list_get(EstadoReady,0);
-		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
+		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		while(1){
 			sem_wait(&semaforoPlanifiquenme);
