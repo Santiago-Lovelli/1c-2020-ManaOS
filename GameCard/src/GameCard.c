@@ -397,6 +397,8 @@ void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				string_append(&lineaHastaIgual, string_itoa(posicionY));
 				string_append(&lineaHastaIgual, "=0");
 
+				tamanioDelPokemon = tamanioDelPokemon + strlen(lineaHastaIgual);
+
 				string_append(&megaChar, lineaHastaIgual);
 
 				lineasDeBloque = string_split(megaChar, "\n");
@@ -502,13 +504,17 @@ void crearMetadata(char* pkm) {
 
 	int meta = open(path, O_RDWR, 0);
 
+	truncate(path,strlen(metadataVacia())+1);
+
 	free(path);
 
 	char* metadataCreada = mmap(NULL, strlen(metadataVacia()),
 	PROT_READ | PROT_WRITE,
 	MAP_SHARED | MAP_FILE, meta, 0);
 
-	memcpy(metadataCreada, metadataVacia(), strlen(metadataVacia()));
+	char * metadataAux = metadataVacia();
+
+	memcpy(metadataCreada, metadataAux, strlen(metadataAux) + 1);
 }
 
 void crearPokemon(char* pokemon) {
@@ -516,16 +522,11 @@ void crearPokemon(char* pokemon) {
 
 	char* rutaFiles = "/Files/";
 
-	char* path = malloc(
-			strlen(tallgrass) + strlen(rutaFiles) + strlen(pokemon) + 1);
-	int desplazamiento = 0;
+	char* path = string_new();
 
-	memcpy(path + desplazamiento, tallgrass, strlen(tallgrass));
-	desplazamiento = desplazamiento + strlen(tallgrass);
-	memcpy(path + desplazamiento, rutaFiles, strlen(rutaFiles));
-	desplazamiento = desplazamiento + strlen(rutaFiles);
-	memcpy(path + desplazamiento, pokemon, strlen(pokemon));
-	desplazamiento = desplazamiento + strlen(pokemon);
+	string_append(&path,tallgrass);
+	string_append(&path,rutaFiles);
+	string_append(&path,pokemon);
 
 	log_info(loggerGeneral, "Montaje de path pokemon a crear: %s \n", path);
 
@@ -535,6 +536,18 @@ void crearPokemon(char* pokemon) {
 	}
 
 	crearMetadata(pokemon);
+
+
+	p_pokemonSemaforo* auxPokemon = malloc(
+			strlen(pokemon) + 1 + sizeof(pthread_mutex_t));
+
+	auxPokemon->nombreDePokemon = malloc(strlen(pokemon) + 1);
+
+	memcpy(auxPokemon->nombreDePokemon, pokemon, strlen(pokemon));
+	memcpy(auxPokemon->nombreDePokemon + strlen(pokemon), "\0", 1);
+	pthread_mutex_init(&(auxPokemon->semaforoDePokemon), NULL);
+
+	list_add(pokemonsEnFiles, auxPokemon);
 
 }
 
@@ -925,18 +938,7 @@ int main(void) {
 	cargarListaAtual();
 	cargarMetadata();
 	iniciarBloques();
-	levantarBitmap();
-
-		bitarray_set_bit(bitmap, 0);
-		bitarray_set_bit(bitmap, 1);
-		bitarray_set_bit(bitmap, 2);
-		bitarray_clean_bit(bitmap, 3);
-		bitarray_clean_bit(bitmap, 4);
-		bitarray_clean_bit(bitmap, 5);
-		bitarray_clean_bit(bitmap, 6);
-		bitarray_clean_bit(bitmap, 7);
-		bitarray_clean_bit(bitmap, 8);
-		bitarray_clean_bit(bitmap, 9);
+	iniciarBitmap();
 
 	pthread_mutex_init(&bitSem, NULL);
 
