@@ -450,6 +450,20 @@ void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio)
 void sumarXCiclos(entrenador *trainer, int ciclos){
 	trainer->ciclosCPUEjecutados = trainer->ciclosCPUEjecutados+ciclos;
 	CICLOS_TOTALES = CICLOS_TOTALES + trainer->ciclosCPUEjecutados;
+	sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+	if(string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "RR") || string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "SJFCD")){
+		sem_post(&semaforoPlanifiquenme);
+		sem_wait(&(trainer->semaforoDeEntrenador));
+	}
+}
+
+void avisarQueTermine(entrenador *trainer){
+	if(string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "RR") || string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "SJFCD")){
+		sem_post(&semaforoPlanifiquenme);
+	}
+	else{
+		sem_post(&semaforoTermine);
+	}
 }
 
 void cumplirMision(entrenador* trainer){
@@ -462,20 +476,19 @@ void cumplirMision(entrenador* trainer){
 			while( moveHacia(trainer, trainer->mision->point) ){
 				log_info(TEAM_LOG,"Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
 				sumarXCiclos(trainer,1);
-				sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 			}
 			if(trainer->mision->esIntercambio){
 				//TODO
-				sumarXCiclos(trainer,5);
-				sleep(5*TEAM_CONFIG.RETARDO_CICLO_CPU);
+				for(int i=0; i<5; i++){
+					sumarXCiclos(trainer,1);
+				}
 			}
 			else{
 				log_info(TEAM_LOG,"Se va a intentar atrapar a: %s \n En la posicion: x:%i y:%i", trainer->mision->pokemon, trainer->posicion.x, trainer->posicion.y);
-				sumarXCiclos(trainer,1);
 				enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
-				sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+				sumarXCiclos(trainer,1);
 			}
-			sem_post(&semaforoTermine);
+			avisarQueTermine(trainer);
 		}
 	}
 }
@@ -591,7 +604,6 @@ void iniciarVariablesDePlanificacion(){
 	CAMBIOS_DE_CONTEXTO_REALIZADOS = 0;
 	DEADLOCKS_PRODUCIDOS = 0;
 	DEADLOCKS_RESUELTOS = 0;
-	sem_init(&semaforoTermine,0,0);
 }
 
 static void entrenadorDestroy(entrenador *self) {
@@ -605,6 +617,11 @@ static void entrenadorDestroy(entrenador *self) {
     free(self->pokemonesObjetivo);
 }
 
+void ponerAlFinalDeLista(entrenador *trainer, t_list *lista){
+	int index = list_get_index(lista,trainer, (void*)mismaPosicion);
+	list_remove(lista,index);
+	list_add(lista,trainer);
+}
 
 ////////////Funciones planificacion/////////////
 void planificarSegun(char* tipoPlanificacion){
@@ -620,6 +637,7 @@ void planificarSegun(char* tipoPlanificacion){
 
 void FIFO(){
 	CICLOS_TOTALES = 0;
+	sem_init(&semaforoTermine,0,0);
 	while(!objetivoGlobalCumplido()){
 		while(list_is_empty(EstadoReady)){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
@@ -632,7 +650,29 @@ void FIFO(){
 }
 
 void RR(){
-	printf("Holis, me llamaron? Soy RR");
+	CICLOS_TOTALES = 0;
+	sem_init(&semaforoPlanifiquenme,0,0);
+	while(!objetivoGlobalCumplido()){
+		while(list_is_empty(EstadoReady)){
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		entrenador *trainer = list_get(EstadoReady,0);
+		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
+		sem_post(&(trainer->semaforoDeEntrenador));
+		while(1){
+			sem_wait(&semaforoPlanifiquenme);
+			if(trainer->mision == NULL){
+				break;
+			}
+			else if(trainer->ciclosCPUEjecutados < TEAM_CONFIG.QUANTUM)
+				sem_post(&(trainer->semaforoDeEntrenador));
+			else{
+				ponerAlFinalDeLista(trainer,EstadoReady);
+				break;
+			}
+		}
+		//Como se que termino?
+	}
 }
 void SJFCD(){
 	printf("Holis, me llamaron? Soy SJFCD");

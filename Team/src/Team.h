@@ -227,6 +227,22 @@ void bloquearEntrenador(int idEntrenador, t_razonBloqueo razon);
 
 void pasarEntrenadorAEstado(int index, t_estado estado);
 
+
+/*
+ * ESTA FUNCION DADO EL ENTRENADOR PASADO POR PARAMETROS
+ * LO TOMA DE LA LISTA Y LO PONE AL FINAL
+ */
+
+void ponerAlFinalDeLista(entrenador *trainer, t_list *lista);
+
+/*
+ * ESTA FUNCION DADO EL ENTRENADOR PASADO POR PARAMETROS
+ * INFORMA A LOS SEMAFOROS CORRESPONDIENTES QUE EL ENTRENADOR
+ * HA CUMPLIDO SU MISION
+ */
+
+void avisarQueTermine(entrenador *trainer);
+
 /*
  * ESTA FUNCION DADOS DOS ENTRENADORES DEVUELVE
  * TRUE SI SE ENCUENTRAN EN LA MISMA POSICION
@@ -422,6 +438,7 @@ int CAMBIOS_DE_CONTEXTO_REALIZADOS;
 int DEADLOCKS_PRODUCIDOS;
 int DEADLOCKS_RESUELTOS;
 int CICLOS_TOTALES;
+sem_t semaforoPlanifiquenme;
 sem_t semaforoTermine;
 
 /////////VARIABLES/////////
