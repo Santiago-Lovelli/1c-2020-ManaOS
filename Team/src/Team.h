@@ -39,6 +39,7 @@ typedef struct config{
 	int RETARDO_CICLO_CPU;
 	char* ALGORITMO_PLANIFICACION;
 	int QUANTUM;
+	double ALPHA;
 	int ESTIMACION_INICIAL;
 	char* IP_BROKER;
 	char* PUERTO_BROKER;
@@ -66,8 +67,9 @@ typedef struct entrenador{
 	t_estado estado;
 	t_razonBloqueo razonBloqueo;
 	t_mision *mision;
-	int ciclosCPUAEjecutar;
 	int ciclosCPUEjecutados;
+	int ciclosCPUEjeutadosAnteriormente;
+	int ciclosCPUEstimados;
 	sem_t semaforoDeEntrenador;
 }entrenador;
 
@@ -321,15 +323,6 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught);
 void crear_hilo_planificacion();
 
 /*
- * ESTA FUNCION DADO UN ENTRENADOR PASADO POR ID, EN BASE A SU MISION ACTUAL
- * CALCULA LA CANTIDAD DE RAFAGAS QUE LE VA A TOMAR REALIZARLA Y LA GUARDA
- * DENTRO DEL MISMO ENTRENADOR, LA MISMA VARIA SI ES UN INTERCAMBIO, NUNCA
- * USAR ESTA FUNCION EN ENTRENADORES QUE NO TIENEN UNA MISION ASIGNADA
- */
-
-void calcularRafagasCPUAEjecutar(int idEntrenador);
-
-/*
  * ESTA FUNCION DADO UN TIPO DE PLANIFICACION LLAMA
  * A LA FUNCION CORRESPONDIENTE
  */
@@ -353,6 +346,38 @@ void SJFCD();
 void SJFSD();
 unsigned long int getClockTime();
 void agregarTiempo(int cantidad);
+
+/*
+ * ESTA FUNCION DADA UNA LISTA
+ * PASADA POR PARAMETROS LA ORDENA
+ * DE MENOR A MAYOR EN CANTIDAD DE RAFAGAS
+ * DE CPU ESTIMADAS USANDO LA FORMULA
+ * DE LA MEDIA EXPONENCIAL
+ */
+
+void ordenarListaSJF(t_list *lista);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR PASADO POR PARAMETROS
+ * LE ESTABLECE SU NUEVA ESTIMACION
+ */
+
+void establecerNuevaEstimacion(entrenador* trainer);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR
+ * RETORNA EL VALOR DE LA NUEVA
+ * ESTIMACION
+ */
+
+int nuevaEstimacion(entrenador *trainer);
+
+/*
+ * ESTA FUNCION DADOS DOS ENTRENADORES, RETORNA TRUE SI LA ESTIMACION
+ * DEL ENTRENADOR 1 ES MENOR  O IGUAL QUE LA DEL ENTRENADOR 2
+ */
+
+bool entrenador1MenorEstimacionQueEntrenador2(entrenador* trainer1, entrenador* trainer2);
 
 ////////FUNCIONES HILOS////////////
 

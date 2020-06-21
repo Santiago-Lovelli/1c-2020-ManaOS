@@ -262,12 +262,12 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 	posicionPoke.x = posicionAppearedX;
 	posicionPoke.y = posicionAppearedY;
 	int idEntrenador = entrenadorMasCercanoDisponible(posicionPoke);
-	if(idEntrenador == -1){
-		log_error(logger, "No hay entrenadores disponibles");
-		return;
+	while(idEntrenador == -1){
+		log_error(logger, "No hay entrenadores disponibles, se esperara a que los haya");
+		sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		idEntrenador = entrenadorMasCercanoDisponible(posicionPoke);
 	}
 	darMision(idEntrenador,pokemon,posicionPoke,false);
-	calcularRafagasCPUAEjecutar(idEntrenador);
 	pasarEntrenadorAEstado(idEntrenador, t_READY);
 }
 
@@ -458,6 +458,8 @@ void sumarXCiclos(entrenador *trainer, int ciclos){
 }
 
 void avisarQueTermine(entrenador *trainer){
+	trainer->ciclosCPUEjeutadosAnteriormente = trainer->ciclosCPUEjecutados;
+	trainer->ciclosCPUEjecutados = 0;
 	if(string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "RR") || string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "SJFCD")){
 		sem_post(&semaforoPlanifiquenme);
 	}
@@ -542,6 +544,7 @@ void iniciarConfig(){
 	TEAM_CONFIG.RETARDO_CICLO_CPU = config_get_int_value (creacionConfig, "RETARDO_CICLO_CPU");
 	TEAM_CONFIG.ALGORITMO_PLANIFICACION = config_get_string_value (creacionConfig, "ALGORITMO_PLANIFICACION");
 	TEAM_CONFIG.QUANTUM = config_get_int_value (creacionConfig, "QUANTUM");
+	TEAM_CONFIG.ALPHA = config_get_double_value(creacionConfig, "ALPHA");
 	TEAM_CONFIG.ESTIMACION_INICIAL = config_get_int_value (creacionConfig, "ESTIMACION_INICIAL");
 	TEAM_CONFIG.IP_BROKER = config_get_string_value (creacionConfig, "IP_BROKER");
 	TEAM_CONFIG.PUERTO_BROKER = config_get_string_value (creacionConfig, "PUERTO_BROKER");
@@ -586,8 +589,9 @@ entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObj
 	newTrainer->estado = t_NEW;
 	newTrainer->razonBloqueo = t_NULL;
 	newTrainer->mision = NULL;
-	newTrainer->ciclosCPUAEjecutar = 0;
+	newTrainer->ciclosCPUEjeutadosAnteriormente = 0;
 	newTrainer->ciclosCPUEjecutados = 0;
+	newTrainer->ciclosCPUEstimados = 0;
 	sem_init(&newTrainer->semaforoDeEntrenador,0,0);
 	AUX_ID_TRAINER = AUX_ID_TRAINER + 1 ;
 	return newTrainer;
@@ -673,33 +677,78 @@ void RR(){
 				break;
 			}
 		}
-		//Como se que termino?
 	}
 }
 void SJFCD(){
-	printf("Holis, me llamaron? Soy SJFCD");
+	CICLOS_TOTALES = 0;
+	sem_init(&semaforoPlanifiquenme,0,0);
+	while(!objetivoGlobalCumplido()){
+		while(list_is_empty(EstadoReady)){
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		ordenarListaSJF(EstadoReady);
+		entrenador *trainer = list_get(EstadoReady,0);
+		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
+		sem_post(&(trainer->semaforoDeEntrenador));
+		while(1){
+			sem_wait(&semaforoPlanifiquenme);
+			if(trainer->mision == NULL){
+				break;
+			}
+			else{
+				ordenarListaSJF(EstadoReady);
+				entrenador *trainer = list_get(EstadoReady,0);
+				log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
+				sem_post(&(trainer->semaforoDeEntrenador));
+			}
+		}
+	}
 }
 void SJFSD(){
-	printf("Holis, me llamaron? Soy SJFSD");
+	CICLOS_TOTALES = 0;
+	sem_init(&semaforoTermine,0,0);
+	while(!objetivoGlobalCumplido()){
+		while(list_is_empty(EstadoReady)){
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		ordenarListaSJF(EstadoReady);
+		entrenador *trainer = list_get(EstadoReady,0);
+		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
+		sem_post(&(trainer->semaforoDeEntrenador));
+		sem_wait(&semaforoTermine);
+	}
 }
+
+void ordenarListaSJF(t_list *lista){
+	list_sort(lista, (void*)entrenador1MenorEstimacionQueEntrenador2);
+	list_map(lista, (void*)establecerNuevaEstimacion);
+}
+
+void establecerNuevaEstimacion(entrenador* trainer){
+	trainer->ciclosCPUEstimados = nuevaEstimacion(trainer);
+}
+
+int nuevaEstimacion(entrenador *trainer){
+	return ( (TEAM_CONFIG.ALPHA * trainer->ciclosCPUEjeutadosAnteriormente) + ( (1-TEAM_CONFIG.ALPHA) * trainer->ciclosCPUEstimados) ) ;
+}
+
+bool entrenador1MenorEstimacionQueEntrenador2(entrenador* trainer1, entrenador* trainer2){
+	int estimacionTrainer1 = nuevaEstimacion(trainer1);
+	int estimacionTrainer2 = nuevaEstimacion(trainer2);
+	if(estimacionTrainer1 <= estimacionTrainer2){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
 unsigned long int getClockTime(){
 	return CLOCK;
 }
 
 void agregarTiempo(int cantidad){
 	CLOCK += cantidad;
-}
-
-void calcularRafagasCPUAEjecutar(int idEntrenador){
-	entrenador* trainer = list_get(ENTRENADORES_TOTALES, idEntrenador);
-	if(trainer->mision == NULL)
-		return;
-	int distancia = diferenciaEntrePuntos(trainer->posicion, trainer->mision->point);
-	if(trainer->mision->esIntercambio)
-		distancia = distancia +5;
-	else
-		distancia = distancia +1;
-	trainer->ciclosCPUAEjecutar = distancia;
 }
 
 void setObjetivoGlobal(){
