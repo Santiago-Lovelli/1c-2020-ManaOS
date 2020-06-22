@@ -85,6 +85,7 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			void * recibir = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			uint32_t variable = Serialize_Unpack_ACK(recibir);
 			suscribir(variable, cliente);
+
 			free(recibir);
 			break;
 		default:
@@ -100,6 +101,12 @@ void suscribir(uint32_t variable, int cliente){
 	case d_NEW_POKEMON:
 		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de NEW", cliente);
 		list_add (SUSCRIPTORES_NEW, cliente);
+		if (list_is_empty (MEMORIA_CACHE)){
+			log_info (LOGGER_GENERAL, "No hay mensajes anteriore");
+		}
+		else{
+		enviarMensajesCacheNew (cliente);
+		}
 		break;
 	case d_CATCH_POKEMON:
 		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de CATCH", cliente);
@@ -127,8 +134,20 @@ void suscribir(uint32_t variable, int cliente){
 	}
 }
 
+void enviarMensajesCacheNew (int cliente){
+	memoriaInterna cache;
+	int lenght = list_size(MEMORIA_CACHE);
+	for (int i = 0; i<lenght; i++){
+	 int mensajeCache = list_get(MEMORIA_CACHE, i);
+	 Serialize_PackAndSend_ACK(cliente, mensajeCache);
+	 log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i", cliente);
+	}
+}
+
+
+
 void enviarMensajeNewASuscriptores (void *paquete, t_list* lista){
-	mensajeConID mensaje;
+	mensajeConID mensaje; //Guardo el mensaje que me llega en la cache
 	memoriaInterna cache;
 	cache.suscriptoresConMensajeEnviado = list_create();
 	uint32_t posX, posY, cantidad;
@@ -147,63 +166,95 @@ void enviarMensajeNewASuscriptores (void *paquete, t_list* lista){
 	cache.tipoMensaje = d_NEW_POKEMON;
 	list_add(MEMORIA_CACHE, &cache);
 	log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
-	memoriaInterna *resultado = list_get(MEMORIA_CACHE,0);
-	list_get(resultado->suscriptoresConMensajeEnviado,0);
+	//memoriaInterna *resultado = list_get(MEMORIA_CACHE,0);
+	//list_get(resultado->suscriptoresConMensajeEnviado,0);
 }
 
 
 void enviarMensajeCatchASuscriptores (void* paquete, t_list* lista){
+	mensajeConID mensaje;
+	memoriaInterna cache;
+	cache.suscriptoresConMensajeEnviado = list_create();
 	uint32_t posicionCatchX, posicionCatchY;
 	char *catchNombrePokemon;
 	Serialize_Unpack_CatchPokemon_NoID(paquete, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
 	log_info(LOGGER_GENERAL,"Me llego mensaje catch, Pkm: %s, x: %i, y: %i\n", catchNombrePokemon, posicionCatchX, posicionCatchY);
+	mensaje = agregarIDMensaje (paquete);
 	int lenght = list_size(lista);
 	for (int i = 0; i<lenght; i++){
 		int socketCliente = list_get(lista, i);
 		Serialize_PackAndSend_CATCH_POKEMON_NoID(socketCliente, catchNombrePokemon, posicionCatchX, posicionCatchY);
-		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
+		log_info (LOGGER_GENERAL, "Se envió el mensaje %i al suscriptor %i\n", mensaje.id, socketCliente);
+		list_add (cache.suscriptoresConMensajeEnviado, &socketCliente);
 }
+	cache.idMensaje = mensaje.id;
+	cache.tipoMensaje = d_CATCH_POKEMON;
+	list_add(MEMORIA_CACHE, &cache);
 	log_info(LOGGER_GENERAL, "No hay suscriptores");
 }
 
 void enviarMensajeGetASuscriptores (void* paquete, t_list* lista){
+	mensajeConID mensaje;
+	memoriaInterna cache;
+	cache.suscriptoresConMensajeEnviado = list_create();
 	uint32_t idMensajeGet;
 	char *getNombrePokemon;
 	Serialize_Unpack_GetPokemon_NoID(paquete, &getNombrePokemon);
 	log_info(LOGGER_GENERAL,"Me llego mensaje get, Pkm: %s\n", getNombrePokemon);
+	mensaje = agregarIDMensaje (paquete);
 	int lenght = list_size(lista);
 	for (int i = 0; i<lenght; i++){
 		int socketCliente = list_get(lista, i);
 		Serialize_PackAndSend_GET_POKEMON_NoID(socketCliente, getNombrePokemon);
-		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
+		log_info (LOGGER_GENERAL, "Se envió el mensaje %i al suscriptor %i\n", mensaje.id, socketCliente);
+		list_add (cache.suscriptoresConMensajeEnviado, &socketCliente);
 	}
+	cache.idMensaje = mensaje.id;
+	cache.tipoMensaje = d_GET_POKEMON;
+	list_add(MEMORIA_CACHE, &cache);
 	log_info(LOGGER_GENERAL, "No hay suscriptores");
 }
 
 void enviarMensajeAppearedASuscriptores (void* paquete, t_list* lista){
+	mensajeConID mensaje;
+	memoriaInterna cache;
+	cache.suscriptoresConMensajeEnviado = list_create();
 	uint32_t idMensajeAppeared, posicionX, posicionY;
 	char *nombrePokemon;
 	Serialize_Unpack_AppearedPokemon(paquete, &idMensajeAppeared, &nombrePokemon, &posicionX, &posicionY);
 	log_info(LOGGER_GENERAL,"Me llego mensaje appeared Id: %i, Pkm: %s, x: %i, y: %i\n", idMensajeAppeared, nombrePokemon, posicionX, posicionY);
+	mensaje = agregarIDMensaje (paquete);
 	int lenght = list_size(lista);
 	for (int i = 0; i<lenght; i++){
 		int socketCliente = list_get(lista, i);
 		Serialize_PackAndSend_APPEARED_POKEMON(socketCliente, &idMensajeAppeared, nombrePokemon, posicionX, posicionY);
 		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
+		list_add (cache.suscriptoresConMensajeEnviado, &socketCliente);
 	}
+	cache.idMensaje = mensaje.id;
+	cache.tipoMensaje = d_APPEARED_POKEMON;
+	list_add(MEMORIA_CACHE, &cache);
 	log_info(LOGGER_GENERAL, "No hay suscriptores");
 }
 
 void enviarMensajeCaughtASuscriptores (void* paquete, t_list* lista){
+	mensajeConID mensaje;
+	memoriaInterna cache;
+	cache.suscriptoresConMensajeEnviado = list_create();
 	uint32_t idMensajeCaught, resultado;
 	Serialize_Unpack_CaughtPokemon(paquete, idMensajeCaught, resultado);
 	log_info(LOGGER_GENERAL,"Me llego mensaje caught Id: %i, Resultado: %i\n", idMensajeCaught, resultado);
+	mensaje = agregarIDMensaje (paquete);
 	int lenght = list_size(lista);
 	for (int i = 0; i<lenght; i++){
 		int socketCliente = list_get(lista, i);
 		Serialize_PackAndSend_CAUGHT_POKEMON(socketCliente, idMensajeCaught, resultado); ////hacer funcion sin id
-		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
+		log_info (LOGGER_GENERAL, "Se envió el mensaje %i al suscriptor %i\n", mensaje.id, socketCliente);
+		list_add (cache.suscriptoresConMensajeEnviado, &socketCliente);
 	}
+	cache.idMensaje = mensaje.id;
+	cache.tipoMensaje = d_CAUGHT_POKEMON;
+	list_add(MEMORIA_CACHE, &cache);
 	log_info(LOGGER_GENERAL, "No hay suscriptores");
 }
 
@@ -255,13 +306,20 @@ void ListsInit () {
 	MEMORIA_CACHE = list_create();
 }
 
+/////////FUNCIONES VARIAS/////////
 
 mensajeConID agregarIDMensaje (void* paquete){
 	mensajeConID mensaje;
 	mensaje.pack = paquete;
-	mensaje.id = rand()%10;//asigna un valor aleatorio a partir del 1.
-	//Agregar los IDs a una lista y verificar que no se repitan, en caso de que lo hagan, volver a llamar a la función
-	log_info (LOGGER_GENERAL, "Se asigno el id %i\n", mensaje.id);
+	mensaje.id = rand()%100;//asigna un valor aleatorio a partir del 1.
+	/* list_add (IDs, mensaje.id);
+	if (mensaje.id == IDs->head->data){
+		mensaje.id = rand()%100;
+	}
+	else{*/
+		log_info (LOGGER_GENERAL, "Se asigno el id %i\n", mensaje.id);
+	//}
 	return mensaje;
 }
+
 
