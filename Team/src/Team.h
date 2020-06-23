@@ -98,6 +98,14 @@ void setObjetivoGlobal();
 void cargarEstadoNew();
 void iniciarVariablesDePlanificacion();
 
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR, DESCUENTA LOS POKEMONS QEU ESTE
+ * TENGA QUE SEAN NECESARIOS PARA NUESTRO OBJETIVO GLOBAL DE NUESTRO
+ * OBJETIVO GLOBAL
+ */
+
+void descontarPokemonsActualesDeOBJGlobal(entrenador* trainer);
+
 //////FUNCIONES FINALES/////////
 void finalFeliz();
 static void entrenadorDestroy(entrenador *self);

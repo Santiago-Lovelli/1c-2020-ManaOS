@@ -501,7 +501,7 @@ int diferenciaEntrePuntos(punto origen, punto destino){
 }
 
 bool necesitoEstePokemon(char *pokemon){
-	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
+	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon); //TODO y si ya tiene alguno atrapado al iniciar ejecucion??
 	return (valor>0);
 }
 
@@ -552,6 +552,15 @@ void iniciarConfig(){
 	TEAM_CONFIG.IP_TEAM = config_get_string_value(creacionConfig, "IP_TEAM");
 	TEAM_CONFIG.PUERTO_TEAM = config_get_string_value(creacionConfig, "PUERTO_TEAM");
 	free(creacionConfig);
+}
+
+void descontarPokemonsActualesDeOBJGlobal(entrenador* trainer){
+	int posFinal = damePosicionFinalDoblePuntero(trainer->pokemones);
+	for(int i=0; i<=posFinal; i++){
+		if( necesitoEstePokemon(trainer->pokemones[i]) ){
+			descontarDeObjetivoGlobal(trainer->pokemones[i]);
+		}
+	}
 }
 
 void crearEntrenadores(){
@@ -761,6 +770,7 @@ void setObjetivoGlobal(){
 			unPokemon = (int)dictionary_get(OBJETIVO_GLOBAL, trainer->pokemonesObjetivo[i]);
 			dictionary_put(OBJETIVO_GLOBAL, trainer->pokemonesObjetivo[i], unPokemon + 1);
 		}
+		descontarPokemonsActualesDeOBJGlobal(trainer);
 		j++;
 		trainer = list_get(ENTRENADORES_TOTALES, j);
 	}
