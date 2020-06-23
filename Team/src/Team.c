@@ -500,9 +500,22 @@ int diferenciaEntrePuntos(punto origen, punto destino){
 	return abs( abs(destino.x - origen.x) + abs(destino.y - origen.y) );
 }
 
+int cantidadDeMisiones(char *pokemon){
+	int cantidad = 0;
+	entrenador *trainer;
+	for(int i=0; i<list_size(ENTRENADORES_TOTALES); i++){
+		trainer = list_get(ENTRENADORES_TOTALES,i);
+		if( (trainer->mision != NULL) && (strcmp(trainer->mision->pokemon , pokemon)) == 0 ){
+			cantidad = cantidad +1;
+		}
+	}
+	return cantidad;
+}
+
 bool necesitoEstePokemon(char *pokemon){
-	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon); //TODO y si ya tiene alguno atrapado al iniciar ejecucion??
-	return (valor>0);
+	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
+	int cantidad = cantidadDeMisiones(pokemon);
+	return ((valor-cantidad)>0);
 }
 
 bool comparadorIDs(objetoID_QUE_NECESITO *objetoID1, objetoID_QUE_NECESITO *objetoID2){

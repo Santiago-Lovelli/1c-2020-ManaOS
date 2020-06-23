@@ -254,6 +254,14 @@ void ponerAlFinalDeLista(entrenador *trainer, t_list *lista);
 void avisarQueTermine(entrenador *trainer);
 
 /*
+ * ESTA FUNCION DADO UN POKEMON NOS DEVUELVE
+ * LA CANTIDAD DE ENTRENADORES QUE LO TIENEN COMO
+ * MISION ACTUALMENTE
+ */
+
+int cantidadDeMisiones(char *pokemon);
+
+/*
  * ESTA FUNCION DADOS DOS ENTRENADORES DEVUELVE
  * TRUE SI SE ENCUENTRAN EN LA MISMA POSICION
  */
