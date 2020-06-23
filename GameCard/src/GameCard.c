@@ -399,13 +399,10 @@ void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			if (cantidadDeLineas == -1) {
 
 				char* lineaHastaIgual = string_new();
-				if (tamanioDelPokemon != 0) {
-					string_append(&lineaHastaIgual, "\n");
-				}
 				string_append(&lineaHastaIgual, string_itoa(posicionX));
 				string_append(&lineaHastaIgual, "-");
 				string_append(&lineaHastaIgual, string_itoa(posicionY));
-				string_append(&lineaHastaIgual, "=0");
+				string_append(&lineaHastaIgual, "=0\n");
 
 				tamanioDelPokemon = tamanioDelPokemon + strlen(lineaHastaIgual);
 
@@ -575,7 +572,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		log_info(logger, "Llego un new pokemon");
 		void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		sem_post(&sock);
+		sem_post(&sock); sem_post(&mutexCliente);
 		uint32_t idMensajeNew, posicionNewX, posicionNewY, newCantidad;
 		char *newNombrePokemon;
 		Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew,
@@ -594,7 +591,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 
 		void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		sem_post(&sock);
+		sem_post(&sock); sem_post(&mutexCliente);
 		uint32_t idMensajeCatch, posicionCatchX, posicionCatchY;
 		char *catchNombrePokemon;
 		Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch,
@@ -612,7 +609,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 
 		void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		sem_post(&sock);
+		sem_post(&sock); sem_post(&mutexCliente);
 		uint32_t idMensajeGet;
 		char *getNombrePokemon;
 		Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet,
@@ -626,7 +623,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		log_error(logger, "Mensaje no entendido: %i\n", header);
 		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		sem_post(&sock);
+		sem_post(&sock); sem_post(&mutexCliente);
 		free(packBasura);
 		break;
 	}
@@ -639,7 +636,7 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 				elemento->cliente);
 		if (headerRecibido.tipoMensaje == -1) {
 			log_error(elemento->log, "Se desconecto el Cliente\n");
-			sem_post(&sock);
+			sem_post(&sock); sem_post(&mutexCliente);
 			break;
 		}
 		atender(headerRecibido, elemento->cliente, elemento->log);
@@ -660,6 +657,10 @@ void* atenderGameBoy() {
 	log_info(gameBoyLog, "Ip GameCard: %s", ip);
 
 	int conexion = iniciar_servidor(ip, puerto, gameBoyLog);
+
+	p_elementoDeHilo elemento;
+	elemento.log = gameBoyLog;
+
 	while (1) {
 		int cliente = esperar_cliente_con_accept(conexion, gameBoyLog);
 
@@ -668,9 +669,7 @@ void* atenderGameBoy() {
 		log_info(gameBoyLog, "se conecto cliente: %i", cliente);
 		pthread_t* dondeSeAtiende = malloc(sizeof(pthread_t));
 
-		p_elementoDeHilo elemento;
 		elemento.cliente = cliente;
-		elemento.log = gameBoyLog;
 
 		if (pthread_create(dondeSeAtiende, NULL,
 				(void*) recibirYAtenderUnCliente, &elemento) == 0) {
@@ -681,7 +680,6 @@ void* atenderGameBoy() {
 		}
 		pthread_detach(*dondeSeAtiende);
 
-		sem_post(&mutexCliente);
 	}
 }
 
