@@ -23,6 +23,7 @@ void inicializar(){
 	crearEntrenadores();
 	iniciarVariablesDePlanificacion();
 	ID_QUE_NECESITO = list_create();
+	MISIONES_PENDIENTES = list_create();
 	for (int i = 0; list_get(ENTRENADORES_TOTALES, i) != NULL; i++){
 		entrenador * entrenador = list_get(ENTRENADORES_TOTALES, i);
 		printf("Entrenador en posicion: x = %d, y = %d \n", entrenador->posicion.x, entrenador->posicion.y);
@@ -100,6 +101,7 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 		descontarDeObjetivoGlobal(pokemon);
 		bloquearEntrenador(trainer->tid,t_DESOCUPADO);
 		sacarMision(idEntrenadorQueMandaCatch);
+		verPendientes(pokemon);
 		//comportamiento Default es asumir que el pokemon pudo atraparse
 	}
 	else{
@@ -261,6 +263,18 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 	punto posicionPoke;
 	posicionPoke.x = posicionAppearedX;
 	posicionPoke.y = posicionAppearedY;
+	if(!contandoMisionesActualesNecesitoEstePokemon(pokemon)){
+		t_mision* misionPendiente = crearMision(pokemon,posicionPoke,false);
+		list_add(MISIONES_PENDIENTES, misionPendiente);
+		printf("\n Este pokemon se agregara a pendientes \n");
+		return;
+	}
+//	while(!contandoMisionesActualesNecesitoEstePokemon(pokemon)){
+//		printf(" ::: VAMO A CALMARNO :::");
+//		sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+//		if(!necesitoEstePokemon(pokemon))
+//			return;
+//	}
 	int idEntrenador = entrenadorMasCercanoDisponible(posicionPoke);
 	while(idEntrenador == -1){
 		log_error(logger, "No hay entrenadores disponibles, se esperara a que los haya");
@@ -284,6 +298,7 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught){
 		descontarDeObjetivoGlobal(objetoID->pokemon);
 		trainer->razonBloqueo = t_DESOCUPADO;
 		sacarMision(objetoID->idEntrenador);
+		verPendientes(objetoID->pokemon);
 		free(objetoID);
 	}
 	else{
@@ -292,7 +307,44 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught){
 		list_remove(ID_QUE_NECESITO, index);
 		bloquearEntrenador(objetoID->idEntrenador, t_DESOCUPADO);
 		sacarMision(objetoID->idEntrenador);
+		asignarMisionPendienteDePoke(objetoID->pokemon);
 		free(objetoID);
+	}
+}
+
+void verPendientes(char *pokemon){
+	if(contandoMisionesActualesNecesitoEstePokemon(pokemon))
+		asignarMisionPendienteDePoke(pokemon);
+	if(!necesitoEstePokemon(pokemon))
+		borrarEstePokemonDePendientes(pokemon);
+}
+
+void destruirMision(t_mision *mision){
+	free(mision->pokemon);
+	free(mision);
+}
+
+void borrarEstePokemonDePendientes(char *pokemon){
+	t_mision *mision;
+	for(int i=0; i<list_size(MISIONES_PENDIENTES); i++){
+		mision = list_get(MISIONES_PENDIENTES,i);
+		if(mismoPokemonDeMision(mision,pokemon))
+			list_remove_and_destroy_element(MISIONES_PENDIENTES,i,(void*)destruirMision);
+	}
+}
+
+bool mismoPokemonDeMision(t_mision* pokemon1, char* pokemon2){
+	return ( (strcmp(pokemon1->pokemon,pokemon2)) == 0);
+}
+
+void asignarMisionPendienteDePoke(char* pokemon){
+	t_mision *mision;
+	for(int i=0; i<list_size(MISIONES_PENDIENTES); i++){
+		mision = list_get(MISIONES_PENDIENTES,i);
+		if(mismoPokemonDeMision(mision,pokemon)){
+			hacerAppeared(mision->pokemon,mision->point.x,mision->point.y, TEAM_LOG);
+			return;
+		}
 	}
 }
 
@@ -433,18 +485,27 @@ void pasarEntrenadorAEstado(int index, t_estado estado){
 
 void sacarMision(int idEntrenador){
 	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
-	free(trainer->mision);
+	destruirMision(trainer->mision);
 	trainer->mision = NULL;
 }
 
-void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio){
-	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
+t_mision* crearMision(char *pokemon, punto point, bool esIntercambio){
 	t_mision *mision = malloc(sizeof(punto) + strlen(pokemon) +1 + sizeof(bool));
 	mision->point = point;
 	mision->pokemon = pokemon;
 	mision->esIntercambio = esIntercambio;
-	trainer->mision = mision;
+	return mision;
+}
 
+void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio){
+	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
+	trainer->mision = crearMision(pokemon,point,esIntercambio);
+
+}
+
+void asignarMision(int idEntrenador, t_mision* misionYaCreada){
+	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
+	trainer->mision = misionYaCreada;
 }
 
 void sumarXCiclos(entrenador *trainer, int ciclos){
@@ -513,6 +574,11 @@ int cantidadDeMisiones(char *pokemon){
 }
 
 bool necesitoEstePokemon(char *pokemon){
+	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
+	return (valor>0);
+}
+
+bool contandoMisionesActualesNecesitoEstePokemon(char *pokemon){
 	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
 	int cantidad = cantidadDeMisiones(pokemon);
 	return ((valor-cantidad)>0);

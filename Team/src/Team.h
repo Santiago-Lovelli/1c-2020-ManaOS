@@ -12,7 +12,7 @@
 #include <pthread.h>
 #include "Logger/Logger.h"
 #include <semaphore.h>
-//Ver como crear lista de listas
+
 /////////ESTRUCTURA/////////
 
 typedef enum t_estado {
@@ -183,6 +183,14 @@ int diferenciaEntrePuntos(punto origen, punto destino);
 bool necesitoEstePokemon(char *pokemon);
 
 /*
+ * ESTA FUNCION DADO UN POKEMON NOS DEVUELVE SI ESTE
+ * SE ENCUENTRA EN NUESTRO OBJETIVO GLOBAL Y PERO TAMBIEN
+ * CONSIDERANDO SI TENEMOS ENTRENADORES YENDO A BUSCARLO
+ */
+
+bool contandoMisionesActualesNecesitoEstePokemon(char *pokemon);
+
+/*
  * ESTA FUNCION DADO UN POKEMON RESTA UNO DEL
  * MISMO DE LA CANTIDAD QUE NECESITAMOS EN UN
  * NUESTRO OBJETIVO GLOBAL
@@ -220,11 +228,26 @@ void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio)
 void cumplirMision(entrenador* trainer);
 
 /*
+ * ESTA FUNCION DADO UN POKEMON, UN PUNTO Y SI ES O NO UN INTERCAMBIO
+ * CREA UNA MISION Y LA RETORNA
+ */
+
+t_mision* crearMision(char *pokemon, punto point, bool esIntercambio);
+
+/*
+ * ESTA FUNCION DADO EL ID DE UN  ENTRENADOR
+ * Y UNA MISION YA CREADA, SE LA ASIGNA
+ */
+
+void asignarMision(int idEntrenador, t_mision* misionYaCreada);
+
+/*
  * ESTA FUNCION DADO UN ENTRENADOR Y UNA RAZON
  * PASA EL ESTADO DE ESTE A BLOQUEADO PARA BLOQUEAR
  * A UN ENTRENADOR ES IMPORTANTE QUE SE USE ESTA
  * FUNCION
  */
+
 
 void bloquearEntrenador(int idEntrenador, t_razonBloqueo razon);
 
@@ -327,6 +350,44 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
  */
 
 void hacerCaught(int idMensajeCaught, int resultadoCaught);
+
+/*
+ * ESTA FUNCION DADA UNA MISION LA DESTRUYE
+ */
+
+void destruirMision(t_mision *mision);
+
+/*
+ * ESTA FUNCION DADO UN POKEMON, BORRA TODAS LAS MISIONES
+ * PENDIENTES DEL MISMO
+ */
+
+void borrarEstePokemonDePendientes(char *pokemon);
+
+/*
+ * ESTA FUNCION DADO UN POKEMON SE FIJA:
+ * 1) SI LO NECESITAMOS Y HAY MISIONES PENDIENTES
+ * MANDARA A HACERSE UNA MISION
+ * 2) SI NO LO NECESITAMOS BORRA TODAS LAS
+ * MISIONES PENDIENTES QUE HAYA
+ */
+
+void verPendientes(char *pokemon);
+
+/*
+ *	ESTA FUNCION DADO UNA MISION Y UN POKEMON RETORNA TRUE
+ *	SI EL POKEMON OBJETIVO DE ESA MISION ES EL POKEMON PASADO
+ *	POR PARAMETROS
+ */
+
+bool mismoPokemonDeMision(t_mision* pokemon1, char* pokemon2);
+
+/*
+ * ESTA FUNCION DADO UN POKEMON BUSCA ALGUNA MISION PENDIENTE
+ * DEL MISMO Y SE LA ASIGNA AL ENTRENADOR DISPONIBLE MAS CERCANO
+ */
+
+void asignarMisionPendienteDePoke(char* pokemon);
 
 ////////FUNCIONES PLANIFICACION////////////
 
@@ -489,6 +550,7 @@ t_dictionary * OBJETIVO_GLOBAL;
 t_list * ENTRENADORES_TOTALES;
 t_list * POKEMONES_ATRAPADOS;
 t_list * ID_QUE_NECESITO;
+t_list * MISIONES_PENDIENTES;
 int AUX_ID_TRAINER;
 
 ///////Estados//////////
