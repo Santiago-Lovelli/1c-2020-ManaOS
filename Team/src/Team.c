@@ -229,7 +229,22 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	case d_LOCALIZED_POKEMON:
 		;
 		//SERIALIZACION PENDIENTE
-
+//		log_info(logger, "Llego un LOCALIZED POKEMON");
+//		void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+//		t_list *posCant = list_create();
+//		uint32_t idMensajeLocalized;
+//		char *localizedNombrePokemon;
+//		Serialize_Unpack_LocalizedPokemon(packLocalizedPokemon,&idMensajeLocalized,localizedNombrePokemon,posCant);
+//		//logear lo que llego
+//		if(necesitoEstePokemon(localizedNombrePokemon)){
+//			printf("Necesito este pokemon!!! \n ");
+//			for(int i=0; i<list_size(posCant);i++){
+//				d_PosCant *posCantAUX = list_get(posCant,i);
+//				hacerAppeared(localizedNombrePokemon,posCantAUX->posX,posCantAUX->posY,logger);
+//			}
+//		}
+//		else{ printf("No necesito este pokemon!!! \n "); }
+//		free(packLocalizedPokemon);
 		break;
 
 	case d_CAUGHT_POKEMON:
