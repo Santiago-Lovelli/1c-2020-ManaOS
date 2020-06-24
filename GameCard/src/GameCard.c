@@ -365,6 +365,7 @@ void abrirArchivoPokemon(char*pkm) {
 		if (strcmp(metadataDePokemon->inicioOpen, "N") == 0) {
 			memcpy(metadataDePokemon->inicioOpen, "Y", strlen("Y"));
 			sem_post(&semaforoDePokemon->semaforoDePokemon);
+			log_info(loggerGeneral, "Se puede abrir %s", pkm);
 			break;
 		}
 		sem_post(&semaforoDePokemon->semaforoDePokemon);
@@ -375,26 +376,35 @@ void abrirArchivoPokemon(char*pkm) {
 
 }
 
+char* leerUnPokemon(char* pkm, t_list* listaDeBloques){
+
+	p_metadata* metadataDePokemon = obtenerMetadataEnteraDePokemon(pkm);
+
+	char** bloquesEnUno = string_split(metadataDePokemon->inicioBloques, "\n");
+	char** arrayConBloques = string_get_string_as_array(bloquesEnUno[0]);
+	cargarListaDeBloques(arrayConBloques, listaDeBloques);
+
+	char** tamEnCero = string_split(metadataDePokemon->inicioSize, "\n");
+	int tamanioDelPokemon = atoi(tamEnCero[0]);
+
+	char* archivoDePokemon = leerBloques(listaDeBloques, tamanioDelPokemon);
+
+	return archivoDePokemon;
+}
+
 void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		uint32_t cantidad) {
 
 	abrirArchivoPokemon(pkm);
+
 	p_metadata* metadataDePokemon = obtenerMetadataEnteraDePokemon(pkm);
 
-	log_info(loggerGeneral, "Se puede escribir %s", pkm);
-
-	/*----------------------------------------------------------------*/
-	char** bloquesEnUno = string_split(metadataDePokemon->inicioBloques, "\n");
-	char** arrayConBloques = string_get_string_as_array(bloquesEnUno[0]);
 	t_list* listaDeBloques = list_create();
 
-	cargarListaDeBloques(arrayConBloques, listaDeBloques);
-
-	/*-------------------------------Recorriendo bloques---------------------------------*/
 	char** tamEnCero = string_split(metadataDePokemon->inicioSize, "\n");
 	int tamanioDelPokemon = atoi(tamEnCero[0]);
 
-	char* megaChar = leerBloques(listaDeBloques, tamanioDelPokemon);
+	char* megaChar = leerUnPokemon(pkm, listaDeBloques);
 
 	char** lineasDeBloque = string_split(megaChar, "\n");
 
