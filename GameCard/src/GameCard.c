@@ -392,6 +392,34 @@ char* leerUnPokemon(char* pkm, t_list* listaDeBloques){
 	return archivoDePokemon;
 }
 
+char* metadataNueva(int tamanioDelPokemon, char* cantidadAEscribir, char**lineaSeparadaPorIgual, t_list* listaDeBloques){
+	char* metadataPost = string_duplicate("DIRECTORY=N\nSIZE=");
+
+	uint32_t tamanioNuevoFinal = tamanioDelPokemon + strlen(cantidadAEscribir)
+			- strlen(lineaSeparadaPorIgual[1]);
+	string_append(&metadataPost, string_itoa(tamanioNuevoFinal));
+	string_append(&metadataPost, "\n");
+
+	string_append(&metadataPost, "BLOCKS=[");
+
+	uint32_t bloquesTotales = ceil(
+			(float) tamanioNuevoFinal / metadata.tamanioDeBloque);
+
+	for (int j = 0; j < bloquesTotales; ++j) {
+		if (list_get(listaDeBloques, j) != NULL) {
+			string_append(&metadataPost, list_get(listaDeBloques, j));
+			if (list_get(listaDeBloques, j + 1) != NULL)
+				string_append(&metadataPost, ",");
+		} else {
+			log_error(loggerGeneral, "No hay bloque en posicion: %i", j);
+		}
+	}
+
+	string_append(&metadataPost, "]\nOPEN=N");
+
+	return metadataPost;
+}
+
 void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		uint32_t cantidad) {
 
@@ -476,31 +504,9 @@ void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	desplazamiento = desplazamiento + faltanteEscribir;
 	escrito = escrito + faltanteEscribir;
 
-	char* metadataPost = string_duplicate("DIRECTORY=N\nSIZE=");
-
-	uint32_t tamanioNuevoFinal = tamanioDelPokemon + strlen(cantidadAEscribir)
-			- strlen(lineaSeparadaPorIgual[1]);
-	string_append(&metadataPost, string_itoa(tamanioNuevoFinal));
-	string_append(&metadataPost, "\n");
-
-	string_append(&metadataPost, "BLOCKS=[");
-
-	uint32_t bloquesTotales = ceil(
-			(float) tamanioNuevoFinal / metadata.tamanioDeBloque);
-
-	for (int j = 0; j < bloquesTotales; ++j) {
-		if (list_get(listaDeBloques, j) != NULL) {
-			string_append(&metadataPost, list_get(listaDeBloques, j));
-			if (list_get(listaDeBloques, j + 1) != NULL)
-				string_append(&metadataPost, ",");
-		} else {
-			log_error(loggerGeneral, "No hay bloque en posicion: %i", j);
-		}
-	}
-
-	string_append(&metadataPost, "]\nOPEN=N");
-
+	char* metadataPost = metadataNueva(tamanioDelPokemon, cantidadAEscribir, lineaSeparadaPorIgual, listaDeBloques);
 	cambiarMetadata(pkm, metadataPost);
+
 }
 
 char* metadataVacia() {
