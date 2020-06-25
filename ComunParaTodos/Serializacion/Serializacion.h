@@ -56,6 +56,7 @@ typedef enum d_messages {
 	d_CAUGHT_POKEMON,
 	d_LOCALIZED_POKEMON,
 	d_ACK,
+	d_RESPONSE_CATCH,
 	d_SUBSCRIBE_QUEUE
 } d_message;
 
@@ -220,7 +221,6 @@ void* Serialize_ReceiveAndUnpack(int socketCliente, uint32_t tamanioChar);
 */
 
 uint32_t Serialize_Unpack_ACK(void *pack);
-
 
 /**
  * ESTA FUNCION DESEMPAQUETA EL ID DEL MENSAJE DE UN

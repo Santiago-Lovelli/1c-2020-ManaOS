@@ -48,4 +48,9 @@ void ocupar_bloque_en_bitmap(int indice, t_bitarray *tBitarray);
 */
 void liberar_bloque_en_bitmap(int indice, t_bitarray *tBitarray);
 
+/*
+* Limpia el bitamp desde una posicion una cantidad
+*/
+void limpiar_bitmap(int desdePosision, int cantidad, t_bitarray *tBitarray, t_log *logger);
+
 #endif /* BITMAP_H_ */

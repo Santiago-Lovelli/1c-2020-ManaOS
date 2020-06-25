@@ -4,19 +4,26 @@ int main (void){
 	inicializar();
 	list_add_all(EstadoNew, ENTRENADORES_TOTALES);
 	list_add_all(EstadoReady, ENTRENADORES_TOTALES);
-	while(objetivoTerminado() == 0){
-		proceso* procesoAEjecutar = planificarSegun(TEAM_CONFIG.ALGORITMO_PLANIFICACION, EstadoReady);
-	}
+//	while(objetivoTerminado() == 0){
+//		proceso* procesoAEjecutar = planificarSegun(TEAM_CONFIG.ALGORITMO_PLANIFICACION, EstadoReady);
+//	}
 	finalFeliz();
 	return EXIT_SUCCESS;
+}
+
+void crear_hilo_planificacion(){
+	pthread_create(&hiloPlanificacion, NULL, planificarSegun, TEAM_CONFIG.ALGORITMO_PLANIFICACION);
+	pthread_detach(hiloPlanificacion);
 }
 
 void inicializar(){
 	TEAM_LOG = iniciar_log("Team");
 	iniciarConfig();
-	crearEntrenadores();
 	crearEstados();
+	crearEntrenadores();
 	iniciarVariablesDePlanificacion();
+	ID_QUE_NECESITO = list_create();
+	MISIONES_PENDIENTES = list_create();
 	for (int i = 0; list_get(ENTRENADORES_TOTALES, i) != NULL; i++){
 		entrenador * entrenador = list_get(ENTRENADORES_TOTALES, i);
 		printf("Entrenador en posicion: x = %d, y = %d \n", entrenador->posicion.x, entrenador->posicion.y);
@@ -27,10 +34,12 @@ void inicializar(){
 			printf("Pokemon objetivo n° %d es un: %s \n", j, entrenador->pokemonesObjetivo[j]);
 		}
 	}
-	//cargarEstadoNew(); //
-	setObjetivoGlobal(); //
+	setObjetivoGlobal();
 	log_info (TEAM_LOG, "TEAM OK");
 	//iniciarHilos();
+
+	crear_hilo_planificacion();
+
 	pthread_t* servidor = malloc(sizeof(pthread_t));
 	iniciarServidorDeGameBoy(servidor);
 
@@ -47,6 +56,81 @@ void inicializar(){
 	pthread_join(*suscriptoAppearedPokemon, NULL);
 	pthread_join(*suscriptoLocalizedPokemon, NULL);
 	pthread_join(*suscriptoCaughtPokemon, NULL);
+}
+
+int iniciarConexionABroker(){
+	int conexion;
+	while (1) {
+		conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+		if (conexion == -1) {
+			log_error(TEAM_LOG,
+					"No se pudo conectar con el Broker");
+			sleep(TEAM_CONFIG.TIEMPO_RECONEXION);
+		} else {
+			break;
+		}
+	}
+	return conexion;
+}
+
+uint32_t recibirResponse(int conexion, HeaderDelibird headerACK){
+	if(headerACK.tipoMensaje == d_ACK)
+	{
+		void* packACK = Serialize_ReceiveAndUnpack(conexion, headerACK.tamanioMensaje);
+		uint32_t id = Serialize_Unpack_ACK(packACK);
+		free(packACK);
+		//cerrar conexion;
+		close(conexion);
+		return id;
+	}
+	else
+		return -1; //codigo de error
+}
+
+void sumarPokemon(entrenador* trainer, char* pokemon){
+	int index = damePosicionFinalDoblePuntero(trainer->pokemones);
+	trainer->pokemones[index+1] = pokemon;
+}
+
+void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch){
+	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+	if(conexion == -1){
+		log_error(TEAM_LOG,"No se pudo conectar con el Broker. Se procede con comportamiento DEFAULT");
+		entrenador *trainer = list_get(ENTRENADORES_TOTALES, idEntrenadorQueMandaCatch);
+		sumarPokemon(trainer,pokemon);
+		descontarDeObjetivoGlobal(pokemon);
+		bloquearEntrenador(trainer->tid,t_DESOCUPADO);
+		sacarMision(idEntrenadorQueMandaCatch);
+		verPendientes(pokemon);
+		//comportamiento Default es asumir que el pokemon pudo atraparse
+	}
+	else{
+		Serialize_PackAndSend_CATCH_POKEMON_NoID(conexion, pokemon, posX, posY);
+		HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
+		int idEsperado = recibirResponse(conexion, headerACK);
+		objetoID_QUE_NECESITO *objetoID = malloc(2*sizeof(int) + strlen(pokemon)+1);
+		objetoID->idMensaje = idEsperado;
+		objetoID->idEntrenador = idEntrenadorQueMandaCatch;
+		objetoID->pokemon = pokemon;
+		bloquearEntrenador(objetoID->idEntrenador, t_ESPERANDO_RESPUESTA);
+		list_add(ID_QUE_NECESITO, objetoID);
+	}
+}
+
+void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
+	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+	if(conexion == -1){
+		log_error(TEAM_LOG,"No se pudo conectar con el Broker. Se procede con comportamiento DEFAULT");
+		return; //comportamiento Default es asumir que el pokemon no esta
+	}
+	Serialize_PackAndSend_GET_POKEMON_NoID(conexion,pokemon);
+	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
+	recibirResponse(conexion, headerACK); //NO ESTOY USANDO ESTE DATO
+
+}
+
+void enviarGetXCadaPokemonObjetivo(){
+	dictionary_iterator(OBJETIVO_GLOBAL, (void*)enviarGetPokemonYRecibirResponse);
 }
 
 void iniciarServidorDeGameBoy(pthread_t* servidor) {
@@ -99,19 +183,7 @@ void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion) {
 
 
 void* suscribirme(d_message colaDeSuscripcion) {
-	int conexion;
-
-	while (1) {
-		conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
-		if (conexion == -1) {
-			log_error(TEAM_LOG,
-					"No se pudo conectar con el Broken a la cola de: %i\n",
-					colaDeSuscripcion);
-			sleep(TEAM_CONFIG.TIEMPO_RECONEXION);
-		} else {
-			break;
-		}
-	}
+	int conexion = iniciarConexionABroker();
 	Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
 
 	p_elementoDeHilo* elemento;
@@ -137,61 +209,62 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 
 void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	//es el atender del gamecard, ahora hay que tunearlo para que atienda el team
-
 	switch (header.tipoMensaje) {
 	case d_APPEARED_POKEMON:
 		;
-		log_info(logger, "Llego un appeared pokemon");
-		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente,
-				header.tamanioMensaje);
+		log_info(logger, "Llego un APPEARED POKEMON");
+		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 		uint32_t posicionAppearedX, posicionAppearedY;
 		char *AppearedNombrePokemon;
-		Serialize_Unpack_AppearedPokemon_NoID(packAppearedPokemon,
-				&AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
-		log_info(logger,
-				"Me llego mensaje de %i. Pkm: %s, x: %i, y: %i\n",
-				header.tipoMensaje, AppearedNombrePokemon,
-				posicionAppearedX, posicionAppearedY);
+		Serialize_Unpack_AppearedPokemon_NoID(packAppearedPokemon, &AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
+		log_info(logger, "Me llego mensaje de %i. Pkm: %s, x: %i, y: %i\n", header.tipoMensaje, AppearedNombrePokemon, posicionAppearedX, posicionAppearedY);
 
-		//HACER APPEARED
-
+		if(necesitoEstePokemon(AppearedNombrePokemon)){
+			printf("Necesito este pokemon!!! \n ");
+			hacerAppeared(AppearedNombrePokemon,posicionAppearedX,posicionAppearedY,logger);
+		}
+		else{ printf("No necesito este pokemon!!! \n "); }
 		free(packAppearedPokemon);
 		break;
 	case d_LOCALIZED_POKEMON:
 		;
 		//SERIALIZACION PENDIENTE
-
-			/*log_info(logger, "Llego un catch pokemon");
-
-			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente,
-					header.tamanioMensaje);
-			uint32_t idMensajeCatch, posicionCatchX, posicionCatchY;
-			char *catchNombrePokemon;
-			Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch,
-					&catchNombrePokemon, &posicionCatchX, &posicionCatchY);
-			log_info(logger,
-					"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n",
-					header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
-					posicionCatchX, posicionCatchY);
-			// Se hace lo necesario
-			free(packCatchPokemon);*/
+//		log_info(logger, "Llego un LOCALIZED POKEMON");
+//		void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+//		t_list *posCant = list_create();
+//		uint32_t idMensajeLocalized;
+//		char *localizedNombrePokemon;
+//		Serialize_Unpack_LocalizedPokemon(packLocalizedPokemon,&idMensajeLocalized,localizedNombrePokemon,posCant);
+//		//logear lo que llego
+//		if(necesitoEstePokemon(localizedNombrePokemon)){
+//			printf("Necesito este pokemon!!! \n ");
+//			for(int i=0; i<list_size(posCant);i++){
+//				d_PosCant *posCantAUX = list_get(posCant,i);
+//				hacerAppeared(localizedNombrePokemon,posCantAUX->posX,posCantAUX->posY,logger);
+//			}
+//		}
+//		else{ printf("No necesito este pokemon!!! \n "); }
+//		free(packLocalizedPokemon);
 		break;
+
 	case d_CAUGHT_POKEMON:
 		;
-		log_info(logger, "Llego un caught pokemon");
-
-		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente,
-				header.tamanioMensaje);
+		log_info(logger, "Llego un CAUGHT POKEMON");
+		//recibimos el resto del paquete
+		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+		//Con estas dos variables desempaquetamos el paquete
 		uint32_t idMensajeCaught, resultadoCaught;
-		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught,
-				&resultadoCaught);
-		log_info(logger, "Me llego mensaje de %i. Id: %i, Result: %i\n",
-				header.tipoMensaje, idMensajeCaught, resultadoCaught);
+		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught, &resultadoCaught);
+		log_info(logger, "Me llego mensaje de %i. Id: %i, Result: %i\n", header.tipoMensaje, idMensajeCaught, resultadoCaught);
 
-		// HACER CAUGHT
+		if(necesitoEsteID(idMensajeCaught)){
+			hacerCaught(idMensajeCaught,resultadoCaught);
+		}
 
 		free(packCaughtPokemon);
+
 		break;
+
 	default:
 		log_error(logger, "Mensaje no entendido: %i\n", header);
 		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
@@ -201,6 +274,355 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	}
 }
 
+void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, t_log* logger){
+	punto posicionPoke;
+	posicionPoke.x = posicionAppearedX;
+	posicionPoke.y = posicionAppearedY;
+	if(!contandoMisionesActualesNecesitoEstePokemon(pokemon)){
+		t_mision* misionPendiente = crearMision(pokemon,posicionPoke,false);
+		list_add(MISIONES_PENDIENTES, misionPendiente);
+		printf("\n Este pokemon se agregara a pendientes \n");
+		return;
+	}
+//	while(!contandoMisionesActualesNecesitoEstePokemon(pokemon)){
+//		printf(" ::: VAMO A CALMARNO :::");
+//		sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+//		if(!necesitoEstePokemon(pokemon))
+//			return;
+//	}
+	int idEntrenador = entrenadorMasCercanoDisponible(posicionPoke);
+	while(idEntrenador == -1){
+		log_error(logger, "No hay entrenadores disponibles, se esperara a que los haya");
+		sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		idEntrenador = entrenadorMasCercanoDisponible(posicionPoke);
+	}
+	darMision(idEntrenador,pokemon,posicionPoke,false);
+	pasarEntrenadorAEstado(idEntrenador, t_READY);
+}
+
+void hacerCaught(int idMensajeCaught, int resultadoCaught){
+	objetoID_QUE_NECESITO *objetoID = malloc(sizeof(objetoID_QUE_NECESITO));
+	objetoID->idMensaje = idMensajeCaught;
+	int index = list_get_index(ID_QUE_NECESITO, objetoID, (void*)comparadorIDs);
+	if(resultadoCaught){
+		free(objetoID);
+		objetoID = list_get(ID_QUE_NECESITO, index);
+		entrenador *trainer = list_get(ENTRENADORES_TOTALES, objetoID->idEntrenador);
+		list_remove(ID_QUE_NECESITO, index);
+		sumarPokemon(trainer,objetoID->pokemon);
+		descontarDeObjetivoGlobal(objetoID->pokemon);
+		trainer->razonBloqueo = t_DESOCUPADO;
+		sacarMision(objetoID->idEntrenador);
+		verPendientes(objetoID->pokemon);
+		free(objetoID);
+	}
+	else{
+		free(objetoID);
+		objetoID = list_get(ID_QUE_NECESITO, index);
+		list_remove(ID_QUE_NECESITO, index);
+		bloquearEntrenador(objetoID->idEntrenador, t_DESOCUPADO);
+		sacarMision(objetoID->idEntrenador);
+		asignarMisionPendienteDePoke(objetoID->pokemon);
+		free(objetoID);
+	}
+}
+
+void verPendientes(char *pokemon){
+	if(contandoMisionesActualesNecesitoEstePokemon(pokemon))
+		asignarMisionPendienteDePoke(pokemon);
+	if(!necesitoEstePokemon(pokemon))
+		borrarEstePokemonDePendientes(pokemon);
+}
+
+void destruirMision(t_mision *mision){
+	free(mision->pokemon);
+	free(mision);
+}
+
+void borrarEstePokemonDePendientes(char *pokemon){
+	t_mision *mision;
+	for(int i=0; i<list_size(MISIONES_PENDIENTES); i++){
+		mision = list_get(MISIONES_PENDIENTES,i);
+		if(mismoPokemonDeMision(mision,pokemon))
+			list_remove_and_destroy_element(MISIONES_PENDIENTES,i,(void*)destruirMision);
+	}
+}
+
+bool mismoPokemonDeMision(t_mision* pokemon1, char* pokemon2){
+	return ( (strcmp(pokemon1->pokemon,pokemon2)) == 0);
+}
+
+void asignarMisionPendienteDePoke(char* pokemon){
+	t_mision *mision;
+	for(int i=0; i<list_size(MISIONES_PENDIENTES); i++){
+		mision = list_get(MISIONES_PENDIENTES,i);
+		if(mismoPokemonDeMision(mision,pokemon)){
+			hacerAppeared(mision->pokemon,mision->point.x,mision->point.y, TEAM_LOG);
+			return;
+		}
+	}
+}
+
+bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
+	return (entrenadorAUX->estado != t_EXIT) &&
+		   (entrenadorAUX->estado != t_READY) &&
+		   (list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo)) &&
+		   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA) &&
+		   (entrenadorAUX->mision == NULL);
+
+}
+
+int entrenadorMasCercanoDisponible(punto point){
+	int index = -1;
+	int distanciaMinima = 0;
+	int distanciaAUX = 0;
+	entrenador *entrenadorAUX;
+
+	entrenadorAUX = (entrenador*)list_get(ENTRENADORES_TOTALES,0);
+	distanciaMinima = diferenciaEntrePuntos( entrenadorAUX->posicion , point);
+	if( entrenadorEstaDisponible(entrenadorAUX) )
+		index = 0;
+
+	for(int j = 1; j < list_size(ENTRENADORES_TOTALES); j=j+1){
+		entrenadorAUX = (entrenador*)list_get(ENTRENADORES_TOTALES,j);
+		distanciaAUX = diferenciaEntrePuntos( entrenadorAUX->posicion , point);
+		if( (distanciaAUX < distanciaMinima) && entrenadorEstaDisponible(entrenadorAUX)){
+			distanciaMinima = distanciaAUX;
+			index = j;
+		}
+	}
+
+	return index;
+}
+
+bool mismaPosicion(entrenador* e1, entrenador* e2){
+	return ((e1->posicion.x == e2->posicion.x) && (e1->posicion.y == e2->posicion.y));
+}
+
+bool mismaPosicion2(entrenador* e1, punto e2){
+	return ((e1->posicion.x == e2.x) && (e1->posicion.y == e2.y));
+}
+
+bool acercar(int *punto1, int punto2){
+	if(*punto1<punto2){
+		*punto1 = *punto1 + 1;
+		return true;
+	}
+	if(*punto1>punto2){
+		*punto1 = *punto1 - 1;
+		return true;
+	}
+	return false;
+}
+
+bool moveHacia(entrenador* e1, punto destino){
+	if(mismaPosicion2(e1,destino))
+		return false;
+	if(!acercar(&e1->posicion.x, destino.x))
+		acercar(&e1->posicion.y, destino.y);
+	return true;
+}
+
+
+void eliminarDeListaEntrenador(entrenador  *trainer, t_list* lista){
+	if(trainer->tid != -1){
+		int index = list_get_index(lista, trainer, (void*)mismaPosicion);
+		list_remove(lista,index);
+	}
+	else
+		printf("Indice Invalido");
+}
+
+void bloquearEntrenador(int idEntrenador, t_razonBloqueo razon){
+	entrenador *trainer = list_get(ENTRENADORES_TOTALES, idEntrenador);
+	trainer->razonBloqueo = razon;
+	pasarEntrenadorAEstado(idEntrenador, t_BLOCKED);
+}
+
+void sacarEntrenadorDeEstadoActual(entrenador* trainer){
+	int index=0;
+	trainer->razonBloqueo = t_NULL;
+	switch(trainer->estado){
+	case t_NEW:;
+		eliminarDeListaEntrenador(trainer,EstadoNew);
+		break;
+	case t_READY:;
+		eliminarDeListaEntrenador(trainer,EstadoReady);
+		break;
+	case t_BLOCKED:;
+		eliminarDeListaEntrenador(trainer,EstadoBlock);
+		break;
+	case t_EXEC:;
+		if(mismaPosicion(EstadoExec, trainer))
+			EstadoExec = NULL;
+		else
+			printf("Este entrenador NO esta en exec");
+		break;
+	case t_EXIT:;
+		eliminarDeListaEntrenador(trainer,EstadoExit);
+		break;
+	default:;
+		printf("Estado invalido");
+		break;
+	}
+}
+
+void pasarEntrenadorAEstado(int index, t_estado estado){
+	entrenador *entrenadorAUX = (entrenador*)list_get(ENTRENADORES_TOTALES,index);
+	sacarEntrenadorDeEstadoActual(entrenadorAUX);
+	switch(estado){
+	case t_NEW:;
+		entrenadorAUX->estado = t_NEW;
+		list_add(EstadoNew, entrenadorAUX);
+		break;
+	case t_READY:;
+		entrenadorAUX->estado = t_READY;
+		list_add(EstadoReady, entrenadorAUX);
+		break;
+	case t_BLOCKED:;
+		entrenadorAUX->estado = t_BLOCKED;
+		list_add(EstadoBlock, entrenadorAUX);
+		break;
+	case t_EXEC:;
+		entrenadorAUX->estado = t_EXEC;
+		EstadoExec = entrenadorAUX;
+		break;
+	case t_EXIT:;
+		entrenadorAUX->estado = t_EXIT;
+		list_add(EstadoExit, entrenadorAUX);
+		break;
+	default:;
+		printf("Estado invalido");
+		break;
+	}
+
+}
+
+void sacarMision(int idEntrenador){
+	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
+	destruirMision(trainer->mision);
+	trainer->mision = NULL;
+}
+
+t_mision* crearMision(char *pokemon, punto point, bool esIntercambio){
+	t_mision *mision = malloc(sizeof(punto) + strlen(pokemon) +1 + sizeof(bool));
+	mision->point = point;
+	mision->pokemon = pokemon;
+	mision->esIntercambio = esIntercambio;
+	return mision;
+}
+
+void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio){
+	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
+	trainer->mision = crearMision(pokemon,point,esIntercambio);
+
+}
+
+void asignarMision(int idEntrenador, t_mision* misionYaCreada){
+	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
+	trainer->mision = misionYaCreada;
+}
+
+void sumarXCiclos(entrenador *trainer, int ciclos){
+	trainer->ciclosCPUEjecutados = trainer->ciclosCPUEjecutados+ciclos;
+	CICLOS_TOTALES = CICLOS_TOTALES + trainer->ciclosCPUEjecutados;
+	sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+	if(string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "RR") || string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "SJFCD")){
+		sem_post(&semaforoPlanifiquenme);
+		sem_wait(&(trainer->semaforoDeEntrenador));
+	}
+}
+
+void avisarQueTermine(entrenador *trainer){
+	trainer->ciclosCPUEjeutadosAnteriormente = trainer->ciclosCPUEjecutados;
+	trainer->ciclosCPUEjecutados = 0;
+	if(string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "RR") || string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "SJFCD")){
+		sem_post(&semaforoPlanifiquenme);
+	}
+	else{
+		sem_post(&semaforoTermine);
+	}
+}
+
+void cumplirMision(entrenador* trainer){
+	printf("Se creo el hilo del entrenador %i \n", trainer->tid);
+	while( !entrenadorCumplioObjetivo(trainer) ){
+		if(trainer->mision != NULL){
+			sem_wait(&(trainer->semaforoDeEntrenador));
+			trainer->ciclosCPUEjecutados = 0;
+			printf("Hola soy el entrenador %i \n", trainer->tid);
+			log_info(TEAM_LOG,"\n Mi posicion inicial es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
+			while( moveHacia(trainer, trainer->mision->point) ){
+				log_info(TEAM_LOG,"\n Mi posicion actual es: \n x = %i \n y = %i \n", trainer->posicion.x,trainer->posicion.y);
+				sumarXCiclos(trainer,1);
+			}
+			if(trainer->mision->esIntercambio){
+				//TODO
+				for(int i=0; i<5; i++){
+					sumarXCiclos(trainer,1);
+				}
+			}
+			else{
+				log_info(TEAM_LOG,"\n Se va a intentar atrapar a: %s \n En la posicion: x:%i y:%i", trainer->mision->pokemon, trainer->posicion.x, trainer->posicion.y);
+				enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
+				sumarXCiclos(trainer,1);
+			}
+			avisarQueTermine(trainer);
+		}
+	}
+}
+
+int diferenciaEntrePuntos(punto origen, punto destino){
+	return abs( abs(destino.x - origen.x) + abs(destino.y - origen.y) );
+}
+
+int cantidadDeMisiones(char *pokemon){
+	int cantidad = 0;
+	entrenador *trainer;
+	for(int i=0; i<list_size(ENTRENADORES_TOTALES); i++){
+		trainer = list_get(ENTRENADORES_TOTALES,i);
+		if( (trainer->mision != NULL) && (strcmp(trainer->mision->pokemon , pokemon)) == 0 ){
+			cantidad = cantidad +1;
+		}
+	}
+	return cantidad;
+}
+
+bool necesitoEstePokemon(char *pokemon){
+	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
+	return (valor>0);
+}
+
+bool contandoMisionesActualesNecesitoEstePokemon(char *pokemon){
+	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
+	int cantidad = cantidadDeMisiones(pokemon);
+	return ((valor-cantidad)>0);
+}
+
+bool comparadorIDs(objetoID_QUE_NECESITO *objetoID1, objetoID_QUE_NECESITO *objetoID2){
+	return objetoID1->idMensaje == objetoID2->idMensaje;
+}
+
+bool necesitoEsteID(int id){
+	objetoID_QUE_NECESITO* objetoIDAux = malloc(sizeof(objetoID_QUE_NECESITO));
+	objetoIDAux->idMensaje = id;
+	int resultado = list_get_index(ID_QUE_NECESITO, objetoIDAux, comparadorIDs);
+	free(objetoIDAux);
+	if(resultado == -1)
+		return false;
+	return true;
+}
+
+void descontarDeObjetivoGlobal(char *pokemon){
+	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
+	valor = valor - 1 ;
+	if(valor>0)
+		dictionary_put(OBJETIVO_GLOBAL, pokemon, valor);
+	else
+		dictionary_remove(OBJETIVO_GLOBAL, pokemon);
+	printf("Hemos atrapado al pokemon: %s \n",pokemon);
+}
+
 void finalFeliz(){
 	//destruirObjetivoGlobal();
 	//destruirEstados();
@@ -208,7 +630,7 @@ void finalFeliz(){
 }
 
 void iniciarConfig(){
-	t_config* creacionConfig = config_create("../Team.config");
+	t_config* creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team.config");
 	TEAM_CONFIG.POSICIONES_ENTRENADORES = config_get_array_value(creacionConfig, "POSICIONES_ENTRENADORES");
 	TEAM_CONFIG.POKEMON_ENTRENADORES = config_get_array_value(creacionConfig, "POKEMON_ENTRENADORES");
 	TEAM_CONFIG.OBJETIVOS_ENTRENADORES = config_get_array_value(creacionConfig, "OBJETIVOS_ENTRENADORES");
@@ -216,6 +638,7 @@ void iniciarConfig(){
 	TEAM_CONFIG.RETARDO_CICLO_CPU = config_get_int_value (creacionConfig, "RETARDO_CICLO_CPU");
 	TEAM_CONFIG.ALGORITMO_PLANIFICACION = config_get_string_value (creacionConfig, "ALGORITMO_PLANIFICACION");
 	TEAM_CONFIG.QUANTUM = config_get_int_value (creacionConfig, "QUANTUM");
+	TEAM_CONFIG.ALPHA = config_get_double_value(creacionConfig, "ALPHA");
 	TEAM_CONFIG.ESTIMACION_INICIAL = config_get_int_value (creacionConfig, "ESTIMACION_INICIAL");
 	TEAM_CONFIG.IP_BROKER = config_get_string_value (creacionConfig, "IP_BROKER");
 	TEAM_CONFIG.PUERTO_BROKER = config_get_string_value (creacionConfig, "PUERTO_BROKER");
@@ -225,14 +648,29 @@ void iniciarConfig(){
 	free(creacionConfig);
 }
 
+void descontarPokemonsActualesDeOBJGlobal(entrenador* trainer){
+	int posFinal = damePosicionFinalDoblePuntero(trainer->pokemones);
+	for(int i=0; i<=posFinal; i++){
+		if( necesitoEstePokemon(trainer->pokemones[i]) ){
+			descontarDeObjetivoGlobal(trainer->pokemones[i]);
+		}
+	}
+}
+
 void crearEntrenadores(){
 	ENTRENADORES_TOTALES = list_create();
+	AUX_ID_TRAINER = 0;
+	int cantTrainers = damePosicionFinalDoblePuntero(TEAM_CONFIG.POSICIONES_ENTRENADORES);
+	pthread_t hiloEntrenadores[cantTrainers+1];
 	for (int i = 0; TEAM_CONFIG.POSICIONES_ENTRENADORES[i] != NULL; i++){
 		punto punto = crearPunto(TEAM_CONFIG.POSICIONES_ENTRENADORES[i]);
 		char ** pokemones = string_split(TEAM_CONFIG.POKEMON_ENTRENADORES[i], "|");
 		char ** pokemonesObjetivo = string_split(TEAM_CONFIG.OBJETIVOS_ENTRENADORES[i], "|");
 		entrenador * entrenador = crearEntrenador(punto, pokemones, pokemonesObjetivo);
 		list_add(ENTRENADORES_TOTALES, entrenador);
+		list_add(EstadoNew, entrenador);
+		pthread_create(&hiloEntrenadores[i], NULL, (void*)cumplirMision, entrenador);
+		pthread_detach(hiloEntrenadores[i]);
 	}
 }
 
@@ -247,9 +685,18 @@ punto crearPunto(char * posiciones){
 
 entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObjetivo){
 	entrenador * newTrainer = malloc(sizeof(entrenador));
+	newTrainer->tid = AUX_ID_TRAINER;
 	newTrainer->posicion = punto;
 	newTrainer->pokemones = pokemones;
 	newTrainer->pokemonesObjetivo = pokemonesObjetivo;
+	newTrainer->estado = t_NEW;
+	newTrainer->razonBloqueo = t_NULL;
+	newTrainer->mision = NULL;
+	newTrainer->ciclosCPUEjeutadosAnteriormente = 0;
+	newTrainer->ciclosCPUEjecutados = 0;
+	newTrainer->ciclosCPUEstimados = 0;
+	sem_init(&newTrainer->semaforoDeEntrenador,0,0);
+	AUX_ID_TRAINER = AUX_ID_TRAINER + 1 ;
 	return newTrainer;
 }
 
@@ -267,32 +714,6 @@ void iniciarVariablesDePlanificacion(){
 	DEADLOCKS_RESUELTOS = 0;
 }
 
-
-/*void iniciarHilos(){
-	pthread_create(&hiloEscucha, NULL, (void*) escucharMensajes, NULL);
-	log_info(TEAM_LOG, "Se creo el hilo Escucha");
-	pthread_create(&hiloConexionBroker, NULL, (void*) conectarseConBroker, NULL);
-	log_info(TEAM_LOG, "Se creo el hilo Conexion Broker");
-}
-*/
-
-/*void escucharMensajes(){
-	int servidor = iniciar_servidor(TEAM_CONFIG.IP_TEAM, TEAM_CONFIG.PUERTO_TEAM,TEAM_LOG);
-	while(1){
-	int cliente = esperar_cliente_con_accept(servidor, TEAM_LOG);
-	log_info ("Se conecto el cliente: %i", cliente);
-	}
-}*/
-
-void conectarseConBroker(){
-	int cliente = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
-	if (cliente == -1){
-		//reintentarConexión(); ////////Ver como hago con TIEMPO_RECONEXION del config
-	}
-	else ;
-		//log_info ("Conexion exitosa");
-}
-
 static void entrenadorDestroy(entrenador *self) {
 	for (int i = 0; self->pokemones[i]!=NULL; i++){
 		free(self->pokemones[i]);
@@ -304,39 +725,127 @@ static void entrenadorDestroy(entrenador *self) {
     free(self->pokemonesObjetivo);
 }
 
-int objetivoTerminado(){
-	return 0;
+void ponerAlFinalDeLista(entrenador *trainer, t_list *lista){
+	int index = list_get_index(lista,trainer, (void*)mismaPosicion);
+	list_remove(lista,index);
+	list_add(lista,trainer);
+	trainer->ciclosCPUEjecutados = 0;
 }
 
 ////////////Funciones planificacion/////////////
-proceso* planificarSegun(char* tipoPlanificacion, t_list* procesos){
-	if(string_equals_ignore_case(tipoPlanificacion, "FIFO")){
-		return FIFO(procesos);
+void planificarSegun(char* tipoPlanificacion){
+	if(string_equals_ignore_case(tipoPlanificacion, "FIFO"))
+		FIFO();
+	if(string_equals_ignore_case(tipoPlanificacion, "RR"))
+		RR();
+	if(string_equals_ignore_case(tipoPlanificacion, "SJFCD"))
+		SJFCD();
+	if(string_equals_ignore_case(tipoPlanificacion, "SJFSD"))
+		SJFSD();
+}
+
+void FIFO(){
+	CICLOS_TOTALES = 0;
+	sem_init(&semaforoTermine,0,0);
+	while(!objetivoGlobalCumplido()){
+		while(list_is_empty(EstadoReady)){
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		entrenador *trainer = list_get(EstadoReady,0);
+		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
+		sem_post(&(trainer->semaforoDeEntrenador));
+		sem_wait(&semaforoTermine);
 	}
-	if(string_equals_ignore_case(tipoPlanificacion, "RR")){
-		return RR(procesos);
+}
+
+void RR(){
+	CICLOS_TOTALES = 0;
+	sem_init(&semaforoPlanifiquenme,0,0);
+	while(!objetivoGlobalCumplido()){
+		while(list_is_empty(EstadoReady)){
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		entrenador *trainer = list_get(EstadoReady,0);
+		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
+		sem_post(&(trainer->semaforoDeEntrenador));
+		while(1){
+			sem_wait(&semaforoPlanifiquenme);
+			if(trainer->mision == NULL){
+				break;
+			}
+			else if(trainer->ciclosCPUEjecutados < TEAM_CONFIG.QUANTUM)
+				sem_post(&(trainer->semaforoDeEntrenador));
+			else{
+				ponerAlFinalDeLista(trainer,EstadoReady);
+				break;
+			}
+		}
 	}
-	if(string_equals_ignore_case(tipoPlanificacion, "SJFCD")){
-		return SJFCD(procesos);
+}
+void SJFCD(){
+	CICLOS_TOTALES = 0;
+	sem_init(&semaforoPlanifiquenme,0,0);
+	while(!objetivoGlobalCumplido()){
+		while(list_is_empty(EstadoReady)){
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		ordenarListaSJF(EstadoReady);
+		entrenador *trainer = list_get(EstadoReady,0);
+		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
+		sem_post(&(trainer->semaforoDeEntrenador));
+		while(1){
+			sem_wait(&semaforoPlanifiquenme);
+			if(trainer->mision == NULL){
+				break;
+			}
+			else{
+				ordenarListaSJF(EstadoReady);
+				entrenador *trainer = list_get(EstadoReady,0);
+				log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
+				sem_post(&(trainer->semaforoDeEntrenador));
+			}
+		}
 	}
-	if(string_equals_ignore_case(tipoPlanificacion, "SJFSD")){
-		return SJFSD(procesos);
+}
+void SJFSD(){
+	CICLOS_TOTALES = 0;
+	sem_init(&semaforoTermine,0,0);
+	while(!objetivoGlobalCumplido()){
+		while(list_is_empty(EstadoReady)){
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+		}
+		ordenarListaSJF(EstadoReady);
+		entrenador *trainer = list_get(EstadoReady,0);
+		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
+		sem_post(&(trainer->semaforoDeEntrenador));
+		sem_wait(&semaforoTermine);
 	}
-	return NULL;
 }
-proceso* FIFO(t_list* procesos){
-	printf("Holis, me llamaron? Soy FIFO");
-	return list_remove(procesos, 0);
+
+void ordenarListaSJF(t_list *lista){
+	list_sort(lista, (void*)entrenador1MenorEstimacionQueEntrenador2);
+	list_map(lista, (void*)establecerNuevaEstimacion);
 }
-proceso* RR(t_list* procesos){
-	printf("Holis, me llamaron? Soy RR");
+
+void establecerNuevaEstimacion(entrenador* trainer){
+	trainer->ciclosCPUEstimados = nuevaEstimacion(trainer);
 }
-proceso* SJFCD(t_list* procesos){
-	printf("Holis, me llamaron? Soy SJFCD");
+
+int nuevaEstimacion(entrenador *trainer){
+	return ( (TEAM_CONFIG.ALPHA * trainer->ciclosCPUEjeutadosAnteriormente) + ( (1-TEAM_CONFIG.ALPHA) * trainer->ciclosCPUEstimados) ) ;
 }
-proceso* SJFSD(t_list* procesos){
-	printf("Holis, me llamaron? Soy SJFSD");
+
+bool entrenador1MenorEstimacionQueEntrenador2(entrenador* trainer1, entrenador* trainer2){
+	int estimacionTrainer1 = nuevaEstimacion(trainer1);
+	int estimacionTrainer2 = nuevaEstimacion(trainer2);
+	if(estimacionTrainer1 <= estimacionTrainer2){
+		return true;
+	}
+	else{
+		return false;
+	}
 }
+
 unsigned long int getClockTime(){
 	return CLOCK;
 }
@@ -348,14 +857,37 @@ void agregarTiempo(int cantidad){
 void setObjetivoGlobal(){
 	OBJETIVO_GLOBAL = dictionary_create();
 	int j=0;
+	int unPokemon = 0;
 	entrenador * trainer = list_get(ENTRENADORES_TOTALES, j);
 	while(trainer != NULL){
 		for (int i = 0; trainer->pokemonesObjetivo[i] != NULL; i++){
-			int unPokemon = (int)dictionary_get(OBJETIVO_GLOBAL, trainer->pokemonesObjetivo[i]);
+			unPokemon = (int)dictionary_get(OBJETIVO_GLOBAL, trainer->pokemonesObjetivo[i]);
 			dictionary_put(OBJETIVO_GLOBAL, trainer->pokemonesObjetivo[i], unPokemon + 1);
 		}
+		descontarPokemonsActualesDeOBJGlobal(trainer);
 		j++;
 		trainer = list_get(ENTRENADORES_TOTALES, j);
 	}
 	printf("Objetivo global setteado \n");
+}
+
+bool teamCumplioSuObjetivo(){
+	return (( objetivoGlobalCumplido() ) && ( todosLosEntrenadoresCumplieronObjetivo() ));
+}
+
+bool objetivoGlobalCumplido(){
+	return dictionary_is_empty(OBJETIVO_GLOBAL); //asumiendo que vamos a usar dictionary_remove cuando capturemos
+}
+
+bool todosLosEntrenadoresCumplieronObjetivo(){
+	return list_all_satisfy(ENTRENADORES_TOTALES, (void*)entrenadorCumplioObjetivo);
+}
+
+bool entrenadorCumplioObjetivo(entrenador* trainer){
+	return sonLosMismosPokemon(trainer->pokemones,trainer->pokemonesObjetivo);
+}
+
+bool sonLosMismosPokemon(char **pokemons1, char **pokemons2){
+	//TODO
+	return false;
 }
