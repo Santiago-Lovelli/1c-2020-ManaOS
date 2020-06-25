@@ -2031,3 +2031,141 @@
 [INFO] 15:57:01:276 GameBoy/(9897:9930): Llego un new pokemon
 [INFO] 15:57:01:276 GameBoy/(9897:9930): Me llego mensaje de 0. Id: 1, Pkm: PIKACHU, x: 3, y: 2, cant: 1000
 
+[INFO] 09:52:19:473 GameBoy/(2590:2646): Logger iniciado: GameBoy.log
+
+[INFO] 09:52:19:476 GameBoy/(2590:2646): Puerto GameCard: 9579
+[INFO] 09:52:19:476 GameBoy/(2590:2646): Ip GameCard: 127.0.0.1
+[INFO] 09:52:19:476 GameBoy/(2590:2646): Dentro de iniciar servidor
+[INFO] 09:52:19:476 GameBoy/(2590:2646): Listo para escuchar a mi cliente
+[INFO] 09:52:19:476 GameBoy/(2590:2646): esperando
+[INFO] 09:52:27:894 GameBoy/(2590:2646): Se conecto un cliente!
+[INFO] 09:52:27:895 GameBoy/(2590:2646): se conecto cliente: 8
+[INFO] 09:52:27:897 GameBoy/(2590:2646): :::: Se creo hilo para cliente ::::
+[INFO] 09:52:27:897 GameBoy/(2590:2646): esperando
+[INFO] 09:52:27:900 GameBoy/(2590:2669): Llego un new pokemon
+[INFO] 09:52:27:901 GameBoy/(2590:2669): Me llego mensaje de 0. Id: 9, Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[ERROR] 09:52:34:74 GameBoy/(2590:2669): Se desconecto el Cliente
+
+[INFO] 09:53:39:853 GameBoy/(2590:2646): Se conecto un cliente!
+[INFO] 09:53:39:854 GameBoy/(2590:2646): se conecto cliente: 12
+[INFO] 09:53:39:858 GameBoy/(2590:2708): Llego un new pokemon
+[INFO] 09:53:39:858 GameBoy/(2590:2708): Me llego mensaje de 0. Id: 1, Pkm: Pikachu, x: 1, y: 9, cant: 3
+
+[INFO] 09:53:39:862 GameBoy/(2590:2646): :::: Se creo hilo para cliente ::::
+[INFO] 09:53:39:874 GameBoy/(2590:2646): esperando
+[ERROR] 09:53:39:877 GameBoy/(2590:2708): Se desconecto el Cliente
+
+[INFO] 09:53:39:888 GameBoy/(2590:2646): Se conecto un cliente!
+[INFO] 09:53:39:888 GameBoy/(2590:2646): se conecto cliente: 45
+[INFO] 09:53:39:888 GameBoy/(2590:2646): :::: Se creo hilo para cliente ::::
+[INFO] 09:53:39:889 GameBoy/(2590:2646): esperando
+[INFO] 09:53:39:889 GameBoy/(2590:2711): Llego un new pokemon
+[INFO] 09:53:39:891 GameBoy/(2590:2711): Me llego mensaje de 0. Id: 2, Pkm: Charmander, x: 4, y: 1, cant: 101
+
+[ERROR] 09:53:39:903 GameBoy/(2590:2711): Se desconecto el Cliente
+
+[INFO] 09:53:39:919 GameBoy/(2590:2646): Se conecto un cliente!
+[INFO] 09:53:39:919 GameBoy/(2590:2646): se conecto cliente: 48
+[INFO] 09:53:39:920 GameBoy/(2590:2646): :::: Se creo hilo para cliente ::::
+[INFO] 09:53:39:920 GameBoy/(2590:2646): esperando
+[INFO] 09:53:39:920 GameBoy/(2590:2715): Llego un new pokemon
+[INFO] 09:53:39:920 GameBoy/(2590:2715): Me llego mensaje de 0. Id: 3, Pkm: Charmander, x: 517, y: 2046, cant: 15
+
+[ERROR] 09:53:39:923 GameBoy/(2590:2715): Se desconecto el Cliente
+
+[INFO] 09:53:39:928 GameBoy/(2590:2646): Se conecto un cliente!
+[INFO] 09:53:39:928 GameBoy/(2590:2646): se conecto cliente: 55
+[INFO] 09:53:39:929 GameBoy/(2590:2646): :::: Se creo hilo para cliente ::::
+[INFO] 09:53:39:929 GameBoy/(2590:2646): esperando
+[INFO] 09:53:39:929 GameBoy/(2590:2717): Llego un new pokemon
+[INFO] 09:53:39:929 GameBoy/(2590:2717): Me llego mensaje de 0. Id: 4, Pkm: Charmander, x: 413, y: 17, cant: 1
+
+[ERROR] 09:53:39:933 GameBoy/(2590:2717): Se desconecto el Cliente
+
+[INFO] 09:53:39:943 GameBoy/(2590:2646): Se conecto un cliente!
+[INFO] 09:53:39:943 GameBoy/(2590:2646): se conecto cliente: 63
+[INFO] 09:53:39:944 GameBoy/(2590:2719): Llego un new pokemon
+[INFO] 09:53:39:944 GameBoy/(2590:2719): Me llego mensaje de 0. Id: 5, Pkm: Charmander, x: 723, y: 97, cant: 29
+
+[INFO] 09:53:39:945 GameBoy/(2590:2646): :::: Se creo hilo para cliente ::::
+[INFO] 09:53:39:945 GameBoy/(2590:2646): esperando
+[ERROR] 09:53:39:950 GameBoy/(2590:2719): Se desconecto el Cliente
+
+[INFO] 09:53:39:966 GameBoy/(2590:2646): Se conecto un cliente!
+[INFO] 09:53:39:966 GameBoy/(2590:2646): se conecto cliente: 78
+[INFO] 09:53:39:972 GameBoy/(2590:2646): :::: Se creo hilo para cliente ::::
+[INFO] 09:53:39:972 GameBoy/(2590:2646): esperando
+[INFO] 09:53:39:979 GameBoy/(2590:2721): Llego un new pokemon
+[INFO] 09:53:39:979 GameBoy/(2590:2721): Me llego mensaje de 0. Id: 6, Pkm: Charmander, x: 65, y: 93, cant: 3001
+
+[ERROR] 09:53:39:980 GameBoy/(2590:2721): Se desconecto el Cliente
+
+[INFO] 09:53:39:996 GameBoy/(2590:2646): Se conecto un cliente!
+[INFO] 09:53:39:996 GameBoy/(2590:2646): se conecto cliente: 82
+[INFO] 09:53:39:996 GameBoy/(2590:2646): :::: Se creo hilo para cliente ::::
+[INFO] 09:53:39:996 GameBoy/(2590:2646): esperando
+[INFO] 09:53:39:996 GameBoy/(2590:2723): Llego un new pokemon
+[INFO] 09:53:39:996 GameBoy/(2590:2723): Me llego mensaje de 0. Id: 7, Pkm: Charmander, x: 12, y: 17, cant: 34
+
+[ERROR] 09:53:40:9 GameBoy/(2590:2723): Se desconecto el Cliente
+
+[INFO] 09:53:40:13 GameBoy/(2590:2646): Se conecto un cliente!
+[INFO] 09:53:40:13 GameBoy/(2590:2646): se conecto cliente: 93
+[INFO] 09:53:40:16 GameBoy/(2590:2646): :::: Se creo hilo para cliente ::::
+[INFO] 09:53:40:16 GameBoy/(2590:2646): esperando
+[INFO] 09:53:40:16 GameBoy/(2590:2725): Llego un new pokemon
+[INFO] 09:53:40:17 GameBoy/(2590:2725): Me llego mensaje de 0. Id: 8, Pkm: Charmander, x: 129, y: 547, cant: 11
+
+[ERROR] 09:53:40:27 GameBoy/(2590:2725): Se desconecto el Cliente
+
+[INFO] 11:02:40:369 GameBoy/(4871:4932): Logger iniciado: GameBoy.log
+
+[INFO] 11:02:40:374 GameBoy/(4871:4932): Puerto GameCard: 9579
+[INFO] 11:02:40:374 GameBoy/(4871:4932): Ip GameCard: 127.0.0.1
+[INFO] 11:02:40:374 GameBoy/(4871:4932): Dentro de iniciar servidor
+[INFO] 11:02:40:374 GameBoy/(4871:4932): Listo para escuchar a mi cliente
+[INFO] 11:02:40:374 GameBoy/(4871:4932): esperando
+[INFO] 11:02:44:915 GameBoy/(4871:4932): Se conecto un cliente!
+[INFO] 11:02:44:916 GameBoy/(4871:4932): se conecto cliente: 8
+[INFO] 11:02:44:918 GameBoy/(4871:4932): :::: Se creo hilo para cliente ::::
+[INFO] 11:02:44:918 GameBoy/(4871:4932): esperando
+[INFO] 11:02:44:922 GameBoy/(4871:4943): Llego un new pokemon
+[INFO] 11:02:44:923 GameBoy/(4871:4943): Me llego mensaje de 0. Id: 9, Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[ERROR] 11:05:37:576 GameBoy/(4871:4943): Se desconecto el Cliente
+
+[INFO] 11:05:43:199 GameBoy/(4871:4932): Se conecto un cliente!
+[INFO] 11:05:43:200 GameBoy/(4871:4932): se conecto cliente: 24
+[INFO] 11:05:43:204 GameBoy/(4871:4932): :::: Se creo hilo para cliente ::::
+[INFO] 11:05:43:204 GameBoy/(4871:4932): esperando
+[INFO] 11:05:43:204 GameBoy/(4871:5019): Llego un new pokemon
+[INFO] 11:05:43:204 GameBoy/(4871:5019): Me llego mensaje de 0. Id: 9, Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[ERROR] 11:05:57:963 GameBoy/(4871:5019): Se desconecto el Cliente
+
+[INFO] 11:07:07:236 GameBoy/(4871:4932): Se conecto un cliente!
+[INFO] 11:07:07:236 GameBoy/(4871:4932): se conecto cliente: 31
+[INFO] 11:07:07:237 GameBoy/(4871:5064): Llego un new pokemon
+[INFO] 11:07:07:237 GameBoy/(4871:5064): Me llego mensaje de 0. Id: 9, Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[INFO] 11:07:07:238 GameBoy/(4871:4932): :::: Se creo hilo para cliente ::::
+[INFO] 11:07:07:244 GameBoy/(4871:4932): esperando
+[ERROR] 11:07:10:430 GameBoy/(4871:5064): Se desconecto el Cliente
+
+[INFO] 11:07:32:638 GameBoy/(4871:4932): Se conecto un cliente!
+[INFO] 11:07:32:638 GameBoy/(4871:4932): se conecto cliente: 66
+[INFO] 11:07:32:643 GameBoy/(4871:4932): :::: Se creo hilo para cliente ::::
+[INFO] 11:07:32:643 GameBoy/(4871:4932): esperando
+[INFO] 11:07:32:647 GameBoy/(4871:5082): Llego un new pokemon
+[INFO] 11:07:32:648 GameBoy/(4871:5082): Me llego mensaje de 0. Id: 9, Pkm: Pikachu, x: 2, y: 5, cant: 10
+
+[ERROR] 11:07:36:283 GameBoy/(4871:5082): Se desconecto el Cliente
+
+[INFO] 11:07:41:946 GameBoy/(4871:4932): Se conecto un cliente!
+[INFO] 11:07:41:946 GameBoy/(4871:4932): se conecto cliente: 78
+[INFO] 11:07:41:949 GameBoy/(4871:4932): :::: Se creo hilo para cliente ::::
+[INFO] 11:07:41:949 GameBoy/(4871:4932): esperando
+[INFO] 11:07:41:952 GameBoy/(4871:5090): Llego un new pokemon
+[INFO] 11:07:41:952 GameBoy/(4871:5090): Me llego mensaje de 0. Id: 9, Pkm: Pikachu, x: 3, y: 5, cant: 10
+
