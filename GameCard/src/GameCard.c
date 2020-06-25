@@ -376,7 +376,7 @@ void abrirArchivoPokemon(char*pkm) {
 
 }
 
-char* leerUnPokemon(char* pkm, t_list* listaDeBloques){
+char* leerUnPokemon(char* pkm, t_list* listaDeBloques) {
 
 	p_metadata* metadataDePokemon = obtenerMetadataEnteraDePokemon(pkm);
 
@@ -392,7 +392,8 @@ char* leerUnPokemon(char* pkm, t_list* listaDeBloques){
 	return archivoDePokemon;
 }
 
-char* metadataNueva(int tamanioDelPokemon, char* cantidadAEscribir, char**lineaSeparadaPorIgual, t_list* listaDeBloques){
+char* metadataNueva(int tamanioDelPokemon, char* cantidadAEscribir,
+		char**lineaSeparadaPorIgual, t_list* listaDeBloques) {
 	char* metadataPost = string_duplicate("DIRECTORY=N\nSIZE=");
 
 	uint32_t tamanioNuevoFinal = tamanioDelPokemon + strlen(cantidadAEscribir)
@@ -504,7 +505,8 @@ void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	desplazamiento = desplazamiento + faltanteEscribir;
 	escrito = escrito + faltanteEscribir;
 
-	char* metadataPost = metadataNueva(tamanioDelPokemon, cantidadAEscribir, lineaSeparadaPorIgual, listaDeBloques);
+	char* metadataPost = metadataNueva(tamanioDelPokemon, cantidadAEscribir,
+			lineaSeparadaPorIgual, listaDeBloques);
 	cambiarMetadata(pkm, metadataPost);
 
 }
@@ -858,6 +860,7 @@ void * obtenerBitmap() {
 void crearBitmap() {
 	void* bitmapAuxiliar = obtenerBitmap();
 	int bytes = ceil((float) metadata.bloques / 8);
+	log_info(loggerGeneral, "Tengo un tamanio de bitmap bytes: %i", bytes);
 	bitmap = bitarray_create_with_mode(bitmapAuxiliar, bytes, MSB_FIRST);
 }
 
@@ -873,8 +876,7 @@ void iniciarBitmap() {
 
 void levantarBitmap() {
 
-	crearBitmap();
-
+	bitmap = obtenerBitmap();
 	log_info(loggerGeneral, "::::Bitmap Levantado::::");
 
 }
@@ -953,7 +955,7 @@ void iniciarBloques() {
 		log_info(loggerGeneral, "path: %s", path);
 
 		FILE *block;
-		block = fopen(path, "a");
+		block = fopen(path, "w");
 		fclose(block);
 
 		truncate(path, metadata.tamanioDeBloque);
@@ -966,19 +968,35 @@ void finalizar() {
 	config_destroy(archivo_de_configuracion);
 }
 
-int main(void) {
-
-	levantarLogYArchivoDeConfiguracion();
-	cargarListaAtual();
-	cargarMetadata();
-	iniciarBitmap();
-	iniciarBloques();
-
+void iniciarSemaforos() {
 	sem_init(&bitSem, 0, 1);
 	sem_init(&sock, 0, 1);
 	sem_init(&mutexCliente, 0, 1);
 	sem_init(&listaPokemon, 0, 1);
 	sem_init(&existencia, 0, 1);
+}
+
+int main(int argc, char *argv[]) {
+
+	char *format = "";
+	format = argv[1];
+
+	levantarLogYArchivoDeConfiguracion();
+	iniciarSemaforos();
+	cargarListaAtual();
+	cargarMetadata();
+
+	if (argc > 1 && strcmp("-f", format) == 0){
+		log_info(loggerGeneral, "Formateando");
+		iniciarBitmap();
+		iniciarBloques();
+	}else if (argc == 1) {
+		log_info(loggerGeneral, "Levantando");
+		levantarBitmap();
+	} else {
+		log_error(loggerGeneral, "Argumentos invalidos");
+		return EXIT_FAILURE;
+	}
 
 	pthread_t* servidor = malloc(sizeof(pthread_t));
 	iniciarServidorDeGameBoy(servidor);
