@@ -11,17 +11,28 @@ char* montajeDeArchivo() {
 	return tallgrass;
 }
 
+char* rutaDeFiles() {
+	char* tallgrass = montajeDeArchivo();
+	char* rutaFiles = "/Files/";
+	char* path = malloc(strlen(tallgrass) + strlen(rutaFiles) + 1);
+	int desplazamiento = 0;
+	memcpy(path + desplazamiento, tallgrass, strlen(tallgrass));
+	desplazamiento = desplazamiento + strlen(tallgrass);
+	memcpy(path + desplazamiento, rutaFiles, strlen(rutaFiles) + 1);
+
+	log_info(loggerGeneral, "Ruta de t_list pokemons: %s \n", path);
+
+	return path;
+}
+
 char* pathDePokemonMetadata(char * pokemon) {
 
-	char *tallgrass = montajeDeArchivo();
-
-	char* rutaFiles = "/Files/";
+	char* rutaFiles = rutaDeFiles();
 
 	char* rutaMeta = "/Metadata.bin";
 
 	char* path = string_new();
 
-	string_append(&path, tallgrass);
 	string_append(&path, rutaFiles);
 	string_append(&path, pokemon);
 	string_append(&path, rutaMeta);
@@ -537,13 +548,11 @@ void crearMetadata(char* pkm) {
 }
 
 void crearPokemon(char* pokemon) {
-	char *tallgrass = montajeDeArchivo();
 
-	char* rutaFiles = "/Files/";
+	char* rutaFiles = rutaDeFiles();
 
 	char* path = string_new();
 
-	string_append(&path, tallgrass);
 	string_append(&path, rutaFiles);
 	string_append(&path, pokemon);
 
@@ -896,24 +905,11 @@ void agregarAPokemosEnLista(char* nombrePokemon) {
 	sem_post(&listaPokemon);
 }
 
-void cargarListaAtual() {
+t_list* listaActual() {
 	DIR *dir;
 	struct dirent *dirrectorio;
-
-	char *tallgrass = montajeDeArchivo();
-
-	char* rutaFiles = "/Files/";
-
-	char* path = malloc(strlen(tallgrass) + strlen(rutaFiles) + 1);
-	int desplazamiento = 0;
-
-	memcpy(path + desplazamiento, tallgrass, strlen(tallgrass));
-	desplazamiento = desplazamiento + strlen(tallgrass);
-	memcpy(path + desplazamiento, rutaFiles, strlen(rutaFiles) + 1);
-
-	log_info(loggerGeneral, "Ruta de t_list pokemons: %s \n", path);
-
-	pokemonsEnFiles = list_create();
+	t_list* lista = list_create();
+	char* path = rutaDeFiles();
 
 	dir = opendir(path);
 	int cont = 0;
@@ -923,18 +919,29 @@ void cargarListaAtual() {
 			if (dirrectorio->d_type == 4 && strcmp(nombre, ".") != 0
 					&& strcmp(nombre, "..") != 0) {
 
-				agregarAPokemosEnLista(nombre);
+				log_info(loggerGeneral, "Existe el pokemon, %s", nombre);
+				list_add(lista, nombre);
 
 				cont++;
 			}
 		}
 		closedir(dir);
-		for (int i = 0; i < cont; ++i) {
-			p_pokemonSemaforo* elDeLaLista = list_get(pokemonsEnFiles, i);
-			log_info(loggerGeneral, "Elemento en index %i: %s\n", i,
-					elDeLaLista->nombreDePokemon);
-		}
 	}
+	for (int i = 0; i < lista->elements_count; ++i) {
+	}
+
+	return lista;
+}
+
+void cargarListaAtual() {
+
+	pokemonsEnFiles = list_create();
+
+	t_list* pkms = listaActual();
+
+	list_add_all(pokemonsEnFiles, pkms);
+
+	list_destroy(pkms);
 }
 
 char* pathBlock() {
@@ -976,31 +983,47 @@ void iniciarSemaforos() {
 	sem_init(&existencia, 0, 1);
 }
 
-int main(int argc, char *argv[]) {
+void limpiarFiles() {
+	t_list* pkms = listaActual();
 
-	char *format = "";
-	format = argv[1];
+	for (int i = 0; i < pkms->elements_count; ++i) {
+		char* rutaFile = rutaDeFiles();
+		char* nombre = list_get(pkms, i);
+		string_append(&rutaFile, nombre);
+		char* rutameta = string_duplicate(rutaFile);
+		string_append(&rutameta, "/Metadata.bin");
 
-	levantarLogYArchivoDeConfiguracion();
-	iniciarSemaforos();
-	cargarListaAtual();
-	cargarMetadata();
+		remove(rutameta);
+		log_info(loggerGeneral, "Se Elimino la metadata: %s", rutameta);
 
-	if (argc > 1 && strcmp("-f", format) == 0){
-		log_info(loggerGeneral, "Formateando");
-		iniciarBitmap();
-		iniciarBloques();
-	}else if (argc == 1) {
-		log_info(loggerGeneral, "Levantando");
-		levantarBitmap();
-	} else {
-		log_error(loggerGeneral, "Argumentos invalidos");
-		return EXIT_FAILURE;
+		rmdir(rutaFile);
+		log_info(loggerGeneral, "Se Elimino el archivo: %s", rutaFile);
+
 	}
 
-	pthread_t* servidor = malloc(sizeof(pthread_t));
-	iniciarServidorDeGameBoy(servidor);
+	list_destroy(pkms);
 
+	pokemonsEnFiles = list_create();
+}
+
+void formatear() {
+	iniciarBitmap();
+	iniciarBloques();
+	limpiarFiles();
+}
+
+void levantar() {
+	levantarBitmap();
+	cargarListaAtual();
+}
+
+void inicio() {
+	levantarLogYArchivoDeConfiguracion();
+	iniciarSemaforos();
+	cargarMetadata();
+}
+
+void suscribirse() {
 	pthread_t* suscriptoNewPokemon = malloc(sizeof(pthread_t));
 	conectarmeColaDe(suscriptoNewPokemon, d_NEW_POKEMON);
 
@@ -1010,10 +1033,35 @@ int main(int argc, char *argv[]) {
 	pthread_t* suscriptoGetPokemon = malloc(sizeof(pthread_t));
 	conectarmeColaDe(suscriptoGetPokemon, d_GET_POKEMON);
 
-	pthread_join(*servidor, NULL);
 	pthread_join(*suscriptoNewPokemon, NULL);
 	pthread_join(*suscriptoCatchPokemon, NULL);
 	pthread_join(*suscriptoGetPokemon, NULL);
+}
+
+int main(int argc, char *argv[]) {
+
+	char *format = "";
+	format = argv[1];
+
+	inicio();
+
+	if (argc > 1 && strcmp("-f", format) == 0) {
+		log_info(loggerGeneral, "Formateando");
+		formatear();
+	} else if (argc == 1) {
+		log_info(loggerGeneral, "Levantando");
+		levantar();
+	} else {
+		log_error(loggerGeneral, "Argumentos invalidos");
+		return EXIT_FAILURE;
+	}
+
+	pthread_t* servidor = malloc(sizeof(pthread_t));
+	iniciarServidorDeGameBoy(servidor);
+
+	suscribirse();
+
+	pthread_join(*servidor, NULL);
 
 	finalizar();
 
