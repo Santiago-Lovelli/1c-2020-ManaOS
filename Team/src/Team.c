@@ -335,7 +335,6 @@ void verPendientes(char *pokemon){
 }
 
 void destruirMision(t_mision *mision){
-	free(mision->pokemon);
 	free(mision);
 }
 
@@ -570,6 +569,8 @@ void cumplirMision(entrenador* trainer){
 			avisarQueTermine(trainer);
 		}
 	}
+	printf("El entrenador: %i cumplio su objetivo! Yupiiii!!! \n", trainer->tid);
+	pasarEntrenadorAEstado(trainer->tid, t_EXIT);
 }
 
 int diferenciaEntrePuntos(punto origen, punto destino){
@@ -884,10 +885,7 @@ bool todosLosEntrenadoresCumplieronObjetivo(){
 }
 
 bool entrenadorCumplioObjetivo(entrenador* trainer){
-	return sonLosMismosPokemon(trainer->pokemones,trainer->pokemonesObjetivo);
+	return false;
+	//return (sonIgualesSinInportarOrden(trainer->pokemones,trainer->pokemonesObjetivo) == 1);
 }
 
-bool sonLosMismosPokemon(char **pokemons1, char **pokemons2){
-	//TODO
-	return false;
-}

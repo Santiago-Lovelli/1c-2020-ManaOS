@@ -143,12 +143,6 @@ bool todosLosEntrenadoresCumplieronObjetivo();
 
 bool entrenadorCumplioObjetivo(entrenador* trainer);
 
-/*
- * FUNCION QUE DADOS DOS POKEMON RETORNA TRUE SI SON IGUALES
- */
-
-bool sonLosMismosPokemon(char **pokemons1, char **pokemons2);
-
 /////////FUNCIONES PROPIAS TEAMS/////////////
 
 /*
