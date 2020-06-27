@@ -432,8 +432,77 @@ char* metadataNueva(int tamanioDelPokemon, char* cantidadAEscribir,
 	return metadataPost;
 }
 
+void enviarAperedPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
+		uint32_t cantidad, uint32_t idMensajeNew) {
+	char *ip = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
+	char *puerto = config_get_string_value(archivo_de_configuracion,
+			"PUERTO_BROKER");
+
+	int conexion = conectarse_a_un_servidor(ip, puerto, loggerGeneral);
+	if (conexion == -1) {
+		log_error(loggerGeneral,
+				"No se pudo conectar al Broker para un aperedPokemon");
+	}
+	Serialize_PackAndSend_APPEARED_POKEMON(conexion, idMensajeNew, pkm,
+			posicionX, posicionY);
+}
+
+void escribirUnPokemon(int cantidadDeLineas, char** lineasDeBloque, t_list* listaDeBloques, char* megaChar, int cantidadNueva){
+	int contadorDeBloque = 0;
+		int escrito = 0;
+
+		for (int lineaActual = 0; lineaActual < cantidadDeLineas; ++lineaActual) {
+			int lineaEntera = strlen(lineasDeBloque[lineaActual]) + 1;
+
+			contadorDeBloque = escribirEnBloquesDiciendoEnQueBloqueEstoy(
+					lineaEntera, listaDeBloques, contadorDeBloque, megaChar,
+					escrito, escrito);
+
+			escrito = escrito + lineaEntera;
+		}
+
+		char** lineaSeparadaPorIgual = string_split(
+				lineasDeBloque[cantidadDeLineas], "=");
+
+		/*					Empiezo a escribir la linea					*/
+		int desplazamiento = 0;
+		if(cantidadNueva > 0){
+			int faltanteDeLineaHastaIgual = strlen(lineaSeparadaPorIgual[0]) + 1;
+
+			contadorDeBloque = escribirEnBloquesDiciendoEnQueBloqueEstoy(
+					faltanteDeLineaHastaIgual, listaDeBloques, contadorDeBloque,
+					megaChar, escrito, escrito);
+			escrito = escrito + faltanteDeLineaHastaIgual;
+
+
+			char* cantidadAEscribir = string_itoa(cantidadNueva);
+			faltanteDeLineaHastaIgual = strlen(cantidadAEscribir);
+
+			contadorDeBloque = escribirEnBloquesDiciendoEnQueBloqueEstoy(
+					faltanteDeLineaHastaIgual, listaDeBloques, contadorDeBloque,
+					cantidadAEscribir, escrito, 0);
+			desplazamiento = escrito + faltanteDeLineaHastaIgual;
+			escrito = escrito + strlen(lineaSeparadaPorIgual[1]); //salteo lo viejo
+
+
+		} else {
+			escrito = escrito + strlen(lineasDeBloque[cantidadDeLineas]); //salteo la linea
+		}
+
+		int faltanteEscribir = strlen(megaChar) - escrito;
+
+		contadorDeBloque = escribirEnBloquesDiciendoEnQueBloqueEstoy(
+				faltanteEscribir, listaDeBloques, contadorDeBloque, megaChar,
+				desplazamiento, escrito);
+		desplazamiento = desplazamiento + faltanteEscribir;
+		escrito = escrito + faltanteEscribir;
+
+
+}
+
+
 void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
-		uint32_t cantidad) {
+		uint32_t cantidad, uint32_t idMensajeNew) {
 
 	abrirArchivoPokemon(pkm);
 
@@ -473,53 +542,20 @@ void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				&lineaConDePosicion);
 	}
 
-	int contadorDeBloque = 0;
-	int escrito = 0;
-
-	for (int lineaActual = 0; lineaActual < cantidadDeLineas; ++lineaActual) {
-		int lineaEntera = strlen(lineasDeBloque[lineaActual]) + 1;
-
-		contadorDeBloque = escribirEnBloquesDiciendoEnQueBloqueEstoy(
-				lineaEntera, listaDeBloques, contadorDeBloque, megaChar,
-				escrito, escrito);
-
-		escrito = escrito + lineaEntera;
-	}
-
 	char** lineaSeparadaPorIgual = string_split(
-			lineasDeBloque[cantidadDeLineas], "=");
-
-	/*					Empiezo a escribir la linea					*/
-
-	int faltanteDeLineaHastaIgual = strlen(lineaSeparadaPorIgual[0]) + 1;
-
-	contadorDeBloque = escribirEnBloquesDiciendoEnQueBloqueEstoy(
-			faltanteDeLineaHastaIgual, listaDeBloques, contadorDeBloque,
-			megaChar, escrito, escrito);
-	escrito = escrito + faltanteDeLineaHastaIgual;
+				lineasDeBloque[cantidadDeLineas], "=");
 
 	int cantidadNueva = cantidad + atoi(lineaSeparadaPorIgual[1]);
+
+/*Desde*/
+	escribirUnPokemon(cantidadDeLineas,lineasDeBloque, listaDeBloques, megaChar, cantidadNueva);
 	char* cantidadAEscribir = string_itoa(cantidadNueva);
-	faltanteDeLineaHastaIgual = strlen(cantidadAEscribir);
-
-	contadorDeBloque = escribirEnBloquesDiciendoEnQueBloqueEstoy(
-			faltanteDeLineaHastaIgual, listaDeBloques, contadorDeBloque,
-			cantidadAEscribir, escrito, 0);
-	int desplazamiento = escrito + faltanteDeLineaHastaIgual;
-	escrito = escrito + strlen(lineaSeparadaPorIgual[1]); //salteo lo viejo
-
-	int faltanteEscribir = strlen(megaChar) - escrito;
-
-	contadorDeBloque = escribirEnBloquesDiciendoEnQueBloqueEstoy(
-			faltanteEscribir, listaDeBloques, contadorDeBloque, megaChar,
-			desplazamiento, escrito);
-	desplazamiento = desplazamiento + faltanteEscribir;
-	escrito = escrito + faltanteEscribir;
-
+/*Hasta*/
 	char* metadataPost = metadataNueva(tamanioDelPokemon, cantidadAEscribir,
 			lineaSeparadaPorIgual, listaDeBloques);
 	cambiarMetadata(pkm, metadataPost);
 
+	enviarAperedPokemon(pkm, posicionX, posicionY, cantidad, idMensajeNew);
 }
 
 char* metadataVacia() {
@@ -570,7 +606,7 @@ void crearPokemon(char* pokemon) {
 }
 
 void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
-		uint32_t cantidad) {
+		uint32_t cantidad, uint32_t idMensajeNew) {
 	sem_wait(&existencia);
 	bool existe = existePokemon(pkm);
 
@@ -582,7 +618,7 @@ void newPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		log_info(loggerGeneral, "Existe el pokemon %s", pkm);
 	}
 	sem_post(&existencia);
-	agregarPokemonesNuevos(pkm, posicionX, posicionY, cantidad);
+	agregarPokemonesNuevos(pkm, posicionX, posicionY, cantidad, idMensajeNew);
 }
 
 void atender(HeaderDelibird header, int cliente, t_log* logger) {
@@ -603,7 +639,8 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n",
 				header.tipoMensaje, idMensajeNew, newNombrePokemon,
 				posicionNewX, posicionNewY, newCantidad);
-		newPokemon(newNombrePokemon, posicionNewX, posicionNewY, newCantidad);
+		newPokemon(newNombrePokemon, posicionNewX, posicionNewY, newCantidad,
+				idMensajeNew);
 
 		free(packNewPokemon);
 		break;
