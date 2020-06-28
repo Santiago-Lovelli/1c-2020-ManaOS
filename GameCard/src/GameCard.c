@@ -941,27 +941,26 @@ void cargarMetadata() {
 	char **blockSizeEnPosicionUno = string_split(separadoPorEnters[0], "=");
 	uint32_t blockSize = atoi(blockSizeEnPosicionUno[1]);
 
-	free(blockSizeEnPosicionUno[1]);
-	free(blockSizeEnPosicionUno);
+	liberarDoblePuntero(blockSizeEnPosicionUno);
 
 	log_info(loggerGeneral, "BLOCK_SIZE: %i", blockSize);
 
 	char **blocksEnPosicionUno = string_split(separadoPorEnters[1], "=");
 	uint32_t blocks = atoi(blocksEnPosicionUno[1]);
 
-	free(blocksEnPosicionUno[1]);
-	free(blocksEnPosicionUno);
+	liberarDoblePuntero(blocksEnPosicionUno);
 
 	log_info(loggerGeneral, "BLOCKS: %i", blocks);
 
 	char **magicNumberEnPosicionUno = string_split(separadoPorEnters[2], "=");
 	char *magicNumber = malloc(strlen(magicNumberEnPosicionUno[1]) + 1);
 
+
 	memcpy(magicNumber, magicNumberEnPosicionUno[1],
 			strlen(magicNumberEnPosicionUno[1]) + 1);
 
-	free(magicNumberEnPosicionUno[1]);
-	free(magicNumberEnPosicionUno);
+	liberarDoblePuntero(magicNumberEnPosicionUno);
+	liberarDoblePuntero(separadoPorEnters);
 
 	log_info(loggerGeneral, "MAGIC_NUMBER: %s", magicNumber);
 
@@ -1029,8 +1028,7 @@ void iniciarBitmap() {
 }
 
 void levantarBitmap() {
-
-	bitmap = obtenerBitmap();
+	crearBitmap();
 	log_info(loggerGeneral, "::::Bitmap Levantado::::");
 
 }
@@ -1052,17 +1050,18 @@ void agregarAPokemosEnLista(char* nombrePokemon) {
 
 void listaActual(t_list* lista) {
 	DIR *dir;
-	struct dirent *dirrectorio;
+	struct dirent *directorio;
 	char* path = rutaDeFiles();
 
 	dir = opendir(path);
 	int cont = 0;
 	if (dir) {
-		while ((dirrectorio = readdir(dir)) != NULL) {
-			char* nombre = dirrectorio->d_name;
-			if (dirrectorio->d_type == 4 && strcmp(nombre, ".") != 0
-					&& strcmp(nombre, "..") != 0) {
+		while ((directorio = readdir(dir)) != NULL) {
+			if (directorio->d_type == 4 && strcmp(directorio->d_name, ".") != 0
+					&& strcmp(directorio->d_name, "..") != 0) {
 
+				char* nombre = malloc(strlen(directorio->d_name)+1);
+				memcpy(nombre,directorio->d_name,strlen(directorio->d_name)+1);
 				log_info(loggerGeneral, "Existe el pokemon, %s", nombre);
 				list_add(lista, nombre);
 
@@ -1071,15 +1070,22 @@ void listaActual(t_list* lista) {
 		}
 		closedir(dir);
 	}
-	free(dirrectorio);
+	free(directorio);
 
 }
 
-void cargarListaAtual() {
-
+void crearListaDePokemons(t_list* pokemons){
 	pokemonsEnFiles = list_create();
-	listaActual(pokemonsEnFiles);
+	for (int i = 0; i < pokemons->elements_count; ++i) {
+		agregarAPokemosEnLista(list_get(pokemons,i));
+	}
+}
 
+void cargarListaAtual() {
+	t_list* nombres = list_create();
+	listaActual(nombres);
+	crearListaDePokemons(nombres);
+	list_destroy(nombres);
 }
 
 char* pathBlock() {
@@ -1093,18 +1099,19 @@ void iniciarBloques() {
 	char* rutaBlock = pathBlock();
 
 	DIR *dir;
-	struct dirent *dirrectorio;
+	struct dirent *directorio;
 	dir = opendir(rutaBlock);
 	if (dir) {
-		while ((dirrectorio = readdir(dir)) != NULL) {
-			char* nombre = dirrectorio->d_name;
-			if (dirrectorio->d_type == 8 && strcmp(nombre, ".") != 0
+		while ((directorio = readdir(dir)) != NULL) {
+			char* nombre = directorio->d_name;
+			if (directorio->d_type == 8 && strcmp(nombre, ".") != 0
 					&& strcmp(nombre, "..") != 0) {
 
 				char* ruta = string_new();
 				string_append(&ruta,rutaBlock);
 				string_append(&ruta,nombre);
 				log_info(loggerGeneral, "remuevo: %s -- %i", nombre,remove(ruta));
+				free(ruta);
 			}
 		}
 		closedir(dir);
@@ -1123,13 +1130,23 @@ void iniciarBloques() {
 		fclose(block);
 
 		truncate(path, metadata.tamanioDeBloque);
+		free(path);
 
 	}
+	free(rutaBlock);
+
 }
 
 void finalizar() {
 	log_destroy(loggerGeneral);
 	config_destroy(archivo_de_configuracion);
+	sem_destroy(&bitSem);
+	sem_destroy(&sock);
+	sem_destroy(&mutexCliente);
+	sem_destroy(&listaPokemon);
+	sem_destroy(&existencia);
+	bitarray_destroy(bitmap);
+	list_destroy(pokemonsEnFiles);
 }
 
 void iniciarSemaforos() {
@@ -1154,14 +1171,12 @@ void limpiarFiles() {
 		string_append(&rutaFile, nombre);
 
 		char* rutameta = string_duplicate(rutaFile);
-		string_append(&rutameta, nombre);
 		string_append(&rutameta, "/Metadata.bin");
 
-		remove(rutameta);
-		log_info(loggerGeneral, "Se Elimino la metadata: %s", rutameta);
 
-		rmdir(rutaFile);
-		log_info(loggerGeneral, "Se Elimino el archivo: %s", rutaFile);
+		log_info(loggerGeneral, "Se Elimino la metadata: %s, %i", rutameta, remove(rutameta));
+
+		log_info(loggerGeneral, "Se Elimino el archivo: %s, %i", rutaFile, rmdir(rutaFile));
 
 		free(rutaFile);
 		free(rutameta);
@@ -1222,12 +1237,12 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 
-	pthread_t* servidor = malloc(sizeof(pthread_t));
-	iniciarServidorDeGameBoy(servidor);
+//	pthread_t* servidor = malloc(sizeof(pthread_t));
+//	iniciarServidorDeGameBoy(servidor);
+//
+//	suscribirse();
 
-	suscribirse();
-
-	pthread_join(*servidor, NULL);
+//	pthread_join(*servidor, NULL);
 
 	finalizar();
 

@@ -32957,3 +32957,21 @@
 [INFO] 00:02:11:295 GameCard/(28351:28351): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
 
 [INFO] 00:02:11:295 GameCard/(28351:28351): el valor de i: -1
+[INFO] 12:59:14:517 GameCard/(16777:16777): Logger iniciado: GameCard.log
+
+[INFO] 12:59:14:519 GameCard/(16777:16777): Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config
+
+[INFO] 12:59:14:520 GameCard/(16777:16777): Montaje de metadata: /home/utnso/Escritorio/tall-grass/Metadata/Metadata.bin 
+
+[INFO] 12:59:14:520 GameCard/(16777:16777): Tamanio archivo: 48
+[INFO] 12:59:14:520 GameCard/(16777:16777): BLOCK_SIZE: 64
+[INFO] 12:59:14:520 GameCard/(16777:16777): BLOCKS: 100
+[INFO] 12:59:14:520 GameCard/(16777:16777): MAGIC_NUMBER: TALL_GRASS
+[INFO] 12:59:14:520 GameCard/(16777:16777): ESTRUCTURA METADATA: 64, 100, TALL_GRASS
+[INFO] 12:59:18:370 GameCard/(16777:16777): Levantando
+[INFO] 12:59:22:32 GameCard/(16777:16777): Montaje de bitmap: /home/utnso/Escritorio/tall-grass/Metadata/Bitmap.bin 
+
+[INFO] 12:59:22:32 GameCard/(16777:16777): Tengo un tamanio de bitmap bytes: 13
+[INFO] 12:59:22:32 GameCard/(16777:16777): ::::Bitmap Levantado::::
+[INFO] 12:59:29:233 GameCard/(16777:16777): Ruta de t_list pokemons: /home/utnso/Escritorio/tall-grass/Files/ 
+
