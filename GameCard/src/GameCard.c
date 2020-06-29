@@ -739,7 +739,6 @@ void atender(HeaderDelibird header, p_elementoDeHilo* elemento) {
 				idMensajeNew);
 
 		free(packNewPokemon);
-		free(elemento);
 		break;
 	case d_CATCH_POKEMON:
 		;
@@ -759,6 +758,7 @@ void atender(HeaderDelibird header, p_elementoDeHilo* elemento) {
 		sem_post(&mutexCliente);
 		// Se hace lo necesario
 		free(packCatchPokemon);
+
 		break;
 	case d_GET_POKEMON:
 		;
@@ -841,6 +841,7 @@ void* atenderGameBoy() {
 		pthread_detach(*dondeSeAtiende);
 
 	}
+	log_destroy(gameBoyLog);
 }
 
 void iniciarServidorDeGameBoy(pthread_t* servidor) {
@@ -1237,12 +1238,12 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 
-//	pthread_t* servidor = malloc(sizeof(pthread_t));
-//	iniciarServidorDeGameBoy(servidor);
-//
-//	suscribirse();
+	pthread_t* servidor = malloc(sizeof(pthread_t));
+	iniciarServidorDeGameBoy(servidor);
 
-//	pthread_join(*servidor, NULL);
+	suscribirse();
+
+	pthread_join(*servidor, NULL);
 
 	finalizar();
 
