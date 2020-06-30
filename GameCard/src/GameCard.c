@@ -621,8 +621,7 @@ void atraparPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	} else{
 		char* cantidadAEscribir = string_itoa(cantidadNueva);
 
-		tamanioNuevoFinal = tamanioDelPokemon - strlen(cantidadAEscribir)
-							+ strlen(lineaSeparadaPorIgual[1]);
+		tamanioNuevoFinal = tamanioDelPokemon - (strlen(lineaSeparadaPorIgual[1])-strlen(cantidadAEscribir));
 	}
 
 	int bloquesTotales = ceil((float)tamanioNuevoFinal/metadata.tamanioDeBloque);
