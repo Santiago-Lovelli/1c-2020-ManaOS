@@ -66,7 +66,7 @@ void* mmapeadoBloquePropio(t_log* log, uint32_t tamanioDeseado,
 
 	free(pathBloque);
 
-	void* bloqueConDatos = mmap(NULL, tamanio_archivo_de_metadata,
+	void* bloqueConDatos = mmap(NULL, tamanioDeseado,
 	PROT_READ | PROT_WRITE,
 	MAP_SHARED | MAP_FILE, bloque, 0);
 
@@ -268,26 +268,26 @@ int maximo(int unNumero, int otroNumero) {
 }
 
 char* leerBloques(t_list* bloques, uint32_t tamanio) {
-	char* leido = string_new();
+	char* leido = malloc(tamanio + 1);
 	int i = 0;
-	int desplazamiento = 0;
+	int yaLeido = 0;
 	while (list_get(bloques, i) != NULL) {
 		log_info(loggerGeneral, "bloques %s", list_get(bloques, i));
 
-		int aLevantar = minimo(metadata.tamanioDeBloque,
-				tamanio - desplazamiento);
+		int aLevantar = minimo(metadata.tamanioDeBloque, tamanio - yaLeido);
 
 		char *bloqueConDatos = mmapeadoBloquePropio(loggerGeneral, aLevantar,
 				list_get(bloques, i));
 
 		log_info(loggerGeneral, "bloqueConDatos %s", bloqueConDatos);
 
-		string_append(&leido, bloqueConDatos);
+		memcpy(leido + yaLeido, bloqueConDatos, aLevantar);
 
-		desplazamiento = desplazamiento + aLevantar;
+		yaLeido = yaLeido + aLevantar;
 
 		i = i + 1;
 	}
+	memcpy(leido + yaLeido, "\0", 1);
 
 	log_info(loggerGeneral, "El archivo del pokemon es:\n%s", leido);
 
@@ -491,6 +491,7 @@ void escribirUnPokemon(int cantidadDeLineas, char** lineasDeBloque,
 		escrito = escrito + strlen(lineaSeparadaPorIgual[1]); //salteo lo viejo
 
 	} else {
+		desplazamiento = escrito;
 		escrito = escrito + strlen(lineasDeBloque[cantidadDeLineas]) + 1; //salteo la linea
 	}
 
@@ -554,7 +555,7 @@ void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	char* cantidadAEscribir = string_itoa(cantidadNueva);
 
 	uint32_t tamanioNuevoFinal = tamanioDelPokemon + strlen(cantidadAEscribir)
-				- strlen(lineaSeparadaPorIgual[1]);
+			- strlen(lineaSeparadaPorIgual[1]);
 
 	char* metadataPost = metadataNueva(tamanioDelPokemon, tamanioNuevoFinal,
 			lineaSeparadaPorIgual, listaDeBloques);
@@ -616,18 +617,25 @@ void atraparPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 	uint32_t tamanioNuevoFinal = 0;
 
-	if(cantidadNueva == 0){
-		tamanioNuevoFinal = tamanioDelPokemon - (strlen(lineasDeBloque[cantidadDeLineas]) + 1);
-	} else{
+	if (cantidadNueva == 0) {
+		tamanioNuevoFinal = tamanioDelPokemon
+				- (strlen(lineasDeBloque[cantidadDeLineas]) + 1);
+	} else {
 		char* cantidadAEscribir = string_itoa(cantidadNueva);
 
-		tamanioNuevoFinal = tamanioDelPokemon - (strlen(lineaSeparadaPorIgual[1])-strlen(cantidadAEscribir));
+		tamanioNuevoFinal =
+				tamanioDelPokemon
+						- (strlen(lineaSeparadaPorIgual[1])
+								- strlen(cantidadAEscribir));
 	}
 
-	int bloquesTotales = ceil((float)tamanioNuevoFinal/metadata.tamanioDeBloque);
+	int bloquesTotales = ceil(
+			(float) tamanioNuevoFinal / metadata.tamanioDeBloque);
 
-	if(bloquesTotales < listaDeBloques->elements_count){
-		for (int cont = 0; cont < listaDeBloques->elements_count - bloquesTotales; ++cont) {
+	if (bloquesTotales < listaDeBloques->elements_count) {
+		for (int cont = 0;
+				cont < listaDeBloques->elements_count - bloquesTotales;
+				++cont) {
 			int pos = listaDeBloques->elements_count - cont - 1;
 			int numeroDeBloque = atoi(list_get(listaDeBloques, pos));
 			limpiarBloque(numeroDeBloque);
@@ -756,7 +764,8 @@ void atender(HeaderDelibird header, p_elementoDeHilo* elemento) {
 				header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
 				posicionCatchX, posicionCatchY);
 		sem_post(&mutexCliente);
-		catchPokemon(catchNombrePokemon,posicionCatchX,posicionCatchY,idMensajeCatch);
+		catchPokemon(catchNombrePokemon, posicionCatchX, posicionCatchY,
+				idMensajeCatch);
 		free(packCatchPokemon);
 
 		break;
@@ -956,7 +965,6 @@ void cargarMetadata() {
 	char **magicNumberEnPosicionUno = string_split(separadoPorEnters[2], "=");
 	char *magicNumber = malloc(strlen(magicNumberEnPosicionUno[1]) + 1);
 
-
 	memcpy(magicNumber, magicNumberEnPosicionUno[1],
 			strlen(magicNumberEnPosicionUno[1]) + 1);
 
@@ -1061,8 +1069,9 @@ void listaActual(t_list* lista) {
 			if (directorio->d_type == 4 && strcmp(directorio->d_name, ".") != 0
 					&& strcmp(directorio->d_name, "..") != 0) {
 
-				char* nombre = malloc(strlen(directorio->d_name)+1);
-				memcpy(nombre,directorio->d_name,strlen(directorio->d_name)+1);
+				char* nombre = malloc(strlen(directorio->d_name) + 1);
+				memcpy(nombre, directorio->d_name,
+						strlen(directorio->d_name) + 1);
 				log_info(loggerGeneral, "Existe el pokemon, %s", nombre);
 				list_add(lista, nombre);
 
@@ -1075,10 +1084,10 @@ void listaActual(t_list* lista) {
 
 }
 
-void crearListaDePokemons(t_list* pokemons){
+void crearListaDePokemons(t_list* pokemons) {
 	pokemonsEnFiles = list_create();
 	for (int i = 0; i < pokemons->elements_count; ++i) {
-		agregarAPokemosEnLista(list_get(pokemons,i));
+		agregarAPokemosEnLista(list_get(pokemons, i));
 	}
 }
 
@@ -1109,9 +1118,10 @@ void iniciarBloques() {
 					&& strcmp(nombre, "..") != 0) {
 
 				char* ruta = string_new();
-				string_append(&ruta,rutaBlock);
-				string_append(&ruta,nombre);
-				log_info(loggerGeneral, "remuevo: %s -- %i", nombre,remove(ruta));
+				string_append(&ruta, rutaBlock);
+				string_append(&ruta, nombre);
+				log_info(loggerGeneral, "remuevo: %s -- %i", nombre,
+						remove(ruta));
 				free(ruta);
 			}
 		}
@@ -1174,10 +1184,11 @@ void limpiarFiles() {
 		char* rutameta = string_duplicate(rutaFile);
 		string_append(&rutameta, "/Metadata.bin");
 
+		log_info(loggerGeneral, "Se Elimino la metadata: %s, %i", rutameta,
+				remove(rutameta));
 
-		log_info(loggerGeneral, "Se Elimino la metadata: %s, %i", rutameta, remove(rutameta));
-
-		log_info(loggerGeneral, "Se Elimino el archivo: %s, %i", rutaFile, rmdir(rutaFile));
+		log_info(loggerGeneral, "Se Elimino el archivo: %s, %i", rutaFile,
+				rmdir(rutaFile));
 
 		free(rutaFile);
 		free(rutameta);
