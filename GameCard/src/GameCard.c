@@ -453,6 +453,19 @@ void enviarAperedPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			posicionX, posicionY);
 }
 
+void enviarCaughtPokemon(char* pkm, uint32_t resultado, uint32_t idMensajeNew) {
+	char *ip = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
+	char *puerto = config_get_string_value(archivo_de_configuracion,
+			"PUERTO_BROKER");
+
+	int conexion = conectarse_a_un_servidor(ip, puerto, loggerGeneral);
+	if (conexion == -1) {
+		log_error(loggerGeneral,
+				"No se pudo conectar al Broker para un CaughtPokemon");
+	}
+	Serialize_PackAndSend_CAUGHT_POKEMON(conexion,idMensajeNew, resultado);
+}
+
 void escribirUnPokemon(int cantidadDeLineas, char** lineasDeBloque,
 		t_list* listaDeBloques, char* megaChar, int cantidadNueva) {
 	int contadorDeBloque = 0;
@@ -604,6 +617,7 @@ void atraparPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		log_error(loggerGeneral,
 				"No se a encontrado la posicion del pokemond: %s", pkm);
 		cerrarArchivoPokemon(pkm);
+		enviarCaughtPokemon(pkm, 0, idMensajeNew);
 		return;
 	}
 
@@ -646,7 +660,7 @@ void atraparPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	char* metadataPost = metadataNueva(tamanioDelPokemon, tamanioNuevoFinal,
 			lineaSeparadaPorIgual, listaDeBloques);
 	cambiarMetadata(pkm, metadataPost);
-
+	enviarCaughtPokemon(pkm, 1, idMensajeNew);
 }
 
 void crearMetadata(char* pkm) {
@@ -715,6 +729,7 @@ void catchPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 
 	if (!existe) {
 		log_error(loggerGeneral, "NO existe el pokemon: %s", pkm);
+		enviarCaughtPokemon(pkm, 0, idMensajeNew);
 		return;
 	} else {
 		log_info(loggerGeneral, "Existe el pokemon %s", pkm);
