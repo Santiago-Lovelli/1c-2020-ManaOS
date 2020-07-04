@@ -365,7 +365,7 @@ void asignarMisionPendienteDePoke(char* pokemon){
 bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
 	return (entrenadorAUX->estado != t_EXIT) &&
 		   (entrenadorAUX->estado != t_READY) &&
-		   (list_size(entrenadorAUX->pokemones) != list_size(entrenadorAUX->pokemonesObjetivo)) &&
+		   (damePosicionFinalDoblePuntero(entrenadorAUX->pokemones) < damePosicionFinalDoblePuntero(entrenadorAUX->pokemonesObjetivo)) &&
 		   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA) &&
 		   (entrenadorAUX->mision == NULL);
 
@@ -546,7 +546,7 @@ void avisarQueTermine(entrenador *trainer){
 void cumplirMision(entrenador* trainer){
 	printf("Se creo el hilo del entrenador %i \n", trainer->tid);
 	while( !entrenadorCumplioObjetivo(trainer) ){
-		if(trainer->mision != NULL){
+		//if(trainer->mision != NULL){
 			sem_wait(&(trainer->semaforoDeEntrenador));
 			trainer->ciclosCPUEjecutados = 0;
 			printf("Hola soy el entrenador %i \n", trainer->tid);
@@ -567,7 +567,7 @@ void cumplirMision(entrenador* trainer){
 				sumarXCiclos(trainer,1);
 			}
 			avisarQueTermine(trainer);
-		}
+		//}
 	}
 	printf("El entrenador: %i cumplio su objetivo! Yupiiii!!! \n", trainer->tid);
 	pasarEntrenadorAEstado(trainer->tid, t_EXIT);
@@ -757,6 +757,7 @@ void FIFO(){
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
 	}
+	//Quienes no esten en exit en este momento estaran en deadlock
 }
 
 void RR(){
@@ -885,7 +886,6 @@ bool todosLosEntrenadoresCumplieronObjetivo(){
 }
 
 bool entrenadorCumplioObjetivo(entrenador* trainer){
-	return false;
-	//return (sonIgualesSinInportarOrden(trainer->pokemones,trainer->pokemonesObjetivo) == 1);
+	return (sonIgualesSinInportarOrden(trainer->pokemones,trainer->pokemonesObjetivo) == 1);
 }
 

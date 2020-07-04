@@ -28,6 +28,10 @@ int sonIgualesSinInportarOrden(char** unPuntero, char** otroPuntero){
 	int j = 0;
 	int limiteDeUno = damePosicionFinalDoblePuntero(unPuntero);
 	int limiteDeDos = damePosicionFinalDoblePuntero(otroPuntero);
+
+	if(limiteDeUno != limiteDeDos)
+		return -1;
+
 	while(i <= limiteDeUno){
 		p_punteroEnLista* aux = malloc(strlen(unPuntero[i])+1);
 		aux->data = unPuntero[i];
@@ -42,7 +46,7 @@ int sonIgualesSinInportarOrden(char** unPuntero, char** otroPuntero){
 	}
 
 	int contador = 0;
-	while(contador <= list_size(listaDeUno) && contador <= list_size(listaDeOtro)){
+	while(contador < list_size(listaDeUno) && contador < list_size(listaDeOtro)){
 
 		p_punteroEnLista* otroAux = list_get(listaDeOtro,contador);
 		int unIndex = list_get_index(listaDeUno,otroAux->data,(void*)esElString);
