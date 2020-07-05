@@ -36,22 +36,34 @@ enum queueName {
 	APPEARED
 };
 
-typedef struct memoriaInterna {
+typedef struct estructuraAdministrativa {
 	int idMensaje;
+	int estaOcupado;
+	int tamanio;
+	void* donde;
 	d_message tipoMensaje;
 	t_list* suscriptoresConMensajeEnviado;
 	t_list* suscriptoresConACK;
-}memoriaInterna;
+}estructuraAdministrativa;
 
 typedef struct mensajeConID{
 	void *pack;
 	int id;
 }mensajeConID;
 
+typedef struct cachearNew{
+	uint32_t largoDeNombre;
+	char * nombrePokemon;
+	uint32_t posX;
+	uint32_t posY;
+	uint32_t cantidad;
+}cachearNew;
+
 ///////FUNCIONES INICIALIZACION/////////
 void Init();
 void ConfigInit();
 void ListsInit();
+void MemoriaPrincipalInit();
 
 //////FUNCIONES DE CONEXION//////////
 void EsperarClientes();
@@ -60,7 +72,7 @@ void ActuarAnteMensaje();
 
 //////FUNCIONES VARIAS//////////
 void suscribir (uint32_t variable, int cliente);
-void enviarMensajeNewASuscriptores (void* paquete, t_list* SUSCRIPTORES_NEW);
+void tratarMensajeNewASuscriptores (void* paquete, t_list* SUSCRIPTORES_NEW);
 void enviarMensajeCatchASuscriptores (void* paquete, t_list* lista);
 void enviarMensajeGetASuscriptores (void* paquete, t_list* lista);
 void enviarMensajeAppearedASuscriptores (void* paquete, t_list* lista);
@@ -68,6 +80,12 @@ void enviarMensajeCaughtASuscriptores (void* paquete, t_list* lista);
 void enviarMensajeLocalizedASuscriptores (void* paquete, t_list* lista);
 mensajeConID agregarIDMensaje (void* paquete);
 
+//////FUNCIONES CACHE//////////
+void * guardarMensaje(void * mensajeAGuardar);
+void * buscarParticionLibrePara(int mensajeAGuardar);
+estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id);
+int obtenerID();
+int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje);
 
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;
@@ -75,7 +93,9 @@ t_log * LOGGER_GENERAL;
 t_log * LOGGER_OBLIGATORIO;
 enum queueName COLAS;
 t_list* CONEXIONES;
-
+void * MEMORIA_PRINCIPAL;
+t_list* ADMINISTRADOR_MEMORIA;
+int CONTADOR = 0;
 
 ////////LISTA DE SUSCRIPTORES//////
 t_list* SUSCRIPTORES_NEW;
@@ -85,14 +105,8 @@ t_list* SUSCRIPTORES_CATCH;
 t_list* SUSCRIPTORES_CAUGHT;
 t_list* SUSCRIPTORES_LOCALIZED;
 t_list* IDs; // si es que usamos el rand
-t_list* MEMORIA_CACHE;
 
 #endif /* BROKER_H_ */
-
-
-
-
-
 
 
 
