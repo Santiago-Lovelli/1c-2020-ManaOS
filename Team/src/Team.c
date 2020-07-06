@@ -351,6 +351,26 @@ bool mismoPokemonDeMision(t_mision* pokemon1, char* pokemon2){
 	return ( (strcmp(pokemon1->pokemon,pokemon2)) == 0);
 }
 
+int cuantosDeEstePokemonTengo(entrenador* trainer, char* pokemon){
+	int index = damePosicionFinalDoblePuntero(trainer->pokemones);
+	int response = 0;
+	for(int i=0; i<index; i++){
+		if(strcmp(trainer->pokemones[i],pokemon) == 0)
+			response = response +1;
+	}
+	return response;
+}
+
+int cuantosDeEstePokemonNecesito(entrenador* trainer, char*pokemon){
+	int index = damePosicionFinalDoblePuntero(trainer->pokemonesObjetivo);
+	int response = 0;
+	for(int i=0; i<index; i++){
+		if(strcmp(trainer->pokemonesObjetivo[i],pokemon) == 0)
+			response = response +1;
+	}
+	return response;
+}
+
 void asignarMisionPendienteDePoke(char* pokemon){
 	t_mision *mision;
 	for(int i=0; i<list_size(MISIONES_PENDIENTES); i++){
@@ -757,7 +777,10 @@ void FIFO(){
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
 	}
-	//Quienes no esten en exit en este momento estaran en deadlock
+	//Manejo de Deadlock
+	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i", list_size(EstadoBlock));
+
+
 }
 
 void RR(){

@@ -177,6 +177,21 @@ int diferenciaEntrePuntos(punto origen, punto destino);
 bool necesitoEstePokemon(char *pokemon);
 
 /*
+ * ESTA FUNCION DADO UN ENTRENADOR Y UN POKEMON
+ * NOS DICE CUANTOS DE ESE POKEMON YA ESTAN EN POSESION
+ * DE ESE ENTRENADOR
+ */
+
+int cuantosDeEstePokemonTengo(entrenador* trainer, char* pokemon);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR Y UN POKEMON
+ * NOS DICE CUANTOS DE ESE POKEMON NECESITA ESE ENTRENADOR
+ */
+
+int cuantosDeEstePokemonNecesito(entrenador* trainer, char*pokemon);
+
+/*
  * ESTA FUNCION DADO UN POKEMON NOS DEVUELVE SI ESTE
  * SE ENCUENTRA EN NUESTRO OBJETIVO GLOBAL Y PERO TAMBIEN
  * CONSIDERANDO SI TENEMOS ENTRENADORES YENDO A BUSCARLO
