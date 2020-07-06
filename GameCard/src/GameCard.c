@@ -374,6 +374,12 @@ void cargarListaDeBloques(char** arrayConBloques, t_list* listaDeBloques) {
 	}
 }
 
+void esperarTiempoDeOperacion() {
+	uint32_t espera = config_get_int_value(archivo_de_configuracion,
+			"TIEMPO_RETARDO_OPERACION");
+	sleep(espera);
+}
+
 void abrirArchivoPokemon(char*pkm) {
 	uint32_t reconectar = config_get_int_value(archivo_de_configuracion,
 			"TIEMPO_DE_REINTENTO_OPERACION");
@@ -448,6 +454,7 @@ void enviarAperedPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	if (conexion == -1) {
 		log_error(loggerGeneral,
 				"No se pudo conectar al Broker para un aperedPokemon");
+		return;
 	}
 	Serialize_PackAndSend_APPEARED_POKEMON(conexion, idMensajeNew, pkm,
 			posicionX, posicionY);
@@ -462,8 +469,25 @@ void enviarCaughtPokemon(char* pkm, uint32_t resultado, uint32_t idMensajeNew) {
 	if (conexion == -1) {
 		log_error(loggerGeneral,
 				"No se pudo conectar al Broker para un CaughtPokemon");
+		return;
 	}
-	Serialize_PackAndSend_CAUGHT_POKEMON(conexion,idMensajeNew, resultado);
+	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, idMensajeNew, resultado);
+}
+
+void enviarLocalizedPokemon(char* pkm, t_list* posicionesConCantidad,
+		uint32_t idMensajeNew) {
+	char *ip = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
+	char *puerto = config_get_string_value(archivo_de_configuracion,
+			"PUERTO_BROKER");
+
+	int conexion = conectarse_a_un_servidor(ip, puerto, loggerGeneral);
+	if (conexion == -1) {
+		log_error(loggerGeneral,
+				"No se pudo conectar al Broker para un LocalizedPokemon");
+		return;
+	}
+	Serialize_PackAndSend_LOCALIZED_POKEMON(conexion, idMensajeNew, pkm,
+			posicionesConCantidad);
 }
 
 void escribirUnPokemon(int cantidadDeLineas, char** lineasDeBloque,
@@ -575,6 +599,7 @@ void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	cambiarMetadata(pkm, metadataPost);
 
 	enviarAperedPokemon(pkm, posicionX, posicionY, cantidad, idMensajeNew);
+	esperarTiempoDeOperacion();
 }
 
 char* metadataVacia() {
@@ -656,11 +681,44 @@ void atraparPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			list_remove(listaDeBloques, pos);
 		}
 	}
-
 	char* metadataPost = metadataNueva(tamanioDelPokemon, tamanioNuevoFinal,
 			lineaSeparadaPorIgual, listaDeBloques);
 	cambiarMetadata(pkm, metadataPost);
 	enviarCaughtPokemon(pkm, 1, idMensajeNew);
+	esperarTiempoDeOperacion();
+}
+
+void localizarPokemon(char *pkm, uint32_t idMensajeNew) {
+
+	abrirArchivoPokemon(pkm);
+
+	t_list* listaDeBloques = list_create();
+
+	char* megaChar = leerUnPokemon(pkm, listaDeBloques);
+
+	char** lineasDeBloque = string_split(megaChar, "\n");
+
+	int i = 0;
+
+	t_list* posicionCantidad = list_create();
+
+	while (lineasDeBloque[i] != NULL) {
+		char** separadoIgual = string_split(lineasDeBloque[i], "=");
+		char** posiciones = string_split(separadoIgual[0], "-");
+
+		d_PosCant* posicion = malloc(sizeof(d_PosCant));
+		posicion->cantidad = atoi(separadoIgual[1]);
+		posicion->posX = atoi(posiciones[0]);
+		posicion->posY = atoi(posiciones[1]);
+		log_info(loggerGeneral,"cant: %i, x: %i, y: %i",posicion->cantidad,posicion->posX,posicion->posY);
+		list_add(posicionCantidad, posicion);
+		i=i+1;
+	}
+
+	enviarLocalizedPokemon(pkm, posicionCantidad, idMensajeNew);
+	list_destroy_and_destroy_elements(posicionCantidad,free);
+	cerrarArchivoPokemon(pkm);
+	esperarTiempoDeOperacion();
 }
 
 void crearMetadata(char* pkm) {
@@ -738,6 +796,22 @@ void catchPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	atraparPokemon(pkm, posicionX, posicionY, idMensajeNew);
 }
 
+void getPokemon(char* pkm, uint32_t idMensajeNew) {
+	sem_wait(&existencia);
+	bool existe = existePokemon(pkm);
+
+	if (!existe) {
+		log_error(loggerGeneral, "NO existe el pokemon: %s", pkm);
+		t_list* posicionesNull = list_create();
+		enviarLocalizedPokemon(pkm, posicionesNull, idMensajeNew);
+		return;
+	} else {
+		log_info(loggerGeneral, "Existe el pokemon %s", pkm);
+	}
+	sem_post(&existencia);
+	localizarPokemon(pkm, idMensajeNew);
+}
+
 void atender(HeaderDelibird header, p_elementoDeHilo* elemento) {
 	int cliente = elemento->cliente;
 	t_log* logger = elemento->log;
@@ -798,7 +872,7 @@ void atender(HeaderDelibird header, p_elementoDeHilo* elemento) {
 		log_info(logger, "Me llego mensaje de %i. Id: %i, Pkm: %s\n",
 				header.tipoMensaje, idMensajeGet, getNombrePokemon);
 		sem_post(&mutexCliente);
-		// Se hace lo necesario
+		getPokemon(getNombrePokemon, idMensajeGet);
 		free(packGetPokemon);
 		break;
 	default:
