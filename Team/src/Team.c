@@ -90,6 +90,7 @@ uint32_t recibirResponse(int conexion, HeaderDelibird headerACK){
 void sumarPokemon(entrenador* trainer, char* pokemon){
 	int index = damePosicionFinalDoblePuntero(trainer->pokemones);
 	trainer->pokemones[index+1] = pokemon;
+	trainer->pokemones[index+2] = NULL;
 }
 
 void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch){
@@ -354,7 +355,7 @@ bool mismoPokemonDeMision(t_mision* pokemon1, char* pokemon2){
 int cuantosDeEstePokemonTengo(entrenador* trainer, char* pokemon){
 	int index = damePosicionFinalDoblePuntero(trainer->pokemones);
 	int response = 0;
-	for(int i=0; i<index; i++){
+	for(int i=0; i<=index; i++){
 		if(strcmp(trainer->pokemones[i],pokemon) == 0)
 			response = response +1;
 	}
@@ -364,11 +365,27 @@ int cuantosDeEstePokemonTengo(entrenador* trainer, char* pokemon){
 int cuantosDeEstePokemonNecesito(entrenador* trainer, char*pokemon){
 	int index = damePosicionFinalDoblePuntero(trainer->pokemonesObjetivo);
 	int response = 0;
-	for(int i=0; i<index; i++){
+	for(int i=0; i<=index; i++){
 		if(strcmp(trainer->pokemonesObjetivo[i],pokemon) == 0)
 			response = response +1;
 	}
 	return response;
+}
+
+char* quePokemonMeFalta(entrenador* trainer){
+	int indexPoke = damePosicionFinalDoblePuntero(trainer->pokemones);
+	int indexPokeObj = damePosicionFinalDoblePuntero(trainer->pokemonesObjetivo);
+	bool aux = false;
+	for(int i=0; i<=indexPokeObj; i++){
+		for(int j=0; j<=indexPoke; j++){
+			if(strcmp(trainer->pokemones[j],trainer->pokemonesObjetivo[i]) == 0)
+				aux = true;
+		}
+		if(!aux)
+			return trainer->pokemonesObjetivo[i];
+		aux = false;
+	}
+	return NULL;
 }
 
 void asignarMisionPendienteDePoke(char* pokemon){
@@ -845,6 +862,10 @@ void SJFSD(){
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
 	}
+}
+
+void planificarDeadlocks(){
+
 }
 
 void ordenarListaSJF(t_list *lista){

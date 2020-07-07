@@ -22,31 +22,16 @@ bool esElString(p_punteroEnLista* unString, char* otroString){
 }
 
 int sonIgualesSinInportarOrden(char** unPuntero, char** otroPuntero){
-	t_list* listaDeUno = list_create();
-	t_list* listaDeOtro = list_create();
-	int i = 0;
-	int j = 0;
+	t_list* listaDeUno = convertirDoblePunteroEnLista(unPuntero);
+	t_list* listaDeOtro = convertirDoblePunteroEnLista(otroPuntero);
 	int limiteDeUno = damePosicionFinalDoblePuntero(unPuntero);
 	int limiteDeDos = damePosicionFinalDoblePuntero(otroPuntero);
 
 	if(limiteDeUno != limiteDeDos)
 		return -1;
 
-	while(i <= limiteDeUno){
-		p_punteroEnLista* aux = malloc(strlen(unPuntero[i])+1);
-		aux->data = unPuntero[i];
-		list_add(listaDeUno,aux);
-		i = i + 1;
-	}
-	while(j <= limiteDeDos){
-		p_punteroEnLista* aux = malloc(strlen(otroPuntero[j])+1);
-		aux->data = otroPuntero[j];
-		list_add(listaDeOtro,aux);
-		j = j + 1;
-	}
-
 	int contador = 0;
-	while(contador < list_size(listaDeUno) && contador < list_size(listaDeOtro)){
+	while(list_size(listaDeUno) != 0 && list_size(listaDeOtro) != 0){
 
 		p_punteroEnLista* otroAux = list_get(listaDeOtro,contador);
 		int unIndex = list_get_index(listaDeUno,otroAux->data,(void*)esElString);
@@ -58,9 +43,24 @@ int sonIgualesSinInportarOrden(char** unPuntero, char** otroPuntero){
 			list_destroy(listaDeOtro);
 			return -1;
 		}
-		contador = contador+1;
+		list_remove(listaDeUno, contador);
+		list_remove(listaDeOtro, unIndex);
 	}
 	list_destroy(listaDeUno);
 	list_destroy(listaDeOtro);
 	return 1;
+}
+
+t_list* convertirDoblePunteroEnLista(char** doble){
+	int limiteDeLista = damePosicionFinalDoblePuntero(doble);
+	t_list* listaDeUno = list_create();
+	int i=0;
+	while(i <= limiteDeLista){
+		p_punteroEnLista* aux = malloc(strlen(doble[i])+1);
+		aux->data = doble[i];
+		list_add(listaDeUno,aux);
+		i = i + 1;
+	}
+	return listaDeUno;
+
 }

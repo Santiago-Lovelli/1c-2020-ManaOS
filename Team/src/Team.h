@@ -192,6 +192,14 @@ int cuantosDeEstePokemonTengo(entrenador* trainer, char* pokemon);
 int cuantosDeEstePokemonNecesito(entrenador* trainer, char*pokemon);
 
 /*
+ * ESTA FUNCION DADO UN ENTRENADOR NOS DEVUELVE
+ * EL PRIMER POKEMON EN SU LISTA DE OBJETIVOS
+ * QUE NO ESTE EN SU LISTA DE POKEMONS ACTUAL
+ */
+
+char* quePokemonMeFalta(entrenador* trainer);
+
+/*
  * ESTA FUNCION DADO UN POKEMON NOS DEVUELVE SI ESTE
  * SE ENCUENTRA EN NUESTRO OBJETIVO GLOBAL Y PERO TAMBIEN
  * CONSIDERANDO SI TENEMOS ENTRENADORES YENDO A BUSCARLO
