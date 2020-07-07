@@ -7,6 +7,27 @@ uint32_t damePosicionFinalDoblePuntero(char **puntero){
 	return contador-1;
 }
 
+int damePosicionDeObjetoEnDoblePuntero(char **puntero, char* objeto){
+	int limite = damePosicionFinalDoblePuntero(puntero);
+	for(int i=0; i<=limite; i++){
+		if(strcmp(objeto, puntero[i]) == 0 )
+			return i;
+	}
+	return -1;
+}
+
+char* primerElementoEnComun(char** puntero1, char** puntero2){
+	int limite1 = damePosicionFinalDoblePuntero(puntero1);
+	int limite2 = damePosicionFinalDoblePuntero(puntero2);
+	for(int i=0; i<=limite1; i++){
+		for(int j=0; i<=limite2; i++){
+			if(strcmp(puntero1[i],puntero2[j]) == 0 )
+				return puntero1[i];
+		}
+	}
+	return NULL;
+}
+
 void liberarDoblePuntero(char **puntero){
 	uint32_t posicionFinal = damePosicionFinalDoblePuntero(puntero);
 	for(int i=0; i<=posicionFinal; i=i+1)

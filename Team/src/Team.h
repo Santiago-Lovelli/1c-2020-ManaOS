@@ -57,6 +57,7 @@ typedef struct t_mision {
 	char* pokemon;
 	punto point;
 	bool esIntercambio;
+	int tidObjetivo;
 }t_mision;
 
 typedef struct entrenador{
@@ -170,6 +171,21 @@ int entrenadorMasCercanoDisponible(punto point);
 int diferenciaEntrePuntos(punto origen, punto destino);
 
 /*
+ * ESTA FUNCION DADO UN ENTRENADOR Y UN POKEMON SE LO SUMA
+ * A SU LISTA DE POKEMONS CAPTURADOS
+ */
+
+void sumarPokemon(entrenador* trainer, char* pokemon);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR, EL ID DE UN ENTRENADOR OBJETIVO Y UN POKEMON,
+ * REALIZA EL INTERCAMBIO MAS EFICIENTE ENTRE LOS DOS (YENDO EL POKEMON PASADO POR
+ * PARAMETROS AL ENTRENADOR Y UN POKEMON SOBRANTE DEL ENTRENADOR AL ENTRENADOR OBJETIVO)
+ */
+
+void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* pokemon);
+
+/*
  * ESTA FUNCION DADO UN POKEMON NOS DEVUELVE
  * SI ESTE SE ENCUENTRA EN NUESTRO OBJETIVO GLOBAL
  */
@@ -193,11 +209,19 @@ int cuantosDeEstePokemonNecesito(entrenador* trainer, char*pokemon);
 
 /*
  * ESTA FUNCION DADO UN ENTRENADOR NOS DEVUELVE
- * EL PRIMER POKEMON EN SU LISTA DE OBJETIVOS
- * QUE NO ESTE EN SU LISTA DE POKEMONS ACTUAL
+ * TODOS LOS POKEMON POKEMON EN SU LISTA DE OBJETIVOS
+ * QUE NO ESTEN EN SU LISTA DE POKEMONS ACTUAL
  */
 
-char* quePokemonMeFalta(entrenador* trainer);
+char** quePokemonMeFalta(entrenador* trainer);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR NOS DEVUELVE
+ * TODOS LOS POKEMON EN SU LISTA DE POKEMONES ACTUALES
+ * QUE NO ESTEN EN SU LISTA DE OBJETIVOS
+ */
+
+char** quePokemonTengoDeMas(entrenador *trainer);
 
 /*
  * ESTA FUNCION DADO UN POKEMON NOS DEVUELVE SI ESTE
@@ -235,7 +259,7 @@ void sacarMision(int idEntrenador);
  * LE ASIGNA ESA MISION A ESE ENTRENADOR
  */
 
-void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio);
+void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio, int tidObjetivo);
 
 /*
  * ESTA FUNCION DADO EL ENTRENADOR PASADO POR PARAMETROS
@@ -249,7 +273,7 @@ void cumplirMision(entrenador* trainer);
  * CREA UNA MISION Y LA RETORNA
  */
 
-t_mision* crearMision(char *pokemon, punto point, bool esIntercambio);
+t_mision* crearMision(char *pokemon, punto point, bool esIntercambio, int tidObjetivo);
 
 /*
  * ESTA FUNCION DADO EL ID DE UN  ENTRENADOR
@@ -440,6 +464,13 @@ void SJFCD();
 void SJFSD();
 unsigned long int getClockTime();
 void agregarTiempo(int cantidad);
+
+/*
+ * ESTA FUNCION PONE EN READY CON UNA MISION
+ * A UN ENTRENADOR PARA PLANIFICARLO HACIA OTRO
+ */
+
+void planificarDeadlocks();
 
 /*
  * ESTA FUNCION DADA UNA LISTA

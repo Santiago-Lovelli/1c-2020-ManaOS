@@ -20,6 +20,20 @@ typedef struct {
 uint32_t damePosicionFinalDoblePuntero(char **puntero);
 
 /*
+ * Esta funcion dado un objeto y un doble puntero devuelve el primer indice
+ * en el que se encuentre ese objeto, si no lo encuentra retorna -1
+ */
+
+int damePosicionDeObjetoEnDoblePuntero(char **puntero, char* objeto);
+
+/*
+ * Esta funcion dados dos dobles punteros retorna el primer
+ * elemento que tengan en comun
+ */
+
+char* primerElementoEnComun(char** puntero1, char** puntero2);
+
+/*
  * Libera un puntero doble
  */
 void liberarDoblePuntero(char **puntero);
