@@ -886,6 +886,76 @@ void atender(HeaderDelibird header, p_elementoDeHilo* elemento) {
 	}
 }
 
+void atenderBroken(HeaderDelibird header, p_elementoDeHilo* elemento) {
+	int cliente = elemento->cliente;
+	t_log* logger = elemento->log;
+	switch (header.tipoMensaje) {
+	case d_NEW_POKEMON:
+		;
+		log_info(logger, "Llego un new pokemon");
+		void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		sem_post(&sockBroken);
+		uint32_t idMensajeNew, posicionNewX, posicionNewY, newCantidad;
+		char *newNombrePokemon;
+		Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew,
+				&newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
+		log_info(logger,
+				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n",
+				header.tipoMensaje, idMensajeNew, newNombrePokemon,
+				posicionNewX, posicionNewY, newCantidad);
+
+		newPokemon(newNombrePokemon, posicionNewX, posicionNewY, newCantidad,
+				idMensajeNew);
+
+		free(packNewPokemon);
+		break;
+	case d_CATCH_POKEMON:
+		;
+		log_info(logger, "Llego un catch pokemon");
+
+		void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		sem_post(&sockBroken);
+		uint32_t idMensajeCatch, posicionCatchX, posicionCatchY;
+		char *catchNombrePokemon;
+		Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch,
+				&catchNombrePokemon, &posicionCatchX, &posicionCatchY);
+		log_info(logger,
+				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n",
+				header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
+				posicionCatchX, posicionCatchY);
+		catchPokemon(catchNombrePokemon, posicionCatchX, posicionCatchY,
+				idMensajeCatch);
+		free(packCatchPokemon);
+
+		break;
+	case d_GET_POKEMON:
+		;
+		log_info(logger, "Llego un get pokemon");
+
+		void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		sem_post(&sockBroken);
+		uint32_t idMensajeGet;
+		char *getNombrePokemon;
+		Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet,
+				&getNombrePokemon);
+		log_info(logger, "Me llego mensaje de %i. Id: %i, Pkm: %s\n",
+				header.tipoMensaje, idMensajeGet, getNombrePokemon);
+		getPokemon(getNombrePokemon, idMensajeGet);
+		free(packGetPokemon);
+		break;
+	default:
+		log_error(logger, "Mensaje no entendido: %i\n", header);
+		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
+				header.tamanioMensaje);
+		sem_post(&sockBroken);
+		free(packBasura);
+		break;
+	}
+}
+
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 	while (1) {
 		sem_wait(&sock);
@@ -959,6 +1029,21 @@ void levantarLogYArchivoDeConfiguracion() {
 			"Se levanto el archivo de configuracion /home/utnso/workspace/tp-2020-1c-ManaOS-/GameCard/GameCard.config\n");
 }
 
+void* recibirYAtenderUnaSuscripcion(p_elementoDeHilo* elemento) {
+	while (1) {
+		sem_wait(&sockBroken);
+		HeaderDelibird headerRecibido = Serialize_RecieveHeader(
+				elemento->cliente);
+		if (headerRecibido.tipoMensaje == -1) {
+			log_error(elemento->log, "Se perdio al Broken\n");
+			sem_post(&sockBroken);
+			break;
+		}
+		atenderBroken(headerRecibido, elemento);
+	}
+	return 0;
+}
+
 void* suscribirme(d_message colaDeSuscripcion) {
 	char *puerto = config_get_string_value(archivo_de_configuracion,
 			"PUERTO_BROKER");
@@ -980,12 +1065,13 @@ void* suscribirme(d_message colaDeSuscripcion) {
 		}
 	}
 	Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
+	while(1){
+		p_elementoDeHilo *elemento = malloc(sizeof(p_elementoDeHilo));
+		elemento->log = loggerGeneral;
+		elemento->cliente = conexion;
 
-	p_elementoDeHilo* elemento;
-	elemento->cliente = conexion;
-	elemento->log = loggerGeneral;
-
-	recibirYAtenderUnCliente(elemento);
+		recibirYAtenderUnaSuscripcion(elemento);
+	}
 	return 0;
 }
 
@@ -1242,6 +1328,7 @@ void finalizar() {
 	config_destroy(archivo_de_configuracion);
 	sem_destroy(&bitSem);
 	sem_destroy(&sock);
+	sem_destroy(&sockBroken);
 	sem_destroy(&mutexCliente);
 	sem_destroy(&listaPokemon);
 	sem_destroy(&existencia);
@@ -1252,6 +1339,7 @@ void finalizar() {
 void iniciarSemaforos() {
 	sem_init(&bitSem, 0, 1);
 	sem_init(&sock, 0, 1);
+	sem_init(&sockBroken, 0, 1);
 	sem_init(&mutexCliente, 0, 1);
 	sem_init(&listaPokemon, 0, 1);
 	sem_init(&existencia, 0, 1);

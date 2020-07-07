@@ -55,6 +55,7 @@ t_bitarray * bitmap;
 
 sem_t bitSem;
 sem_t sock;
+sem_t sockBroken;
 sem_t mutexCliente;
 sem_t listaPokemon;
 sem_t existencia;
