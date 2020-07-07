@@ -812,81 +812,14 @@ void getPokemon(char* pkm, uint32_t idMensajeNew) {
 	localizarPokemon(pkm, idMensajeNew);
 }
 
-void atender(HeaderDelibird header, p_elementoDeHilo* elemento) {
-	int cliente = elemento->cliente;
-	t_log* logger = elemento->log;
-	switch (header.tipoMensaje) {
-	case d_NEW_POKEMON:
-		;
-		log_info(logger, "Llego un new pokemon");
-		void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente,
-				header.tamanioMensaje);
-		sem_post(&sock);
-		uint32_t idMensajeNew, posicionNewX, posicionNewY, newCantidad;
-		char *newNombrePokemon;
-		Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew,
-				&newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
-		log_info(logger,
-				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n",
-				header.tipoMensaje, idMensajeNew, newNombrePokemon,
-				posicionNewX, posicionNewY, newCantidad);
-
-		sem_post(&mutexCliente);
-		newPokemon(newNombrePokemon, posicionNewX, posicionNewY, newCantidad,
-				idMensajeNew);
-
-		free(packNewPokemon);
-		break;
-	case d_CATCH_POKEMON:
-		;
-		log_info(logger, "Llego un catch pokemon");
-
-		void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente,
-				header.tamanioMensaje);
-		sem_post(&sock);
-		uint32_t idMensajeCatch, posicionCatchX, posicionCatchY;
-		char *catchNombrePokemon;
-		Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch,
-				&catchNombrePokemon, &posicionCatchX, &posicionCatchY);
-		log_info(logger,
-				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n",
-				header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
-				posicionCatchX, posicionCatchY);
-		sem_post(&mutexCliente);
-		catchPokemon(catchNombrePokemon, posicionCatchX, posicionCatchY,
-				idMensajeCatch);
-		free(packCatchPokemon);
-
-		break;
-	case d_GET_POKEMON:
-		;
-		log_info(logger, "Llego un get pokemon");
-
-		void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente,
-				header.tamanioMensaje);
-		sem_post(&sock);
-		uint32_t idMensajeGet;
-		char *getNombrePokemon;
-		Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet,
-				&getNombrePokemon);
-		log_info(logger, "Me llego mensaje de %i. Id: %i, Pkm: %s\n",
-				header.tipoMensaje, idMensajeGet, getNombrePokemon);
-		sem_post(&mutexCliente);
-		getPokemon(getNombrePokemon, idMensajeGet);
-		free(packGetPokemon);
-		break;
-	default:
-		log_error(logger, "Mensaje no entendido: %i\n", header);
-		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
-				header.tamanioMensaje);
-		sem_post(&sock);
-		sem_post(&mutexCliente);
-		free(packBasura);
-		break;
+void liberarSemaforos(t_list* semaforos){
+	for (int i = 0; i < semaforos->elements_count; ++i) {
+		sem_t* sem = list_get(semaforos,i);
+		sem_post(sem);
 	}
 }
 
-void atenderBroken(HeaderDelibird header, p_elementoDeHilo* elemento) {
+void atender(HeaderDelibird header, p_elementoDeHilo* elemento, t_list* semaforos) {
 	int cliente = elemento->cliente;
 	t_log* logger = elemento->log;
 	switch (header.tipoMensaje) {
@@ -895,7 +828,6 @@ void atenderBroken(HeaderDelibird header, p_elementoDeHilo* elemento) {
 		log_info(logger, "Llego un new pokemon");
 		void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		sem_post(&sockBroken);
 		uint32_t idMensajeNew, posicionNewX, posicionNewY, newCantidad;
 		char *newNombrePokemon;
 		Serialize_Unpack_NewPokemon(packNewPokemon, &idMensajeNew,
@@ -905,6 +837,7 @@ void atenderBroken(HeaderDelibird header, p_elementoDeHilo* elemento) {
 				header.tipoMensaje, idMensajeNew, newNombrePokemon,
 				posicionNewX, posicionNewY, newCantidad);
 
+		liberarSemaforos(semaforos);
 		newPokemon(newNombrePokemon, posicionNewX, posicionNewY, newCantidad,
 				idMensajeNew);
 
@@ -916,7 +849,6 @@ void atenderBroken(HeaderDelibird header, p_elementoDeHilo* elemento) {
 
 		void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		sem_post(&sockBroken);
 		uint32_t idMensajeCatch, posicionCatchX, posicionCatchY;
 		char *catchNombrePokemon;
 		Serialize_Unpack_CatchPokemon(packCatchPokemon, &idMensajeCatch,
@@ -925,6 +857,7 @@ void atenderBroken(HeaderDelibird header, p_elementoDeHilo* elemento) {
 				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n",
 				header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
 				posicionCatchX, posicionCatchY);
+		liberarSemaforos(semaforos);
 		catchPokemon(catchNombrePokemon, posicionCatchX, posicionCatchY,
 				idMensajeCatch);
 		free(packCatchPokemon);
@@ -936,13 +869,13 @@ void atenderBroken(HeaderDelibird header, p_elementoDeHilo* elemento) {
 
 		void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		sem_post(&sockBroken);
 		uint32_t idMensajeGet;
 		char *getNombrePokemon;
 		Serialize_Unpack_GetPokemon(packGetPokemon, &idMensajeGet,
 				&getNombrePokemon);
 		log_info(logger, "Me llego mensaje de %i. Id: %i, Pkm: %s\n",
 				header.tipoMensaje, idMensajeGet, getNombrePokemon);
+		liberarSemaforos(semaforos);
 		getPokemon(getNombrePokemon, idMensajeGet);
 		free(packGetPokemon);
 		break;
@@ -950,10 +883,11 @@ void atenderBroken(HeaderDelibird header, p_elementoDeHilo* elemento) {
 		log_error(logger, "Mensaje no entendido: %i\n", header);
 		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
-		sem_post(&sockBroken);
+		liberarSemaforos(semaforos);
 		free(packBasura);
 		break;
 	}
+	list_destroy(semaforos);
 }
 
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
@@ -967,7 +901,10 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 			sem_post(&mutexCliente);
 			break;
 		}
-		atender(headerRecibido, elemento);
+		t_list* semaforo = list_create();
+		list_add(semaforo,&sock);
+		list_add(semaforo,&mutexCliente);
+		atender(headerRecibido, elemento, semaforo);
 	}
 	return 0;
 }
@@ -1030,6 +967,8 @@ void levantarLogYArchivoDeConfiguracion() {
 }
 
 void* recibirYAtenderUnaSuscripcion(p_elementoDeHilo* elemento) {
+	sem_t sockBroken;
+	sem_init(&sockBroken, 0, 1);
 	while (1) {
 		sem_wait(&sockBroken);
 		HeaderDelibird headerRecibido = Serialize_RecieveHeader(
@@ -1039,8 +978,11 @@ void* recibirYAtenderUnaSuscripcion(p_elementoDeHilo* elemento) {
 			sem_post(&sockBroken);
 			break;
 		}
-		atenderBroken(headerRecibido, elemento);
+		t_list* semaforos = list_create();
+		list_add(semaforos, &sockBroken);
+		atender(headerRecibido, elemento, semaforos);
 	}
+	sem_destroy(&sockBroken);
 	return 0;
 }
 
@@ -1328,7 +1270,6 @@ void finalizar() {
 	config_destroy(archivo_de_configuracion);
 	sem_destroy(&bitSem);
 	sem_destroy(&sock);
-	sem_destroy(&sockBroken);
 	sem_destroy(&mutexCliente);
 	sem_destroy(&listaPokemon);
 	sem_destroy(&existencia);
@@ -1339,7 +1280,6 @@ void finalizar() {
 void iniciarSemaforos() {
 	sem_init(&bitSem, 0, 1);
 	sem_init(&sock, 0, 1);
-	sem_init(&sockBroken, 0, 1);
 	sem_init(&mutexCliente, 0, 1);
 	sem_init(&listaPokemon, 0, 1);
 	sem_init(&existencia, 0, 1);

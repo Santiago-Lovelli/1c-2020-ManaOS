@@ -55,7 +55,6 @@ t_bitarray * bitmap;
 
 sem_t bitSem;
 sem_t sock;
-sem_t sockBroken;
 sem_t mutexCliente;
 sem_t listaPokemon;
 sem_t existencia;
@@ -64,7 +63,7 @@ int crearDirectorioEn(char *path);
 void* atenderGameboy();
 void iniciarServidorDeGameBoy();
 void levantarLogYArchivoDeConfiguracion();
-void atender(HeaderDelibird header, p_elementoDeHilo* elemento);
+void atender(HeaderDelibird header, p_elementoDeHilo* elemento, t_list* semaforos);
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento);
 void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion);
 void cargarMetadata();
