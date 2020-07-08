@@ -311,7 +311,6 @@ void ListsInit(){
 	SUSCRIPTORES_CATCH = list_create();
 	SUSCRIPTORES_CAUGHT = list_create();
 	SUSCRIPTORES_LOCALIZED = list_create();
-	IDs = list_create();
 	ADMINISTRADOR_MEMORIA = list_create();
 }
 
@@ -385,9 +384,37 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
 	}
 }
 
+void buddySystem(cachearNew mensaje){ ///Le quiero pasar void*
+	mensajeConID mensajeConID;
+	mensajeConID.pack = mensaje;
+	estructuraAdministrativa estructura;
+	if (elTamanioEsMenor && estructura.estaOcupado == 0){
+		estructura.donde = guardarMensaje (mensajeConID.pack);
+		estructura.estaOcupado = 1;
+		estructura.idMensaje = mensajeConID.id;
+		estructura.tamanioMemoriaVariable; //Ver como sacar el tamanio de la paticion en la funcion elTamanioEsMenor
+		estructura.tamanioParticion; //Ver de donde sacarlo
+		estructura.tipoMensaje = d_NEW_POKEMON;
+	}
+	else{
+		log_info(LOGGER_GENERAL,"El mensaje no entra en la memoria");
+	}
 
+}
 
-
+int elTamanioEsMenor (cachearNew mensaje){ //Le quiero pasar void*. Esto es para BUDDY SYSTEM
+	estructuraAdministrativa estructura;
+	int particion = BROKER_CONFIG.TAMANO_MEMORIA;
+	int cantidadParticiones = 0;
+	if (mensaje.largoDeNombre > particion){
+	while(mensaje.largoDeNombre < particion){
+		particion = particion / 2;
+		cantidadParticiones ++;
+	}
+	return 1; /// No me mates nacho con este return jeje
+	}
+	return -1;
+}
 
 
 

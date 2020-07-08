@@ -39,7 +39,8 @@ enum queueName {
 typedef struct estructuraAdministrativa {
 	int idMensaje;
 	int estaOcupado;
-	int tamanio;
+	int tamanioParticion;
+	int tamanioMemoriaVariable;
 	void* donde;
 	d_message tipoMensaje;
 	t_list* suscriptoresConMensajeEnviado;
@@ -86,6 +87,7 @@ void * buscarParticionLibrePara(int mensajeAGuardar);
 estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id);
 int obtenerID();
 int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje);
+int elTamanioEsMenor (cachearNew); ///ver si es void* cambiar el parametro
 
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;
@@ -104,7 +106,7 @@ t_list* SUSCRIPTORES_GET;
 t_list* SUSCRIPTORES_CATCH;
 t_list* SUSCRIPTORES_CAUGHT;
 t_list* SUSCRIPTORES_LOCALIZED;
-t_list* IDs; // si es que usamos el rand
+
 
 #endif /* BROKER_H_ */
 
