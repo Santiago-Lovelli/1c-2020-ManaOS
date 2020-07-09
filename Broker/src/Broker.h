@@ -40,7 +40,6 @@ typedef struct estructuraAdministrativa {
 	int idMensaje;
 	int estaOcupado;
 	int tamanioParticion;
-	int tamanioMemoriaVariable;
 	void* donde;
 	d_message tipoMensaje;
 	t_list* suscriptoresConMensajeEnviado;
@@ -88,6 +87,9 @@ estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id);
 int obtenerID();
 int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje);
 int elTamanioEsMenor (cachearNew); ///ver si es void* cambiar el parametro
+
+//////////FUNCION BUDDY//////////////7
+int composicion();
 
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;
