@@ -164,7 +164,7 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 	if (resultado){
 		elemento.idMensaje = ID;
 		elemento.tipoMensaje = d_NEW_POKEMON;
-		elemento.tamanio = tamanioDeMensaje(d_NEW_POKEMON, &mensajeAGuardar);
+		elemento.tamanioParticion = tamanioDeMensaje(d_NEW_POKEMON, &mensajeAGuardar);
 		elemento.estaOcupado = 1;
 		elemento.donde = resultado;
 		elemento.suscriptoresConACK = list_create();
@@ -327,22 +327,46 @@ int obtenerID(){
 
 //////FUNCIONES CACHE//////////
 void * guardarMensaje(void * mensajeAGuardar){
-	void * donde = buscarParticionLibrePara(sizeof(mensajeAGuardar));
+	void * donde;
+	donde = buscarParticionLibrePara(sizeof(mensajeAGuardar));
 	memcpy(donde, mensajeAGuardar, sizeof(mensajeAGuardar));
 	return donde;
+
 }
 
-void * buscarParticionLibrePara(int tamanioMensajeAGuardar){ //esto es firstfit x ahora
+void * buscarParticionLibrePara(int tamanioMensajeAGuardar){
+	int i = BROKER_CONFIG.TAMANO_MEMORIA;
+	int j = 0, k = -1;
+	estructuraAdministrativa* estructura;
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "ff")){
 	bool hayParticionParaGuardarlo(estructuraAdministrativa* elemento) {
-		return (elemento->estaOcupado && elemento->tamanio == tamanioMensajeAGuardar);
+		return (!elemento->estaOcupado && elemento->tamanioParticion >= tamanioMensajeAGuardar);
 	}
-	estructuraAdministrativa* estructura =  list_find(ADMINISTRADOR_MEMORIA, (void*) hayParticionParaGuardarlo);
-	return estructura->donde;
+	estructura =  list_find(ADMINISTRADOR_MEMORIA, (void*) hayParticionParaGuardarlo);
 	}
-	else{
-		return NULL;
+	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "bf")){
+		void mejorParticion(estructuraAdministrativa* elemento) {
+			int tam = elemento->tamanioParticion - tamanioMensajeAGuardar;
+			if(!elemento->estaOcupado && tam < i){
+				i = tam;
+				k = j;
+			}
+			j++;
+		}
+		list_iterate(ADMINISTRADOR_MEMORIA, (void*) mejorParticion);
+		estructura =  list_get(ADMINISTRADOR_MEMORIA, k);
 	}
+	if (estructura != NULL){
+		//respetando el tamaño mínimo, hacer la partición lo más chica posible
+		return estructura->donde;
+	}
+	/*if(!compactorecien){
+		compactar();
+	}
+	if(!reemplazorecien){
+	reemplazar();
+	}
+	buscarParticionLibrePara();*/
 }
 
 void actualizarEnviadosPorID(int id, int socketCliente){
@@ -384,7 +408,7 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
 	}
 }
 
-void buddySystem(cachearNew mensaje){ ///Le quiero pasar void*
+/*void buddySystem(cachearNew mensaje){ ///Le quiero pasar void*
 	mensajeConID mensajeConID;
 	mensajeConID.pack = mensaje;
 	estructuraAdministrativa estructura;
@@ -414,7 +438,6 @@ int elTamanioEsMenor (cachearNew mensaje){ //Le quiero pasar void*. Esto es para
 	return 1; /// No me mates nacho con este return jeje
 	}
 	return -1;
-}
-
+}*/
 
 
