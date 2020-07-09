@@ -415,7 +415,6 @@ int composicion(){
 	estructuraAdministrativa * particionActual;
 	estructuraAdministrativa * particionAnterior;
 	estructuraAdministrativa * particionPosterior;
-	//estructuraAdministrativa * particionAuxiliar;
 	particionAnterior->donde = particionActual->donde - particionActual->tamanioParticion;
 	particionPosterior->donde = particionActual->donde + particionActual->tamanioParticion;
 	if (!particionAnterior->estaOcupado && !particionActual->estaOcupado && particionAnterior->tamanioParticion == particionActual->tamanioParticion){
@@ -443,7 +442,7 @@ void particionAMedida(d_message tipoMensaje, void*mensaje){
 	if (tamanioMensaje <= particionMinima.tamanioParticion){
 		memcpy(particionMinima.donde, mensaje, sizeof(mensaje)); //Puede existir Frag Interna
 		}
-	while (particion.tamanioParticion > tamanioMensaje){
+	while (particion.tamanioParticion / 2 > tamanioMensaje){
 		particionAuxiliar.tamanioParticion = particion.tamanioParticion / 2;
 		particionAuxiliar.estaOcupado = 0;
 		particionAuxiliar.donde =particion.donde + particionAuxiliar.tamanioParticion;
