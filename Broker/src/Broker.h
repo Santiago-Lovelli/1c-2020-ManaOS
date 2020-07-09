@@ -86,10 +86,10 @@ void * buscarParticionLibrePara(int mensajeAGuardar);
 estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id);
 int obtenerID();
 int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje);
-int elTamanioEsMenor (cachearNew); ///ver si es void* cambiar el parametro
 
-//////////FUNCION BUDDY//////////////7
+//////////FUNCION BUDDY//////////////
 int composicion();
+void particionAMedida(d_message tipoMensaje, void*mensaje);
 
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;

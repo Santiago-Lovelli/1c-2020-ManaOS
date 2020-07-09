@@ -415,6 +415,7 @@ int composicion(){
 	estructuraAdministrativa * particionActual;
 	estructuraAdministrativa * particionAnterior;
 	estructuraAdministrativa * particionPosterior;
+	//estructuraAdministrativa * particionAuxiliar;
 	particionAnterior->donde = particionActual->donde - particionActual->tamanioParticion;
 	particionPosterior->donde = particionActual->donde + particionActual->tamanioParticion;
 	if (!particionAnterior->estaOcupado && !particionActual->estaOcupado && particionAnterior->tamanioParticion == particionActual->tamanioParticion){
@@ -433,7 +434,24 @@ int composicion(){
 	return flag;
 }
 
-
+void particionAMedida(d_message tipoMensaje, void*mensaje){
+	estructuraAdministrativa particionMinima;
+	particionMinima.tamanioParticion = BROKER_CONFIG.TAMANO_MINIMO_PARTICION;
+	estructuraAdministrativa particion;
+	estructuraAdministrativa particionAuxiliar; // la que le sigue al actual
+	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
+	if (tamanioMensaje <= particionMinima.tamanioParticion){
+		memcpy(particionMinima.donde, mensaje, sizeof(mensaje)); //Puede existir Frag Interna
+		}
+	while (particion.tamanioParticion > tamanioMensaje){
+		particionAuxiliar.tamanioParticion = particion.tamanioParticion / 2;
+		particionAuxiliar.estaOcupado = 0;
+		particionAuxiliar.donde =particion.donde + particionAuxiliar.tamanioParticion;
+		particion.tamanioParticion = particion.tamanioParticion / 2;
+	}
+	memcpy(particion.donde, mensaje, sizeof(mensaje));
+	particion.estaOcupado = 1;
+}
 
 
 
