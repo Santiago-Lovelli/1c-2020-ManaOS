@@ -410,6 +410,105 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
 
 /////////////BUDDY SYSTEM/////////////////
 
+bool hayParticion(d_message tipoMensaje, void *mensaje) {
+	estructuraAdministrativa particion;
+	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
+	if (!particion.estaOcupado && particion.tamanioParticion > tamanioMensaje){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+void* buscarParticionLibre(d_message tipoMensaje, void* mensaje){
+	estructuraAdministrativa* particion;
+	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
+	int i = BROKER_CONFIG.TAMANO_MEMORIA;
+	int j = 0, k = -1;
+	///////////FIRST FIT ///////////////////
+	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "ff")){
+		if (hayParticion(tipoMensaje, mensaje)){
+		particion =  list_find(ADMINISTRADOR_MEMORIA, (void*) hayParticion);
+		}
+	}
+	//////////BEST FIT///////////////////////
+	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "bf")){
+		void mejorParticion(estructuraAdministrativa* elemento) {
+			int tam = elemento->tamanioParticion - tamanioMensaje;
+			if(!elemento->estaOcupado && tam < i){
+				i = tam;
+				k = j;
+				}
+				j++;
+			}
+			list_iterate(ADMINISTRADOR_MEMORIA, (void*) mejorParticion);
+			particion =  list_get(ADMINISTRADOR_MEMORIA, k);
+
+		}
+		if (particion != NULL){
+			particionAMedida(tipoMensaje, mensaje);
+			return particion->donde;
+		}
+		if(particion == NULL){
+			int seRealizoLaComposicion = composicion();
+		}
+		////buscar de nuevo
+		reemplazar(tipoMensaje, mensaje);
+		}
+		//////////buscarParticionLibre();
+
+void* primeraParticion(){
+	estructuraAdministrativa * particionMenor;
+	estructuraAdministrativa * particion;
+	int i;
+	particionMenor->tiempo = list_get (ADMINISTRADOR_MEMORIA, 0); ///solo los que estan ocupados van a tener tiempo
+	int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
+	for (i = 1; i < particionesMemoria; i++){
+		particion->tiempo = list_get(ADMINISTRADOR_MEMORIA, i);
+		if (particion->tiempo < particionMenor->tiempo){
+			particionMenor->tiempo = particion->tiempo;
+			i ++;
+		}
+	}
+	return particionMenor->donde;
+}
+
+void* particionMenosReferenciada(){
+	estructuraAdministrativa * particionMenor;
+	estructuraAdministrativa * particion;
+	int i;
+	particionMenor->ultimaReferencia = list_get (ADMINISTRADOR_MEMORIA, 0); ///solo los que estan ocupados van a tener tiempo
+	int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
+	for (i = 1; i < particionesMemoria; i++){
+		particion->ultimaReferencia = list_get(ADMINISTRADOR_MEMORIA, i);
+		if (particion->ultimaReferencia < particionMenor->ultimaReferencia){
+			particionMenor->ultimaReferencia = particion->ultimaReferencia;
+			i ++;
+		}
+	}
+	return particionMenor->donde;
+}
+
+void reemplazar (d_message tipoMensaje, void* mensaje){
+	estructuraAdministrativa* particion;
+	int tamanioMensaje = tamanioDeMensaje (tipoMensaje, mensaje);
+	//////////FIFO////////////////////////////////////////
+	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "fifo")){
+		particion->donde = primeraParticion();
+		if (particion->tamanioParticion > tamanioMensaje){
+		list_replace_and_destroy_element(ADMINISTRADOR_MEMORIA, particion->donde, mensaje, particion);
+		}
+	}
+	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "lru")){
+		particion->donde = particionMenosReferenciada();
+		if (particion->tamanioParticion > tamanioMensaje){
+		list_replace_and_destroy_element(ADMINISTRADOR_MEMORIA, particion->donde, mensaje, particion);
+		}
+	}
+	list_remove(ADMINISTRADOR_MEMORIA, particion->donde); /////Lo saco para que se pueda compactar
+}
+
 int composicion(){
 	int flag;
 	estructuraAdministrativa * particionActual;
@@ -451,7 +550,3 @@ void particionAMedida(d_message tipoMensaje, void*mensaje){
 	memcpy(particion.donde, mensaje, sizeof(mensaje));
 	particion.estaOcupado = 1;
 }
-
-
-
-

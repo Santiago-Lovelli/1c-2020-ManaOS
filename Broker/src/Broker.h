@@ -41,6 +41,8 @@ typedef struct estructuraAdministrativa {
 	int estaOcupado;
 	int tamanioParticion;
 	void* donde;
+	int tiempo;
+	int ultimaReferencia;
 	d_message tipoMensaje;
 	t_list* suscriptoresConMensajeEnviado;
 	t_list* suscriptoresConACK;
@@ -87,9 +89,14 @@ estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id);
 int obtenerID();
 int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje);
 
-//////////FUNCION BUDDY//////////////
+//////////FUNCION BUDDY Y PARTICION DINAMICA//////////////
 int composicion();
 void particionAMedida(d_message tipoMensaje, void*mensaje);
+bool hayParticion(d_message tipoMensaje, void *mensaje);
+void* buscarParticionLibre(d_message tipoMensaje, void* mensaje);
+void* primeraParticion();
+void* particionMenosReferenciada();
+void reemplazar (d_message tipoMensaje, void* mensaje);
 
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;
