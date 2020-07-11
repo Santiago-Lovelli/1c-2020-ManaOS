@@ -173,7 +173,7 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 		resultado->suscriptoresConMensajeEnviado = list_create();
 		resultado->tiempo = 234; ///ver
 		resultado->ultimaReferencia = 45; //ver
-		list_add(ADMINISTRADOR_MEMORIA, &resultado);
+		list_add_in_index(ADMINISTRADOR_MEMORIA, (void*) resultado->donde, &resultado);
 	}
 	int lenght = list_size(lista);
 	for (int i = 0; i<lenght; i++){
@@ -422,13 +422,6 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
 }
 
 /////////////BUDDY SYSTEM/////////////////
-
-bool hayParticion(d_message tipoMensaje, void *mensaje) {
-	estructuraAdministrativa * particion;
-	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
-	return (particion->estaOcupado && particion->tamanioParticion > tamanioMensaje);
-}
-
 estructuraAdministrativa* buscarParticionLibreBS(d_message tipoMensaje, void* mensaje){
 	estructuraAdministrativa* particion = malloc (sizeof (estructuraAdministrativa));
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
@@ -564,20 +557,31 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 	estructuraAdministrativa * particionMinima = malloc (sizeof (estructuraAdministrativa));
 	particionMinima->tamanioParticion = BROKER_CONFIG.TAMANO_MINIMO_PARTICION;
 	estructuraAdministrativa * particionAuxiliar = malloc (sizeof (estructuraAdministrativa)); // la que le sigue al actual
+	estructuraAdministrativa * particion2 = malloc (sizeof (estructuraAdministrativa)); // la que le sigue al actual
+	estructuraAdministrativa * particion3 = malloc (sizeof (estructuraAdministrativa)); // la que le sigue al actual
+	//estructuraAdministrativa * particionNueva = malloc (sizeof(estructuraAdministrativa))
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
 	if (tamanioMensaje <= particionMinima->tamanioParticion){
-		//memcpy(particionMinima->donde, mensaje, tamanioMensaje); //Puede existir Frag Interna
 		return particionMinima;
 		}
 	while (particion->tamanioParticion / 2 > tamanioMensaje){
 		particionAuxiliar->tamanioParticion = particion->tamanioParticion / 2;
 		particionAuxiliar->estaOcupado = 0;
 		particionAuxiliar->donde =particion->donde + particionAuxiliar->tamanioParticion;
-		particion->tamanioParticion = particion->tamanioParticion / 2;
+		particionAuxiliar->idMensaje = NULL;
+		particionAuxiliar->suscriptoresConACK = list_create();
+		particionAuxiliar->suscriptoresConMensajeEnviado = list_create();
+		particionAuxiliar->tiempo = NULL;
+		particionAuxiliar->ultimaReferencia = NULL;
+		list_add (ADMINISTRADOR_MEMORIA, particionAuxiliar);
 		particion->estaOcupado = 0;
+		particion->tamanioParticion = particionAuxiliar->tamanioParticion;
 
+		particion = list_get (ADMINISTRADOR_MEMORIA, 0);
+			particionAuxiliar = list_get (ADMINISTRADOR_MEMORIA, 1);
+			particion2 = list_get (ADMINISTRADOR_MEMORIA, 2);
+			particion3 = list_get (ADMINISTRADOR_MEMORIA, 3);
 	}
+
 	return particion;
-	//memcpy(particion->donde, mensaje, tamanioMensaje);
-	//particion->estaOcupado = 1;
 }
