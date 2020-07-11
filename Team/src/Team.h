@@ -69,6 +69,7 @@ typedef struct entrenador{
 	t_razonBloqueo razonBloqueo;
 	t_mision *mision;
 	int ciclosCPUEjecutados;
+	int ciclosCPUEjecutadosEnTotal;
 	int ciclosCPUEjeutadosAnteriormente;
 	int ciclosCPUEstimados;
 	sem_t semaforoDeEntrenador;

@@ -255,23 +255,23 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		break;
 	case d_LOCALIZED_POKEMON:
 		;
-		//SERIALIZACION PENDIENTE
-//		log_info(logger, "Llego un LOCALIZED POKEMON");
-//		void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-//		t_list *posCant = list_create();
-//		uint32_t idMensajeLocalized;
-//		char *localizedNombrePokemon;
-//		Serialize_Unpack_LocalizedPokemon(packLocalizedPokemon,&idMensajeLocalized,localizedNombrePokemon,posCant);
-//		//logear lo que llego
-//		if(necesitoEstePokemon(localizedNombrePokemon)){
-//			printf("Necesito este pokemon!!! \n ");
-//			for(int i=0; i<list_size(posCant);i++){
-//				d_PosCant *posCantAUX = list_get(posCant,i);
-//				hacerAppeared(localizedNombrePokemon,posCantAUX->posX,posCantAUX->posY,logger);
-//			}
-//		}
-//		else{ printf("No necesito este pokemon!!! \n "); }
-//		free(packLocalizedPokemon);
+//		SERIALIZACION PENDIENTE
+		log_info(logger, "Llego un LOCALIZED POKEMON");
+		void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+		t_list *posCant = list_create();
+		uint32_t idMensajeLocalized;
+		char *localizedNombrePokemon;
+		Serialize_Unpack_LocalizedPokemon(packLocalizedPokemon,&idMensajeLocalized,localizedNombrePokemon,posCant);
+		//logear lo que llego
+		if(necesitoEstePokemon(localizedNombrePokemon)){
+			printf("Necesito este pokemon!!! \n ");
+			for(int i=0; i<list_size(posCant);i++){
+				d_PosCant *posCantAUX = list_get(posCant,i);
+				hacerAppeared(localizedNombrePokemon,posCantAUX->posX,posCantAUX->posY,logger);
+			}
+		}
+		else{ printf("No necesito este pokemon!!! \n "); }
+		free(packLocalizedPokemon);
 		break;
 
 	case d_CAUGHT_POKEMON:
@@ -608,7 +608,8 @@ void asignarMision(int idEntrenador, t_mision* misionYaCreada){
 
 void sumarXCiclos(entrenador *trainer, int ciclos){
 	trainer->ciclosCPUEjecutados = trainer->ciclosCPUEjecutados+ciclos;
-	CICLOS_TOTALES = CICLOS_TOTALES + trainer->ciclosCPUEjecutados;
+	trainer->ciclosCPUEjecutadosEnTotal = trainer->ciclosCPUEjecutadosEnTotal+ciclos;
+	CICLOS_TOTALES = CICLOS_TOTALES + ciclos;
 	sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 	if(string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "RR") || string_equals_ignore_case(TEAM_CONFIG.ALGORITMO_PLANIFICACION, "SJFCD")){
 		sem_post(&semaforoPlanifiquenme);
@@ -729,6 +730,10 @@ void finalFeliz(){
 	log_info(TEAM_LOG, "::: CAMBIOS DE CONTEXTO REALIZADOS: %i", CAMBIOS_DE_CONTEXTO_REALIZADOS);
 	log_info(TEAM_LOG, "::: CANTIDAD DE DEADLOCKS PRODUCIDOS: %i", DEADLOCKS_PRODUCIDOS);
 	log_info(TEAM_LOG, "::: CANTIDAD DE DEADLOCKS RESUELTOS: %i", DEADLOCKS_RESUELTOS);
+	for(int i=0;i<list_size(ENTRENADORES_TOTALES); i++){
+		entrenador * trainer = list_get(ENTRENADORES_TOTALES,i);
+		log_info(TEAM_LOG, "::: CANTIDAD DE CICLOS EJECUTADOS POR EL ENTRENADOR %i: %i", trainer->tid,trainer->ciclosCPUEjecutadosEnTotal);
+	}
 	//destruirObjetivoGlobal();
 	//destruirEstados();
 	//destruirEntrenadores();//list_destroy_and_destroy_elements(ENTRENADORES_TOTALES, entrenadorDestroy);
@@ -800,6 +805,7 @@ entrenador * crearEntrenador(punto punto, char ** pokemones, char **pokemonesObj
 	newTrainer->ciclosCPUEjeutadosAnteriormente = 0;
 	newTrainer->ciclosCPUEjecutados = 0;
 	newTrainer->ciclosCPUEstimados = 0;
+	newTrainer->ciclosCPUEjecutadosEnTotal = 0;
 	sem_init(&newTrainer->semaforoDeEntrenador,0,0);
 	AUX_ID_TRAINER = AUX_ID_TRAINER + 1 ;
 	return newTrainer;
@@ -856,11 +862,12 @@ void FIFO(){
 		while(list_is_empty(EstadoReady)){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
-		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 1;
+		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
+		log_info(TEAM_LOG, "Se va a intercambiar al entrenador nro: %i porque termino sus rafagas", trainer->tid);
 	}
 	//Manejo de Deadlock
 	DEADLOCKS_PRODUCIDOS = list_size(EstadoBlock);
@@ -870,11 +877,12 @@ void FIFO(){
 		while(list_is_empty(EstadoReady)){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
-		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 1;
+		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
+		log_info(TEAM_LOG, "Se va a intercambiar al entrenador nro: %i porque termino sus rafagas", trainer->tid);
 	}
 	log_info(TEAM_LOG, "TEAM ha cumplido su objetivo!");
 	finalFeliz();
@@ -889,13 +897,14 @@ void RR(){
 		while(list_is_empty(EstadoReady)){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
-		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 1;
+		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		while(1){
 			sem_wait(&semaforoPlanifiquenme);
 			if(trainer->mision == NULL){
+				log_info(TEAM_LOG, "Se va a intercambiar al entrenador nro: %i porque termino sus rafagas", trainer->tid);
 				break;
 			}
 			else if(trainer->ciclosCPUEjecutados < TEAM_CONFIG.QUANTUM){
@@ -903,6 +912,7 @@ void RR(){
 				sem_post(&(trainer->semaforoDeEntrenador));
 			}
 			else{
+				log_info(TEAM_LOG, "Se va a intercambiar al entrenador nro: %i por corte de quantum", trainer->tid);
 				ponerAlFinalDeLista(trainer,EstadoReady);
 				break;
 			}
@@ -916,13 +926,14 @@ void RR(){
 		while(list_is_empty(EstadoReady)){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
-		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 1;
+		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		while(1){
 			sem_wait(&semaforoPlanifiquenme);
 			if(trainer->mision == NULL){
+				log_info(TEAM_LOG, "Se va a intercambiar al entrenador nro: %i porque termino sus rafagas", trainer->tid);
 				break;
 			}
 			else if(trainer->ciclosCPUEjecutados < TEAM_CONFIG.QUANTUM){
@@ -930,6 +941,7 @@ void RR(){
 				sem_post(&(trainer->semaforoDeEntrenador));
 			}
 			else{
+				log_info(TEAM_LOG, "Se va a intercambiar al entrenador nro: %i por corte de quantum", trainer->tid);
 				ponerAlFinalDeLista(trainer,EstadoReady);
 				break;
 			}
@@ -946,20 +958,21 @@ void SJFCD(){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
 		ordenarListaSJF(EstadoReady);
-		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 1;
+		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		while(1){
 			sem_wait(&semaforoPlanifiquenme);
 			if(trainer->mision == NULL){
+				log_info(TEAM_LOG, "Se va a intercambiar al entrenador nro: %i porque termino sus rafagas", trainer->tid);
 				break;
 			}
 			else{
 				ordenarListaSJF(EstadoReady);
 				entrenador *trainer = list_get(EstadoReady,0);
 				log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
-				CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 1;
+				CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 				sem_post(&(trainer->semaforoDeEntrenador));
 			}
 		}
@@ -973,13 +986,14 @@ void SJFCD(){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
 		ordenarListaSJF(EstadoReady);
-		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 1;
+		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		while(1){
 			sem_wait(&semaforoPlanifiquenme);
 			if(trainer->mision == NULL){
+				log_info(TEAM_LOG, "Se va a intercambiar al entrenador nro: %i porque termino sus rafagas", trainer->tid);
 				break;
 			}
 			else{
@@ -1002,11 +1016,12 @@ void SJFSD(){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
 		ordenarListaSJF(EstadoReady);
-		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 1;
+		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
+		log_info(TEAM_LOG, "Se va a intercambiar al entrenador nro: %i porque termino sus rafagas", trainer->tid);
 	}
 	//Manejo de Deadlock
 	DEADLOCKS_PRODUCIDOS = list_size(EstadoBlock);
@@ -1016,11 +1031,12 @@ void SJFSD(){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		}
 		ordenarListaSJF(EstadoReady);
-		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 1;
+		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
+		log_info(TEAM_LOG, "Se va a intercambiar al entrenador nro: %i porque termino sus rafagas", trainer->tid);
 	}
 	log_info(TEAM_LOG, "TEAM ha cumplido su objetivo!");
 	finalFeliz();
@@ -1063,6 +1079,7 @@ void planificarDeadlocks(){
 }
 
 void ordenarListaSJF(t_list *lista){
+	log_info(TEAM_LOG, "Se reordena la lista de ready SJF");
 	list_sort(lista, (void*)entrenador1MenorEstimacionQueEntrenador2);
 	list_map(lista, (void*)establecerNuevaEstimacion);
 }
