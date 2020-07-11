@@ -81,9 +81,10 @@ void enviarMensajeAppearedASuscriptores (void* paquete, t_list* lista);
 void enviarMensajeCaughtASuscriptores (void* paquete, t_list* lista);
 void enviarMensajeLocalizedASuscriptores (void* paquete, t_list* lista);
 mensajeConID agregarIDMensaje (void* paquete);
+void actualizarEnviadosPorID(int id, int socketCliente);
 
 //////FUNCIONES CACHE//////////
-void * guardarMensaje(void * mensajeAGuardar);
+void * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar);
 void * buscarParticionLibrePara(int mensajeAGuardar);
 estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id);
 int obtenerID();
@@ -91,11 +92,11 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje);
 
 //////////FUNCION BUDDY Y PARTICION DINAMICA//////////////
 int composicion();
-void particionAMedida(d_message tipoMensaje, void*mensaje);
+void particionAMedida(d_message tipoMensaje, void*mensaje, estructuraAdministrativa * particion);
 bool hayParticion(d_message tipoMensaje, void *mensaje);
-void* buscarParticionLibre(d_message tipoMensaje, void* mensaje);
-void* primeraParticion();
-void* particionMenosReferenciada();
+void* buscarParticionLibreBS(d_message tipoMensaje, void* mensaje);
+int primeraParticion();
+int particionMenosReferenciada();
 void reemplazar (d_message tipoMensaje, void* mensaje);
 
 ////////VARIABLES GLOBALES//////////

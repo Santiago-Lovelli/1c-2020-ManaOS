@@ -159,7 +159,7 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 	mensajeAGuardar.nombrePokemon = pokemon;
 	mensajeAGuardar.posX = posX;
 	mensajeAGuardar.posY = posY;
-	void*  resultado = guardarMensaje(&mensajeAGuardar);
+	void*  resultado = guardarMensaje(d_NEW_POKEMON, &mensajeAGuardar);
 	estructuraAdministrativa elemento;
 	if (resultado){
 		elemento.idMensaje = ID;
@@ -291,7 +291,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -315,7 +315,12 @@ void ListsInit(){
 }
 
 void MemoriaPrincipalInit(){
+		estructuraAdministrativa * estructura = malloc (sizeof (estructuraAdministrativa));
 		MEMORIA_PRINCIPAL = malloc(BROKER_CONFIG.TAMANO_MEMORIA);
+		estructura->estaOcupado = 0;
+		estructura->tamanioParticion = BROKER_CONFIG.TAMANO_MEMORIA;
+		list_add (ADMINISTRADOR_MEMORIA, estructura);
+		free (estructura);
 }
 
 /////////FUNCIONES VARIAS/////////
@@ -326,12 +331,16 @@ int obtenerID(){
 }
 
 //////FUNCIONES CACHE//////////
-void * guardarMensaje(void * mensajeAGuardar){
-	void * donde;
-	donde = buscarParticionLibrePara(sizeof(mensajeAGuardar));
+void * guardarMensaje(d_message mensaje, void * mensajeAGuardar){
+	void* donde;
+	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
+	//donde = buscarParticionLibrePara(sizeof(mensajeAGuardar));
 	memcpy(donde, mensajeAGuardar, sizeof(mensajeAGuardar));
+	}
+	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "bs")){
+	donde = buscarParticionLibreBS(mensaje, mensajeAGuardar);
 	return donde;
-
+	}
 }
 
 void * buscarParticionLibrePara(int tamanioMensajeAGuardar){
@@ -411,27 +420,24 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
 /////////////BUDDY SYSTEM/////////////////
 
 bool hayParticion(d_message tipoMensaje, void *mensaje) {
-	estructuraAdministrativa particion;
+	estructuraAdministrativa * particion;
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
-	if (!particion.estaOcupado && particion.tamanioParticion > tamanioMensaje){
-		return true;
-	}
-	else{
-		return false;
-	}
+	return (particion->estaOcupado && particion->tamanioParticion > tamanioMensaje);
 }
 
-void* buscarParticionLibre(d_message tipoMensaje, void* mensaje){
-	estructuraAdministrativa* particion;
+void* buscarParticionLibreBS(d_message tipoMensaje, void* mensaje){
+	estructuraAdministrativa* particion = malloc (sizeof (estructuraAdministrativa));
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
 	int i = BROKER_CONFIG.TAMANO_MEMORIA;
 	int j = 0, k = -1;
 	///////////FIRST FIT ///////////////////
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "ff")){
-		if (hayParticion(tipoMensaje, mensaje)){
-		particion =  list_find(ADMINISTRADOR_MEMORIA, (void*) hayParticion);
+		bool hayParticionParaGuardarlo(estructuraAdministrativa* elemento) {
+				return (elemento->estaOcupado == 0 && elemento->tamanioParticion >= tamanioMensaje);
+			}
+		particion = (estructuraAdministrativa*) list_get (ADMINISTRADOR_MEMORIA, 0);
+			particion =  list_find(ADMINISTRADOR_MEMORIA, (void*) hayParticionParaGuardarlo);
 		}
-	}
 	//////////BEST FIT///////////////////////
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "bf")){
 		void mejorParticion(estructuraAdministrativa* elemento) {
@@ -447,18 +453,24 @@ void* buscarParticionLibre(d_message tipoMensaje, void* mensaje){
 
 		}
 		if (particion != NULL){
-			particionAMedida(tipoMensaje, mensaje);
+			particionAMedida(tipoMensaje, mensaje, particion);
+			log_info (LOGGER_GENERAL, "Se guardó el mensaje en la particion");
 			return particion->donde;
 		}
 		if(particion == NULL){
+			log_info (LOGGER_GENERAL, "No hay espacio, es necesario componer");
 			int seRealizoLaComposicion = composicion();
+			log_info (LOGGER_GENERAL, "Se realizó la composición BS");
 		}
+		/*
 		////buscar de nuevo
 		reemplazar(tipoMensaje, mensaje);
 		}
 		//////////buscarParticionLibre();
+		 */
+}
 
-void* primeraParticion(){
+int primeraParticion(){
 	estructuraAdministrativa * particionMenor;
 	estructuraAdministrativa * particion;
 	int i;
@@ -468,13 +480,14 @@ void* primeraParticion(){
 		particion->tiempo = list_get(ADMINISTRADOR_MEMORIA, i);
 		if (particion->tiempo < particionMenor->tiempo){
 			particionMenor->tiempo = particion->tiempo;
+			particionMenor->donde = particion->donde;
 			i ++;
 		}
 	}
-	return particionMenor->donde;
+	return i;
 }
 
-void* particionMenosReferenciada(){
+int particionMenosReferenciada(){
 	estructuraAdministrativa * particionMenor;
 	estructuraAdministrativa * particion;
 	int i;
@@ -484,36 +497,48 @@ void* particionMenosReferenciada(){
 		particion->ultimaReferencia = list_get(ADMINISTRADOR_MEMORIA, i);
 		if (particion->ultimaReferencia < particionMenor->ultimaReferencia){
 			particionMenor->ultimaReferencia = particion->ultimaReferencia;
+			particionMenor->donde = particion->donde;
 			i ++;
 		}
 	}
-	return particionMenor->donde;
+	return i;
 }
 
 void reemplazar (d_message tipoMensaje, void* mensaje){
-	estructuraAdministrativa* particion;
+	estructuraAdministrativa* particion = malloc (sizeof (estructuraAdministrativa));
 	int tamanioMensaje = tamanioDeMensaje (tipoMensaje, mensaje);
 	//////////FIFO////////////////////////////////////////
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "fifo")){
-		particion->donde = primeraParticion();
+		int posicion = primeraParticion();
+		particion = list_get (ADMINISTRADOR_MEMORIA, posicion);
 		if (particion->tamanioParticion > tamanioMensaje){
-		list_replace_and_destroy_element(ADMINISTRADOR_MEMORIA, particion->donde, mensaje, particion);
+			list_replace_and_destroy_element(ADMINISTRADOR_MEMORIA, particion->donde, mensaje, particion);
+			return;
 		}
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "lru")){
-		particion->donde = particionMenosReferenciada();
+		int posicion = particionMenosReferenciada();
+		particion = list_get (ADMINISTRADOR_MEMORIA, posicion);
 		if (particion->tamanioParticion > tamanioMensaje){
 		list_replace_and_destroy_element(ADMINISTRADOR_MEMORIA, particion->donde, mensaje, particion);
+		return;
 		}
 	}
-	list_remove(ADMINISTRADOR_MEMORIA, particion->donde); /////Lo saco para que se pueda compactar
+	particion->idMensaje = NULL;
+	list_clean(particion->suscriptoresConACK);
+	list_clean (particion->suscriptoresConMensajeEnviado);
+	particion->tiempo = NULL;
+	//particion->tipoMensaje = NULL;
+	particion->ultimaReferencia = NULL;
+	particion->estaOcupado = 0;
+	/////se usa despues para compactar
 }
 
 int composicion(){
 	int flag;
-	estructuraAdministrativa * particionActual;
-	estructuraAdministrativa * particionAnterior;
-	estructuraAdministrativa * particionPosterior;
+	estructuraAdministrativa * particionActual = malloc (sizeof (estructuraAdministrativa));
+	estructuraAdministrativa * particionAnterior = malloc (sizeof (estructuraAdministrativa));
+	estructuraAdministrativa * particionPosterior = malloc (sizeof (estructuraAdministrativa));
 	particionAnterior->donde = particionActual->donde - particionActual->tamanioParticion;
 	particionPosterior->donde = particionActual->donde + particionActual->tamanioParticion;
 	if (!particionAnterior->estaOcupado && !particionActual->estaOcupado && particionAnterior->tamanioParticion == particionActual->tamanioParticion){
@@ -532,21 +557,20 @@ int composicion(){
 	return flag;
 }
 
-void particionAMedida(d_message tipoMensaje, void*mensaje){
-	estructuraAdministrativa particionMinima;
-	particionMinima.tamanioParticion = BROKER_CONFIG.TAMANO_MINIMO_PARTICION;
-	estructuraAdministrativa particion;
-	estructuraAdministrativa particionAuxiliar; // la que le sigue al actual
+void particionAMedida(d_message tipoMensaje, void*mensaje, estructuraAdministrativa* particion){
+	estructuraAdministrativa * particionMinima = malloc (sizeof (estructuraAdministrativa));
+	particionMinima->tamanioParticion = BROKER_CONFIG.TAMANO_MINIMO_PARTICION;
+	estructuraAdministrativa * particionAuxiliar = malloc (sizeof (estructuraAdministrativa)); // la que le sigue al actual
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
-	if (tamanioMensaje <= particionMinima.tamanioParticion){
-		memcpy(particionMinima.donde, mensaje, sizeof(mensaje)); //Puede existir Frag Interna
+	if (tamanioMensaje <= particionMinima->tamanioParticion){
+		memcpy(particionMinima->donde, mensaje, tamanioMensaje); //Puede existir Frag Interna
 		}
-	while (particion.tamanioParticion / 2 > tamanioMensaje){
-		particionAuxiliar.tamanioParticion = particion.tamanioParticion / 2;
-		particionAuxiliar.estaOcupado = 0;
-		particionAuxiliar.donde =particion.donde + particionAuxiliar.tamanioParticion;
-		particion.tamanioParticion = particion.tamanioParticion / 2;
+	while (particion->tamanioParticion / 2 > tamanioMensaje){
+		particionAuxiliar->tamanioParticion = particion->tamanioParticion / 2;
+		particionAuxiliar->estaOcupado = 0;
+		particionAuxiliar->donde =particion->donde + particionAuxiliar->tamanioParticion;
+		particion->tamanioParticion = particion->tamanioParticion / 2;
 	}
-	memcpy(particion.donde, mensaje, sizeof(mensaje));
-	particion.estaOcupado = 1;
+	memcpy(particion->donde, mensaje, tamanioMensaje);
+	particion->estaOcupado = 1;
 }
