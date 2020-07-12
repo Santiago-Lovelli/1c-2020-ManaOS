@@ -12,6 +12,7 @@
 #include <commons/string.h>
 #include <commons/collections/list.h>
 #include <commons/log.h>
+#include <semaphore.h>
 
 ///////ESTRUCTURAS//////////
 typedef struct config
@@ -41,8 +42,8 @@ typedef struct estructuraAdministrativa {
 	int estaOcupado;
 	int tamanioParticion;
 	void* donde;
-	int tiempo;
-	int ultimaReferencia;
+	char* tiempo;
+	char* ultimaReferencia;
 	d_message tipoMensaje;
 	t_list* suscriptoresConMensajeEnviado;
 	t_list* suscriptoresConACK;
@@ -53,19 +54,56 @@ typedef struct mensajeConID{
 	int id;
 }mensajeConID;
 
-typedef struct cachearNew{
+typedef struct punto{
+	uint32_t posX;
+	uint32_t posY;
+}punto;
+
+///////////ESTRUCTURAS PARA GUARDADO/LEVANTADO EN MEMORIA PRINCIPAL/////////////
+typedef struct newEnMemoria{
 	uint32_t largoDeNombre;
 	char * nombrePokemon;
 	uint32_t posX;
 	uint32_t posY;
 	uint32_t cantidad;
-}cachearNew;
+}newEnMemoria;
+
+typedef struct catchEnMemoria{
+	uint32_t largoDeNombre;
+	char * nombrePokemon;
+	uint32_t posX;
+	uint32_t posY;
+}catchEnMemoria;
+
+typedef struct getEnMemoria{
+	uint32_t largoDeNombre;
+	char * nombrePokemon;
+}getEnMemoria;
+
+typedef struct appearedEnMemoria{
+	uint32_t largoDeNombre;
+	char * nombrePokemon;
+	uint32_t posX;
+	uint32_t posY;
+}appearedEnMemoria;
+
+typedef struct caughtEnMemoria{
+	uint32_t atrapado;
+}caughtEnMemoria;
+
+typedef struct localizedEnMemoria{
+	uint32_t largoDeNombre;
+	char * nombrePokemon;
+	uint32_t cantidadDePuntos;
+	t_list* puntos;
+}localizedEnMemoria;
 
 ///////FUNCIONES INICIALIZACION/////////
 void Init();
 void ConfigInit();
 void ListsInit();
 void MemoriaPrincipalInit();
+void SemaphoresInit();
 
 //////FUNCIONES DE CONEXION//////////
 void EsperarClientes();
@@ -82,6 +120,7 @@ void enviarMensajeCaughtASuscriptores (void* paquete, t_list* lista);
 void enviarMensajeLocalizedASuscriptores (void* paquete, t_list* lista);
 mensajeConID agregarIDMensaje (void* paquete);
 void actualizarEnviadosPorID(int id, int socketCliente);
+void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo);
 
 //////FUNCIONES CACHE//////////
 estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar);
@@ -89,6 +128,8 @@ void * buscarParticionLibrePara(int mensajeAGuardar);
 estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id);
 int obtenerID();
 int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje);
+void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo);
+void reposicionarParticionesOcupadas(t_list * listaAuxiliar);
 
 //////////FUNCION BUDDY Y PARTICION DINAMICA//////////////
 int composicion();
@@ -112,6 +153,11 @@ t_list* CONEXIONES;
 void * MEMORIA_PRINCIPAL;
 t_list* ADMINISTRADOR_MEMORIA;
 int CONTADOR = 0;
+
+////////SEMAFOROS///////////
+sem_t MUTEX_CLIENTE;
+sem_t MUTEX_CONTADOR;
+sem_t MUTEX_MEMORIA;
 
 ////////LISTA DE SUSCRIPTORES//////
 t_list* SUSCRIPTORES_NEW;

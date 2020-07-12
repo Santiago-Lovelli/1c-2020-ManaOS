@@ -154,7 +154,7 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 	Serialize_Unpack_NewPokemon_NoID(paquete, &pokemon, &posX, &posY, &cantidad);
 	log_info(LOGGER_GENERAL,"Me llego mensaje new Pkm: %s, x: %i, y: %i, cant: %i\n", pokemon, posX, posY, cantidad);
 	int ID = obtenerID();
-	cachearNew mensajeAGuardar;
+	newEnMemoria mensajeAGuardar;
 	mensajeAGuardar.cantidad = cantidad;
 	mensajeAGuardar.largoDeNombre = string_length(pokemon);
 	mensajeAGuardar.nombrePokemon = pokemon;
@@ -171,8 +171,8 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 		resultado->donde = resultado;
 		resultado->suscriptoresConACK = list_create();
 		resultado->suscriptoresConMensajeEnviado = list_create();
-		resultado->tiempo = 234; ///ver
-		resultado->ultimaReferencia = 45; //ver
+		resultado->tiempo = temporal_get_string_time();
+		resultado->ultimaReferencia = temporal_get_string_time();
 		memcpy(resultado->donde, &mensajeAGuardar, tamanioDeMensaje(d_NEW_POKEMON, &mensajeAGuardar));
 		log_info(LOGGER_GENERAL, "Se guardo el mensaje en la memoria");
 	}
@@ -271,20 +271,6 @@ void enviarMensajeCaughtASuscriptores (void* paquete, t_list* lista){
 	log_info(LOGGER_GENERAL, "No hay suscriptores");
 }
 
-/*void enviarMensajeLocalizedASuscriptores (void* paquete, t_list* lista){
-	uint32_t idMensaje;
-	char *pokemon;
-	t_list* poscant;
-	int lenght = list_size(lista);
-	for (int i = 0; i<lenght; i++){
-		int socketCliente = list_get(lista, i);
-		Serialize_PackAndSend_LOCALIZED_POKEMON(socketCliente, idMensaje, pokemon, poscant); //hacer funcion sin id
-		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
-	}
-	log_info(LOGGER_GENERAL, "No hay suscriptores");
-}*/
-
-
 ///////FUNCIONES DE INIT///////////
 void Init(){
 	LOGGER_GENERAL = iniciar_log("Broker");
@@ -293,6 +279,7 @@ void Init(){
 	LOGGER_OBLIGATORIO = iniciar_log(BROKER_CONFIG.LOG_FILE);
 	ListsInit();
 	MemoriaPrincipalInit();
+	SemaphoresInit();
 }
 
 void ConfigInit(){
@@ -328,11 +315,17 @@ void MemoriaPrincipalInit(){
 		estructura = list_get(ADMINISTRADOR_MEMORIA, 0);
 }
 
-/////////FUNCIONES VARIAS/////////
+void SemaphoresInit(){
+	sem_init(&MUTEX_CLIENTE, 0, 1);
+	sem_init(&MUTEX_CONTADOR, 0, 1);
+	sem_init(&MUTEX_MEMORIA, 0, 1);
+}
 
+/////////FUNCIONES VARIAS/////////
 int obtenerID(){
-	//Falta semaforo
+	sem_wait(&MUTEX_CONTADOR);
 	return CONTADOR++;
+	sem_post(&MUTEX_CONTADOR);
 }
 
 //////FUNCIONES CACHE//////////
@@ -351,17 +344,17 @@ estructuraAdministrativa * guardarMensaje(d_message mensaje, void * mensajeAGuar
 void * buscarParticionLibrePara(int tamanioMensajeAGuardar){
 	int i = BROKER_CONFIG.TAMANO_MEMORIA;
 	int j = 0, k = -1;
-	estructuraAdministrativa* estructura;
+	estructuraAdministrativa* estructura = malloc(sizeof(estructuraAdministrativa));
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "ff")){
-	bool hayParticionParaGuardarlo(estructuraAdministrativa* elemento) {
-		return (!elemento->estaOcupado && elemento->tamanioParticion >= tamanioMensajeAGuardar);
-	}
-	estructura =  list_find(ADMINISTRADOR_MEMORIA, (void*) hayParticionParaGuardarlo);
+		bool hayParticionParaGuardarlo(estructuraAdministrativa* elemento) {
+			return (elemento->estaOcupado == 0 && elemento->tamanioParticion >= tamanioMensajeAGuardar);
+		}
+		estructura =  list_find(ADMINISTRADOR_MEMORIA, (void*) hayParticionParaGuardarlo);
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "bf")){
 		void mejorParticion(estructuraAdministrativa* elemento) {
 			int tam = elemento->tamanioParticion - tamanioMensajeAGuardar;
-			if(!elemento->estaOcupado && tam < i){
+			if(elemento->estaOcupado == 0 && tam < i){
 				i = tam;
 				k = j;
 			}
@@ -400,7 +393,7 @@ estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id){
 int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
 	switch(tipoMensaje){
 	case d_NEW_POKEMON:
-		return (((cachearNew *)unMensaje)->largoDeNombre * 4 + 16);
+		return (((newEnMemoria *)unMensaje)->largoDeNombre * 4 + 16);
 		break;
 	/*case d_CATCH_POKEMON:
 		break;
@@ -598,14 +591,33 @@ int contarTamanio (){
 	return contador;
 }
 
-/*void compactacion() {
-	bool estaDesocupado(estructuraAdministrativa* elemento) {
-			return (elemento->estaOcupado==0);
+void compactacion() {
+	bool estaOcupado(estructuraAdministrativa* elemento) {
+			return (elemento->estaOcupado==1);
 		}
-	t_list* listaAuxiliar = list_filter(ADMINISTRADOR_MEMORIA, (void*) estaDesocupado);
+	t_list* listaAuxiliar = list_filter(ADMINISTRADOR_MEMORIA, (void*) estaOcupado);
 	reposicionarParticionesOcupadas(listaAuxiliar);
 }
-*/
+
+void reposicionarParticionesOcupadas(t_list * listaAuxiliar){
+	void * nuevoDonde = MEMORIA_PRINCIPAL;
+	void cambiarInfo(estructuraAdministrativa* elemento) {
+			memcpy(nuevoDonde, elemento->donde, elemento->tamanioParticion);
+			elemento->donde = nuevoDonde;
+			nuevoDonde = nuevoDonde + elemento->tamanioParticion;
+			return;
+		}
+	list_iterate(listaAuxiliar, (void*) cambiarInfo);
+	list_clean_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void *)estructuraAdministrativaDestroyer);
+	list_add_all(ADMINISTRADOR_MEMORIA, listaAuxiliar);
+	estructuraAdministrativa * espacioFaltante = malloc (sizeof(estructuraAdministrativa));
+	espacioFaltante->donde = nuevoDonde;
+	espacioFaltante->estaOcupado = 0;
+	espacioFaltante->suscriptoresConACK = list_create();
+	espacioFaltante->suscriptoresConMensajeEnviado = list_create();
+	espacioFaltante->tamanioParticion = BROKER_CONFIG.TAMANO_MEMORIA - contarTamanio();
+	list_add(ADMINISTRADOR_MEMORIA, espacioFaltante);
+}
 
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self) {
     free(self->donde);
@@ -626,15 +638,108 @@ static void suscriptorDestroyer(int *self) {
     free(self);
 }
 
-/*void reposicionarParticionesOcupadas(listaAuxiliar){
-	//asigno nuevos valores al elemento
-	//limpio lista
-	//agrego cachazo de memoria
-	//
-	bool estaDesocupado(estructuraAdministrativa* elemento) {
-			return (elemento->estaOcupado==0);
+
+void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo){
+	void * punteroManipulable = lugarDeComienzo;
+	newEnMemoria * retorno;
+	catchEnMemoria * retornoCatch;
+	getEnMemoria * retornoGet;
+	appearedEnMemoria * retornoAppeared;
+	caughtEnMemoria * retornoCaught;
+	localizedEnMemoria * retornoLocalized;
+	sem_wait(&MUTEX_MEMORIA);
+	switch(tipoMensaje){
+	case d_NEW_POKEMON:
+		retorno = malloc(sizeof(newEnMemoria));
+		retorno->nombrePokemon = string_new();
+		memcpy(retorno->largoDeNombre, punteroManipulable, sizeof(uint32_t));
+		punteroManipulable += sizeof(uint32_t);
+		memcpy(retorno->nombrePokemon, punteroManipulable, retorno->largoDeNombre);
+		punteroManipulable += (sizeof(char) * retorno->largoDeNombre);
+		memcpy(retorno->posX, punteroManipulable, sizeof(uint32_t));
+		punteroManipulable += (sizeof(uint32_t));
+		memcpy(retorno->posY, punteroManipulable, sizeof(uint32_t));
+		punteroManipulable += (sizeof(uint32_t));
+		memcpy(retorno->cantidad, punteroManipulable, sizeof(uint32_t));
+		sem_post(&MUTEX_MEMORIA);
+		return retorno;
+		break;
+	case d_CATCH_POKEMON:
+		retornoCatch = malloc(sizeof(catchEnMemoria));
+		retornoCatch->nombrePokemon = string_new();
+		memcpy(retornoCatch->largoDeNombre, punteroManipulable, sizeof(uint32_t));
+		punteroManipulable += sizeof(uint32_t);
+		memcpy(retornoCatch->nombrePokemon, punteroManipulable, retornoCatch->largoDeNombre);
+		punteroManipulable += (sizeof(char) * retornoCatch->largoDeNombre);
+		memcpy(retornoCatch->posX, punteroManipulable, sizeof(uint32_t));
+		punteroManipulable += (sizeof(uint32_t));
+		memcpy(retornoCatch->posY, punteroManipulable, sizeof(uint32_t));
+		sem_post(&MUTEX_MEMORIA);
+		return retornoCatch;
+		break;
+	case d_GET_POKEMON:
+		retornoGet = malloc(sizeof(getEnMemoria));
+		retornoGet->nombrePokemon = string_new();
+		memcpy(retornoGet->largoDeNombre, punteroManipulable, sizeof(uint32_t));
+		punteroManipulable += sizeof(uint32_t);
+		memcpy(retornoGet->nombrePokemon, punteroManipulable, retornoGet->largoDeNombre);
+		sem_post(&MUTEX_MEMORIA);
+		return retornoGet;
+		break;
+	case d_APPEARED_POKEMON:
+		retornoAppeared = malloc(sizeof(appearedEnMemoria));
+		retornoAppeared->nombrePokemon = string_new();
+		memcpy(retornoAppeared->largoDeNombre, punteroManipulable, sizeof(uint32_t));
+		punteroManipulable += sizeof(uint32_t);
+		memcpy(retornoAppeared->nombrePokemon, punteroManipulable, retornoAppeared->largoDeNombre);
+		punteroManipulable += (sizeof(char) * retornoAppeared->largoDeNombre);
+		memcpy(retornoAppeared->posX, punteroManipulable, sizeof(uint32_t));
+		punteroManipulable += (sizeof(uint32_t));
+		memcpy(retornoAppeared->posY, punteroManipulable, sizeof(uint32_t));
+		sem_post(&MUTEX_MEMORIA);
+		return retornoAppeared;
+		break;
+	case d_CAUGHT_POKEMON:
+		retornoCaught = malloc(sizeof(caughtEnMemoria));
+		memcpy(retornoCaught->atrapado, punteroManipulable, sizeof(uint32_t));
+		sem_post(&MUTEX_MEMORIA);
+		return retornoCaught;
+		break;
+	case d_LOCALIZED_POKEMON:
+		retornoLocalized = malloc(sizeof(localizedEnMemoria));
+		retornoLocalized->nombrePokemon = string_new();
+		retornoLocalized->puntos = list_create();
+		memcpy(retornoLocalized->largoDeNombre, punteroManipulable, sizeof(uint32_t));
+		punteroManipulable += sizeof(uint32_t);
+		memcpy(retornoLocalized->nombrePokemon, punteroManipulable, retornoLocalized->largoDeNombre);
+		punteroManipulable += (sizeof(char) * retorno->largoDeNombre);
+		memcpy(retornoLocalized->cantidadDePuntos, punteroManipulable, sizeof(uint32_t));
+		punteroManipulable += (sizeof(uint32_t));
+		for (int i = 0; i<retornoLocalized->cantidadDePuntos; i++){
+			punto * nuevoPunto = malloc(sizeof(punto));
+			memcpy(nuevoPunto->posX, punteroManipulable, sizeof(uint32_t));
+			punteroManipulable += (sizeof(uint32_t));
+			memcpy(nuevoPunto->posY, punteroManipulable, sizeof(uint32_t));
+			punteroManipulable += (sizeof(uint32_t));
+			list_add(retornoLocalized->puntos, nuevoPunto);
 		}
-	list_iterate
-	list_add_all(ADMINISTRADOR_MEMORIA, listaAuxiliar);
-}*/
+		sem_post(&MUTEX_MEMORIA);
+		return retornoLocalized;
+		break;
+	default:
+		log_error(LOGGER_GENERAL, "Error levantando data de la memoria");
+		sem_post(&MUTEX_MEMORIA);
+		return NULL;
+	}
+}
+
+void * leerInfoYActualizarUsoPorID(int id){
+	bool igualID(estructuraAdministrativa* elemento) {
+				return (elemento->idMensaje == id);
+			}
+	estructuraAdministrativa * ElElemento = list_find(ADMINISTRADOR_MEMORIA, (void*)igualID);
+	ElElemento->ultimaReferencia = string_new();
+	ElElemento->ultimaReferencia = temporal_get_string_time();
+	return(levantarMensaje(ElElemento->tipoMensaje, ElElemento->donde));
+}
 
