@@ -585,3 +585,43 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 
 	return particion;
 }
+
+void compactacion() {
+	bool estaDesocupado(estructuraAdministrativa* elemento) {
+			return (elemento->estaOcupado==0);
+		}
+	t_list* listaAuxiliar = list_filter(ADMINISTRADOR_MEMORIA, (void*) estaDesocupado);
+	reposicionarParticionesOcupadas(listaAuxiliar);
+}
+
+static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self) {
+    free(self->donde);
+    free(self->estaOcupado);
+    free(self->idMensaje);
+    free(self->tamanioParticion);
+    free(self->tiempo);
+    free(self->tipoMensaje);
+    free(self->ultimaReferencia);
+    list_clean_and_destroy_elements(self->suscriptoresConACK, (void*)suscriptorDestroyer);
+    list_destroy(self->suscriptoresConACK);
+    list_clean_and_destroy_elements(self->suscriptoresConMensajeEnviado, (void*)suscriptorDestroyer);
+    list_destroy(self->suscriptoresConMensajeEnviado);
+    free(self);
+}
+
+static void suscriptorDestroyer(int *self) {
+    free(self);
+}
+
+/*void reposicionarParticionesOcupadas(listaAuxiliar){
+	//asigno nuevos valores al elemento
+	//limpio lista
+	//agrego cachazo de memoria
+	//
+	bool estaDesocupado(estructuraAdministrativa* elemento) {
+			return (elemento->estaOcupado==0);
+		}
+	list_iterate
+	list_add_all(ADMINISTRADOR_MEMORIA, listaAuxiliar);
+}*/
+

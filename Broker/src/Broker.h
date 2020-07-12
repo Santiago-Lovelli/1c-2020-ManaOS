@@ -99,6 +99,10 @@ int primeraParticion();
 int particionMenosReferenciada();
 void reemplazar (d_message tipoMensaje, void* mensaje);
 
+////////////FUNCIONES DESTROYER//////////////////
+static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self);
+static void suscriptorDestroyer(int *self);
+
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;
 t_log * LOGGER_GENERAL;
