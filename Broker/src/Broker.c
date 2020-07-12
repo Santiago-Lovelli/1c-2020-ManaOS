@@ -39,9 +39,9 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			break;
 		case d_CATCH_POKEMON:
 			log_info(LOGGER_GENERAL, "Llego un catch pokemon");
-			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			enviarMensajeCatchASuscriptores (packCatchPokemon, SUSCRIPTORES_CATCH);
-			free(packCatchPokemon);
+			//void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+			//enviarMensajeCatchASuscriptores (packCatchPokemon, SUSCRIPTORES_CATCH);
+			//free(packCatchPokemon);
 			break;
 		case d_GET_POKEMON:
 			log_info(LOGGER_GENERAL, "Llego un get pokemon");
@@ -105,9 +105,6 @@ void suscribir(uint32_t variable, int cliente){
 		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriore");
 		}
-		else{
-		enviarMensajesCacheNew (cliente);
-		}
 		break;
 	case d_CATCH_POKEMON:
 		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de CATCH", cliente);
@@ -135,20 +132,11 @@ void suscribir(uint32_t variable, int cliente){
 	}
 }
 
-void enviarMensajesCacheNew (int cliente){
-	estructuraAdministrativa cache;
-	int lenght = list_size(ADMINISTRADOR_MEMORIA);
-	for (int i = 0; i<lenght; i++){
-	 int mensajeCache = list_get(ADMINISTRADOR_MEMORIA, i);
-	 Serialize_PackAndSend_ACK(cliente, mensajeCache);
-	 log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i", cliente);
-	}
-}
-
-
-
 void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 	estructuraAdministrativa * resultado = malloc (sizeof(estructuraAdministrativa));
+	estructuraAdministrativa * resultado1 = malloc (sizeof(estructuraAdministrativa));
+	estructuraAdministrativa * resultado2 = malloc (sizeof(estructuraAdministrativa));
+	estructuraAdministrativa * resultado3 = malloc (sizeof(estructuraAdministrativa));
 	uint32_t posX, posY, cantidad;
 	char *pokemon;
 	Serialize_Unpack_NewPokemon_NoID(paquete, &pokemon, &posX, &posY, &cantidad);
@@ -168,14 +156,19 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 		resultado->tamanioParticion = tamanioDeMensaje(d_NEW_POKEMON, &mensajeAGuardar);
 		}
 		resultado->estaOcupado = 1;
-		resultado->donde = resultado;
+		//resultado->donde = resultado;
 		resultado->suscriptoresConACK = list_create();
 		resultado->suscriptoresConMensajeEnviado = list_create();
-		resultado->tiempo = temporal_get_string_time();
-		resultado->ultimaReferencia = temporal_get_string_time();
+		resultado->tiempo = 13;
+		resultado->ultimaReferencia = 14;
 		memcpy(resultado->donde, &mensajeAGuardar, tamanioDeMensaje(d_NEW_POKEMON, &mensajeAGuardar));
 		log_info(LOGGER_GENERAL, "Se guardo el mensaje en la memoria");
+		resultado = list_get (ADMINISTRADOR_MEMORIA, 0);
+		resultado1 = list_get (ADMINISTRADOR_MEMORIA, 1);
+		resultado2 = list_get (ADMINISTRADOR_MEMORIA, 2);
+		resultado3 = list_get (ADMINISTRADOR_MEMORIA, 3);
 	}
+	/*//Levantar memoria y actualizo
 	int lenght = list_size(lista);
 	for (int i = 0; i<lenght; i++){
 		int socketCliente = list_get(lista, i);
@@ -184,6 +177,7 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 		log_info (LOGGER_GENERAL, "Se envió el mensaje %i al suscriptor %i", ID, socketCliente);
 	}
 	log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
+	*/
 
 }
 
@@ -311,8 +305,8 @@ void MemoriaPrincipalInit(){
 		MEMORIA_PRINCIPAL = malloc(BROKER_CONFIG.TAMANO_MEMORIA);
 		estructura->estaOcupado = 0;
 		estructura->tamanioParticion = BROKER_CONFIG.TAMANO_MEMORIA;
+		estructura->donde = MEMORIA_PRINCIPAL;
 		list_add (ADMINISTRADOR_MEMORIA, estructura);
-		estructura = list_get(ADMINISTRADOR_MEMORIA, 0);
 }
 
 void SemaphoresInit(){
@@ -324,19 +318,21 @@ void SemaphoresInit(){
 /////////FUNCIONES VARIAS/////////
 int obtenerID(){
 	sem_wait(&MUTEX_CONTADOR);
-	return CONTADOR++;
+	CONTADOR ++;
+	int i = CONTADOR;
 	sem_post(&MUTEX_CONTADOR);
+	return i;
 }
 
 //////FUNCIONES CACHE//////////
-estructuraAdministrativa * guardarMensaje(d_message mensaje, void * mensajeAGuardar){
+estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar){
 	estructuraAdministrativa* donde = malloc (sizeof (estructuraAdministrativa));
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
 	//donde = buscarParticionLibrePara(sizeof(mensajeAGuardar));
 	//memcpy(donde, mensajeAGuardar, sizeof(mensajeAGuardar));
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "bs")){
-	donde = buscarParticionLibreBS(mensaje, mensajeAGuardar);
+	donde = buscarParticionLibreBS(tipoMensaje, mensajeAGuardar);
 	return donde;
 	}
 }
@@ -367,11 +363,22 @@ void * buscarParticionLibrePara(int tamanioMensajeAGuardar){
 		//respetando el tamaño mínimo, hacer la partición lo más chica posible
 		return estructura->donde;
 	}
+	///si es particiones
 	/*if(!compactorecien){
 		compactar();
 	}
+	//si es bs
+	if (variable global == 0
+	//llamo a composocion
+	variable global en 1 y no tiene que pasar por aca la segunda vuelta
+	reemplzar en 0
+	buscarparticion...
+	if (variable global = 0)
 	if(!reemplazorecien){
 	reemplazar();
+	variable global 0
+	la otra en 1
+	buscarparticoin...
 	}
 	buscarParticionLibrePara();*/
 }
@@ -432,7 +439,7 @@ estructuraAdministrativa* buscarParticionLibreBS(d_message tipoMensaje, void* me
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "bf")){
 		void mejorParticion(estructuraAdministrativa* elemento) {
 			int tam = elemento->tamanioParticion - tamanioMensaje;
-			if(!elemento->estaOcupado && tam < i){
+			if(elemento->estaOcupado == 0 && tam < i && elemento->tamanioParticion >= tamanioMensaje){
 				i = tam;
 				k = j;
 				}
@@ -449,21 +456,30 @@ estructuraAdministrativa* buscarParticionLibreBS(d_message tipoMensaje, void* me
 			return particionDondeGuardar;
 		}
 		if(particion == NULL){
-			log_info (LOGGER_GENERAL, "No hay espacio, es necesario componer");
-			int seRealizoLaComposicion = composicion();
-			log_info (LOGGER_GENERAL, "Se realizó la composición BS");
+		if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
+			//compactar();
+			return "No esta hecho todavia";
 		}
-		/*
-		////buscar de nuevo
-		reemplazar(tipoMensaje, mensaje);
+		if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "bs")){
+			if (FLAG_COMPOSICION == 0){
+			composicion();
+			FLAG_COMPOSICION = 1;
+			FLAG_REEMPLAZAR = 0;
+			return buscarParticionLibreBS(tipoMensaje, mensaje);
+			}                                             ///me fijo si tengo que retornar
+			if (FLAG_REEMPLAZAR == 0){
+			reemplazar(tipoMensaje, mensaje);
+			FLAG_COMPOSICION = 0;
+			FLAG_REEMPLAZAR = 1;
+			return buscarParticionLibreBS(tipoMensaje, mensaje); ///me fijo si tengo que retornar
+			}
 		}
-		//////////buscarParticionLibre();
-		 */
+	}
 }
 
 int primeraParticion(){
-	estructuraAdministrativa * particionMenor;
-	estructuraAdministrativa * particion;
+	estructuraAdministrativa * particionMenor = malloc (sizeof(estructuraAdministrativa));
+	estructuraAdministrativa * particion = malloc (sizeof(estructuraAdministrativa));
 	int i;
 	particionMenor->tiempo = list_get (ADMINISTRADOR_MEMORIA, 0); ///solo los que estan ocupados van a tener tiempo
 	int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
@@ -472,10 +488,9 @@ int primeraParticion(){
 		if (particion->tiempo < particionMenor->tiempo){
 			particionMenor->tiempo = particion->tiempo;
 			particionMenor->donde = particion->donde;
-			i ++;
 		}
 	}
-	return i;
+	return i-1;
 }
 
 int particionMenosReferenciada(){
@@ -489,10 +504,9 @@ int particionMenosReferenciada(){
 		if (particion->ultimaReferencia < particionMenor->ultimaReferencia){
 			particionMenor->ultimaReferencia = particion->ultimaReferencia;
 			particionMenor->donde = particion->donde;
-			i ++;
 		}
 	}
-	return i;
+	return i-1;
 }
 
 void reemplazar (d_message tipoMensaje, void* mensaje){
@@ -502,31 +516,27 @@ void reemplazar (d_message tipoMensaje, void* mensaje){
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "fifo")){
 		int posicion = primeraParticion();
 		particion = list_get (ADMINISTRADOR_MEMORIA, posicion);
-		if (particion->tamanioParticion > tamanioMensaje){
-			list_add_in_index(ADMINISTRADOR_MEMORIA, particion, mensaje);
-			return;
-		}
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "lru")){
 		int posicion = particionMenosReferenciada();
 		particion = list_get (ADMINISTRADOR_MEMORIA, posicion);
-		if (particion->tamanioParticion > tamanioMensaje){
-		list_add_in_index(ADMINISTRADOR_MEMORIA, particion, mensaje);
-		return;
-		}
 	}
-	particion->idMensaje = NULL;
-	list_clean(particion->suscriptoresConACK);
-	list_clean (particion->suscriptoresConMensajeEnviado);
-	particion->tiempo = NULL;
-	//particion->tipoMensaje = NULL;
-	particion->ultimaReferencia = NULL;
-	particion->estaOcupado = 0;
-	/////se usa despues para compactar
+	limpiarParticion (particion); ///Lo uso despues para compactar
+	///El donde no cambia, al igual que el tamaño de la particion
+	log_info (LOGGER_GENERAL, "Se limpio la particion Victima, volvemos a buscar");
 }
 
-int composicion(){
-	int flag;
+void limpiarParticion(estructuraAdministrativa * particionVictima){
+	particionVictima->estaOcupado = 0;
+	particionVictima->idMensaje = NULL;
+	list_clean(particionVictima->suscriptoresConACK);
+	list_clean (particionVictima->suscriptoresConMensajeEnviado);
+	particionVictima->tiempo = NULL;
+	particionVictima->ultimaReferencia = NULL;
+	///El donde no cambia, al igual que el tamaño de la particion
+}
+
+void composicion(){
 	estructuraAdministrativa * particionActual = malloc (sizeof (estructuraAdministrativa));
 	estructuraAdministrativa * particionAnterior = malloc (sizeof (estructuraAdministrativa));
 	estructuraAdministrativa * particionPosterior = malloc (sizeof (estructuraAdministrativa));
@@ -540,12 +550,7 @@ int composicion(){
 			particionActual->estaOcupado = 0;
 			particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
 		}
-	flag = 1;
 	}
-	else{
-	flag = 0;
-	}
-	return flag;
 }
 
 estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje, estructuraAdministrativa* particion){
@@ -638,7 +643,7 @@ static void suscriptorDestroyer(int *self) {
     free(self);
 }
 
-
+///Leer memoria para mandar mensaje
 void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo){
 	void * punteroManipulable = lugarDeComienzo;
 	newEnMemoria * retorno;

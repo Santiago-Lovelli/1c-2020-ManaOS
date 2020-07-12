@@ -42,8 +42,8 @@ typedef struct estructuraAdministrativa {
 	int estaOcupado;
 	int tamanioParticion;
 	void* donde;
-	char* tiempo;
-	char* ultimaReferencia;
+	int tiempo;
+	int ultimaReferencia;
 	d_message tipoMensaje;
 	t_list* suscriptoresConMensajeEnviado;
 	t_list* suscriptoresConACK;
@@ -121,8 +121,9 @@ void enviarMensajeLocalizedASuscriptores (void* paquete, t_list* lista);
 mensajeConID agregarIDMensaje (void* paquete);
 void actualizarEnviadosPorID(int id, int socketCliente);
 void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo);
+int contarTamanio();
 
-//////FUNCIONES CACHE//////////
+//////FUNCIONES ESTRUCTURA ADMINISTRATIVA//////////
 estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar);
 void * buscarParticionLibrePara(int mensajeAGuardar);
 estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id);
@@ -132,13 +133,14 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo);
 void reposicionarParticionesOcupadas(t_list * listaAuxiliar);
 
 //////////FUNCION BUDDY Y PARTICION DINAMICA//////////////
-int composicion();
+void composicion();
 estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje, estructuraAdministrativa * particion);
 bool hayParticion(d_message tipoMensaje, void *mensaje);
 estructuraAdministrativa* buscarParticionLibreBS(d_message tipoMensaje, void* mensaje);
 int primeraParticion();
 int particionMenosReferenciada();
 void reemplazar (d_message tipoMensaje, void* mensaje);
+void limpiarParticion (estructuraAdministrativa * particion);
 
 ////////////FUNCIONES DESTROYER//////////////////
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self);
@@ -153,6 +155,9 @@ t_list* CONEXIONES;
 void * MEMORIA_PRINCIPAL;
 t_list* ADMINISTRADOR_MEMORIA;
 int CONTADOR = 0;
+int FLAG_COMPOSICION = 0;
+int FLAG_COMPACTACION = 0;
+int FLAG_REEMPLAZAR = 1;
 
 ////////SEMAFOROS///////////
 sem_t MUTEX_CLIENTE;
