@@ -139,8 +139,8 @@ bool hayParticion(d_message tipoMensaje, void *mensaje);
 estructuraAdministrativa* buscarParticionLibreBS(d_message tipoMensaje, void* mensaje);
 int primeraParticion();
 int particionMenosReferenciada();
-void reemplazar (d_message tipoMensaje, void* mensaje);
-void limpiarParticion (estructuraAdministrativa * particion);
+//void reemplazar (d_message tipoMensaje, void* mensaje);
+//void limpiarParticion (estructuraAdministrativa * particion);
 
 ////////////FUNCIONES DESTROYER//////////////////
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self);

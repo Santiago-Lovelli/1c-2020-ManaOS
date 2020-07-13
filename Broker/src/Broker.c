@@ -159,7 +159,7 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 		//resultado->donde = resultado;
 		resultado->suscriptoresConACK = list_create();
 		resultado->suscriptoresConMensajeEnviado = list_create();
-		resultado->tiempo = 13;
+		resultado->tiempo = rand()%10;
 		resultado->ultimaReferencia = 14;
 		memcpy(resultado->donde, &mensajeAGuardar, tamanioDeMensaje(d_NEW_POKEMON, &mensajeAGuardar));
 		log_info(LOGGER_GENERAL, "Se guardo el mensaje en la memoria");
@@ -425,6 +425,7 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
 /////////////BUDDY SYSTEM/////////////////
 estructuraAdministrativa* buscarParticionLibreBS(d_message tipoMensaje, void* mensaje){
 	estructuraAdministrativa* particion = malloc (sizeof (estructuraAdministrativa));
+	estructuraAdministrativa* particionPrueba = malloc (sizeof (estructuraAdministrativa));
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
 	int i = BROKER_CONFIG.TAMANO_MEMORIA;
 	int j = 0, k = -1;
@@ -468,7 +469,8 @@ estructuraAdministrativa* buscarParticionLibreBS(d_message tipoMensaje, void* me
 			return buscarParticionLibreBS(tipoMensaje, mensaje);
 			}                                             ///me fijo si tengo que retornar
 			if (FLAG_REEMPLAZAR == 0){
-			reemplazar(tipoMensaje, mensaje);
+			int posicion = reemplazar(tipoMensaje, mensaje);
+			particionPrueba = list_get (ADMINISTRADOR_MEMORIA, posicion);
 			FLAG_COMPOSICION = 0;
 			FLAG_REEMPLAZAR = 1;
 			return buscarParticionLibreBS(tipoMensaje, mensaje); ///me fijo si tengo que retornar
@@ -477,78 +479,98 @@ estructuraAdministrativa* buscarParticionLibreBS(d_message tipoMensaje, void* me
 	}
 }
 
+
 int primeraParticion(){
 	estructuraAdministrativa * particionMenor = malloc (sizeof(estructuraAdministrativa));
 	estructuraAdministrativa * particion = malloc (sizeof(estructuraAdministrativa));
 	int i;
-	particionMenor->tiempo = list_get (ADMINISTRADOR_MEMORIA, 0); ///solo los que estan ocupados van a tener tiempo
+	int posicionMenor;
+	bool estaOcupado(estructuraAdministrativa* elemento) {
+				return (elemento->estaOcupado == 1);
+			}
+	particionMenor = list_find(ADMINISTRADOR_MEMORIA, (void*) estaOcupado); // asi arreglo de agarrar uno que este desocupado
 	int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
-	for (i = 1; i < particionesMemoria; i++){
-		particion->tiempo = list_get(ADMINISTRADOR_MEMORIA, i);
-		if (particion->tiempo < particionMenor->tiempo){
+	for (i=0; i<particionesMemoria; i++){
+		particion = list_get(ADMINISTRADOR_MEMORIA, i);
+		if(particion->tiempo < particionMenor->tiempo && particion->estaOcupado == 1){
 			particionMenor->tiempo = particion->tiempo;
-			particionMenor->donde = particion->donde;
+			posicionMenor = i;
 		}
 	}
-	return i-1;
+	return posicionMenor;
 }
 
 int particionMenosReferenciada(){
 	estructuraAdministrativa * particionMenor = malloc (sizeof(estructuraAdministrativa));
 	estructuraAdministrativa * particion = malloc (sizeof(estructuraAdministrativa));
 	int i;
-	particionMenor->ultimaReferencia = list_get (ADMINISTRADOR_MEMORIA, 0); ///solo los que estan ocupados van a tener tiempo
+	int posicionMenor;
+	particionMenor = list_get (ADMINISTRADOR_MEMORIA, 0); ///solo los que estan ocupados van a tener tiempo
 	int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
-	for (i = 1; i < particionesMemoria; i++){
-		particion->ultimaReferencia = list_get(ADMINISTRADOR_MEMORIA, i);
-		if (particion->ultimaReferencia < particionMenor->ultimaReferencia){
+	for (i=1; i<particionesMemoria; i++){
+		particion = list_get(ADMINISTRADOR_MEMORIA, i);
+		if(particion->ultimaReferencia < particionMenor->ultimaReferencia){
 			particionMenor->ultimaReferencia = particion->ultimaReferencia;
-			particionMenor->donde = particion->donde;
+			posicionMenor = i;
 		}
 	}
-	return i-1;
-}
+	return posicionMenor;
+	}
 
-void reemplazar (d_message tipoMensaje, void* mensaje){
+int reemplazar (d_message tipoMensaje, void* mensaje){
 	estructuraAdministrativa* particion = malloc (sizeof (estructuraAdministrativa));
 	int tamanioMensaje = tamanioDeMensaje (tipoMensaje, mensaje);
 	//////////FIFO////////////////////////////////////////
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "fifo")){
 		int posicion = primeraParticion();
 		particion = list_get (ADMINISTRADOR_MEMORIA, posicion);
+		limpiarParticion (particion, posicion); ///Lo uso despues para compactar
+		return posicion;
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "lru")){
 		int posicion = particionMenosReferenciada();
 		particion = list_get (ADMINISTRADOR_MEMORIA, posicion);
+		limpiarParticion (particion, posicion); ///Lo uso despues para compactar
 	}
-	limpiarParticion (particion); ///Lo uso despues para compactar
 	///El donde no cambia, al igual que el tamaño de la particion
 	log_info (LOGGER_GENERAL, "Se limpio la particion Victima, volvemos a buscar");
 }
 
-void limpiarParticion(estructuraAdministrativa * particionVictima){
+void limpiarParticion(estructuraAdministrativa * particionVictima, int posicion){
 	particionVictima->estaOcupado = 0;
 	particionVictima->idMensaje = NULL;
 	list_clean(particionVictima->suscriptoresConACK);
 	list_clean (particionVictima->suscriptoresConMensajeEnviado);
 	particionVictima->tiempo = NULL;
 	particionVictima->ultimaReferencia = NULL;
+	list_add_in_index(ADMINISTRADOR_MEMORIA, posicion, particionVictima);
 	///El donde no cambia, al igual que el tamaño de la particion
 }
 
 void composicion(){
-	estructuraAdministrativa * particionActual = malloc (sizeof (estructuraAdministrativa));
-	estructuraAdministrativa * particionAnterior = malloc (sizeof (estructuraAdministrativa));
-	estructuraAdministrativa * particionPosterior = malloc (sizeof (estructuraAdministrativa));
-	particionAnterior->donde = particionActual->donde - particionActual->tamanioParticion;
-	particionPosterior->donde = particionActual->donde + particionActual->tamanioParticion;
-	if (particionAnterior->estaOcupado == 0 && !particionActual->estaOcupado && particionAnterior->tamanioParticion == particionActual->tamanioParticion){
-		particionActual->donde = particionAnterior->donde;
+	estructuraAdministrativa * particionAnterior = malloc (sizeof(estructuraAdministrativa));
+	estructuraAdministrativa * particionActual = malloc (sizeof(estructuraAdministrativa));
+	estructuraAdministrativa * particionPosterior = malloc (sizeof(estructuraAdministrativa));
+	int i;
+	int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
+	particionActual = list_get(ADMINISTRADOR_MEMORIA, 0);
+	particionPosterior = list_get (ADMINISTRADOR_MEMORIA, 1);
+	if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 		particionActual->estaOcupado = 0;
-		particionActual->tamanioParticion = particionAnterior->tamanioParticion + particionActual->tamanioParticion;
-		if (!particionActual->estaOcupado && !particionPosterior->estaOcupado && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
-			particionActual->estaOcupado = 0;
-			particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
+		particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
+	}
+		for (i=1; i<particionesMemoria; i++){
+		particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
+		particionAnterior = list_get (ADMINISTRADOR_MEMORIA, i-1);
+		particionPosterior = list_get (ADMINISTRADOR_MEMORIA, i+1);
+		if (particionAnterior->estaOcupado == 0 && particionActual->estaOcupado == 0 && particionAnterior->tamanioParticion == particionActual->tamanioParticion){
+				particionActual->donde = particionAnterior->donde;
+				particionActual->estaOcupado = 0;
+				particionActual->tamanioParticion = particionAnterior->tamanioParticion + particionActual->tamanioParticion;
+				if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
+					particionActual->estaOcupado = 0;
+					particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
+		}
 		}
 	}
 }
