@@ -109,7 +109,42 @@ void iniciarVariablesDePlanificacion();
 void descontarPokemonsActualesDeOBJGlobal(entrenador* trainer);
 
 //////FUNCIONES FINALES/////////
+
+/*
+ * ESTA FUNCION ES LLAMADA CUANDO TEAM FINALIZA Y
+ * SE OCUPA DE LLAMAR A TODAS LAS FUNCIONES NECESARIAS
+ * PARA DICHO FIN
+ */
+
 void finalFeliz();
+
+/*
+ * ESTA FUNCION LOGEA TODO LO PEDIDO POR ENUNCIADO A LA
+ * HORA DE FINALIZAR EL PROCESO TEAM
+ */
+
+void logearFin();
+
+/*
+ * ESTA FUNCION SE OCUPA DE LIBERAR TODA LA MEMORIA
+ * QUE HAYA OCUPADO EL TEAM DURANTE SU EJECUCION
+ */
+
+void destruirTodo();
+
+/*
+ * ESTA FUNCION FINALIZA LA EJECUCION DE LOS HILOS
+ */
+
+void matarHilos();
+
+void destruirObjetivoGlobal();
+
+void destruirEstados();
+
+void destruirEntrenadores();
+
+
 static void entrenadorDestroy(entrenador *self);
 
 /*
@@ -601,6 +636,7 @@ t_list * POKEMONES_ATRAPADOS;
 t_list * ID_QUE_NECESITO;
 t_list * MISIONES_PENDIENTES;
 int AUX_ID_TRAINER;
+bool SEGUIR_ATENDIENDO;
 
 ///////Estados//////////
 t_list* EstadoNew;
@@ -611,6 +647,8 @@ t_list* EstadoExit;
 
 /////////HILOS///////////
 pthread_t hiloPlanificacion;
-pthread_t hiloEscucha;
-pthread_t hiloConexionBroker;
+pthread_t* servidor;
+pthread_t* suscriptoAppearedPokemon;
+pthread_t* suscriptoLocalizedPokemon;
+pthread_t* suscriptoCaughtPokemon;
 #endif /* TEAM_H_ */

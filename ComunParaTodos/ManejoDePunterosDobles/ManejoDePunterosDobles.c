@@ -1,6 +1,10 @@
 #include "ManejoDePunterosDobles.h"
 
 uint32_t damePosicionFinalDoblePuntero(char **puntero){
+	if(puntero == NULL)
+			return 0;
+	if(puntero[0] == NULL)
+		return 0;
 	uint32_t contador = 0;
 	while(puntero[contador] != NULL)
 		contador = contador+1;
@@ -76,11 +80,13 @@ t_list* convertirDoblePunteroEnLista(char** doble){
 	int limiteDeLista = damePosicionFinalDoblePuntero(doble);
 	t_list* listaDeUno = list_create();
 	int i=0;
-	while(i <= limiteDeLista){
-		p_punteroEnLista* aux = malloc(strlen(doble[i])+1);
-		aux->data = doble[i];
-		list_add(listaDeUno,aux);
-		i = i + 1;
+	if(doble[0] != NULL){
+		while(i <= limiteDeLista){
+			p_punteroEnLista* aux = malloc(strlen(doble[i])+1);
+			aux->data = doble[i];
+			list_add(listaDeUno,aux);
+			i = i + 1;
+		}
 	}
 	return listaDeUno;
 

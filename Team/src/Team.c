@@ -22,6 +22,7 @@ void inicializar(){
 	crearEstados();
 	crearEntrenadores();
 	iniciarVariablesDePlanificacion();
+	SEGUIR_ATENDIENDO = true;
 	ID_QUE_NECESITO = list_create();
 	MISIONES_PENDIENTES = list_create();
 	DEADLOCKS_RESUELTOS = 0;
@@ -29,8 +30,10 @@ void inicializar(){
 	for (int i = 0; list_get(ENTRENADORES_TOTALES, i) != NULL; i++){
 		entrenador * entrenador = list_get(ENTRENADORES_TOTALES, i);
 		printf("Entrenador en posicion: x = %d, y = %d \n", entrenador->posicion.x, entrenador->posicion.y);
-		for (int j = 0; entrenador->pokemones[j]!=NULL; j++){
-			printf("Pokemon n° %d es un: %s \n", j, entrenador->pokemones[j]);
+		if(entrenador->pokemones != NULL){
+			for (int j = 0; entrenador->pokemones[j]!=NULL; j++){
+				printf("Pokemon n° %d es un: %s \n", j, entrenador->pokemones[j]);
+			}
 		}
 		for (int j = 0; entrenador->pokemonesObjetivo[j]!=NULL; j++){
 			printf("Pokemon objetivo n° %d es un: %s \n", j, entrenador->pokemonesObjetivo[j]);
@@ -42,16 +45,16 @@ void inicializar(){
 
 	crear_hilo_planificacion();
 
-	pthread_t* servidor = malloc(sizeof(pthread_t));
+	servidor = malloc(sizeof(pthread_t));
 	iniciarServidorDeGameBoy(servidor);
 
-	pthread_t* suscriptoAppearedPokemon = malloc(sizeof(pthread_t));
+	suscriptoAppearedPokemon = malloc(sizeof(pthread_t));
 	conectarmeColaDe(suscriptoAppearedPokemon, d_APPEARED_POKEMON);
 
-	pthread_t* suscriptoLocalizedPokemon = malloc(sizeof(pthread_t));
+	suscriptoLocalizedPokemon = malloc(sizeof(pthread_t));
 	conectarmeColaDe(suscriptoLocalizedPokemon, d_LOCALIZED_POKEMON);
 
-	pthread_t* suscriptoCaughtPokemon = malloc(sizeof(pthread_t));
+	suscriptoCaughtPokemon = malloc(sizeof(pthread_t));
 	conectarmeColaDe(suscriptoCaughtPokemon, d_CAUGHT_POKEMON);
 
 	pthread_join(*servidor, NULL);
@@ -90,6 +93,10 @@ uint32_t recibirResponse(int conexion, HeaderDelibird headerACK){
 }
 
 void sumarPokemon(entrenador* trainer, char* pokemon){
+	if(trainer->pokemones == NULL){
+		trainer->pokemones = malloc(sizeof(char*));
+		trainer->pokemones[0] = NULL;
+	}
 	int index = damePosicionFinalDoblePuntero(trainer->pokemones);
 	trainer->pokemones[index+1] = pokemon;
 	trainer->pokemones[index+2] = NULL;
@@ -173,7 +180,7 @@ void* atenderGameBoy() {
 	t_log* gameBoyLog = iniciar_log("GameBoy");
 
 	int conexion = iniciar_servidor(TEAM_CONFIG.IP_TEAM, TEAM_CONFIG.PUERTO_TEAM, gameBoyLog);
-	while (1) {
+	while (SEGUIR_ATENDIENDO) {
 		int cliente = esperar_cliente_con_accept(conexion, gameBoyLog);
 		log_info(gameBoyLog, "se conecto cliente: %i", cliente);
 		pthread_t* dondeSeAtiende = malloc(sizeof(pthread_t));
@@ -222,7 +229,7 @@ void* suscribirme(d_message colaDeSuscripcion) {
 }
 
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
-	while (1) {
+	while (SEGUIR_ATENDIENDO) {
 		HeaderDelibird headerRecibido = Serialize_RecieveHeader(elemento->cliente);
 		if (headerRecibido.tipoMensaje == -1) {
 			log_error(elemento->log, "Se desconecto el GameBoy\n");
@@ -423,6 +430,7 @@ char** quePokemonTengoDeMas(entrenador *trainer){
 	int cuantosNecesito = 0;
 	int indexRespuesta = 0;
 	char** respuesta = malloc(sizeof(char*));
+	respuesta[0] = NULL;
 	for(int i=0; i<=indexPoke; i++){
 		cuantosTengo = cuantosDeEstePokemonTengo(trainer, trainer->pokemones[i]);
 		cuantosNecesito = cuantosDeEstePokemonNecesito(trainer, trainer->pokemones[i]);
@@ -457,14 +465,15 @@ bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
 
 int entrenadorMasCercanoDisponible(punto point){
 	int index = -1;
-	int distanciaMinima = 0;
+	int distanciaMinima = 9999;
 	int distanciaAUX = 0;
 	entrenador *entrenadorAUX;
 
 	entrenadorAUX = (entrenador*)list_get(ENTRENADORES_TOTALES,0);
-	distanciaMinima = diferenciaEntrePuntos( entrenadorAUX->posicion , point);
-	if( entrenadorEstaDisponible(entrenadorAUX) )
+	if( entrenadorEstaDisponible(entrenadorAUX) ){
 		index = 0;
+		distanciaMinima = diferenciaEntrePuntos( entrenadorAUX->posicion , point);
+	}
 
 	for(int j = 1; j < list_size(ENTRENADORES_TOTALES); j=j+1){
 		entrenadorAUX = (entrenador*)list_get(ENTRENADORES_TOTALES,j);
@@ -686,6 +695,8 @@ int cantidadDeMisiones(char *pokemon){
 }
 
 bool necesitoEstePokemon(char *pokemon){
+	if(pokemon == NULL)
+		return false;
 	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
 	return (valor>0);
 }
@@ -720,9 +731,7 @@ void descontarDeObjetivoGlobal(char *pokemon){
 	printf("Hemos atrapado al pokemon: %s \n",pokemon);
 }
 
-void finalFeliz(){
-	planificarDeadlocks();
-	sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+void logearFin(){
 	printf("\n \n \n LLEGAMOS \n AL \n FINAL \n FELIZ \n \n\n ");
 	log_info(TEAM_LOG, "::: TEAM HA FINALIZADO EXITOSAMENTE :::");
 	log_info(TEAM_LOG, "::: ESTADISTICAS :::");
@@ -734,9 +743,45 @@ void finalFeliz(){
 		entrenador * trainer = list_get(ENTRENADORES_TOTALES,i);
 		log_info(TEAM_LOG, "::: CANTIDAD DE CICLOS EJECUTADOS POR EL ENTRENADOR %i: %i", trainer->tid,trainer->ciclosCPUEjecutadosEnTotal);
 	}
-	//destruirObjetivoGlobal();
-	//destruirEstados();
-	//destruirEntrenadores();//list_destroy_and_destroy_elements(ENTRENADORES_TOTALES, entrenadorDestroy);
+}
+
+
+void destruirObjetivoGlobal(){
+	dictionary_destroy(OBJETIVO_GLOBAL);
+}
+
+void destruirEstados(){
+	list_destroy(EstadoBlock);
+	list_destroy(EstadoExit);
+	list_destroy(EstadoNew);
+	list_destroy(EstadoReady);
+}
+
+void destruirEntrenadores(){
+//	list_destroy_and_destroy_elements(ENTRENADORES_TOTALES, entrenadorDestroy); TODO EXPLOTA
+}
+
+void destruirTodo(){
+	destruirObjetivoGlobal();
+	destruirEntrenadores();
+	destruirEstados();
+}
+
+void matarHilos(){
+	pthread_cancel(servidor);
+	pthread_cancel(suscriptoAppearedPokemon);
+	pthread_cancel(suscriptoLocalizedPokemon);
+	pthread_cancel(suscriptoCaughtPokemon);
+
+}
+
+void finalFeliz(){
+	SEGUIR_ATENDIENDO = false;
+	planificarDeadlocks();
+	sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+	logearFin();
+	destruirTodo(); //Hakai
+	matarHilos();
 }
 
 void iniciarConfig(){
@@ -759,6 +804,8 @@ void iniciarConfig(){
 }
 
 void descontarPokemonsActualesDeOBJGlobal(entrenador* trainer){
+	if(trainer->pokemones == NULL)
+		return;
 	int posFinal = damePosicionFinalDoblePuntero(trainer->pokemones);
 	for(int i=0; i<=posFinal; i++){
 		if( necesitoEstePokemon(trainer->pokemones[i]) ){
@@ -771,11 +818,26 @@ void crearEntrenadores(){
 	ENTRENADORES_TOTALES = list_create();
 	AUX_ID_TRAINER = 0;
 	int cantTrainers = damePosicionFinalDoblePuntero(TEAM_CONFIG.POSICIONES_ENTRENADORES);
+	char ** pokemones = NULL;
+	char ** pokemonesObjetivo = NULL;
 	pthread_t hiloEntrenadores[cantTrainers+1];
 	for (int i = 0; TEAM_CONFIG.POSICIONES_ENTRENADORES[i] != NULL; i++){
+		pokemones = NULL;
+		pokemonesObjetivo = NULL;
 		punto punto = crearPunto(TEAM_CONFIG.POSICIONES_ENTRENADORES[i]);
-		char ** pokemones = string_split(TEAM_CONFIG.POKEMON_ENTRENADORES[i], "|");
-		char ** pokemonesObjetivo = string_split(TEAM_CONFIG.OBJETIVOS_ENTRENADORES[i], "|");
+		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.POKEMON_ENTRENADORES))
+			pokemones = string_split(TEAM_CONFIG.POKEMON_ENTRENADORES[i], "|");
+		else{
+			pokemones = malloc(sizeof(char*));
+			pokemones[0] = NULL;
+		}
+
+		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.OBJETIVOS_ENTRENADORES))
+			pokemonesObjetivo = string_split(TEAM_CONFIG.OBJETIVOS_ENTRENADORES[i], "|");
+		else{
+			pokemonesObjetivo = malloc(sizeof(char*));
+			pokemonesObjetivo[0] = NULL;
+		}
 		entrenador * entrenador = crearEntrenador(punto, pokemones, pokemonesObjetivo);
 		list_add(ENTRENADORES_TOTALES, entrenador);
 		list_add(EstadoNew, entrenador);
@@ -826,14 +888,10 @@ void iniciarVariablesDePlanificacion(){
 }
 
 static void entrenadorDestroy(entrenador *self) {
-	for (int i = 0; self->pokemones[i]!=NULL; i++){
-		free(self->pokemones[i]);
-	}
-	for (int i = 0; self->pokemonesObjetivo[i]!=NULL; i++){
-		free(self->pokemonesObjetivo[i]);
-	}
-    free(self->pokemones);
-    free(self->pokemonesObjetivo);
+	liberarDoblePuntero(self->pokemones);
+	liberarDoblePuntero(self->pokemonesObjetivo);
+	free(self->mision);
+	free(self);
 }
 
 void ponerAlFinalDeLista(entrenador *trainer, t_list *lista){
@@ -1050,9 +1108,9 @@ void planificarDeadlocks(){
 
 	entrenador *trainer1;
 	entrenador *trainer2;
-	char **pokemonFaltante;
+	char **pokemonFaltante = NULL;
 	char **pokemonSobrante = NULL;
-	char* pokemonParaIntercambiar;
+	char* pokemonParaIntercambiar = NULL;
 	for(int i=0; i<cantidadEntrenadoresEnDeadlock; i++){
 		trainer1 = list_get(EstadoBlock,i);
 		pokemonFaltante = quePokemonMeFalta(trainer1);
@@ -1064,10 +1122,11 @@ void planificarDeadlocks(){
 			return;
 		}
 
-		for(int j=0; j<cantidadEntrenadoresEnDeadlock; j++){
+		for(int j=1; j<cantidadEntrenadoresEnDeadlock; j++){
 			trainer2 = list_get(EstadoBlock,j);
+			pokemonSobrante = NULL;
 			pokemonSobrante = quePokemonTengoDeMas(trainer2);
-			pokemonParaIntercambiar = primerElementoEnComun(pokemonFaltante,pokemonSobrante);
+			pokemonParaIntercambiar = (char*)primerElementoEnComun(pokemonFaltante,pokemonSobrante);
 			if( pokemonParaIntercambiar != NULL ){
 				darMision(trainer1->tid, pokemonParaIntercambiar, trainer2->posicion, true, trainer2->tid);
 				pasarEntrenadorAEstado(trainer1->tid, t_READY);
