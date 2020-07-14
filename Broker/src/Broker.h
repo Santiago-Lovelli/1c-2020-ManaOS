@@ -143,8 +143,8 @@ bool hayParticion(d_message tipoMensaje, void *mensaje);
 estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mensaje);
 int primeraParticion();
 int particionMenosReferenciada();
-void reemplazar (d_message tipoMensaje, void* mensaje);
-void limpiarParticion (estructuraAdministrativa * particion);
+//void reemplazar (d_message tipoMensaje, void* mensaje);
+//void limpiarParticion (estructuraAdministrativa * particion);
 
 ////////////FUNCIONES DESTROYER//////////////////
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self);
@@ -159,6 +159,7 @@ t_list* CONEXIONES;
 void * MEMORIA_PRINCIPAL;
 t_list* ADMINISTRADOR_MEMORIA;
 int CONTADOR = 0;
+int TIEMPO = 0;
 int FLAG_COMPOSICION = 0;
 int FLAG_COMPACTACION = 0;
 int FLAG_REEMPLAZAR = 1;
@@ -168,6 +169,7 @@ const char* nombresColas[] = {"NEW_POKEMON", "CATCH_POKEMON", "GET_POKEMON", "AP
 sem_t MUTEX_CLIENTE;
 sem_t MUTEX_CONTADOR;
 sem_t MUTEX_MEMORIA;
+sem_t MUTEX_TIEMPO;
 
 ////////LISTA DE SUSCRIPTORES//////
 t_list* SUSCRIPTORES_NEW;
