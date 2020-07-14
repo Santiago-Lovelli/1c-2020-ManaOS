@@ -143,6 +143,7 @@ bool hayParticion(d_message tipoMensaje, void *mensaje);
 estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mensaje);
 int primeraParticion();
 int particionMenosReferenciada();
+void compactacion();
 //void reemplazar (d_message tipoMensaje, void* mensaje);
 //void limpiarParticion (estructuraAdministrativa * particion);
 

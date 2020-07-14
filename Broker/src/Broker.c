@@ -11,7 +11,6 @@ void EsperarClientes(){
 	int server = iniciar_servidor(BROKER_CONFIG.IP_BROKER, BROKER_CONFIG.PUERTO_BROKER, LOGGER_GENERAL);
 	while(1){
 		int cliente = esperar_cliente_con_accept(server, LOGGER_GENERAL);
-		log_info(LOGGER_GENERAL, "Se conecto un cliente: %i", cliente);
 		log_info(LOGGER_OBLIGATORIO, "Se conecto un cliente: %i", cliente);
 		pthread_t* hiloDeAtencion = malloc(sizeof(pthread_t));
 		//Falta un sem acá
@@ -33,38 +32,38 @@ void* AtenderCliente(void* cliente) {
 void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 	switch (header.tipoMensaje) {
 		case d_NEW_POKEMON:
-			log_info(LOGGER_GENERAL, "Llego un new pokemon");
+			log_info(LOGGER_OBLIGATORIO, "Llego un new pokemon");
 			void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			tratarMensajeNewASuscriptores (packNewPokemon, SUSCRIPTORES_NEW);
 			free(packNewPokemon);
 			break;
 		case d_CATCH_POKEMON:
-			log_info(LOGGER_GENERAL, "Llego un catch pokemon");
+			log_info(LOGGER_OBLIGATORIO, "Llego un catch pokemon");
 			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			funcionParaVerMemoria();
 			enviarMensajeCatchASuscriptores (packCatchPokemon, SUSCRIPTORES_CATCH);
 			free(packCatchPokemon);
 			break;
 		case d_GET_POKEMON:
-			log_info(LOGGER_GENERAL, "Llego un get pokemon");
+			log_info(LOGGER_OBLIGATORIO, "Llego un get pokemon");
 			void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			enviarMensajeGetASuscriptores (packGetPokemon, SUSCRIPTORES_GET);
 			free(packGetPokemon);
 			break;
 		case d_APPEARED_POKEMON:
-			log_info(LOGGER_GENERAL, "Llego un appeared pokemon");
+			log_info(LOGGER_OBLIGATORIO, "Llego un appeared pokemon");
 			void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			enviarMensajeAppearedASuscriptores (packAppearedPokemon, SUSCRIPTORES_APPEARED);
 			free(packAppearedPokemon);
 			break;
 		case d_CAUGHT_POKEMON:
-			log_info(LOGGER_GENERAL, "Llego un caught pokemon");
+			log_info(LOGGER_OBLIGATORIO, "Llego un caught pokemon");
 			void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			enviarMensajeCaughtASuscriptores (packCaughtPokemon, SUSCRIPTORES_CAUGHT);
 			free(packCaughtPokemon);
 			break;
 		case d_LOCALIZED_POKEMON:
-			log_info(LOGGER_GENERAL, "Llego un localized pokemon");
+			log_info(LOGGER_OBLIGATORIO, "Llego un localized pokemon");
 			void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			/*uint32_t idMensajeLocalized;
 			char *localizedNombrePokemon;
@@ -102,34 +101,34 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 void suscribir(uint32_t variable, int cliente){
 	switch (variable){
 	case d_NEW_POKEMON:
-		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de NEW", cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de NEW", cliente);
 		list_add (SUSCRIPTORES_NEW, cliente);
 		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriore");
 		}
 		break;
 	case d_CATCH_POKEMON:
-		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de CATCH", cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de CATCH", cliente);
 		list_add (SUSCRIPTORES_CATCH, cliente);
 		break;
 	case d_GET_POKEMON:
-		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de GET", cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de GET", cliente);
 		list_add (SUSCRIPTORES_GET, cliente);
 		break;
 	case d_APPEARED_POKEMON:
-		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de Appeared", cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Appeared", cliente);
 		list_add (SUSCRIPTORES_APPEARED, cliente);
 		break;
 	case d_CAUGHT_POKEMON:
-		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de Caught", cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Caught", cliente);
 		list_add (SUSCRIPTORES_CAUGHT, cliente);
 		break;
 	case d_LOCALIZED_POKEMON:
-		log_info (LOGGER_GENERAL, "Se agrego el suscriptor %i a la cola de Localized", cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Localized", cliente);
 		list_add (SUSCRIPTORES_LOCALIZED, cliente);
 		break;
 	default:
-		log_info (LOGGER_GENERAL, "No se suscribio");
+		log_error(LOGGER_OBLIGATORIO, "No se suscribio");
 		break;
 	}
 }
@@ -176,7 +175,7 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 		int socketCliente = list_get(lista, i);
 		Serialize_PackAndSend_NEW_POKEMON(socketCliente, ID, pokemon, posX, posY, cantidad);
 		actualizarEnviadosPorID(ID, socketCliente);
-		log_info (LOGGER_GENERAL, "Se envió el mensaje %i al suscriptor %i", ID, socketCliente);
+		log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", ID, socketCliente);
 	}
 	log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
 	*/
@@ -632,6 +631,7 @@ void compactacion() {
 		}
 	t_list* listaAuxiliar = list_filter(ADMINISTRADOR_MEMORIA, (void*) estaOcupado);
 	reposicionarParticionesOcupadas(listaAuxiliar);
+	log_info (LOGGER_OBLIGATORIO, "Se ejecuto la compactacion");
 }
 
 void reposicionarParticionesOcupadas(t_list * listaAuxiliar){
@@ -748,7 +748,7 @@ void funcionParaVerMemoria(){
 
 void dump () {
 	sem_wait(&MUTEX_MEMORIA);
-	log_info(LOGGER_GENERAL, "Iniciando dump...");
+	log_info(LOGGER_OBLIGATORIO, "Se requirió un dump");
 	FILE * archivoDump = txt_open_for_append(BROKER_CONFIG.DUMP_FILE);
 	char* unaLinea = string_new();
 	char* extra = string_new();
@@ -769,11 +769,11 @@ void dump () {
 			string_append(&extra, "[X]");
 			string_append(&nombreCola, nombresColas[ElElemento->tipoMensaje]);
 		}
-		unaLinea = string_from_format("Partición %i: %06p %s  Size: %i b     LRU:%s Cola:%s ID:%i \n", i, ElElemento->donde, extra, ElElemento->tamanioParticion, ElElemento->ultimaReferencia, nombreCola, ElElemento->idMensaje);
+		void* finParticion = ElElemento->donde + ElElemento->tamanioParticion - 1;
+		unaLinea = string_from_format("Partición %i: %06p - %06p %s  Size: %i b     LRU:%s Cola:%s ID:%i \n", i, ElElemento->donde, finParticion, extra, ElElemento->tamanioParticion, ElElemento->ultimaReferencia, nombreCola, ElElemento->idMensaje);
 		txt_write_in_file(archivoDump, unaLinea);
 	}
 	txt_close_file(archivoDump);
-	log_info(LOGGER_GENERAL, "Termino el dump.");
 	sem_post(&MUTEX_MEMORIA);
 	return;
 }
