@@ -18,6 +18,7 @@ void crear_hilo_planificacion(){
 
 void inicializar(){
 	TEAM_LOG = iniciar_log("Team");
+	sem_init(&semaforoSocket,0,1);
 	iniciarConfig();
 	crearEstados();
 	crearEntrenadores();
@@ -230,6 +231,7 @@ void* suscribirme(d_message colaDeSuscripcion) {
 
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 	while (SEGUIR_ATENDIENDO) {
+		sem_wait(&semaforoSocket);
 		HeaderDelibird headerRecibido = Serialize_RecieveHeader(elemento->cliente);
 		if (headerRecibido.tipoMensaje == -1) {
 			log_error(elemento->log, "Se desconecto el GameBoy\n");
@@ -259,6 +261,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		}
 		else{ printf("No necesito este pokemon!!! \n "); }
 		free(packAppearedPokemon);
+		sem_post(&semaforoSocket);
 		break;
 	case d_LOCALIZED_POKEMON:
 		;
@@ -279,6 +282,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		}
 		else{ printf("No necesito este pokemon!!! \n "); }
 		free(packLocalizedPokemon);
+		sem_post(&semaforoSocket);
 		break;
 
 	case d_CAUGHT_POKEMON:
@@ -296,7 +300,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		}
 
 		free(packCaughtPokemon);
-
+		sem_post(&semaforoSocket);
 		break;
 
 	default:
@@ -304,6 +308,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
 		free(packBasura);
+		sem_post(&semaforoSocket);
 		break;
 	}
 }
@@ -332,6 +337,7 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 	}
 	darMision(idEntrenador,pokemon,posicionPoke,false,(-1));
 	pasarEntrenadorAEstado(idEntrenador, t_READY);
+
 }
 
 void hacerCaught(int idMensajeCaught, int resultadoCaught){
@@ -596,7 +602,7 @@ void sacarMision(int idEntrenador){
 }
 
 t_mision* crearMision(char *pokemon, punto point, bool esIntercambio, int tidObjetivo){
-	t_mision *mision = malloc(sizeof(punto) + strlen(pokemon) +1 + sizeof(bool));
+	t_mision *mision = malloc(sizeof(punto) + strlen(pokemon) + 1 + sizeof(bool) + sizeof(tidObjetivo) + sizeof(int));
 	mision->point = point;
 	mision->pokemon = pokemon;
 	mision->esIntercambio = esIntercambio;
