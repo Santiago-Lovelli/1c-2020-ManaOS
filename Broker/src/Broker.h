@@ -13,6 +13,8 @@
 #include <commons/collections/list.h>
 #include <commons/log.h>
 #include <semaphore.h>
+#include <commons/txt.h>
+#include <signal.h>
 
 ///////ESTRUCTURAS//////////
 typedef struct config
@@ -26,6 +28,7 @@ typedef struct config
 	char* PUERTO_BROKER;
 	int FRECUENCIA_COMPACTACION;
     char* LOG_FILE;
+    char* DUMP_FILE;
 }config;
 
 enum queueName {
@@ -42,8 +45,8 @@ typedef struct estructuraAdministrativa {
 	int estaOcupado;
 	int tamanioParticion;
 	void* donde;
-	int tiempo;
-	int ultimaReferencia;
+	char * tiempo;
+	char * ultimaReferencia;
 	d_message tipoMensaje;
 	t_list* suscriptoresConMensajeEnviado;
 	t_list* suscriptoresConACK;
@@ -122,21 +125,22 @@ mensajeConID agregarIDMensaje (void* paquete);
 void actualizarEnviadosPorID(int id, int socketCliente);
 void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo);
 int contarTamanio();
+bool primerFechaEsAnterior(char* unaFecha, char* otraFecha);
 
 //////FUNCIONES ESTRUCTURA ADMINISTRATIVA//////////
 estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar);
-void * buscarParticionLibrePara(int mensajeAGuardar);
 estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id);
 int obtenerID();
 int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje);
 void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo);
 void reposicionarParticionesOcupadas(t_list * listaAuxiliar);
+void dump();
 
 //////////FUNCION BUDDY Y PARTICION DINAMICA//////////////
 void composicion();
 estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje, estructuraAdministrativa * particion);
 bool hayParticion(d_message tipoMensaje, void *mensaje);
-estructuraAdministrativa* buscarParticionLibreBS(d_message tipoMensaje, void* mensaje);
+estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mensaje);
 int primeraParticion();
 int particionMenosReferenciada();
 void reemplazar (d_message tipoMensaje, void* mensaje);
@@ -158,6 +162,7 @@ int CONTADOR = 0;
 int FLAG_COMPOSICION = 0;
 int FLAG_COMPACTACION = 0;
 int FLAG_REEMPLAZAR = 1;
+const char* nombresColas[] = {"NEW_POKEMON", "CATCH_POKEMON", "GET_POKEMON", "APPEARED_POKEMON", "CAUGHT_POKEMON", "LOCALIZED_POKEMON"};
 
 ////////SEMAFOROS///////////
 sem_t MUTEX_CLIENTE;
@@ -172,6 +177,7 @@ t_list* SUSCRIPTORES_CATCH;
 t_list* SUSCRIPTORES_CAUGHT;
 t_list* SUSCRIPTORES_LOCALIZED;
 
+void funcionParaVerMemoria();
 
 #endif /* BROKER_H_ */
 
