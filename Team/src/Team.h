@@ -503,6 +503,23 @@ unsigned long int getClockTime();
 void agregarTiempo(int cantidad);
 
 /*
+ * ESTA FUNCION LE DA LA RAZON DE BLOQUEO
+ * DEADLOCK A TODOS LOS ENTRENADORES QUE EN
+ * ESE MOMENTO SE ENCUENTREN EN LA LISTA DE
+ * ENTRENADORES BLOQUEADOS
+ */
+
+void pasarTodosADeadlock();
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR ANALIZA SU DEADLOCK
+ * SI SIGUE EN DEADLOCK LO VUELVE A PONER EN BLOCKED POR RAZON
+ * DEADLOCK, Y SI NO LE DA LA MISION DE TERMINAR
+ */
+
+void analizarDeadlockEspecifico(entrenador *trainer);
+
+/*
  * ESTA FUNCION PONE EN READY CON UNA MISION
  * A UN ENTRENADOR PARA PLANIFICARLO HACIA OTRO
  */
@@ -630,6 +647,7 @@ sem_t semaforoTermine;
 sem_t semaforoSocket;
 sem_t semaforoGameboy;
 sem_t semaforoCambioEstado;
+sem_t semaforoConexionABroker;
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;

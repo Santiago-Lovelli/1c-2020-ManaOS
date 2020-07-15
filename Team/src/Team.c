@@ -20,6 +20,7 @@ void inicializarSemaforos(){
 	sem_init(&semaforoSocket,0,1);
 	sem_init(&semaforoGameboy,0,1);
 	sem_init(&semaforoCambioEstado,0,1);
+	sem_init(&semaforoConexionABroker,0,1);
 }
 
 void inicializar(){
@@ -73,7 +74,9 @@ void inicializar(){
 int iniciarConexionABroker(){
 	int conexion;
 	while (1) {
+		sem_wait(&semaforoConexionABroker);
 		conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+		sem_post(&semaforoConexionABroker);
 		if (conexion == -1) {
 			log_error(TEAM_LOG,
 					"No se pudo conectar con el Broker");
@@ -130,6 +133,7 @@ void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* poke
 		trainerObjetivo->pokemones[posicionPokemonEnObjetivo] = pokemon1;
 		DEADLOCKS_RESUELTOS = DEADLOCKS_RESUELTOS + 1;
 	}
+	analizarDeadlockEspecifico(trainerObjetivo);
 }
 
 
@@ -228,7 +232,6 @@ void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion) {
 void* suscribirme(d_message colaDeSuscripcion) {
 	int conexion = iniciarConexionABroker();
 	Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
-
 	p_elementoDeHilo* elemento;
 	elemento->cliente = conexion;
 	elemento->log = TEAM_LOG;
@@ -239,12 +242,13 @@ void* suscribirme(d_message colaDeSuscripcion) {
 
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 	while (SEGUIR_ATENDIENDO) {
+		sem_wait(&semaforoSocket);
 		HeaderDelibird headerRecibido = Serialize_RecieveHeader(elemento->cliente);
 		if (headerRecibido.tipoMensaje == -1) {
 			log_error(elemento->log, "Se desconecto el broker\n");
+			sem_post(&semaforoSocket);
 			break;
 		}
-		sem_wait(&semaforoSocket);
 		atender(headerRecibido, elemento->cliente, elemento->log);
 	}
 	return 0;
@@ -258,6 +262,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		;
 		log_info(logger, "Llego un APPEARED POKEMON");
 		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+		sem_post(&semaforoSocket);
 		uint32_t posicionAppearedX, posicionAppearedY;
 		char *AppearedNombrePokemon;
 		Serialize_Unpack_AppearedPokemon_NoID(packAppearedPokemon, &AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
@@ -269,13 +274,14 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		}
 		else{ printf("No necesito este pokemon!!! \n "); }
 		free(packAppearedPokemon);
-		sem_post(&semaforoSocket);
+
 		break;
 	case d_LOCALIZED_POKEMON:
 		;
 //		SERIALIZACION PENDIENTE
 		log_info(logger, "Llego un LOCALIZED POKEMON");
 		void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+		sem_post(&semaforoSocket);
 		t_list *posCant = list_create();
 		uint32_t idMensajeLocalized;
 		char *localizedNombrePokemon;
@@ -290,7 +296,6 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		}
 		else{ printf("No necesito este pokemon!!! \n "); }
 		free(packLocalizedPokemon);
-		sem_post(&semaforoSocket);
 		break;
 
 	case d_CAUGHT_POKEMON:
@@ -298,6 +303,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		log_info(logger, "Llego un CAUGHT POKEMON");
 		//recibimos el resto del paquete
 		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+		sem_post(&semaforoSocket);
 		//Con estas dos variables desempaquetamos el paquete
 		uint32_t idMensajeCaught, resultadoCaught;
 		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught, &resultadoCaught);
@@ -308,7 +314,6 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		}
 
 		free(packCaughtPokemon);
-		sem_post(&semaforoSocket);
 		break;
 
 	default:
@@ -945,11 +950,13 @@ void FIFO(){
 	}
 	//Manejo de Deadlock
 	DEADLOCKS_PRODUCIDOS = list_size(EstadoBlock);
+	pasarTodosADeadlock();
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
 		planificarDeadlocks();
 		while(list_is_empty(EstadoReady)){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+			planificarDeadlocks();
 		}
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
@@ -994,11 +1001,13 @@ void RR(){
 	}
 	//Manejo de Deadlock
 	DEADLOCKS_PRODUCIDOS = list_size(EstadoBlock);
+	pasarTodosADeadlock();
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
 		planificarDeadlocks();
 		while(list_is_empty(EstadoReady)){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+			planificarDeadlocks();
 		}
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
@@ -1053,11 +1062,13 @@ void SJFCD(){
 	}
 	//Manejo de Deadlock
 	DEADLOCKS_PRODUCIDOS = list_size(EstadoBlock);
+	pasarTodosADeadlock();
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
 		planificarDeadlocks();
 		while(list_is_empty(EstadoReady)){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+			planificarDeadlocks();
 		}
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
@@ -1099,10 +1110,13 @@ void SJFSD(){
 	}
 	//Manejo de Deadlock
 	DEADLOCKS_PRODUCIDOS = list_size(EstadoBlock);
+	pasarTodosADeadlock();
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
+		planificarDeadlocks();
 		while(list_is_empty(EstadoReady)){
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+			planificarDeadlocks();
 		}
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
@@ -1114,6 +1128,24 @@ void SJFSD(){
 	}
 	log_info(TEAM_LOG, "TEAM ha cumplido su objetivo!");
 	finalFeliz();
+}
+
+void pasarTodosADeadlock(){
+	for(int i=0;i<list_size(EstadoBlock); i++){
+		entrenador * trainer = list_get(EstadoBlock,i);
+		bloquearEntrenador(trainer->tid, t_DEADLOCK);
+	}
+}
+
+void analizarDeadlockEspecifico(entrenador *trainer){
+	char *pokemonFaltante = quePokemonMeFalta(trainer);
+	if(pokemonFaltante[0] == NULL){
+		darMision(trainer->tid, "TERMINATE" , trainer->posicion, false, -1);
+		pasarEntrenadorAEstado(trainer->tid, t_READY);
+		sem_post(&(trainer->semaforoDeEntrenador));
+		return;
+	}
+	bloquearEntrenador(trainer->tid,t_DEADLOCK);
 }
 
 void planificarDeadlocks(){
@@ -1143,9 +1175,10 @@ void planificarDeadlocks(){
 			pokemonSobrante = NULL;
 			pokemonSobrante = quePokemonTengoDeMas(trainer2);
 			pokemonParaIntercambiar = (char*)primerElementoEnComun(pokemonFaltante,pokemonSobrante);
-			if( pokemonParaIntercambiar != NULL ){
+			if( pokemonParaIntercambiar != NULL && trainer2->razonBloqueo == t_DEADLOCK){
 				darMision(trainer1->tid, pokemonParaIntercambiar, trainer2->posicion, true, trainer2->tid);
 				pasarEntrenadorAEstado(trainer1->tid, t_READY);
+				bloquearEntrenador(trainer2->tid,t_ESPERANDO_RESPUESTA);
 				return;
 			}
 		}
