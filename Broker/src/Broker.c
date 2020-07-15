@@ -153,11 +153,11 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 	if (resultado){
 		resultado->idMensaje = ID;
 		resultado->tipoMensaje = d_NEW_POKEMON;
-		if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
+		/*if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
 		resultado->tamanioParticion = tamanioDeMensaje(d_NEW_POKEMON, &mensajeAGuardar);
 		}
+		*/ //ESTO YA SE VE EN PARTICION A MEDIDA
 		resultado->estaOcupado = 1;
-		//resultado->donde = resultado;
 		resultado->suscriptoresConACK = list_create();
 		resultado->suscriptoresConMensajeEnviado = list_create();
 		resultado->tiempo = temporal_get_string_time();
@@ -278,7 +278,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -444,22 +444,20 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 	}
 }
 
-
 int primeraParticion(){
 	estructuraAdministrativa * particionMenor = malloc (sizeof(estructuraAdministrativa));
 	estructuraAdministrativa * particion = malloc (sizeof(estructuraAdministrativa));
-	int i;
-	int posicionMenor;
-	bool estaOcupado(estructuraAdministrativa* elemento) {
-				return (elemento->estaOcupado == 1);
-			}
-	particionMenor = list_find(ADMINISTRADOR_MEMORIA, (void*) estaOcupado); // asi arreglo de agarrar uno que este desocupado
+	int posicionMenor, i;
 	int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
+	bool estaOcupado(estructuraAdministrativa* elemento) {
+					return (elemento->estaOcupado == 1);
+				}
+	particionMenor = list_find(ADMINISTRADOR_MEMORIA, (void*) estaOcupado); // asi arreglo de agarrar uno que este desocupado
 	for (i = 1; i < particionesMemoria; i++){
 		particion = list_get(ADMINISTRADOR_MEMORIA, i);
-		if (primerFechaEsAnterior(particion->tiempo, particionMenor->tiempo && particion->estaOcupado == 1)){
-			particionMenor->tiempo = particion->tiempo;
-			posicionMenor = i;
+		if (primerFechaEsAnterior(particion->tiempo, particionMenor->tiempo) && particion->estaOcupado == 1){
+				particionMenor->tiempo = particion->tiempo;
+				posicionMenor = i;
 		}
 	}
 	return posicionMenor;
@@ -543,11 +541,11 @@ void composicion(){
 estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje, estructuraAdministrativa* particion){
 	int contador = 0, posicion = 0;
 	estructuraAdministrativa * particionMinima = malloc (sizeof (estructuraAdministrativa));
-	//particionMinima->tamanioParticion = BROKER_CONFIG.TAMANO_MINIMO_PARTICION;
 	int contar = contarTamanio();
-	estructuraAdministrativa * particionPrueba1 = malloc (sizeof (estructuraAdministrativa)); // la que le sigue al actual
-	estructuraAdministrativa * particionPrueba2 = malloc (sizeof (estructuraAdministrativa)); // la que le sigue al actual
-	estructuraAdministrativa * particionPrueba = malloc (sizeof (estructuraAdministrativa)); // la que le sigue al actual
+	estructuraAdministrativa * particionPrueba1 = malloc (sizeof (estructuraAdministrativa)); // PARA PROBAR
+	estructuraAdministrativa * particionPrueba2 = malloc (sizeof (estructuraAdministrativa)); // PARA PROBAR
+	estructuraAdministrativa * particionPrueba = malloc (sizeof (estructuraAdministrativa)); // PARA PROBAR
+	estructuraAdministrativa * particionPrueba3 = malloc (sizeof (estructuraAdministrativa)); // PARA PROBAR
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
 		estructuraAdministrativa * particionVacia = malloc (sizeof (estructuraAdministrativa));
@@ -579,7 +577,7 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "bs")){
 		if (tamanioMensaje <= BROKER_CONFIG.TAMANO_MINIMO_PARTICION){
-			bool tomarLaParticionMinima(estructuraAdministrativa* elemento) {
+			bool tomarLaParticionMinima(estructuraAdministrativa* elemento) { // PUEDO TENER FRAG INTERNA
 							return (elemento->estaOcupado == 0 && elemento->tamanioParticion ==BROKER_CONFIG.TAMANO_MINIMO_PARTICION);
 						}
 				particionMinima = list_find(ADMINISTRADOR_MEMORIA, (void*) tomarLaParticionMinima); // asi arreglo de agarrar uno que este desocupado
@@ -592,8 +590,8 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 			particionAuxiliar->idMensaje = NULL;
 			particionAuxiliar->suscriptoresConACK = list_create();
 			particionAuxiliar->suscriptoresConMensajeEnviado = list_create();
-			particionAuxiliar->tiempo = NULL;
-			particionAuxiliar->ultimaReferencia = NULL;
+			particionAuxiliar->tiempo = string_new();
+			particionAuxiliar->ultimaReferencia = string_new();
 			void tomarParticion(estructuraAdministrativa* elemento){
 				if(elemento->donde == particion->donde){
 					posicion = contador;
@@ -608,6 +606,7 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 			particionPrueba = list_get (ADMINISTRADOR_MEMORIA, 0);
 			particionPrueba1 = list_get (ADMINISTRADOR_MEMORIA, 1);
 			particionPrueba2 = list_get (ADMINISTRADOR_MEMORIA, 2);
+			particionPrueba3 = list_get (ADMINISTRADOR_MEMORIA, 3);
 			}
 	}
 	log_info (LOGGER_GENERAL, "Se toma la particion a medida");
