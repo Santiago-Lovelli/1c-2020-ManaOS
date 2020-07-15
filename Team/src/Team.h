@@ -91,6 +91,7 @@ typedef struct objetoID_QUE_NECESITO{
 //////FUNCIONES INICIALES/////////
 void iniciarConfig();
 void inicializar();
+void inicializarSemaforos();
 void crearEntrenadores();
 void escucharMensajes();
 punto crearPunto(char * posiciones); // x|y
@@ -627,6 +628,8 @@ int CICLOS_TOTALES;
 sem_t semaforoPlanifiquenme;
 sem_t semaforoTermine;
 sem_t semaforoSocket;
+sem_t semaforoGameboy;
+sem_t semaforoCambioEstado;
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;

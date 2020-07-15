@@ -16,9 +16,15 @@ void crear_hilo_planificacion(){
 	pthread_detach(hiloPlanificacion);
 }
 
+void inicializarSemaforos(){
+	sem_init(&semaforoSocket,0,1);
+	sem_init(&semaforoGameboy,0,1);
+	sem_init(&semaforoCambioEstado,0,1);
+}
+
 void inicializar(){
 	TEAM_LOG = iniciar_log("Team");
-	sem_init(&semaforoSocket,0,1);
+	inicializarSemaforos();
 	iniciarConfig();
 	crearEstados();
 	crearEntrenadores();
@@ -98,7 +104,7 @@ void sumarPokemon(entrenador* trainer, char* pokemon){
 		trainer->pokemones = malloc(sizeof(char*));
 		trainer->pokemones[0] = NULL;
 	}
-	int index = damePosicionFinalDoblePuntero(trainer->pokemones);
+	int index = (int)damePosicionFinalDoblePuntero(trainer->pokemones);
 	trainer->pokemones[index+1] = pokemon;
 	trainer->pokemones[index+2] = NULL;
 }
@@ -106,10 +112,10 @@ void sumarPokemon(entrenador* trainer, char* pokemon){
 void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* pokemon){
 	entrenador *trainerObjetivo = list_get(ENTRENADORES_TOTALES, tidTrainerObjetivo);
 	char* pokemon1;
-	int posicionPokemonEnObjetivo = damePosicionDeObjetoEnDoblePuntero(trainerObjetivo->pokemones, pokemon);
+	int posicionPokemonEnObjetivo = (int)damePosicionDeObjetoEnDoblePuntero(trainerObjetivo->pokemones, pokemon);
 	char** sobrantes = quePokemonTengoDeMas(trainer);
 	char** faltantes = quePokemonMeFalta(trainerObjetivo);
-	char* pokemonParaObjetivo = primerElementoEnComun(faltantes,sobrantes);
+	char* pokemonParaObjetivo = (char*)primerElementoEnComun(faltantes,sobrantes);
 	if(pokemonParaObjetivo != NULL){
 		int posicionDeIntercambio = damePosicionDeObjetoEnDoblePuntero(trainer->pokemones, pokemonParaObjetivo);
 		pokemon1 = trainer->pokemones[posicionDeIntercambio];
@@ -179,10 +185,10 @@ void iniciarServidorDeGameBoy(pthread_t* servidor) {
 
 void* atenderGameBoy() {
 	t_log* gameBoyLog = iniciar_log("GameBoy");
-
 	int conexion = iniciar_servidor(TEAM_CONFIG.IP_TEAM, TEAM_CONFIG.PUERTO_TEAM, gameBoyLog);
 	while (SEGUIR_ATENDIENDO) {
 		int cliente = esperar_cliente_con_accept(conexion, gameBoyLog);
+		sem_wait(&semaforoGameboy);
 		log_info(gameBoyLog, "se conecto cliente: %i", cliente);
 		pthread_t* dondeSeAtiende = malloc(sizeof(pthread_t));
 
@@ -197,8 +203,10 @@ void* atenderGameBoy() {
 		} else {
 			log_error(gameBoyLog,
 					":::: No se pudo crear el hilo para cliente ::::");
+
 		}
 		pthread_detach(*dondeSeAtiende);
+		sem_post(&semaforoGameboy);
 	}
 }
 
@@ -231,12 +239,12 @@ void* suscribirme(d_message colaDeSuscripcion) {
 
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 	while (SEGUIR_ATENDIENDO) {
-		sem_wait(&semaforoSocket);
 		HeaderDelibird headerRecibido = Serialize_RecieveHeader(elemento->cliente);
 		if (headerRecibido.tipoMensaje == -1) {
-			log_error(elemento->log, "Se desconecto el GameBoy\n");
+			log_error(elemento->log, "Se desconecto el broker\n");
 			break;
 		}
+		sem_wait(&semaforoSocket);
 		atender(headerRecibido, elemento->cliente, elemento->log);
 	}
 	return 0;
@@ -565,6 +573,7 @@ void sacarEntrenadorDeEstadoActual(entrenador* trainer){
 }
 
 void pasarEntrenadorAEstado(int index, t_estado estado){
+	sem_wait(&semaforoCambioEstado);
 	entrenador *entrenadorAUX = (entrenador*)list_get(ENTRENADORES_TOTALES,index);
 	sacarEntrenadorDeEstadoActual(entrenadorAUX);
 	switch(estado){
@@ -592,6 +601,7 @@ void pasarEntrenadorAEstado(int index, t_estado estado){
 		printf("Estado invalido");
 		break;
 	}
+	sem_post(&semaforoCambioEstado);
 
 }
 
@@ -834,14 +844,14 @@ void crearEntrenadores(){
 		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.POKEMON_ENTRENADORES))
 			pokemones = string_split(TEAM_CONFIG.POKEMON_ENTRENADORES[i], "|");
 		else{
-			pokemones = malloc(sizeof(char*));
+			pokemones = malloc(sizeof(char**));
 			pokemones[0] = NULL;
 		}
 
 		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.OBJETIVOS_ENTRENADORES))
 			pokemonesObjetivo = string_split(TEAM_CONFIG.OBJETIVOS_ENTRENADORES[i], "|");
 		else{
-			pokemonesObjetivo = malloc(sizeof(char*));
+			pokemonesObjetivo = malloc(sizeof(char**));
 			pokemonesObjetivo[0] = NULL;
 		}
 		entrenador * entrenador = crearEntrenador(punto, pokemones, pokemonesObjetivo);
