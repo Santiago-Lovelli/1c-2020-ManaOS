@@ -447,13 +447,20 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 int primeraParticion(){
 	estructuraAdministrativa * particionMenor = malloc (sizeof(estructuraAdministrativa));
 	estructuraAdministrativa * particion = malloc (sizeof(estructuraAdministrativa));
-	int posicionMenor, i;
+	int i, posicionMenor, contador = 0;
 	int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
 	bool estaOcupado(estructuraAdministrativa* elemento) {
 					return (elemento->estaOcupado == 1);
 				}
 	particionMenor = list_find(ADMINISTRADOR_MEMORIA, (void*) estaOcupado); // asi arreglo de agarrar uno que este desocupado
-	for (i = 1; i < particionesMemoria; i++){
+	void tomarParticion(estructuraAdministrativa* elemento){
+					if(elemento->donde == particionMenor->donde){
+					posicionMenor = contador;
+				}
+					contador ++;
+				}
+	list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
+	for (i = posicionMenor + 1; i < particionesMemoria; i++){
 		particion = list_get(ADMINISTRADOR_MEMORIA, i);
 		if (primerFechaEsAnterior(particion->tiempo, particionMenor->tiempo) && particion->estaOcupado == 1){
 				particionMenor->tiempo = particion->tiempo;
@@ -465,20 +472,31 @@ int primeraParticion(){
 
 int particionMenosReferenciada(){
 	estructuraAdministrativa * particionMenor = malloc (sizeof(estructuraAdministrativa));
-	estructuraAdministrativa * particion = malloc (sizeof(estructuraAdministrativa));
-	int i;
-	int posicionMenor;
-	particionMenor = list_get (ADMINISTRADOR_MEMORIA, 0); ///solo los que estan ocupados van a tener tiempo
-	int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
-	for (i = 1; i < particionesMemoria; i++){
-		particion = list_get(ADMINISTRADOR_MEMORIA, i);
-		if (primerFechaEsAnterior(particion->ultimaReferencia, particionMenor->ultimaReferencia)){
-			particionMenor->ultimaReferencia = particion->ultimaReferencia;
-			posicionMenor = i;
+		estructuraAdministrativa * particion = malloc (sizeof(estructuraAdministrativa));
+		int i, posicionMenor, contador = 0;
+		int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
+		bool estaOcupado(estructuraAdministrativa* elemento) {
+						return (elemento->estaOcupado == 1);
+					}
+		particionMenor = list_find(ADMINISTRADOR_MEMORIA, (void*) estaOcupado); // asi arreglo de agarrar uno que este desocupado
+		void tomarParticion(estructuraAdministrativa* elemento){
+						if(elemento->donde == particionMenor->donde){
+						posicionMenor = contador;
+					}
+						contador ++;
+					}
+		list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
+		for (i = posicionMenor + 1; i < particionesMemoria; i++){
+			particion = list_get(ADMINISTRADOR_MEMORIA, i);
+			if (primerFechaEsAnterior(particion->ultimaReferencia, particionMenor->ultimaReferencia) && particion->ultimaReferencia == 1){
+					particionMenor->ultimaReferencia = particion->ultimaReferencia;
+					posicionMenor = i;
+			}
 		}
+		return posicionMenor;
 	}
-	return posicionMenor;
-	}
+}
+
 
 int reemplazar (d_message tipoMensaje, void* mensaje){
 	estructuraAdministrativa* particion = malloc (sizeof (estructuraAdministrativa));
