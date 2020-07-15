@@ -491,6 +491,14 @@ void planificarSegun(char* tipoPlanificacion);
 void sumarXCiclos(entrenador *trainer, int ciclos);
 
 /*
+ * ESTA FUNCION ESPERA A QUE HAYA AL MENOS
+ * UN ENTRENADOR EN ESTADO READY
+ */
+
+void esperarAlgunoEnReady(bool isDeadlock);
+
+
+/*
  * ESTA FUNCION PLANIFICA LOS ENTRENADORES
  * EN ESTADO READY EN FORMA FIFO
  */

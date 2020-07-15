@@ -923,6 +923,29 @@ void ponerAlFinalDeLista(entrenador *trainer, t_list *lista){
 }
 
 ////////////Funciones planificacion/////////////
+
+void esperarAlgunoEnReady(bool isDeadlock){
+	if(isDeadlock){
+		sem_wait(&semaforoCambioEstado);
+		while(list_is_empty(EstadoReady)){
+			sem_post(&semaforoCambioEstado);
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+			planificarDeadlocks();
+			sem_wait(&semaforoCambioEstado);
+		}
+		sem_post(&semaforoCambioEstado);
+	}
+	else{
+		sem_wait(&semaforoCambioEstado);
+		while(list_is_empty(EstadoReady)){
+			sem_post(&semaforoCambioEstado);
+			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
+			sem_wait(&semaforoCambioEstado);
+		}
+		sem_post(&semaforoCambioEstado);
+	}
+}
+
 void planificarSegun(char* tipoPlanificacion){
 	if(string_equals_ignore_case(tipoPlanificacion, "FIFO"))
 		FIFO();
@@ -938,9 +961,7 @@ void FIFO(){
 	CICLOS_TOTALES = 0;
 	sem_init(&semaforoTermine,0,0);
 	while(!objetivoGlobalCumplido()){
-		while(list_is_empty(EstadoReady)){
-			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
-		}
+		esperarAlgunoEnReady(false);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
@@ -954,10 +975,7 @@ void FIFO(){
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
 		planificarDeadlocks();
-		while(list_is_empty(EstadoReady)){
-			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
-			planificarDeadlocks();
-		}
+		esperarAlgunoEnReady(true);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
@@ -975,9 +993,7 @@ void RR(){
 	CICLOS_TOTALES = 0;
 	sem_init(&semaforoPlanifiquenme,0,0);
 	while(!objetivoGlobalCumplido()){
-		while(list_is_empty(EstadoReady)){
-			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
-		}
+		esperarAlgunoEnReady(false);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
@@ -1005,10 +1021,7 @@ void RR(){
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
 		planificarDeadlocks();
-		while(list_is_empty(EstadoReady)){
-			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
-			planificarDeadlocks();
-		}
+		esperarAlgunoEnReady(true);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
@@ -1037,9 +1050,7 @@ void SJFCD(){
 	CICLOS_TOTALES = 0;
 	sem_init(&semaforoPlanifiquenme,0,0);
 	while(!objetivoGlobalCumplido()){
-		while(list_is_empty(EstadoReady)){
-			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
-		}
+		esperarAlgunoEnReady(false);
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
@@ -1066,10 +1077,7 @@ void SJFCD(){
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
 		planificarDeadlocks();
-		while(list_is_empty(EstadoReady)){
-			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
-			planificarDeadlocks();
-		}
+		esperarAlgunoEnReady(true);
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
@@ -1097,9 +1105,7 @@ void SJFSD(){
 	CICLOS_TOTALES = 0;
 	sem_init(&semaforoTermine,0,0);
 	while(!objetivoGlobalCumplido()){
-		while(list_is_empty(EstadoReady)){
-			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
-		}
+		esperarAlgunoEnReady(false);
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
@@ -1114,10 +1120,7 @@ void SJFSD(){
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
 		planificarDeadlocks();
-		while(list_is_empty(EstadoReady)){
-			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
-			planificarDeadlocks();
-		}
+		esperarAlgunoEnReady(true);
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		entrenador *trainer = list_get(EstadoReady,0);
