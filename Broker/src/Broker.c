@@ -170,8 +170,8 @@ void tratarMensajeACK (void* paquete, int cliente){
 	actualizarRecibidosPorID(idMensaje, cliente);
 }
 
-static void destruir(estructuraAdministrativa *self) {
-    free(self);
+static void destruir(estructuraAdministrativa *estructura) {
+    free(estructura);
 }
 
 /////////////////ENVIAR MENSAJE A SUSCRIPTORES/////////////////////////////////////
