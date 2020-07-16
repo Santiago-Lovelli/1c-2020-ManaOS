@@ -12,7 +12,7 @@ int main (void){
 }
 
 void crear_hilo_planificacion(){
-	pthread_create(&hiloPlanificacion, NULL, planificarSegun, TEAM_CONFIG.ALGORITMO_PLANIFICACION);
+	pthread_create(&hiloPlanificacion, NULL, (void*)planificarSegun, TEAM_CONFIG.ALGORITMO_PLANIFICACION);
 	pthread_detach(hiloPlanificacion);
 }
 
@@ -21,6 +21,8 @@ void inicializarSemaforos(){
 	sem_init(&semaforoGameboy,0,1);
 	sem_init(&semaforoCambioEstado,0,1);
 	sem_init(&semaforoConexionABroker,0,1);
+	sem_init(&semaforoMisiones,0,1);
+	sem_init(&semaforoDiccionario,0,1);
 }
 
 void inicializar(){
@@ -104,7 +106,7 @@ uint32_t recibirResponse(int conexion, HeaderDelibird headerACK){
 
 void sumarPokemon(entrenador* trainer, char* pokemon){
 	if(trainer->pokemones == NULL){
-		trainer->pokemones = malloc(sizeof(char*));
+		trainer->pokemones = malloc(sizeof(char**));
 		trainer->pokemones[0] = NULL;
 	}
 	int index = (int)damePosicionFinalDoblePuntero(trainer->pokemones);
@@ -175,7 +177,9 @@ void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
 }
 
 void enviarGetXCadaPokemonObjetivo(){
+	sem_wait(&semaforoDiccionario);
 	dictionary_iterator(OBJETIVO_GLOBAL, (void*)enviarGetPokemonYRecibirResponse);
+	sem_post(&semaforoDiccionario);
 }
 
 void iniciarServidorDeGameBoy(pthread_t* servidor) {
@@ -195,14 +199,14 @@ void* atenderGameBoy() {
 		sem_wait(&semaforoGameboy);
 		log_info(gameBoyLog, "se conecto cliente: %i", cliente);
 		pthread_t* dondeSeAtiende = malloc(sizeof(pthread_t));
-
-		p_elementoDeHilo elemento;
-		elemento.cliente = cliente;
-		elemento.log = gameBoyLog;
-
+		sem_wait(&semaforoSocket);
+		p_elementoDeHilo *elemento = malloc(sizeof(p_elementoDeHilo));
+		elemento->log = gameBoyLog;
+		elemento->cliente = cliente;
+		sem_post(&semaforoSocket);
 
 		if (pthread_create(dondeSeAtiende, NULL,
-				(void*) recibirYAtenderUnCliente, &elemento) == 0) {
+				(void*) recibirYAtenderUnCliente, elemento) == 0) {
 			log_info(gameBoyLog, ":::: Se creo hilo para cliente ::::");
 		} else {
 			log_error(gameBoyLog,
@@ -212,6 +216,7 @@ void* atenderGameBoy() {
 		pthread_detach(*dondeSeAtiende);
 		sem_post(&semaforoGameboy);
 	}
+	return NULL;
 }
 
 void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion) {
@@ -232,7 +237,7 @@ void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion) {
 void* suscribirme(d_message colaDeSuscripcion) {
 	int conexion = iniciarConexionABroker();
 	Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
-	p_elementoDeHilo* elemento;
+	p_elementoDeHilo* elemento = malloc(sizeof(p_elementoDeHilo));
 	elemento->cliente = conexion;
 	elemento->log = TEAM_LOG;
 
@@ -245,7 +250,7 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 		sem_wait(&semaforoSocket);
 		HeaderDelibird headerRecibido = Serialize_RecieveHeader(elemento->cliente);
 		if (headerRecibido.tipoMensaje == -1) {
-			log_error(elemento->log, "Se desconecto el broker\n");
+			log_error(elemento->log, "Se desconecto el cliente\n");
 			sem_post(&semaforoSocket);
 			break;
 		}
@@ -285,7 +290,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		t_list *posCant = list_create();
 		uint32_t idMensajeLocalized;
 		char *localizedNombrePokemon;
-		Serialize_Unpack_LocalizedPokemon(packLocalizedPokemon,&idMensajeLocalized,localizedNombrePokemon,posCant);
+		Serialize_Unpack_LocalizedPokemon(packLocalizedPokemon,&idMensajeLocalized,&localizedNombrePokemon,&posCant);
 		//logear lo que llego
 		if(necesitoEstePokemon(localizedNombrePokemon)){
 			printf("Necesito este pokemon!!! \n ");
@@ -474,11 +479,14 @@ void asignarMisionPendienteDePoke(char* pokemon){
 }
 
 bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
-	return (entrenadorAUX->estado != t_EXIT) &&
-		   (entrenadorAUX->estado != t_READY) &&
-		   (damePosicionFinalDoblePuntero(entrenadorAUX->pokemones) < damePosicionFinalDoblePuntero(entrenadorAUX->pokemonesObjetivo)) &&
-		   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA) &&
-		   (entrenadorAUX->mision == NULL);
+	sem_wait(&semaforoCambioEstado);
+	bool response = (entrenadorAUX->estado != t_EXIT) &&
+			   	   (entrenadorAUX->estado != t_READY) &&
+				   (damePosicionFinalDoblePuntero(entrenadorAUX->pokemones) < damePosicionFinalDoblePuntero(entrenadorAUX->pokemonesObjetivo)) &&
+				   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA) &&
+				   (entrenadorAUX->mision == NULL);
+	sem_post(&semaforoCambioEstado);
+	return response;
 
 }
 
@@ -627,7 +635,9 @@ t_mision* crearMision(char *pokemon, punto point, bool esIntercambio, int tidObj
 
 void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio, int tidObjetivo){
 	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
+	sem_wait(&semaforoMisiones);
 	trainer->mision = crearMision(pokemon,point,esIntercambio,tidObjetivo);
+	sem_post(&semaforoMisiones);
 
 }
 
@@ -708,9 +718,11 @@ int cantidadDeMisiones(char *pokemon){
 	entrenador *trainer;
 	for(int i=0; i<list_size(ENTRENADORES_TOTALES); i++){
 		trainer = list_get(ENTRENADORES_TOTALES,i);
+		sem_wait(&semaforoMisiones);
 		if( (trainer->mision != NULL) && (strcmp(trainer->mision->pokemon , pokemon)) == 0 ){
 			cantidad = cantidad +1;
 		}
+		sem_post(&semaforoMisiones);
 	}
 	return cantidad;
 }
@@ -718,12 +730,16 @@ int cantidadDeMisiones(char *pokemon){
 bool necesitoEstePokemon(char *pokemon){
 	if(pokemon == NULL)
 		return false;
+	sem_wait(&semaforoDiccionario);
 	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
+	sem_post(&semaforoDiccionario);
 	return (valor>0);
 }
 
 bool contandoMisionesActualesNecesitoEstePokemon(char *pokemon){
+	sem_wait(&semaforoDiccionario);
 	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
+	sem_post(&semaforoDiccionario);
 	int cantidad = cantidadDeMisiones(pokemon);
 	return ((valor-cantidad)>0);
 }
@@ -735,7 +751,7 @@ bool comparadorIDs(objetoID_QUE_NECESITO *objetoID1, objetoID_QUE_NECESITO *obje
 bool necesitoEsteID(int id){
 	objetoID_QUE_NECESITO* objetoIDAux = malloc(sizeof(objetoID_QUE_NECESITO));
 	objetoIDAux->idMensaje = id;
-	int resultado = list_get_index(ID_QUE_NECESITO, objetoIDAux, comparadorIDs);
+	int resultado = list_get_index(ID_QUE_NECESITO, objetoIDAux, (void*)comparadorIDs);
 	free(objetoIDAux);
 	if(resultado == -1)
 		return false;
@@ -743,6 +759,7 @@ bool necesitoEsteID(int id){
 }
 
 void descontarDeObjetivoGlobal(char *pokemon){
+	sem_wait(&semaforoDiccionario);
 	int valor = (int)dictionary_get(OBJETIVO_GLOBAL, pokemon);
 	valor = valor - 1 ;
 	if(valor>0)
@@ -750,6 +767,7 @@ void descontarDeObjetivoGlobal(char *pokemon){
 	else
 		dictionary_remove(OBJETIVO_GLOBAL, pokemon);
 	printf("Hemos atrapado al pokemon: %s \n",pokemon);
+	sem_post(&semaforoDiccionario);
 }
 
 void logearFin(){
@@ -768,7 +786,9 @@ void logearFin(){
 
 
 void destruirObjetivoGlobal(){
+	sem_wait(&semaforoDiccionario);
 	dictionary_destroy(OBJETIVO_GLOBAL);
+	sem_post(&semaforoDiccionario);
 }
 
 void destruirEstados(){
@@ -782,17 +802,22 @@ void destruirEntrenadores(){
 //	list_destroy_and_destroy_elements(ENTRENADORES_TOTALES, entrenadorDestroy); TODO EXPLOTA
 }
 
+void destruirSemaforos(){
+
+}
+
 void destruirTodo(){
 	destruirObjetivoGlobal();
 	destruirEntrenadores();
 	destruirEstados();
+	destruirSemaforos();
 }
 
 void matarHilos(){
-	pthread_cancel(servidor);
-	pthread_cancel(suscriptoAppearedPokemon);
-	pthread_cancel(suscriptoLocalizedPokemon);
-	pthread_cancel(suscriptoCaughtPokemon);
+	pthread_cancel(*servidor);
+	pthread_cancel(*suscriptoAppearedPokemon);
+	pthread_cancel(*suscriptoLocalizedPokemon);
+	pthread_cancel(*suscriptoCaughtPokemon);
 
 }
 
@@ -1141,7 +1166,7 @@ void pasarTodosADeadlock(){
 }
 
 void analizarDeadlockEspecifico(entrenador *trainer){
-	char *pokemonFaltante = quePokemonMeFalta(trainer);
+	char **pokemonFaltante = quePokemonMeFalta(trainer);
 	if(pokemonFaltante[0] == NULL){
 		darMision(trainer->tid, "TERMINATE" , trainer->posicion, false, -1);
 		pasarEntrenadorAEstado(trainer->tid, t_READY);
@@ -1230,7 +1255,10 @@ void setObjetivoGlobal(){
 	while(trainer != NULL){
 		for (int i = 0; trainer->pokemonesObjetivo[i] != NULL; i++){
 			unPokemon = (int)dictionary_get(OBJETIVO_GLOBAL, trainer->pokemonesObjetivo[i]);
-			dictionary_put(OBJETIVO_GLOBAL, trainer->pokemonesObjetivo[i], unPokemon + 1);
+			unPokemon = unPokemon +1;
+			sem_wait(&semaforoDiccionario);
+			dictionary_put(OBJETIVO_GLOBAL, trainer->pokemonesObjetivo[i], unPokemon);
+			sem_post(&semaforoDiccionario);
 		}
 		descontarPokemonsActualesDeOBJGlobal(trainer);
 		j++;
@@ -1244,7 +1272,10 @@ bool teamCumplioSuObjetivo(){
 }
 
 bool objetivoGlobalCumplido(){
-	return dictionary_is_empty(OBJETIVO_GLOBAL); //asumiendo que vamos a usar dictionary_remove cuando capturemos
+	sem_wait(&semaforoDiccionario);
+	bool response = dictionary_is_empty(OBJETIVO_GLOBAL);
+	sem_post(&semaforoDiccionario);
+	return response;
 }
 
 bool todosLosEntrenadoresCumplieronObjetivo(){

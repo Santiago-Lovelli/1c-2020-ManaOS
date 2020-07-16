@@ -12,6 +12,7 @@
 #include <pthread.h>
 #include "Logger/Logger.h"
 #include <semaphore.h>
+#include "ManejoDePunterosDobles/ManejoDePunterosDobles.h"
 
 /////////ESTRUCTURA/////////
 
@@ -144,6 +145,8 @@ void destruirObjetivoGlobal();
 void destruirEstados();
 
 void destruirEntrenadores();
+
+void destruirSemaforos();
 
 
 static void entrenadorDestroy(entrenador *self);
@@ -656,6 +659,8 @@ sem_t semaforoSocket;
 sem_t semaforoGameboy;
 sem_t semaforoCambioEstado;
 sem_t semaforoConexionABroker;
+sem_t semaforoMisiones;
+sem_t semaforoDiccionario;
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;
