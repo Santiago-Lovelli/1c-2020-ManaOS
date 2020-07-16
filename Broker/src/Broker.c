@@ -495,7 +495,6 @@ int particionMenosReferenciada(){
 		}
 		return posicionMenor;
 	}
-}
 
 
 int reemplazar (d_message tipoMensaje, void* mensaje){
