@@ -126,6 +126,12 @@ void actualizarEnviadosPorID(int id, int socketCliente);
 void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo);
 int contarTamanio();
 bool primerFechaEsAnterior(char* unaFecha, char* otraFecha);
+void * leerInfoYActualizarUsoPorID(int id);
+t_list * tomarLosMensajes (d_message tipoMensaje);
+void enviarVariosMensajes(int cliente, d_message tipoMensaje);
+void tratarMensajeACK (void* paquete, int cliente);
+void actualizarRecibidosPorID(int id, int socketCliente);
+void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministrativa * resultado, t_list * lista);
 
 //////FUNCIONES ESTRUCTURA ADMINISTRATIVA//////////
 estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar);
