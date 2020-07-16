@@ -41,25 +41,25 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			log_info(LOGGER_OBLIGATORIO, "Llego un catch pokemon");
 			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			funcionParaVerMemoria();
-			enviarMensajeCatchASuscriptores (packCatchPokemon, SUSCRIPTORES_CATCH);
+			//enviarMensajeCatchASuscriptores (packCatchPokemon, SUSCRIPTORES_CATCH);
 			free(packCatchPokemon);
 			break;
 		case d_GET_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un get pokemon");
 			void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			enviarMensajeGetASuscriptores (packGetPokemon, SUSCRIPTORES_GET);
+			//enviarMensajeGetASuscriptores (packGetPokemon, SUSCRIPTORES_GET);
 			free(packGetPokemon);
 			break;
 		case d_APPEARED_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un appeared pokemon");
 			void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			enviarMensajeAppearedASuscriptores (packAppearedPokemon, SUSCRIPTORES_APPEARED);
+			//enviarMensajeAppearedASuscriptores (packAppearedPokemon, SUSCRIPTORES_APPEARED);
 			free(packAppearedPokemon);
 			break;
 		case d_CAUGHT_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un caught pokemon");
 			void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			enviarMensajeCaughtASuscriptores (packCaughtPokemon, SUSCRIPTORES_CAUGHT);
+			//enviarMensajeCaughtASuscriptores (packCaughtPokemon, SUSCRIPTORES_CAUGHT);
 			free(packCaughtPokemon);
 			break;
 		case d_LOCALIZED_POKEMON:
@@ -354,8 +354,11 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 			}
 			log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
 			break;
+	default:
+		log_error(LOGGER_OBLIGATORIO, "No existe el mensaje");
+		break;
+	}
 }
-
 //////////////////FIN MENSAJES A SUSCRIPTORES/////////////////////////////////////
 
 void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
