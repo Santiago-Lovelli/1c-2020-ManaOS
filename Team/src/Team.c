@@ -106,10 +106,11 @@ uint32_t recibirResponse(int conexion, HeaderDelibird headerACK){
 
 void sumarPokemon(entrenador* trainer, char* pokemon){
 	if(trainer->pokemones == NULL){
-		trainer->pokemones = malloc(sizeof(char**));
+		trainer->pokemones = malloc(sizeof(char**) + 4);
 		trainer->pokemones[0] = NULL;
 	}
 	int index = (int)damePosicionFinalDoblePuntero(trainer->pokemones);
+	trainer->pokemones = realloc(trainer->pokemones, (sizeof(char**)+( (sizeof(char*)*(index+2)) )) );
 	trainer->pokemones[index+1] = pokemon;
 	trainer->pokemones[index+2] = NULL;
 }
@@ -874,14 +875,14 @@ void crearEntrenadores(){
 		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.POKEMON_ENTRENADORES))
 			pokemones = string_split(TEAM_CONFIG.POKEMON_ENTRENADORES[i], "|");
 		else{
-			pokemones = malloc(sizeof(char**));
+			pokemones = malloc(sizeof(char**)+ 4);
 			pokemones[0] = NULL;
 		}
 
 		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.OBJETIVOS_ENTRENADORES))
 			pokemonesObjetivo = string_split(TEAM_CONFIG.OBJETIVOS_ENTRENADORES[i], "|");
 		else{
-			pokemonesObjetivo = malloc(sizeof(char**));
+			pokemonesObjetivo = malloc(sizeof(char**) + 4);
 			pokemonesObjetivo[0] = NULL;
 		}
 		entrenador * entrenador = crearEntrenador(punto, pokemones, pokemonesObjetivo);
