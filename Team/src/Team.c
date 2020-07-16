@@ -105,11 +105,17 @@ uint32_t recibirResponse(int conexion, HeaderDelibird headerACK){
 }
 
 void sumarPokemon(entrenador* trainer, char* pokemon){
-	if(trainer->pokemones == NULL){
-		trainer->pokemones = malloc(sizeof(char**) + 4);
-		trainer->pokemones[0] = NULL;
-	}
+//	if(trainer->pokemones == NULL){
+//		trainer->pokemones = malloc(sizeof(char**) + 4);
+//		trainer->pokemones[0] = NULL;
+//	}
 	int index = (int)damePosicionFinalDoblePuntero(trainer->pokemones);
+	if(index == 0 && trainer->pokemones[0] == NULL){
+		trainer->pokemones = realloc(trainer->pokemones, (sizeof(char**)+( (sizeof(char*)*(index+2)) )) );
+		trainer->pokemones[index] = pokemon;
+		trainer->pokemones[index+1] = NULL;
+		return;
+	}
 	trainer->pokemones = realloc(trainer->pokemones, (sizeof(char**)+( (sizeof(char*)*(index+2)) )) );
 	trainer->pokemones[index+1] = pokemon;
 	trainer->pokemones[index+2] = NULL;
@@ -121,6 +127,7 @@ void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* poke
 	int posicionPokemonEnObjetivo = (int)damePosicionDeObjetoEnDoblePuntero(trainerObjetivo->pokemones, pokemon);
 	char** sobrantes = quePokemonTengoDeMas(trainer);
 	char** faltantes = quePokemonMeFalta(trainerObjetivo);
+	//TODO free a estos punteros?
 	char* pokemonParaObjetivo = (char*)primerElementoEnComun(faltantes,sobrantes);
 	if(pokemonParaObjetivo != NULL){
 		int posicionDeIntercambio = damePosicionDeObjetoEnDoblePuntero(trainer->pokemones, pokemonParaObjetivo);
@@ -435,12 +442,13 @@ char** quePokemonMeFalta(entrenador* trainer){
 	int cuantosTengo = 0;
 	int cuantosNecesito = 0;
 	int indexRespuesta = 0;
-	char** respuesta = malloc(sizeof(char*));
+	char** respuesta = malloc(sizeof(char**) + 4);
 	respuesta[0] = NULL;
 	for(int i=0; i<=indexPoke; i++){
 		cuantosTengo = cuantosDeEstePokemonTengo(trainer, trainer->pokemonesObjetivo[i]);
 		cuantosNecesito = cuantosDeEstePokemonNecesito(trainer, trainer->pokemonesObjetivo[i]);
 		if((cuantosNecesito - cuantosTengo) > 0){
+			respuesta = realloc(respuesta, sizeof(char**) + sizeof(char*)*(indexRespuesta+2));
 			respuesta[indexRespuesta] = trainer->pokemonesObjetivo[i];
 			respuesta[indexRespuesta+1] = NULL;
 			indexRespuesta = indexRespuesta +1;
@@ -454,12 +462,13 @@ char** quePokemonTengoDeMas(entrenador *trainer){
 	int cuantosTengo = 0;
 	int cuantosNecesito = 0;
 	int indexRespuesta = 0;
-	char** respuesta = malloc(sizeof(char*));
+	char** respuesta = malloc(sizeof(char**) + 4);
 	respuesta[0] = NULL;
 	for(int i=0; i<=indexPoke; i++){
 		cuantosTengo = cuantosDeEstePokemonTengo(trainer, trainer->pokemones[i]);
 		cuantosNecesito = cuantosDeEstePokemonNecesito(trainer, trainer->pokemones[i]);
 		if((cuantosNecesito - cuantosTengo) < 0){
+			respuesta = realloc(respuesta, sizeof(char**) + sizeof(char*)*(indexRespuesta+2));
 			respuesta[indexRespuesta] = trainer->pokemones[i];
 			respuesta[indexRespuesta+1] = NULL;
 			indexRespuesta = indexRespuesta +1;
@@ -1191,7 +1200,7 @@ void planificarDeadlocks(){
 	for(int i=0; i<cantidadEntrenadoresEnDeadlock; i++){
 		trainer1 = list_get(EstadoBlock,i);
 		pokemonFaltante = quePokemonMeFalta(trainer1);
-
+		//TODO free al pokemonFaltante?
 		if(pokemonFaltante[0] == NULL){
 			darMision(trainer1->tid, "TERMINATE" , trainer1->posicion, false, -1);
 			pasarEntrenadorAEstado(trainer1->tid, t_READY);
@@ -1286,4 +1295,7 @@ bool todosLosEntrenadoresCumplieronObjetivo(){
 bool entrenadorCumplioObjetivo(entrenador* trainer){
 	return (sonIgualesSinInportarOrden(trainer->pokemones,trainer->pokemonesObjetivo) == 1);
 }
+
+//TODO porque la razon de bloqueo del entrenador era t_NULL, y porque uno de los punteros rompia
+//en la funcion primer elemento en comun?
 
