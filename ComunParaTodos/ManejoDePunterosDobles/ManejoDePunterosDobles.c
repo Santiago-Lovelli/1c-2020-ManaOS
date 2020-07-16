@@ -24,7 +24,7 @@ char* primerElementoEnComun(char** puntero1, char** puntero2){
 	int limite1 = damePosicionFinalDoblePuntero(puntero1);
 	int limite2 = damePosicionFinalDoblePuntero(puntero2);
 	for(int i=0; i<=limite1; i++){
-		for(int j=0; i<=limite2; i++){
+		for(int j=0; j<=limite2; j++){
 			if(strcmp(puntero1[i],puntero2[j]) == 0 )
 				return puntero1[i];
 		}

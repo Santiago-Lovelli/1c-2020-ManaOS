@@ -1169,8 +1169,10 @@ void SJFSD(){
 }
 
 void pasarTodosADeadlock(){
-	for(int i=0;i<list_size(EstadoBlock); i++){
-		entrenador * trainer = list_get(EstadoBlock,i);
+	entrenador * trainer;
+	int tamanio = list_size(EstadoBlock);
+	for(int i=0;i<tamanio; i++){
+		trainer = list_get(EstadoBlock,i);
 		bloquearEntrenador(trainer->tid, t_DEADLOCK);
 	}
 }
