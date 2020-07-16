@@ -564,8 +564,8 @@ void eliminarDeListaEntrenador(entrenador  *trainer, t_list* lista){
 
 void bloquearEntrenador(int idEntrenador, t_razonBloqueo razon){
 	entrenador *trainer = list_get(ENTRENADORES_TOTALES, idEntrenador);
-	trainer->razonBloqueo = razon;
 	pasarEntrenadorAEstado(idEntrenador, t_BLOCKED);
+	trainer->razonBloqueo = razon;
 }
 
 void sacarEntrenadorDeEstadoActual(entrenador* trainer){
@@ -1207,17 +1207,18 @@ void planificarDeadlocks(){
 			sem_post(&(trainer1->semaforoDeEntrenador));
 			return;
 		}
-
-		for(int j=1; j<cantidadEntrenadoresEnDeadlock; j++){
-			trainer2 = list_get(EstadoBlock,j);
-			pokemonSobrante = NULL;
-			pokemonSobrante = quePokemonTengoDeMas(trainer2);
-			pokemonParaIntercambiar = (char*)primerElementoEnComun(pokemonFaltante,pokemonSobrante);
-			if( pokemonParaIntercambiar != NULL && trainer2->razonBloqueo == t_DEADLOCK){
-				darMision(trainer1->tid, pokemonParaIntercambiar, trainer2->posicion, true, trainer2->tid);
-				pasarEntrenadorAEstado(trainer1->tid, t_READY);
-				bloquearEntrenador(trainer2->tid,t_ESPERANDO_RESPUESTA);
-				return;
+		if(trainer1->razonBloqueo == t_DEADLOCK){
+			for(int j=1; j<cantidadEntrenadoresEnDeadlock; j++){
+				trainer2 = list_get(EstadoBlock,j);
+				pokemonSobrante = NULL;
+				pokemonSobrante = quePokemonTengoDeMas(trainer2);
+				pokemonParaIntercambiar = (char*)primerElementoEnComun(pokemonFaltante,pokemonSobrante);
+				if( pokemonParaIntercambiar != NULL && trainer2->razonBloqueo == t_DEADLOCK){
+					darMision(trainer1->tid, pokemonParaIntercambiar, trainer2->posicion, true, trainer2->tid);
+					pasarEntrenadorAEstado(trainer1->tid, t_READY);
+					bloquearEntrenador(trainer2->tid,t_ESPERANDO_RESPUESTA);
+					return;
+				}
 			}
 		}
 	}
