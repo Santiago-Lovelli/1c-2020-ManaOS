@@ -29,7 +29,8 @@ typedef enum t_razonBloqueo {
 	t_NULL,
 	t_DESOCUPADO,
 	t_ESPERANDO_RESPUESTA,
-	t_DEADLOCK
+	t_DEADLOCK,
+	t_ESPERANDO_INTERCAMBIO
 } t_razonBloqueo;
 
 typedef struct config{
@@ -653,6 +654,8 @@ sem_t semaforoConexionABroker;
 sem_t semaforoMisiones;
 sem_t semaforoDiccionario;
 sem_t semaforoAppeared;
+sem_t semaforoMovimiento;
+sem_t semaforoPokemon;
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;
