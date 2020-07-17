@@ -138,6 +138,7 @@ void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* poke
 		trainer->pokemones[posicionDeIntercambio] = trainerObjetivo->pokemones[posicionPokemonEnObjetivo];
 		trainerObjetivo->pokemones[posicionPokemonEnObjetivo] = pokemon1;
 		sem_post(&semaforoPokemon);
+		log_info(TEAM_LOG, "El entrenador %i intercambio a %s por %s con el entrenador %i", trainer->tid, pokemon1, trainer->pokemones[posicionDeIntercambio], trainerObjetivo->tid);
 		DEADLOCKS_RESUELTOS = DEADLOCKS_RESUELTOS + 2;
 	}
 	else if(sobrantes[0] != NULL){
@@ -147,10 +148,12 @@ void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* poke
 		trainer->pokemones[posicionDeIntercambio] = trainerObjetivo->pokemones[posicionPokemonEnObjetivo];
 		trainerObjetivo->pokemones[posicionPokemonEnObjetivo] = pokemon1;
 		sem_post(&semaforoPokemon);
+		log_info(TEAM_LOG, "El entrenador %i intercambio a %s por %s con el entrenador %i", trainer->tid, pokemon1, trainer->pokemones[posicionDeIntercambio], trainerObjetivo->tid);
 		DEADLOCKS_RESUELTOS = DEADLOCKS_RESUELTOS + 1;
 	}
 	bloquearEntrenador(trainer->tid, t_DESOCUPADO);
 	bloquearEntrenador(trainerObjetivo->tid, t_DESOCUPADO);
+	sacarMision(trainer->tid);
 	analizarDeadlockEspecifico(trainer);
 	analizarDeadlockEspecifico(trainerObjetivo);
 }
@@ -662,6 +665,8 @@ void pasarEntrenadorAEstado(int index, t_estado estado){
 
 void sacarMision(int idEntrenador){
 	entrenador *trainer = list_get(ENTRENADORES_TOTALES,idEntrenador);
+	if(trainer->mision == NULL)
+		return;
 	sem_wait(&semaforoMisiones);
 	destruirMision(trainer->mision);
 	trainer->mision = NULL;
@@ -720,10 +725,10 @@ void cumplirMision(entrenador* trainer){
 		//if(trainer->mision != NULL){
 			sem_wait(&(trainer->semaforoDeEntrenador));
 
-			if(strcmp(trainer->mision->pokemon,"TERMINATE") == 0 && entrenadorCumplioObjetivo(trainer) ){
-				avisarQueTermine(trainer);
+			if(entrenadorCumplioObjetivo(trainer)){
 				printf("El entrenador: %i cumplio su objetivo! Yupiiii!!! \n", trainer->tid);
 				pasarEntrenadorAEstado(trainer->tid, t_EXIT);
+				avisarQueTermine(trainer);
 				return;
 			}
 
@@ -736,15 +741,15 @@ void cumplirMision(entrenador* trainer){
 			}
 			if(trainer->mision->esIntercambio){
 				log_info(TEAM_LOG,"Hola soy el entrenador %i \n Se va a intentar intercambiar por: %s \n En la posicion: x:%i y:%i \n Con el entrenador: %i",trainer->tid, trainer->mision->pokemon, trainer->posicion.x, trainer->posicion.y, trainer->mision->tidObjetivo);
-				intercambiarPokemon(trainer, trainer->mision->tidObjetivo, trainer->mision->pokemon);
 				for(int i=0; i<5; i++){
 					sumarXCiclos(trainer,1);
 				}
+				intercambiarPokemon(trainer, trainer->mision->tidObjetivo, trainer->mision->pokemon);
 			}
 			else{
 				log_info(TEAM_LOG,"Hola soy el entrenador %i \n Se va a intentar atrapar a: %s \n En la posicion: x:%i y:%i", trainer->tid, trainer->mision->pokemon, trainer->posicion.x, trainer->posicion.y);
-				enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
 				sumarXCiclos(trainer,1);
+				enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
 			}
 			avisarQueTermine(trainer);
 		//}
@@ -994,8 +999,10 @@ static void entrenadorDestroy(entrenador *self) {
 
 void ponerAlFinalDeLista(entrenador *trainer, t_list *lista){
 	int index = list_get_index(lista,trainer, (void*)mismaPosicion);
-	list_remove(lista,index);
-	list_add(lista,trainer);
+	if(index != -1){
+		list_remove(lista,index);
+		list_add(lista,trainer);
+	}
 	trainer->ciclosCPUEjecutados = 0;
 }
 
@@ -1228,11 +1235,11 @@ void analizarDeadlockEspecifico(entrenador *trainer){
 	if(trainer->razonBloqueo == t_ESPERANDO_INTERCAMBIO)
 		return;
 	char **pokemonFaltante = quePokemonMeFalta(trainer);
-	//TODO Free a esto
+//	TODO Free a esto
 	if(pokemonFaltante[0] == NULL){
-		darMision(trainer->tid, "TERMINATE" , trainer->posicion, false, -1);
-		pasarEntrenadorAEstado(trainer->tid, t_READY);
-		sem_post(&(trainer->semaforoDeEntrenador));
+		sacarMision(trainer->tid);
+		pasarEntrenadorAEstado(trainer->tid, t_EXIT);
+		printf("El entrenador: %i cumplio su objetivo! Yupiiii!!!! \n", trainer->tid);
 		return;
 	}
 	trainer->razonBloqueo = t_DEADLOCK;
@@ -1255,9 +1262,9 @@ void planificarDeadlocks(){
 		pokemonFaltante = quePokemonMeFalta(trainer1);
 		//TODO free al pokemonFaltante?
 		if(pokemonFaltante[0] == NULL){
-			darMision(trainer1->tid, "TERMINATE" , trainer1->posicion, false, -1);
-			pasarEntrenadorAEstado(trainer1->tid, t_READY);
-			sem_post(&(trainer1->semaforoDeEntrenador));
+//			darMision(trainer1->tid, "TERMINATE" , trainer1->posicion, false, -1);
+//			pasarEntrenadorAEstado(trainer1->tid, t_READY);
+//			sem_post(&(trainer1->semaforoDeEntrenador));
 			return;
 		}
 		if(trainer1->razonBloqueo == t_DEADLOCK){
