@@ -76,14 +76,20 @@ void Get_pokemon(char *argv[]){
 void Subscribe_Queue(char *argv[]){
 	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
 	log_info(logger,"COLA DE MENSAJES: %s ", argv[2] );
-	log_info(logger, "TIEMPO: %i", atoi(argv[3]));
-	int conexion = conectarA("BROKER");
-	Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));
-	pthread_t* hiloDeAtencion = malloc(sizeof(pthread_t));
-	//Falta un sem acá
-	int hilo = pthread_create(hiloDeAtencion, NULL, AtenderCliente, conexion);
-	sleep(atoi(argv[3]));
-	pthread_cancel(hilo);
+	if(argv[3] != NULL){
+		log_info(logger, "TIEMPO: %i", atoi(argv[3]));
+		int conexion = conectarA("BROKER");
+		Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));
+		pthread_t* hiloDeAtencion = malloc(sizeof(pthread_t));
+		int hilo = pthread_create(hiloDeAtencion, NULL, AtenderCliente, conexion);
+		sleep(atoi(argv[3]));
+		pthread_cancel(hilo);
+	}
+	else{
+		int conexion = conectarA("BROKER");
+		Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));
+		AtenderCliente(conexion);
+	}
 }
 
 void AtenderCliente (void * conexion){

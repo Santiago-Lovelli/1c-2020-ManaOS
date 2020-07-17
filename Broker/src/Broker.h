@@ -130,6 +130,13 @@ int contarTamanio();
 bool primerFechaEsAnterior(char* unaFecha, char* otraFecha);
 int posicionALog(void* unaPosicion);
 void tratarMensaje (d_message tipoMensaje, void *paquete);
+void * leerInfoYActualizarUsoPorID(int id);
+t_list * tomarLosMensajes (d_message tipoMensaje);
+void enviarVariosMensajes(int cliente, d_message tipoMensaje);
+void tratarMensajeACK (void* paquete, int cliente);
+void actualizarRecibidosPorID(int id, int socketCliente);
+void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministrativa * resultado, t_list * lista);
+t_list* suscriptoresPara(d_message tipoDeMensaje);
 
 //////FUNCIONES ESTRUCTURA ADMINISTRATIVA//////////
 estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar);
