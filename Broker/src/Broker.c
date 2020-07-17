@@ -643,6 +643,7 @@ int reemplazar (d_message tipoMensaje, void* mensaje){
 	if(noPuedoReemplazarMas()){
 		FLAG_COMPACTACION = 0;
 		log_info (LOGGER_OBLIGATORIO, "No puedo reemplazar más, necesito compactar.");
+		return 0;
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "fifo")){
 		int posicion = primeraParticion();
@@ -800,15 +801,16 @@ void compactacion() {
 
 void reposicionarParticionesOcupadas(t_list * listaAuxiliar){
 	void * nuevoDonde = MEMORIA_PRINCIPAL;
-	void cambiarInfo(estructuraAdministrativa* elemento) {
-			memcpy(nuevoDonde, elemento->donde, elemento->tamanioParticion);
-			elemento->donde = nuevoDonde;
-			nuevoDonde = nuevoDonde + elemento->tamanioParticion;
-			return;
+	if(!list_is_empty(listaAuxiliar)){
+		void cambiarInfo(estructuraAdministrativa* elemento) {
+				memcpy(nuevoDonde, elemento->donde, elemento->tamanioParticion);
+				elemento->donde = nuevoDonde;
+				nuevoDonde = nuevoDonde + elemento->tamanioParticion;
+				return;
 		}
-	list_iterate(listaAuxiliar, (void*) cambiarInfo);
+		list_iterate(listaAuxiliar, (void*) cambiarInfo);
+	}
 	list_clean(ADMINISTRADOR_MEMORIA);//list_clean_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void *)estructuraAdministrativaDestroyerSinDestruirListas);
-	estructuraAdministrativa * x = list_get(listaAuxiliar, 0);
 	list_add_all(ADMINISTRADOR_MEMORIA, listaAuxiliar);
 	estructuraAdministrativa * espacioFaltante = malloc (sizeof(estructuraAdministrativa));
 	espacioFaltante->donde = nuevoDonde;
