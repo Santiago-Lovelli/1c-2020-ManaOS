@@ -20,7 +20,7 @@ void EsperarClientes(){
 
 void* AtenderCliente(void* cliente) {
 	while(1){
-		sem_wait(&MUTEX_CLIENTE);
+		//sem_wait(&MUTEX_CLIENTE);
 		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(cliente);
 		if(headerRecibido.tipoMensaje == -1){
 			log_error(LOGGER_GENERAL, "Se desconecto el cliente %i: \n", cliente);
@@ -68,15 +68,8 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			break;
 		case d_LOCALIZED_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un localized pokemon");
-			//tratarMensaje(header.tipoMensaje, packCaughtPokemon);
+			tratarMensaje(header.tipoMensaje, packCaughtPokemon);
 			break;
-		/*case d_ACK:
-			log_info(LOGGER_GENERAL, "Llego un acknowledged");
-			void* packACK = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			tratarMensajeACK (packACK, cliente);
-			free(packACK);
-			break;
-		*/
 		case d_SUBSCRIBE_QUEUE:
 			log_info(LOGGER_GENERAL, "Llego un Subscribe");
 			void * recibir = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
@@ -301,67 +294,62 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	switch (tipoMensaje){
 	case d_NEW_POKEMON:
 		mensajeNew = mensaje;
-		void notificarSuscriptor(int * self){
+		void notificarSuscriptorNew(int * self){
 			Serialize_PackAndSend_NEW_POKEMON(*self, resultado->idMensaje, mensajeNew->nombrePokemon, mensajeNew->posX, mensajeNew->posY, mensajeNew->cantidad);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
-		list_iterate(lista, (void*)notificarSuscriptor);
+		list_iterate(lista, (void*)notificarSuscriptorNew);
 		log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
 		break;
 	case d_CATCH_POKEMON:
 		mensajeCatch = mensaje;
-		int tamanioCatch = list_size(lista);
-		for (int i = 0; i<tamanioCatch; i++){
-			int socketCliente = list_get(lista, i);
-			Serialize_PackAndSend_CATCH_POKEMON(socketCliente, resultado->idMensaje,mensajeCatch->nombrePokemon, mensajeCatch->posX, mensajeCatch->posY);
-			actualizarEnviadosPorID(resultado->idMensaje, socketCliente);
-			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, socketCliente);
+		void notificarSuscriptorCatch(int * self){
+			Serialize_PackAndSend_CATCH_POKEMON(* self, resultado->idMensaje,mensajeCatch->nombrePokemon, mensajeCatch->posX, mensajeCatch->posY);
+			actualizarEnviadosPorID(resultado->idMensaje, *self);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
-		log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
+			list_iterate(lista, (void*)notificarSuscriptorCatch);
+			log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
 		break;
 	case d_GET_POKEMON:
 		mensajeGet = mensaje;
-		int tamanioGet = list_size(lista);
-		for (int i = 0; i<tamanioGet; i++){
-			int socketCliente = list_get(lista, i);
-			Serialize_PackAndSend_GET_POKEMON(socketCliente, resultado->idMensaje, mensajeGet->nombrePokemon);
-			actualizarEnviadosPorID(resultado->idMensaje, socketCliente);
-			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, socketCliente);
-			}
+		void notificarSuscriptorGet(int * self){
+			Serialize_PackAndSend_GET_POKEMON(*self, resultado->idMensaje, mensajeGet->nombrePokemon);
+			actualizarEnviadosPorID(resultado->idMensaje, *self);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
+		}
+			list_iterate(lista, (void*)notificarSuscriptorGet);
 			log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
 			break;
 	case d_APPEARED_POKEMON:
 		mensajeAppeared = mensaje;
-		int tamanioAppeared = list_size(lista);
-		for (int i = 0; i<tamanioAppeared; i++){
-			int socketCliente = list_get(lista, i);
-			Serialize_PackAndSend_APPEARED_POKEMON(socketCliente, resultado->idMensaje,mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
-			actualizarEnviadosPorID(resultado->idMensaje, socketCliente);
-			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, socketCliente);
-			}
+		void notificarSuscriptorAppeared(int * self){
+			Serialize_PackAndSend_APPEARED_POKEMON(*self, resultado->idMensaje,mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
+			actualizarEnviadosPorID(resultado->idMensaje, *self);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
+		}
+			list_iterate(lista, (void*)notificarSuscriptorAppeared);
 			log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
 			break;
 	case d_CAUGHT_POKEMON:
 		mensajeCaught = mensaje;
-		int tamanioCaught = list_size(lista);
-		for (int i = 0; i<tamanioCaught; i++){
-			int socketCliente = list_get(lista, i);
-			Serialize_PackAndSend_CAUGHT_POKEMON(socketCliente, resultado->idMensaje, mensajeCaught->atrapado);
-			actualizarEnviadosPorID(resultado->idMensaje, socketCliente);
-			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, socketCliente);
-			}
+		void notificarSuscriptorCaught(int * self){
+			Serialize_PackAndSend_CAUGHT_POKEMON(*self, resultado->idMensaje, mensajeCaught->atrapado);
+			actualizarEnviadosPorID(resultado->idMensaje, *self);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
+		}
+			list_iterate(lista, (void*)notificarSuscriptorCaught);
 			log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
 			break;
 	case d_LOCALIZED_POKEMON:
 		mensajeLocalized = mensaje;
-		int tamanioLocalized = list_size(lista);
-		for (int i = 0; i<tamanioLocalized; i++){
-			int socketCliente = list_get(lista, i);
-			Serialize_PackAndSend_LOCALIZED_POKEMON(socketCliente, resultado->idMensaje, mensajeLocalized->nombrePokemon, mensajeLocalized->puntos);
-			actualizarEnviadosPorID(resultado->idMensaje, socketCliente);
-			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, socketCliente);
-			}
+		void notificarSuscriptorLocalized(int * self){
+			Serialize_PackAndSend_LOCALIZED_POKEMON(*self, resultado->idMensaje, mensajeLocalized->nombrePokemon, mensajeLocalized->puntos);
+			actualizarEnviadosPorID(resultado->idMensaje, *self);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
+		}
+			list_iterate(lista, (void*)notificarSuscriptorLocalized);
 			log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
 			break;
 	default:
@@ -406,7 +394,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -721,11 +709,6 @@ bool noPuedoReemplazarMas(){
 }
 
 void composicion(){
-	estructuraAdministrativa * particion0 = malloc (sizeof(estructuraAdministrativa));
-	estructuraAdministrativa * particion1 = malloc (sizeof(estructuraAdministrativa));
-	estructuraAdministrativa * particion2 = malloc (sizeof(estructuraAdministrativa));
-	estructuraAdministrativa * particion3 = malloc (sizeof(estructuraAdministrativa));
-	estructuraAdministrativa * particion4 = malloc (sizeof(estructuraAdministrativa));
 	estructuraAdministrativa * particionAnterior = malloc (sizeof(estructuraAdministrativa));
 	estructuraAdministrativa * particionActual = malloc (sizeof(estructuraAdministrativa));
 	estructuraAdministrativa * particionPosterior = malloc (sizeof(estructuraAdministrativa));
@@ -736,6 +719,8 @@ void composicion(){
 		particionActual->estaOcupado = 0;
 		particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
 		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)destruir);
+		log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
+		log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 	}
 		for (i=1; i<list_size(ADMINISTRADOR_MEMORIA); i++){
 		particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
@@ -745,28 +730,22 @@ void composicion(){
 				particionActual->donde = particionAnterior->donde;
 				particionActual->estaOcupado = 0;
 				particionActual->tamanioParticion = particionAnterior->tamanioParticion + particionActual->tamanioParticion;
+				log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
 				list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i-1, (void*)destruir);
+				log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionAnterior->donde));
 				if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 					particionActual->estaOcupado = 0;
 					particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
 					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)destruir);
+					log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
+					log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 		}
 		}
 	}
-		particion0 = list_get (ADMINISTRADOR_MEMORIA, 0);
-		particion1 = list_get (ADMINISTRADOR_MEMORIA, 1);
-		particion2 = list_get (ADMINISTRADOR_MEMORIA, 2);
-		particion3 = list_get (ADMINISTRADOR_MEMORIA, 3);
-		particion4 = list_get (ADMINISTRADOR_MEMORIA, 4);
 }
 
 estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje, estructuraAdministrativa* particion){
-	int contador = 0, posicion = 0, contadorParticion = 0;
-	estructuraAdministrativa * particionMinima = malloc (sizeof (estructuraAdministrativa));
-	estructuraAdministrativa * particion0 = malloc (sizeof (estructuraAdministrativa));
-	estructuraAdministrativa * particion1 = malloc (sizeof (estructuraAdministrativa));
-	estructuraAdministrativa * particion2 = malloc (sizeof (estructuraAdministrativa));
-	estructuraAdministrativa * particion3 = malloc (sizeof (estructuraAdministrativa));
+	int contador = 0, posicion = 0;
 	int contar = contarTamanio();
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
@@ -798,12 +777,6 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 		}
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "bs")){
-		//estructuraAdministrativa* particion = malloc (sizeof(estructuraAdministrativa));
-		estructuraAdministrativa* particion0 = malloc (sizeof(estructuraAdministrativa));
-		estructuraAdministrativa* particion1 = malloc (sizeof(estructuraAdministrativa));
-		estructuraAdministrativa* particion2 = malloc (sizeof(estructuraAdministrativa));
-		estructuraAdministrativa* particion3 = malloc (sizeof(estructuraAdministrativa));
-		estructuraAdministrativa* particion4 = malloc (sizeof(estructuraAdministrativa));
 		if (particion->tamanioParticion == BROKER_CONFIG.TAMANO_MINIMO_PARTICION ){
 			return particion;
 		}
@@ -828,11 +801,6 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 			list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
 			contador = 0;
 			list_add_in_index(ADMINISTRADOR_MEMORIA,posicion+1, particionAuxiliar);
-			particion0 = list_get (ADMINISTRADOR_MEMORIA, 0);
-			particion1 = list_get (ADMINISTRADOR_MEMORIA,1);
-			particion2 = list_get (ADMINISTRADOR_MEMORIA, 2);
-			particion3 = list_get (ADMINISTRADOR_MEMORIA,3);
-			particion4 = list_get (ADMINISTRADOR_MEMORIA,4);
 		}
 	}
 	log_info (LOGGER_GENERAL, "Se toma la particion a medida");
