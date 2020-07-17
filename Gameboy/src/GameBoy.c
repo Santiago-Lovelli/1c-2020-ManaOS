@@ -76,9 +76,17 @@ void Get_pokemon(char *argv[]){
 void Subscribe_Queue(char *argv[]){
 	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
 	log_info(logger,"COLA DE MENSAJES: %s ", argv[2] );
-	log_info(logger, "TIEMPO", atoi(argv[3]));
+	log_info(logger, "TIEMPO: %i", atoi(argv[3]));
 	int conexion = conectarA("BROKER");
 	Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));
+	pthread_t* hiloDeAtencion = malloc(sizeof(pthread_t));
+	//Falta un sem acá
+	int hilo = pthread_create(hiloDeAtencion, NULL, AtenderCliente, conexion);
+	sleep(atoi(argv[3]));
+	pthread_cancel(hilo);
+}
+
+void AtenderCliente (void * conexion){
 	while(1){
 		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(conexion);
 		if(headerRecibido.tipoMensaje == -1){
@@ -228,7 +236,7 @@ void cumplirPedido(int argc, char *argv[]){
 }
 
 void iniciarConfiguracion(){
-	t_config* archivo_de_configuracion = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Gameboy/Gameboy.config");
+	t_config* archivo_de_configuracion = config_create("/home/utnso/tp-2020-1c-ManaOS-/Gameboy/Gameboy.config");
 	puertoBroker = config_get_string_value(archivo_de_configuracion, "PUERTO_BROKER");
 	ipBroker = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
 	puertoTeam = config_get_string_value(archivo_de_configuracion, "PUERTO_TEAM");

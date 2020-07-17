@@ -7,6 +7,7 @@
 #include <commons/config.h>
 #include <Logger/Logger.h>
 #include <Serializacion/Serializacion.h>
+#include <pthread.h>
 
 ////////////////////////
 // VARIABLES GLOBALES //
@@ -40,6 +41,7 @@ void cumplirPedido(int argc, char *argv[]);
 void iniciarConfiguracion();
 void iniciarEstructuras();
 void atenderMensajes (HeaderDelibird headerRecibido, int socket);
+void AtenderCliente (void * conexion);
 
 
 #endif /* GAMEBOY_H_ */

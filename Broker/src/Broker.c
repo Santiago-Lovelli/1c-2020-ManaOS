@@ -2,7 +2,8 @@
 
 int main(void) {
 	Init();
-	signal(SIGUSR1, dump); //SIGINT
+	signal(SIGUSR1, dump);
+	signal(SIGINT, destruirTodo);
 	EsperarClientes();
 	return EXIT_SUCCESS;
 }
@@ -34,32 +35,35 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 		case d_NEW_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un new pokemon");
 			void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			tratarMensajeNewASuscriptores (packNewPokemon, SUSCRIPTORES_NEW);
+			tratarMensaje(header.tipoMensaje, packNewPokemon);
 			free(packNewPokemon);
 			break;
 		case d_CATCH_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un catch pokemon");
 			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			funcionParaVerMemoria();
-			enviarMensajeCatchASuscriptores (packCatchPokemon, SUSCRIPTORES_CATCH);
+			tratarMensaje(header.tipoMensaje, packCatchPokemon);
+			//enviarMensajeCatchASuscriptores (packCatchPokemon, SUSCRIPTORES_CATCH);
 			free(packCatchPokemon);
 			break;
 		case d_GET_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un get pokemon");
 			void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			enviarMensajeGetASuscriptores (packGetPokemon, SUSCRIPTORES_GET);
+			tratarMensaje(header.tipoMensaje, packGetPokemon);
+			//enviarMensajeGetASuscriptores (packGetPokemon, SUSCRIPTORES_GET);
 			free(packGetPokemon);
 			break;
 		case d_APPEARED_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un appeared pokemon");
 			void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			enviarMensajeAppearedASuscriptores (packAppearedPokemon, SUSCRIPTORES_APPEARED);
+			tratarMensaje(header.tipoMensaje, packAppearedPokemon);
+			//enviarMensajeAppearedASuscriptores (packAppearedPokemon, SUSCRIPTORES_APPEARED);
 			free(packAppearedPokemon);
 			break;
 		case d_CAUGHT_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un caught pokemon");
 			void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			enviarMensajeCaughtASuscriptores (packCaughtPokemon, SUSCRIPTORES_CAUGHT);
+			tratarMensaje(header.tipoMensaje, packCaughtPokemon);
+			//enviarMensajeCaughtASuscriptores (packCaughtPokemon, SUSCRIPTORES_CAUGHT);
 			free(packCaughtPokemon);
 			break;
 		case d_LOCALIZED_POKEMON:
@@ -153,33 +157,36 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 	if (resultado){
 		resultado->idMensaje = ID;
 		resultado->tipoMensaje = d_NEW_POKEMON;
-		/*if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
-		resultado->tamanioParticion = tamanioDeMensaje(d_NEW_POKEMON, &mensajeAGuardar);
-		}
-		*/ //ESTO YA SE VE EN PARTICION A MEDIDA
 		resultado->estaOcupado = 1;
 		resultado->suscriptoresConACK = list_create();
 		resultado->suscriptoresConMensajeEnviado = list_create();
 		resultado->tiempo = temporal_get_string_time();
 		resultado->ultimaReferencia = temporal_get_string_time();
 		memcpy(resultado->donde, &mensajeAGuardar, tamanioDeMensaje(d_NEW_POKEMON, &mensajeAGuardar));
-		log_info(LOGGER_GENERAL, "Se guardo el mensaje en la memoria");
+		log_info(LOGGER_GENERAL, "Se guardo el mensaje en la memoria id: %i posicion: ", resultado->idMensaje, posicionALog(resultado->donde));
 		resultado = list_get (ADMINISTRADOR_MEMORIA, 0);
 		resultado1 = list_get (ADMINISTRADOR_MEMORIA, 1);
 		resultado2 = list_get (ADMINISTRADOR_MEMORIA, 2);
 		resultado3 = list_get (ADMINISTRADOR_MEMORIA, 3);
 	}
-	/*//Levantar memoria y actualizo
-	int lenght = list_size(lista);
-	for (int i = 0; i<lenght; i++){
-		int socketCliente = list_get(lista, i);
-		Serialize_PackAndSend_NEW_POKEMON(socketCliente, ID, pokemon, posX, posY, cantidad);
-		actualizarEnviadosPorID(ID, socketCliente);
-		log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", ID, socketCliente);
-	}
-	log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
-	*/
+}
 
+void tratarMensaje (d_message tipoMensaje, void *paquete){
+	estructuraAdministrativa * resultado = malloc (sizeof(estructuraAdministrativa));
+	void * unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete);
+	resultado = guardarMensaje(d_NEW_POKEMON, unMensaje);
+	if (resultado){
+		int ID = obtenerID();
+		resultado->idMensaje = ID;
+		resultado->tipoMensaje = tipoMensaje;
+		resultado->estaOcupado = 1;
+		resultado->suscriptoresConACK = list_create();
+		resultado->suscriptoresConMensajeEnviado = list_create();
+		resultado->tiempo = temporal_get_string_time();
+		resultado->ultimaReferencia = temporal_get_string_time();
+		memcpy(resultado->donde, unMensaje, tamanioDeMensaje(tipoMensaje, unMensaje));
+		log_info(LOGGER_GENERAL, "Se guardo el mensaje en la memoria");
+	}
 }
 
 
@@ -275,10 +282,11 @@ void Init(){
 	ListsInit();
 	MemoriaPrincipalInit();
 	SemaphoresInit();
+	DumpFileInit();
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -316,6 +324,12 @@ void SemaphoresInit(){
 	sem_init(&MUTEX_CONTADOR, 0, 1);
 	sem_init(&MUTEX_MEMORIA, 0, 1);
 	sem_init(&MUTEX_TIEMPO, 0, 1);
+}
+
+void DumpFileInit(){
+	FILE *fp;
+	fp = fopen (BROKER_CONFIG.DUMP_FILE, "r");
+	fclose(fp);
 }
 
 /////////FUNCIONES VARIAS/////////
@@ -422,23 +436,33 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 		}
 		if(particion == NULL){
 		if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
-			compactacion();
-			return buscarParticionLibre(tipoMensaje, mensaje);
+			if(FLAG_COMPACTACION == 0){
+				compactacion();
+				FLAG_REEMPLAZAR = 0;
+				FLAG_COMPACTACION = 1;
+				return buscarParticionLibre(tipoMensaje, mensaje);
+			}
+			if (FLAG_REEMPLAZAR == 0){
+				int posicion = reemplazar(tipoMensaje, mensaje);
+				particionPrueba = list_get (ADMINISTRADOR_MEMORIA, posicion);
+				FLAG_COMPACTACION = 0;
+				FLAG_REEMPLAZAR = 1;
+				return buscarParticionLibre(tipoMensaje, mensaje);
+			}
 		}
 		if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "bs")){
 			if (FLAG_COMPOSICION == 0){
-			composicion();
-			FLAG_COMPOSICION = 1;
-			FLAG_REEMPLAZAR = 0;
-			return buscarParticionLibre(tipoMensaje, mensaje);
+				composicion();
+				FLAG_COMPOSICION = 1;
+				FLAG_REEMPLAZAR = 0;
+				return buscarParticionLibre(tipoMensaje, mensaje);
 			}
 			if (FLAG_REEMPLAZAR == 0){
-			int posicion = reemplazar(tipoMensaje, mensaje);
-			particionPrueba = list_get (ADMINISTRADOR_MEMORIA, posicion);
-			FLAG_COMPOSICION = 0;
-			FLAG_COMPACTACION = 0;
-			FLAG_REEMPLAZAR = 1;
-			return buscarParticionLibre(tipoMensaje, mensaje);
+				int posicion = reemplazar(tipoMensaje, mensaje);
+				particionPrueba = list_get (ADMINISTRADOR_MEMORIA, posicion);
+				FLAG_COMPOSICION = 0;
+				FLAG_REEMPLAZAR = 1;
+				return buscarParticionLibre(tipoMensaje, mensaje);
 			}
 		}
 	}
@@ -462,9 +486,11 @@ int primeraParticion(){
 	list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
 	for (i = posicionMenor + 1; i < particionesMemoria; i++){
 		particion = list_get(ADMINISTRADOR_MEMORIA, i);
+		if(particion!= NULL){
 		if (primerFechaEsAnterior(particion->tiempo, particionMenor->tiempo) && particion->estaOcupado == 1){
-				particionMenor->tiempo = particion->tiempo;
-				posicionMenor = i;
+			particionMenor->tiempo = particion->tiempo;
+			posicionMenor = i;
+		}
 		}
 	}
 	return posicionMenor;
@@ -504,13 +530,14 @@ int reemplazar (d_message tipoMensaje, void* mensaje){
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "fifo")){
 		int posicion = primeraParticion();
 		particion = list_get (ADMINISTRADOR_MEMORIA, posicion);
-		particion = list_get (ADMINISTRADOR_MEMORIA, posicion);
 		particion->estaOcupado = 0;
 		particion->idMensaje = NULL;
-		list_clean(particion->suscriptoresConACK);
+		list_clean (particion->suscriptoresConACK); //Podemos necesitar destruir los elementos
 		list_clean (particion->suscriptoresConMensajeEnviado);
-		particion->tiempo = NULL;
-		particion->ultimaReferencia = NULL;
+		particion->tiempo = string_new();
+		particion->tiempo = temporal_get_string_time();
+		particion->ultimaReferencia = string_new();
+		particion->ultimaReferencia = temporal_get_string_time();
 		return posicion;
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "lru")){
@@ -520,8 +547,10 @@ int reemplazar (d_message tipoMensaje, void* mensaje){
 		particion->idMensaje = NULL;
 		list_clean(particion->suscriptoresConACK);
 		list_clean (particion->suscriptoresConMensajeEnviado);
-		particion->tiempo = NULL;
-		particion->ultimaReferencia = NULL;
+		particion->tiempo = string_new();
+		particion->tiempo = temporal_get_string_time();
+		particion->ultimaReferencia = string_new();
+		particion->ultimaReferencia = temporal_get_string_time();
 	}
 	///El donde no cambia, al igual que el tamaño de la particion
 	log_info (LOGGER_GENERAL, "Se limpio la particion Victima, volvemos a buscar");
@@ -659,29 +688,35 @@ void reposicionarParticionesOcupadas(t_list * listaAuxiliar){
 			return;
 		}
 	list_iterate(listaAuxiliar, (void*) cambiarInfo);
-	list_clean_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void *)estructuraAdministrativaDestroyer);
+	list_clean(ADMINISTRADOR_MEMORIA);//list_clean_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void *)estructuraAdministrativaDestroyerSinDestruirListas);
+	estructuraAdministrativa * x = list_get(listaAuxiliar, 0);
 	list_add_all(ADMINISTRADOR_MEMORIA, listaAuxiliar);
 	estructuraAdministrativa * espacioFaltante = malloc (sizeof(estructuraAdministrativa));
 	espacioFaltante->donde = nuevoDonde;
 	espacioFaltante->estaOcupado = 0;
 	espacioFaltante->suscriptoresConACK = list_create();
 	espacioFaltante->suscriptoresConMensajeEnviado = list_create();
+	espacioFaltante->tiempo = string_new();
+	espacioFaltante->ultimaReferencia = string_new();
+	espacioFaltante->tiempo = temporal_get_string_time();
+	espacioFaltante->ultimaReferencia = temporal_get_string_time();
 	espacioFaltante->tamanioParticion = BROKER_CONFIG.TAMANO_MEMORIA - contarTamanio();
 	list_add(ADMINISTRADOR_MEMORIA, espacioFaltante);
 }
 
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self) {
-    free(self->donde);
-    free(self->estaOcupado);
-    free(self->idMensaje);
-    free(self->tamanioParticion);
     free(self->tiempo);
-    //free(self->tipoMensaje);
     free(self->ultimaReferencia);
     list_clean_and_destroy_elements(self->suscriptoresConACK, (void*)suscriptorDestroyer);
     list_destroy(self->suscriptoresConACK);
     list_clean_and_destroy_elements(self->suscriptoresConMensajeEnviado, (void*)suscriptorDestroyer);
     list_destroy(self->suscriptoresConMensajeEnviado);
+    free(self);
+}
+
+static void estructuraAdministrativaDestroyerSinDestruirListas(estructuraAdministrativa *self) {
+    free(self->tiempo);
+    free(self->ultimaReferencia);
     free(self);
 }
 
@@ -803,4 +838,81 @@ bool primerFechaEsAnterior(char* unaFecha, char* otraFecha){
 		}
 	}
 	return true;
+}
+
+void destruirTodo(){
+	free(MEMORIA_PRINCIPAL);
+	exit(0);
+}
+
+int posicionALog(void* unaPosicion){
+	return MEMORIA_PRINCIPAL - unaPosicion;
+}
+
+void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete) {
+	uint32_t posX, posY, cantidad, correlativoA, atrapado;
+	char *pokemon;
+	void *retorno;
+	newEnMemoria * retornoNew;
+	catchEnMemoria * retornoCatch;
+	getEnMemoria * retornoGet;
+	appearedEnMemoria * retornoAppeared;
+	caughtEnMemoria * retornoCaught;
+	localizedEnMemoria * retornoLocalized;
+	switch(tipoMensaje){
+	case d_NEW_POKEMON:
+		retornoNew = malloc(sizeof(newEnMemoria));
+		Serialize_Unpack_NewPokemon_NoID(paquete, &pokemon, &posX, &posY, &cantidad);
+		log_info(LOGGER_GENERAL,"Me llego mensaje new Pkm: %s, x: %i, y: %i, cant: %i\n", pokemon, posX, posY, cantidad);
+		retornoNew->cantidad = cantidad;
+		retornoNew->largoDeNombre = string_length(pokemon);
+		retornoNew->nombrePokemon = pokemon;
+		retornoNew->posX = posX;
+		retornoNew->posY = posY;
+		retorno = retornoNew;
+		break;
+	case d_CATCH_POKEMON:
+		retornoCatch = malloc(sizeof(catchEnMemoria));
+		Serialize_Unpack_CatchPokemon_NoID(paquete, &pokemon, &posX, &posY);
+		log_info(LOGGER_GENERAL,"Me llego mensaje catch Pkm: %s, x: %i, y: %i \n", pokemon, posX, posY);
+		retornoCatch->largoDeNombre = string_length(pokemon);
+		retornoCatch->nombrePokemon = pokemon;
+		retornoCatch->posX = posX;
+		retornoCatch->posY = posY;
+		retorno = retornoCatch;
+		break;
+	case d_GET_POKEMON:
+		retornoGet = malloc(sizeof(getEnMemoria));
+		Serialize_Unpack_GetPokemon_NoID(paquete, &pokemon);
+		log_info(LOGGER_GENERAL,"Me llego mensaje get Pkm: %s\n", pokemon);
+		retornoGet->largoDeNombre = string_length(pokemon);
+		retornoGet->nombrePokemon = pokemon;
+		retorno = retornoGet;
+		break;
+	case d_APPEARED_POKEMON:
+		retornoAppeared = malloc(sizeof(appearedEnMemoria));
+		Serialize_Unpack_AppearedPokemon_NoID(paquete, &pokemon, &posX, &posY);
+		log_info(LOGGER_GENERAL,"Me llego mensaje appeared Pkm: %s, x: %i, y: %i \n", pokemon, posX, posY);
+		retornoAppeared->largoDeNombre = string_length(pokemon);
+		retornoAppeared->nombrePokemon = pokemon;
+		retornoAppeared->posX = posX;
+		retornoAppeared->posY = posY;
+		retorno = retornoAppeared;
+		break;
+	case d_CAUGHT_POKEMON:
+		retornoCaught = malloc(sizeof(caughtEnMemoria));
+		Serialize_Unpack_CaughtPokemon(paquete, &correlativoA, &atrapado);
+		log_info(LOGGER_GENERAL,"Me llego mensaje caught correlativoA: %i, resultado: %i \n", correlativoA, atrapado);
+		retornoCaught->atrapado = atrapado;
+		retorno = retornoCaught;
+		break;
+	case d_LOCALIZED_POKEMON:
+		retornoLocalized = malloc(sizeof(localizedEnMemoria));
+		retorno = retornoLocalized;
+		break;
+	default:
+		log_error(LOGGER_GENERAL, "Error descomponiendo el mensaje");
+		return NULL;
+	}
+	return retorno;
 }

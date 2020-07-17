@@ -2009,3 +2009,1498 @@
 [INFO] 23:58:45:666 Broker/(7290:7290): Logger iniciado: Broker.log
 
 [INFO] 23:58:45:666 Broker/(7290:7290): Configuracion broker levantada!
+[INFO] 21:13:20:11 Broker/(7469:7469): Logger iniciado: Broker.log
+
+[INFO] 21:13:58:27 Broker/(7546:7546): Logger iniciado: Broker.log
+
+[INFO] 21:13:58:27 Broker/(7546:7546): Configuracion broker levantada!
+[INFO] 21:13:58:28 Broker/(7546:7546): Dentro de iniciar servidor
+[INFO] 21:13:58:29 Broker/(7546:7546): Listo para escuchar a mi cliente
+[INFO] 21:13:58:29 Broker/(7546:7546): esperando
+[INFO] 21:16:54:902 Broker/(7546:7546): Se conecto un cliente!
+[INFO] 21:16:54:902 Broker/(7546:7546): Se conecto un cliente: 6
+[INFO] 21:16:54:903 Broker/(7546:7546): esperando
+[INFO] 21:16:54:903 Broker/(7546:7639): Llego un new pokemon
+[INFO] 21:16:54:903 Broker/(7546:7639): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[ERROR] 21:16:54:903 Broker/(7546:7639): Se desconecto el cliente 6: 
+
+[INFO] 21:17:02:547 Broker/(7546:7546): Se conecto un cliente!
+[INFO] 21:17:02:547 Broker/(7546:7546): Se conecto un cliente: 7
+[INFO] 21:17:02:547 Broker/(7546:7644): Llego un new pokemon
+[INFO] 21:17:02:547 Broker/(7546:7644): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[ERROR] 21:17:02:547 Broker/(7546:7644): Se desconecto el cliente 7: 
+
+[INFO] 21:17:02:548 Broker/(7546:7546): esperando
+[INFO] 21:17:09:857 Broker/(7546:7546): Se conecto un cliente!
+[INFO] 21:17:09:857 Broker/(7546:7546): Se conecto un cliente: 8
+[INFO] 21:17:09:858 Broker/(7546:7546): esperando
+[INFO] 21:17:09:858 Broker/(7546:7646): Llego un new pokemon
+[INFO] 21:17:09:858 Broker/(7546:7646): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[ERROR] 21:17:09:858 Broker/(7546:7646): Se desconecto el cliente 8: 
+
+[INFO] 21:17:39:298 Broker/(7546:7546): Se conecto un cliente!
+[INFO] 21:17:39:298 Broker/(7546:7546): Se conecto un cliente: 9
+[INFO] 21:17:39:299 Broker/(7546:7546): esperando
+[INFO] 21:17:39:299 Broker/(7546:7656): Llego un new pokemon
+[INFO] 21:17:39:299 Broker/(7546:7656): Me llego mensaje new Pkm: pikachuuuuuuuuuuu, x: 1, y: 2, cant: 2
+
+[INFO] 21:18:20:68 Broker/(7704:7704): Logger iniciado: Broker.log
+
+[INFO] 21:18:20:69 Broker/(7704:7704): Configuracion broker levantada!
+[INFO] 21:18:20:69 Broker/(7704:7704): Dentro de iniciar servidor
+[INFO] 21:18:20:69 Broker/(7704:7704): Listo para escuchar a mi cliente
+[INFO] 21:18:20:69 Broker/(7704:7704): esperando
+[INFO] 21:18:30:731 Broker/(7704:7704): Se conecto un cliente!
+[INFO] 21:18:30:731 Broker/(7704:7704): Se conecto un cliente: 6
+[INFO] 21:18:30:732 Broker/(7704:7704): esperando
+[INFO] 21:18:30:733 Broker/(7704:7719): Llego un new pokemon
+[INFO] 21:18:30:733 Broker/(7704:7719): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:18:30:733 Broker/(7704:7719): Encontre particion Libre
+[INFO] 21:18:30:733 Broker/(7704:7719): Se toma la particion a medida
+[INFO] 21:18:30:733 Broker/(7704:7719): Se guardo el mensaje en la memoria
+[ERROR] 21:18:30:733 Broker/(7704:7719): Se desconecto el cliente 6: 
+
+[INFO] 21:18:33:545 Broker/(7704:7704): Se conecto un cliente!
+[INFO] 21:18:33:545 Broker/(7704:7704): Se conecto un cliente: 7
+[INFO] 21:18:33:546 Broker/(7704:7704): esperando
+[INFO] 21:18:33:546 Broker/(7704:7721): Llego un new pokemon
+[INFO] 21:18:33:546 Broker/(7704:7721): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:18:33:546 Broker/(7704:7721): Encontre particion Libre
+[INFO] 21:18:33:546 Broker/(7704:7721): Se toma la particion a medida
+[INFO] 21:18:33:546 Broker/(7704:7721): Se guardo el mensaje en la memoria
+[ERROR] 21:18:33:546 Broker/(7704:7721): Se desconecto el cliente 7: 
+
+[INFO] 21:18:34:911 Broker/(7704:7704): Se conecto un cliente!
+[INFO] 21:18:34:911 Broker/(7704:7704): Se conecto un cliente: 8
+[INFO] 21:18:34:912 Broker/(7704:7723): Llego un new pokemon
+[INFO] 21:18:34:912 Broker/(7704:7723): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:18:34:912 Broker/(7704:7723): Encontre particion Libre
+[INFO] 21:18:34:912 Broker/(7704:7704): esperando
+[INFO] 21:18:34:912 Broker/(7704:7723): Se toma la particion a medida
+[INFO] 21:18:34:912 Broker/(7704:7723): Se guardo el mensaje en la memoria
+[ERROR] 21:18:34:912 Broker/(7704:7723): Se desconecto el cliente 8: 
+
+[INFO] 21:18:39:196 Broker/(7704:7704): Se conecto un cliente!
+[INFO] 21:18:39:196 Broker/(7704:7704): Se conecto un cliente: 9
+[INFO] 21:18:39:197 Broker/(7704:7704): esperando
+[INFO] 21:18:39:197 Broker/(7704:7727): Llego un new pokemon
+[INFO] 21:18:39:197 Broker/(7704:7727): Me llego mensaje new Pkm: pikachuuuuuuuuuuu, x: 1, y: 2, cant: 2
+
+[INFO] 21:19:01:595 Broker/(7704:7727): Encontre particion Libre
+[INFO] 21:19:01:595 Broker/(7704:7727): Se toma la particion a medida
+[INFO] 21:19:01:595 Broker/(7704:7727): Se guardo el mensaje en la memoria
+[ERROR] 21:19:01:595 Broker/(7704:7727): Se desconecto el cliente 9: 
+
+[INFO] 21:19:33:711 Broker/(7764:7764): Logger iniciado: Broker.log
+
+[INFO] 21:19:33:711 Broker/(7764:7764): Configuracion broker levantada!
+[INFO] 21:19:33:711 Broker/(7764:7764): Dentro de iniciar servidor
+[INFO] 21:19:33:711 Broker/(7764:7764): Listo para escuchar a mi cliente
+[INFO] 21:19:33:711 Broker/(7764:7764): esperando
+[INFO] 21:19:37:594 Broker/(7764:7764): Se conecto un cliente!
+[INFO] 21:19:37:594 Broker/(7764:7764): Se conecto un cliente: 6
+[INFO] 21:19:37:595 Broker/(7764:7764): esperando
+[INFO] 21:19:37:596 Broker/(7764:7771): Llego un new pokemon
+[INFO] 21:19:37:596 Broker/(7764:7771): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:19:40:372 Broker/(7764:7771): Encontre particion Libre
+[INFO] 21:19:40:372 Broker/(7764:7771): Se toma la particion a medida
+[INFO] 21:19:40:372 Broker/(7764:7771): Se guardo el mensaje en la memoria
+[ERROR] 21:19:40:372 Broker/(7764:7771): Se desconecto el cliente 6: 
+
+[INFO] 21:19:44:715 Broker/(7764:7764): Se conecto un cliente!
+[INFO] 21:19:44:715 Broker/(7764:7764): Se conecto un cliente: 7
+[INFO] 21:19:44:716 Broker/(7764:7764): esperando
+[INFO] 21:19:44:716 Broker/(7764:7775): Llego un new pokemon
+[INFO] 21:19:44:716 Broker/(7764:7775): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:19:46:815 Broker/(7764:7775): Encontre particion Libre
+[INFO] 21:19:46:816 Broker/(7764:7775): Se toma la particion a medida
+[INFO] 21:19:46:816 Broker/(7764:7775): Se guardo el mensaje en la memoria
+[ERROR] 21:19:46:816 Broker/(7764:7775): Se desconecto el cliente 7: 
+
+[INFO] 21:19:49:582 Broker/(7764:7764): Se conecto un cliente!
+[INFO] 21:19:49:582 Broker/(7764:7764): Se conecto un cliente: 8
+[INFO] 21:19:49:583 Broker/(7764:7764): esperando
+[INFO] 21:19:49:583 Broker/(7764:7780): Llego un new pokemon
+[INFO] 21:19:49:583 Broker/(7764:7780): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:19:50:854 Broker/(7764:7780): Encontre particion Libre
+[INFO] 21:19:50:854 Broker/(7764:7780): Se toma la particion a medida
+[INFO] 21:19:50:854 Broker/(7764:7780): Se guardo el mensaje en la memoria
+[ERROR] 21:19:50:854 Broker/(7764:7780): Se desconecto el cliente 8: 
+
+[INFO] 21:20:05:596 Broker/(7764:7764): Se conecto un cliente!
+[INFO] 21:20:05:596 Broker/(7764:7764): Se conecto un cliente: 9
+[INFO] 21:20:05:597 Broker/(7764:7784): Llego un new pokemon
+[INFO] 21:20:05:597 Broker/(7764:7784): Me llego mensaje new Pkm: pikachuuuuuuuuuuu, x: 1, y: 2, cant: 2
+
+[INFO] 21:20:05:598 Broker/(7764:7764): esperando
+[INFO] 21:21:31:365 Broker/(7853:7853): Logger iniciado: Broker.log
+
+[INFO] 21:21:31:365 Broker/(7853:7853): Configuracion broker levantada!
+[INFO] 21:21:31:365 Broker/(7853:7853): Dentro de iniciar servidor
+[INFO] 21:21:31:365 Broker/(7853:7853): Listo para escuchar a mi cliente
+[INFO] 21:21:31:365 Broker/(7853:7853): esperando
+[INFO] 21:21:36:673 Broker/(7853:7853): Se conecto un cliente!
+[INFO] 21:21:36:673 Broker/(7853:7853): Se conecto un cliente: 6
+[INFO] 21:21:36:674 Broker/(7853:7853): esperando
+[INFO] 21:21:36:674 Broker/(7853:7865): Llego un new pokemon
+[INFO] 21:21:36:674 Broker/(7853:7865): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:21:39:181 Broker/(7853:7865): Encontre particion Libre
+[INFO] 21:21:39:182 Broker/(7853:7865): Se toma la particion a medida
+[INFO] 21:21:39:182 Broker/(7853:7865): Se guardo el mensaje en la memoria
+[ERROR] 21:21:39:182 Broker/(7853:7865): Se desconecto el cliente 6: 
+
+[INFO] 21:21:43:404 Broker/(7853:7853): Se conecto un cliente!
+[INFO] 21:21:43:404 Broker/(7853:7853): Se conecto un cliente: 7
+[INFO] 21:21:43:405 Broker/(7853:7869): Llego un new pokemon
+[INFO] 21:21:43:405 Broker/(7853:7853): esperando
+[INFO] 21:21:43:405 Broker/(7853:7869): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:21:45:288 Broker/(7853:7869): Encontre particion Libre
+[INFO] 21:21:45:288 Broker/(7853:7869): Se toma la particion a medida
+[INFO] 21:21:45:288 Broker/(7853:7869): Se guardo el mensaje en la memoria
+[ERROR] 21:21:45:288 Broker/(7853:7869): Se desconecto el cliente 7: 
+
+[INFO] 21:21:47:625 Broker/(7853:7853): Se conecto un cliente!
+[INFO] 21:21:47:625 Broker/(7853:7853): Se conecto un cliente: 8
+[INFO] 21:21:47:626 Broker/(7853:7853): esperando
+[INFO] 21:21:47:626 Broker/(7853:7873): Llego un new pokemon
+[INFO] 21:21:47:626 Broker/(7853:7873): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:21:49:149 Broker/(7853:7873): Encontre particion Libre
+[INFO] 21:21:49:149 Broker/(7853:7873): Se toma la particion a medida
+[INFO] 21:21:49:149 Broker/(7853:7873): Se guardo el mensaje en la memoria
+[ERROR] 21:21:49:149 Broker/(7853:7873): Se desconecto el cliente 8: 
+
+[INFO] 21:21:54:350 Broker/(7853:7853): Se conecto un cliente!
+[INFO] 21:21:54:350 Broker/(7853:7853): Se conecto un cliente: 9
+[INFO] 21:21:54:351 Broker/(7853:7853): esperando
+[INFO] 21:21:54:351 Broker/(7853:7878): Llego un new pokemon
+[INFO] 21:21:54:352 Broker/(7853:7878): Me llego mensaje new Pkm: pikachuuuuuuuuuuu, x: 1, y: 2, cant: 2
+
+[INFO] 21:22:24:332 Broker/(7853:7878): Encontre particion Libre
+[INFO] 21:23:17:56 Broker/(7944:7944): Logger iniciado: Broker.log
+
+[INFO] 21:23:17:56 Broker/(7944:7944): Configuracion broker levantada!
+[INFO] 21:23:17:56 Broker/(7944:7944): Dentro de iniciar servidor
+[INFO] 21:23:17:56 Broker/(7944:7944): Listo para escuchar a mi cliente
+[INFO] 21:23:17:56 Broker/(7944:7944): esperando
+[INFO] 21:23:22:383 Broker/(7944:7944): Se conecto un cliente!
+[INFO] 21:23:22:384 Broker/(7944:7944): Se conecto un cliente: 6
+[INFO] 21:23:22:385 Broker/(7944:7957): Llego un new pokemon
+[INFO] 21:23:22:385 Broker/(7944:7944): esperando
+[INFO] 21:23:22:385 Broker/(7944:7957): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:23:24:454 Broker/(7944:7957): Encontre particion Libre
+[INFO] 21:23:24:454 Broker/(7944:7957): Se toma la particion a medida
+[INFO] 21:23:24:454 Broker/(7944:7957): Se guardo el mensaje en la memoria
+[ERROR] 21:23:24:454 Broker/(7944:7957): Se desconecto el cliente 6: 
+
+[INFO] 21:23:27:161 Broker/(7944:7944): Se conecto un cliente!
+[INFO] 21:23:27:161 Broker/(7944:7944): Se conecto un cliente: 7
+[INFO] 21:23:27:163 Broker/(7944:7961): Llego un new pokemon
+[INFO] 21:23:27:163 Broker/(7944:7961): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:23:27:163 Broker/(7944:7944): esperando
+[INFO] 21:23:28:502 Broker/(7944:7961): Encontre particion Libre
+[INFO] 21:23:28:502 Broker/(7944:7961): Se toma la particion a medida
+[INFO] 21:23:28:503 Broker/(7944:7961): Se guardo el mensaje en la memoria
+[ERROR] 21:23:28:503 Broker/(7944:7961): Se desconecto el cliente 7: 
+
+[INFO] 21:23:31:455 Broker/(7944:7944): Se conecto un cliente!
+[INFO] 21:23:31:455 Broker/(7944:7944): Se conecto un cliente: 8
+[INFO] 21:23:31:456 Broker/(7944:7966): Llego un new pokemon
+[INFO] 21:23:31:456 Broker/(7944:7966): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:23:31:456 Broker/(7944:7944): esperando
+[INFO] 21:23:33:167 Broker/(7944:7966): Encontre particion Libre
+[INFO] 21:23:33:167 Broker/(7944:7966): Se toma la particion a medida
+[INFO] 21:23:33:167 Broker/(7944:7966): Se guardo el mensaje en la memoria
+[ERROR] 21:23:33:167 Broker/(7944:7966): Se desconecto el cliente 8: 
+
+[INFO] 21:23:36:236 Broker/(7944:7944): Se conecto un cliente!
+[INFO] 21:23:36:236 Broker/(7944:7944): Se conecto un cliente: 9
+[INFO] 21:23:36:237 Broker/(7944:7944): esperando
+[INFO] 21:23:36:237 Broker/(7944:7970): Llego un new pokemon
+[INFO] 21:23:36:237 Broker/(7944:7970): Me llego mensaje new Pkm: pikachuuuuuuuuuuu, x: 1, y: 2, cant: 2
+
+[INFO] 21:44:19:973 Broker/(8279:8279): Logger iniciado: Broker.log
+
+[INFO] 21:44:19:973 Broker/(8279:8279): Configuracion broker levantada!
+[INFO] 21:44:19:973 Broker/(8279:8279): Dentro de iniciar servidor
+[INFO] 21:44:19:973 Broker/(8279:8279): Listo para escuchar a mi cliente
+[INFO] 21:44:19:973 Broker/(8279:8279): esperando
+[INFO] 21:44:28:395 Broker/(8279:8279): Se conecto un cliente!
+[INFO] 21:44:28:395 Broker/(8279:8279): Se conecto un cliente: 6
+[INFO] 21:44:28:396 Broker/(8279:8279): esperando
+[INFO] 21:44:28:396 Broker/(8279:8292): Llego un new pokemon
+[INFO] 21:44:28:396 Broker/(8279:8292): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:44:28:396 Broker/(8279:8292): Encontre particion Libre
+[INFO] 21:44:28:396 Broker/(8279:8292): Se toma la particion a medida
+[INFO] 21:44:28:396 Broker/(8279:8292): Se guardo el mensaje en la memoria
+[ERROR] 21:44:28:396 Broker/(8279:8292): Se desconecto el cliente 6: 
+
+[INFO] 21:44:52:994 Broker/(8279:8279): Se conecto un cliente!
+[INFO] 21:44:52:995 Broker/(8279:8279): Se conecto un cliente: 7
+[INFO] 21:44:52:995 Broker/(8279:8295): Llego un new pokemon
+[INFO] 21:44:52:995 Broker/(8279:8279): esperando
+[INFO] 21:44:52:995 Broker/(8279:8295): Me llego mensaje new Pkm: squirtle, x: 2, y: 44, cant: 53
+
+[INFO] 21:44:52:996 Broker/(8279:8295): Encontre particion Libre
+[INFO] 21:44:52:996 Broker/(8279:8295): Se toma la particion a medida
+[INFO] 21:44:52:996 Broker/(8279:8295): Se guardo el mensaje en la memoria
+[ERROR] 21:44:52:996 Broker/(8279:8295): Se desconecto el cliente 7: 
+
+[INFO] 21:46:01:75 Broker/(8279:8279): Se conecto un cliente!
+[INFO] 21:46:01:75 Broker/(8279:8279): Se conecto un cliente: 8
+[INFO] 21:46:01:76 Broker/(8279:8279): esperando
+[INFO] 21:46:01:76 Broker/(8279:8308): Llego un catch pokemon
+[INFO] 21:46:48:409 Broker/(8378:8378): Logger iniciado: Broker.log
+
+[INFO] 21:46:48:409 Broker/(8378:8378): Configuracion broker levantada!
+[INFO] 21:46:48:409 Broker/(8378:8378): Dentro de iniciar servidor
+[INFO] 21:46:48:409 Broker/(8378:8378): Listo para escuchar a mi cliente
+[INFO] 21:46:48:409 Broker/(8378:8378): esperando
+[INFO] 21:46:52:819 Broker/(8378:8378): Se conecto un cliente!
+[INFO] 21:46:52:819 Broker/(8378:8378): Se conecto un cliente: 6
+[INFO] 21:46:52:820 Broker/(8378:8378): esperando
+[INFO] 21:46:52:820 Broker/(8378:8388): Llego un new pokemon
+[INFO] 21:46:52:820 Broker/(8378:8388): Me llego mensaje new Pkm: pikachu, x: 1, y: 2, cant: 2
+
+[INFO] 21:46:52:820 Broker/(8378:8388): Encontre particion Libre
+[INFO] 21:46:52:820 Broker/(8378:8388): Se toma la particion a medida
+[INFO] 21:46:52:820 Broker/(8378:8388): Se guardo el mensaje en la memoria
+[ERROR] 21:46:52:821 Broker/(8378:8388): Se desconecto el cliente 6: 
+
+[INFO] 21:46:57:63 Broker/(8378:8378): Se conecto un cliente!
+[INFO] 21:46:57:63 Broker/(8378:8378): Se conecto un cliente: 7
+[INFO] 21:46:57:64 Broker/(8378:8378): esperando
+[INFO] 21:46:57:64 Broker/(8378:8390): Llego un new pokemon
+[INFO] 21:46:57:64 Broker/(8378:8390): Me llego mensaje new Pkm: squirtle, x: 2, y: 44, cant: 53
+
+[INFO] 21:46:57:64 Broker/(8378:8390): Encontre particion Libre
+[INFO] 21:46:57:64 Broker/(8378:8390): Se toma la particion a medida
+[INFO] 21:46:57:64 Broker/(8378:8390): Se guardo el mensaje en la memoria
+[ERROR] 21:46:57:65 Broker/(8378:8390): Se desconecto el cliente 7: 
+
+[INFO] 21:46:59:503 Broker/(8378:8378): Se conecto un cliente!
+[INFO] 21:46:59:503 Broker/(8378:8378): Se conecto un cliente: 8
+[INFO] 21:46:59:504 Broker/(8378:8378): esperando
+[INFO] 21:46:59:504 Broker/(8378:8392): Llego un catch pokemon
+[INFO] 21:49:35:942 Broker/(8492:8492): Logger iniciado: Broker.log
+
+[INFO] 21:49:35:942 Broker/(8492:8492): Configuracion broker levantada!
+[INFO] 21:49:35:942 Broker/(8492:8492): Dentro de iniciar servidor
+[INFO] 21:49:35:942 Broker/(8492:8492): Listo para escuchar a mi cliente
+[INFO] 21:49:35:942 Broker/(8492:8492): esperando
+[INFO] 21:49:40:807 Broker/(8492:8492): Se conecto un cliente!
+[INFO] 21:49:40:807 Broker/(8492:8492): Se conecto un cliente: 6
+[INFO] 21:49:40:807 Broker/(8492:8503): Llego un new pokemon
+[INFO] 21:49:40:807 Broker/(8492:8492): esperando
+[INFO] 21:49:40:807 Broker/(8492:8503): Me llego mensaje new Pkm: squirtle, x: 2, y: 44, cant: 53
+
+[INFO] 21:49:40:808 Broker/(8492:8503): Encontre particion Libre
+[INFO] 21:49:40:808 Broker/(8492:8503): Se toma la particion a medida
+[INFO] 21:49:40:808 Broker/(8492:8503): Se guardo el mensaje en la memoria
+[ERROR] 21:49:40:808 Broker/(8492:8503): Se desconecto el cliente 6: 
+
+[INFO] 21:49:43:969 Broker/(8492:8492): Se conecto un cliente!
+[INFO] 21:49:43:969 Broker/(8492:8492): Se conecto un cliente: 7
+[INFO] 21:49:43:970 Broker/(8492:8505): Llego un catch pokemon
+[INFO] 21:49:43:970 Broker/(8492:8492): esperando
+[INFO] 21:53:47:698 Broker/(8595:8595): Logger iniciado: Broker.log
+
+[INFO] 21:53:47:699 Broker/(8595:8595): Configuracion broker levantada!
+[INFO] 21:53:47:699 Broker/(8595:8595): Dentro de iniciar servidor
+[INFO] 21:53:47:699 Broker/(8595:8595): Listo para escuchar a mi cliente
+[INFO] 21:53:47:700 Broker/(8595:8595): esperando
+[INFO] 21:53:55:40 Broker/(8595:8595): Se conecto un cliente!
+[INFO] 21:53:55:40 Broker/(8595:8595): Se conecto un cliente: 6
+[INFO] 21:53:55:40 Broker/(8595:8595): esperando
+[INFO] 21:53:55:40 Broker/(8595:8607): Llego un new pokemon
+[INFO] 21:53:55:41 Broker/(8595:8607): Me llego mensaje new Pkm: squirtle, x: 2, y: 44, cant: 53
+
+[INFO] 21:53:55:41 Broker/(8595:8607): Encontre particion Libre
+[INFO] 21:53:55:41 Broker/(8595:8607): Se toma la particion a medida
+[INFO] 21:53:55:41 Broker/(8595:8607): Se guardo el mensaje en la memoria
+[ERROR] 21:53:55:41 Broker/(8595:8607): Se desconecto el cliente 6: 
+
+[INFO] 21:53:57:16 Broker/(8595:8595): Se conecto un cliente!
+[INFO] 21:53:57:16 Broker/(8595:8595): Se conecto un cliente: 7
+[INFO] 21:53:57:17 Broker/(8595:8609): Llego un catch pokemon
+[INFO] 21:53:57:17 Broker/(8595:8595): esperando
+[INFO] 21:56:25:547 Broker/(8705:8705): Logger iniciado: Broker.log
+
+[INFO] 21:56:25:547 Broker/(8705:8705): Configuracion broker levantada!
+[INFO] 21:56:25:547 Broker/(8705:8705): Dentro de iniciar servidor
+[INFO] 21:56:25:547 Broker/(8705:8705): Listo para escuchar a mi cliente
+[INFO] 21:56:25:547 Broker/(8705:8705): esperando
+[INFO] 21:56:29:280 Broker/(8705:8705): Se conecto un cliente!
+[INFO] 21:56:29:281 Broker/(8705:8705): Se conecto un cliente: 6
+[INFO] 21:56:29:281 Broker/(8705:8717): Llego un new pokemon
+[INFO] 21:56:29:281 Broker/(8705:8717): Me llego mensaje new Pkm: squirtle, x: 2, y: 44, cant: 53
+
+[INFO] 21:56:29:281 Broker/(8705:8717): Encontre particion Libre
+[INFO] 21:56:29:281 Broker/(8705:8717): Se toma la particion a medida
+[INFO] 21:56:29:281 Broker/(8705:8705): esperando
+[INFO] 21:56:29:283 Broker/(8705:8717): Se guardo el mensaje en la memoria
+[ERROR] 21:56:29:283 Broker/(8705:8717): Se desconecto el cliente 6: 
+
+[INFO] 21:56:32:368 Broker/(8705:8705): Se conecto un cliente!
+[INFO] 21:56:32:368 Broker/(8705:8705): Se conecto un cliente: 7
+[INFO] 21:56:32:369 Broker/(8705:8705): esperando
+[INFO] 21:56:32:370 Broker/(8705:8719): Llego un catch pokemon
+[INFO] 21:57:00:475 Broker/(8747:8747): Logger iniciado: Broker.log
+
+[INFO] 21:57:00:475 Broker/(8747:8747): Configuracion broker levantada!
+[INFO] 21:57:00:475 Broker/(8747:8747): Dentro de iniciar servidor
+[INFO] 21:57:00:475 Broker/(8747:8747): Listo para escuchar a mi cliente
+[INFO] 21:57:00:475 Broker/(8747:8747): esperando
+[INFO] 21:57:02:538 Broker/(8747:8747): Se conecto un cliente!
+[INFO] 21:57:02:538 Broker/(8747:8747): Se conecto un cliente: 6
+[INFO] 21:57:02:539 Broker/(8747:8747): esperando
+[INFO] 21:57:02:539 Broker/(8747:8757): Llego un new pokemon
+[INFO] 21:57:02:539 Broker/(8747:8757): Me llego mensaje new Pkm: squirtle, x: 2, y: 44, cant: 53
+
+[INFO] 21:57:02:539 Broker/(8747:8757): Encontre particion Libre
+[INFO] 21:57:02:539 Broker/(8747:8757): Se toma la particion a medida
+[INFO] 21:57:02:539 Broker/(8747:8757): Se guardo el mensaje en la memoria
+[ERROR] 21:57:02:539 Broker/(8747:8757): Se desconecto el cliente 6: 
+
+[INFO] 21:57:05:429 Broker/(8747:8747): Se conecto un cliente!
+[INFO] 21:57:05:429 Broker/(8747:8747): Se conecto un cliente: 7
+[INFO] 21:57:05:430 Broker/(8747:8759): Llego un catch pokemon
+[INFO] 21:57:05:430 Broker/(8747:8747): esperando
+[INFO] 22:00:30:273 Broker/(8910:8910): Logger iniciado: Broker.log
+
+[INFO] 22:00:30:273 Broker/(8910:8910): Configuracion broker levantada!
+[INFO] 22:00:30:273 Broker/(8910:8910): Dentro de iniciar servidor
+[INFO] 22:00:30:273 Broker/(8910:8910): Listo para escuchar a mi cliente
+[INFO] 22:00:30:274 Broker/(8910:8910): esperando
+[INFO] 22:00:35:270 Broker/(8910:8910): Se conecto un cliente!
+[INFO] 22:00:35:270 Broker/(8910:8910): Se conecto un cliente: 6
+[INFO] 22:00:35:271 Broker/(8910:8910): esperando
+[INFO] 22:00:35:271 Broker/(8910:8922): Llego un new pokemon
+[INFO] 22:00:35:271 Broker/(8910:8922): Me llego mensaje new Pkm: squirtle, x: 2, y: 44, cant: 53
+
+[INFO] 22:00:35:271 Broker/(8910:8922): Encontre particion Libre
+[INFO] 22:00:35:271 Broker/(8910:8922): Se toma la particion a medida
+[INFO] 22:00:35:271 Broker/(8910:8922): Se guardo el mensaje en la memoria
+[ERROR] 22:00:35:271 Broker/(8910:8922): Se desconecto el cliente 6: 
+
+[INFO] 22:00:38:108 Broker/(8910:8910): Se conecto un cliente!
+[INFO] 22:00:38:108 Broker/(8910:8910): Se conecto un cliente: 7
+[INFO] 22:00:38:109 Broker/(8910:8925): Llego un catch pokemon
+[INFO] 22:00:38:109 Broker/(8910:8910): esperando
+[INFO] 23:22:52:363 Broker/(9668:9668): Logger iniciado: Broker.log
+
+[INFO] 23:22:52:363 Broker/(9668:9668): Configuracion broker levantada!
+[INFO] 23:22:52:363 Broker/(9668:9668): Dentro de iniciar servidor
+[INFO] 23:22:52:363 Broker/(9668:9668): Listo para escuchar a mi cliente
+[INFO] 23:22:52:363 Broker/(9668:9668): esperando
+[INFO] 23:22:57:395 Broker/(9668:9668): Se conecto un cliente!
+[INFO] 23:22:57:395 Broker/(9668:9668): Se conecto un cliente: 6
+[INFO] 23:22:57:397 Broker/(9668:9678): Llego un new pokemon
+[INFO] 23:22:57:397 Broker/(9668:9678): Me llego mensaje new Pkm: squirtle, x: 2, y: 44, cant: 53
+
+[INFO] 23:22:57:397 Broker/(9668:9678): Encontre particion Libre
+[INFO] 23:22:57:397 Broker/(9668:9668): esperando
+[INFO] 23:22:57:397 Broker/(9668:9678): Se toma la particion a medida
+[INFO] 23:22:57:397 Broker/(9668:9678): Se guardo el mensaje en la memoria
+[ERROR] 23:22:57:397 Broker/(9668:9678): Se desconecto el cliente 6: 
+
+[INFO] 23:23:05:244 Broker/(9668:9668): Se conecto un cliente!
+[INFO] 23:23:05:244 Broker/(9668:9668): Se conecto un cliente: 7
+[INFO] 23:23:05:245 Broker/(9668:9680): Llego un catch pokemon
+[INFO] 23:23:05:245 Broker/(9668:9668): esperando
+[INFO] 04:46:36:319 Broker/(6472:6472): Logger iniciado: Broker.log
+
+[INFO] 04:46:36:320 Broker/(6472:6472): Configuracion broker levantada!
+[INFO] 04:46:36:321 Broker/(6472:6472): Dentro de iniciar servidor
+[INFO] 04:46:36:322 Broker/(6472:6472): Listo para escuchar a mi cliente
+[INFO] 04:46:36:322 Broker/(6472:6472): esperando
+[INFO] 04:46:38:93 Broker/(6472:6472): Se conecto un cliente!
+[INFO] 04:46:38:94 Broker/(6472:6472): Se conecto un cliente: 6
+[INFO] 04:46:38:94 Broker/(6472:6472): esperando
+[INFO] 04:46:38:94 Broker/(6472:6591): Llego un new pokemon
+[INFO] 04:46:38:94 Broker/(6472:6591): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 04:46:38:94 Broker/(6472:6591): Encontre particion Libre
+[INFO] 04:46:38:95 Broker/(6472:6591): Se toma la particion a medida
+[INFO] 04:46:38:95 Broker/(6472:6591): Se guardo el mensaje en la memoria
+[ERROR] 04:46:38:95 Broker/(6472:6591): Se desconecto el cliente 6: 
+
+[INFO] 04:46:57:600 Broker/(6472:6472): Se conecto un cliente!
+[INFO] 04:46:57:601 Broker/(6472:6472): Se conecto un cliente: 7
+[INFO] 04:46:57:603 Broker/(6472:6594): Llego un catch pokemon
+[INFO] 04:47:03:362 Broker/(6472:6472): esperando
+[ERROR] 04:47:11:934 Broker/(6472:6594): Error levantando data de la memoria
+[INFO] 04:47:18:633 Broker/(6472:6594): Levantado de la memoria posta!!!
+[INFO] 04:48:12:88 Broker/(6472:6594): Levantado de la memoria posta!!!
+[INFO] 04:09:55:182 Broker/(8290:8290): Logger iniciado: Broker.log
+
+[INFO] 04:09:55:183 Broker/(8290:8290): Configuracion broker levantada!
+[INFO] 04:09:55:183 Broker/(8290:8290): Dentro de iniciar servidor
+[INFO] 04:09:55:183 Broker/(8290:8290): Listo para escuchar a mi cliente
+[INFO] 04:09:55:183 Broker/(8290:8290): esperando
+[INFO] 04:10:41:754 Broker/(8290:8290): Se conecto un cliente!
+[INFO] 04:10:41:754 Broker/(8290:8290): Se conecto un cliente: 6
+[INFO] 04:10:41:755 Broker/(8290:8404): Llego un new pokemon
+[INFO] 04:10:41:755 Broker/(8290:8290): esperando
+[INFO] 04:10:41:755 Broker/(8290:8404): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 04:10:41:755 Broker/(8290:8404): Encontre particion Libre
+[INFO] 04:10:41:756 Broker/(8290:8404): Se toma la particion a medida
+[INFO] 04:10:41:756 Broker/(8290:8404): Se guardo el mensaje en la memoria
+[ERROR] 04:10:41:756 Broker/(8290:8404): Se desconecto el cliente 6: 
+
+[INFO] 04:11:34:322 Broker/(8290:8290): Iniciando dump...
+[INFO] 04:12:32:859 Broker/(8497:8497): Logger iniciado: Broker.log
+
+[INFO] 04:12:32:859 Broker/(8497:8497): Configuracion broker levantada!
+[INFO] 04:12:32:859 Broker/(8497:8497): Dentro de iniciar servidor
+[INFO] 04:12:32:859 Broker/(8497:8497): Listo para escuchar a mi cliente
+[INFO] 04:12:32:859 Broker/(8497:8497): esperando
+[INFO] 04:12:42:201 Broker/(8497:8497): Se conecto un cliente!
+[INFO] 04:12:42:201 Broker/(8497:8497): Se conecto un cliente: 6
+[INFO] 04:12:42:202 Broker/(8497:8497): esperando
+[INFO] 04:12:42:202 Broker/(8497:8507): Llego un new pokemon
+[INFO] 04:12:42:202 Broker/(8497:8507): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 04:12:42:202 Broker/(8497:8507): Encontre particion Libre
+[INFO] 04:12:42:202 Broker/(8497:8507): Se toma la particion a medida
+[INFO] 04:12:42:202 Broker/(8497:8507): Se guardo el mensaje en la memoria
+[ERROR] 04:12:42:202 Broker/(8497:8507): Se desconecto el cliente 6: 
+
+[INFO] 04:12:53:362 Broker/(8497:8497): Iniciando dump...
+[INFO] 04:18:36:306 Broker/(8737:8737): Logger iniciado: Broker.log
+
+[INFO] 04:18:36:306 Broker/(8737:8737): Configuracion broker levantada!
+[INFO] 04:18:36:306 Broker/(8737:8737): Dentro de iniciar servidor
+[INFO] 04:18:36:306 Broker/(8737:8737): Listo para escuchar a mi cliente
+[INFO] 04:18:36:306 Broker/(8737:8737): esperando
+[INFO] 04:18:42:418 Broker/(8737:8737): Se conecto un cliente!
+[INFO] 04:18:42:418 Broker/(8737:8737): Se conecto un cliente: 6
+[INFO] 04:18:42:419 Broker/(8737:8737): esperando
+[INFO] 04:18:42:420 Broker/(8737:8748): Llego un new pokemon
+[INFO] 04:18:42:420 Broker/(8737:8748): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 04:20:10:167 Broker/(8787:8787): Logger iniciado: Broker.log
+
+[INFO] 04:20:10:168 Broker/(8787:8787): Configuracion broker levantada!
+[INFO] 04:20:10:168 Broker/(8787:8787): Dentro de iniciar servidor
+[INFO] 04:20:10:168 Broker/(8787:8787): Listo para escuchar a mi cliente
+[INFO] 04:20:10:168 Broker/(8787:8787): esperando
+[INFO] 04:20:12:209 Broker/(8787:8787): Se conecto un cliente!
+[INFO] 04:20:12:210 Broker/(8787:8787): Se conecto un cliente: 6
+[INFO] 04:20:12:211 Broker/(8787:8787): esperando
+[INFO] 04:20:12:211 Broker/(8787:8800): Llego un new pokemon
+[INFO] 04:20:12:211 Broker/(8787:8800): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 04:21:07:730 Broker/(8787:8800): Encontre particion Libre
+[INFO] 04:21:52:188 Broker/(8787:8800): Se toma la particion a medida
+[INFO] 04:22:58:769 Broker/(8787:8800): Se guardo el mensaje en la memoria
+[ERROR] 04:22:58:769 Broker/(8787:8800): Se desconecto el cliente 6: 
+
+[INFO] 04:23:19:124 Broker/(8787:8787): Se conecto un cliente!
+[INFO] 04:23:19:124 Broker/(8787:8787): Se conecto un cliente: 7
+[INFO] 04:23:19:126 Broker/(8787:8943): Llego un catch pokemon
+[INFO] 04:23:25:463 Broker/(8787:8787): esperando
+[ERROR] 04:23:42:259 Broker/(8787:8943): Error levantando data de la memoria
+[INFO] 04:23:56:101 Broker/(8787:8943): Levantado de la memoria posta!!!
+[INFO] 04:42:33:971 Broker/(9302:9302): Logger iniciado: Broker.log
+
+[INFO] 04:42:33:971 Broker/(9302:9302): Configuracion broker levantada!
+[INFO] 04:42:33:973 Broker/(9302:9302): Dentro de iniciar servidor
+[INFO] 04:42:33:973 Broker/(9302:9302): Listo para escuchar a mi cliente
+[INFO] 04:42:33:973 Broker/(9302:9302): esperando
+[INFO] 04:42:46:73 Broker/(9302:9302): Se conecto un cliente!
+[INFO] 04:42:46:73 Broker/(9302:9302): Se conecto un cliente: 6
+[INFO] 04:42:46:74 Broker/(9302:9302): esperando
+[INFO] 04:42:46:74 Broker/(9302:9311): Llego un new pokemon
+[INFO] 04:42:46:74 Broker/(9302:9311): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 04:43:58:974 Broker/(9302:9311): Encontre particion Libre
+[INFO] 04:43:58:974 Broker/(9302:9311): Se toma la particion a medida
+[INFO] 04:46:26:16 Broker/(9430:9430): Logger iniciado: Broker.log
+
+[INFO] 04:46:26:16 Broker/(9430:9430): Configuracion broker levantada!
+[INFO] 04:46:26:16 Broker/(9430:9430): Dentro de iniciar servidor
+[INFO] 04:46:26:16 Broker/(9430:9430): Listo para escuchar a mi cliente
+[INFO] 04:46:26:16 Broker/(9430:9430): esperando
+[INFO] 04:46:28:314 Broker/(9430:9430): Se conecto un cliente!
+[INFO] 04:46:28:314 Broker/(9430:9430): Se conecto un cliente: 6
+[INFO] 04:46:28:315 Broker/(9430:9443): Llego un new pokemon
+[INFO] 04:46:28:315 Broker/(9430:9443): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 04:46:28:315 Broker/(9430:9430): esperando
+[INFO] 04:47:03:126 Broker/(9487:9487): Logger iniciado: Broker.log
+
+[INFO] 04:47:03:126 Broker/(9487:9487): Configuracion broker levantada!
+[INFO] 04:47:03:126 Broker/(9487:9487): Dentro de iniciar servidor
+[INFO] 04:47:03:126 Broker/(9487:9487): Listo para escuchar a mi cliente
+[INFO] 04:47:03:126 Broker/(9487:9487): esperando
+[INFO] 04:47:06:986 Broker/(9487:9487): Se conecto un cliente!
+[INFO] 04:47:06:986 Broker/(9487:9487): Se conecto un cliente: 6
+[INFO] 04:47:06:987 Broker/(9487:9499): Llego un new pokemon
+[INFO] 04:47:06:987 Broker/(9487:9487): esperando
+[INFO] 04:47:06:988 Broker/(9487:9499): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 04:49:16:818 Broker/(9646:9646): Logger iniciado: Broker.log
+
+[INFO] 04:49:16:818 Broker/(9646:9646): Configuracion broker levantada!
+[INFO] 04:49:16:819 Broker/(9646:9646): Dentro de iniciar servidor
+[INFO] 04:49:16:819 Broker/(9646:9646): Listo para escuchar a mi cliente
+[INFO] 04:49:16:819 Broker/(9646:9646): esperando
+[INFO] 04:49:19:585 Broker/(9646:9646): Se conecto un cliente!
+[INFO] 04:49:19:585 Broker/(9646:9646): Se conecto un cliente: 6
+[INFO] 04:49:19:587 Broker/(9646:9657): Llego un new pokemon
+[INFO] 04:49:19:587 Broker/(9646:9657): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 04:49:19:587 Broker/(9646:9646): esperando
+[INFO] 04:50:33:296 Broker/(9733:9733): Logger iniciado: Broker.log
+
+[INFO] 04:50:33:296 Broker/(9733:9733): Configuracion broker levantada!
+[INFO] 04:50:33:296 Broker/(9733:9733): Dentro de iniciar servidor
+[INFO] 04:50:33:297 Broker/(9733:9733): Listo para escuchar a mi cliente
+[INFO] 04:50:33:297 Broker/(9733:9733): esperando
+[INFO] 04:50:35:664 Broker/(9733:9733): Se conecto un cliente!
+[INFO] 04:50:35:664 Broker/(9733:9733): Se conecto un cliente: 6
+[INFO] 04:50:35:665 Broker/(9733:9733): esperando
+[INFO] 04:50:35:665 Broker/(9733:9744): Llego un new pokemon
+[INFO] 04:50:35:666 Broker/(9733:9744): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:01:54:367 Broker/(9883:9883): Logger iniciado: Broker.log
+
+[INFO] 05:01:54:368 Broker/(9883:9883): Configuracion broker levantada!
+[INFO] 05:01:54:368 Broker/(9883:9883): Dentro de iniciar servidor
+[INFO] 05:01:54:368 Broker/(9883:9883): Listo para escuchar a mi cliente
+[INFO] 05:01:54:368 Broker/(9883:9883): esperando
+[INFO] 05:02:15:253 Broker/(9883:9883): Se conecto un cliente!
+[INFO] 05:02:15:253 Broker/(9883:9883): Se conecto un cliente: 6
+[INFO] 05:02:15:253 Broker/(9883:9883): esperando
+[INFO] 05:02:15:254 Broker/(9883:9907): Llego un new pokemon
+[INFO] 05:02:15:254 Broker/(9883:9907): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:02:15:254 Broker/(9883:9907): Encontre particion Libre
+[INFO] 05:02:15:254 Broker/(9883:9907): Se toma la particion a medida
+[INFO] 05:02:15:254 Broker/(9883:9907): Se guardo el mensaje en la memoria
+[ERROR] 05:02:15:254 Broker/(9883:9907): Se desconecto el cliente 6: 
+
+[INFO] 05:02:36:161 Broker/(9883:9883): Se conecto un cliente!
+[INFO] 05:02:36:162 Broker/(9883:9883): Se conecto un cliente: 7
+[INFO] 05:02:36:163 Broker/(9883:9913): Llego un new pokemon
+[INFO] 05:02:36:163 Broker/(9883:9913): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 05:02:36:163 Broker/(9883:9883): esperando
+[INFO] 05:03:37:214 Broker/(9944:9944): Logger iniciado: Broker.log
+
+[INFO] 05:03:37:214 Broker/(9944:9944): Configuracion broker levantada!
+[INFO] 05:03:37:214 Broker/(9944:9944): Dentro de iniciar servidor
+[INFO] 05:03:37:215 Broker/(9944:9944): Listo para escuchar a mi cliente
+[INFO] 05:03:37:215 Broker/(9944:9944): esperando
+[INFO] 05:04:34:14 Broker/(9944:9944): Se conecto un cliente!
+[INFO] 05:04:34:15 Broker/(9944:9944): Se conecto un cliente: 6
+[INFO] 05:04:34:15 Broker/(9944:9944): esperando
+[INFO] 05:04:34:15 Broker/(9944:9959): Llego un new pokemon
+[INFO] 05:04:34:15 Broker/(9944:9959): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 05:04:34:15 Broker/(9944:9959): Encontre particion Libre
+[INFO] 05:04:34:16 Broker/(9944:9959): Se toma la particion a medida
+[INFO] 05:04:34:16 Broker/(9944:9959): Se guardo el mensaje en la memoria
+[ERROR] 05:04:34:16 Broker/(9944:9959): Se desconecto el cliente 6: 
+
+[INFO] 05:04:37:328 Broker/(9944:9944): Se conecto un cliente!
+[INFO] 05:04:37:328 Broker/(9944:9944): Se conecto un cliente: 7
+[INFO] 05:04:37:329 Broker/(9944:9963): Llego un new pokemon
+[INFO] 05:04:37:329 Broker/(9944:9963): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:04:37:333 Broker/(9944:9944): esperando
+[INFO] 05:06:22:413 Broker/(10032:10032): Logger iniciado: Broker.log
+
+[INFO] 05:06:22:413 Broker/(10032:10032): Configuracion broker levantada!
+[INFO] 05:06:22:414 Broker/(10032:10032): Dentro de iniciar servidor
+[INFO] 05:06:22:414 Broker/(10032:10032): Listo para escuchar a mi cliente
+[INFO] 05:06:22:414 Broker/(10032:10032): esperando
+[INFO] 05:06:51:686 Broker/(10032:10032): Se conecto un cliente!
+[INFO] 05:06:51:686 Broker/(10032:10032): Se conecto un cliente: 6
+[INFO] 05:06:51:687 Broker/(10032:10032): esperando
+[INFO] 05:06:51:689 Broker/(10032:10046): Llego un new pokemon
+[INFO] 05:06:51:689 Broker/(10032:10046): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:06:51:689 Broker/(10032:10046): Encontre particion Libre
+[INFO] 05:06:51:689 Broker/(10032:10046): Se toma la particion a medida
+[INFO] 05:06:51:689 Broker/(10032:10046): Se guardo el mensaje en la memoria
+[ERROR] 05:06:51:689 Broker/(10032:10046): Se desconecto el cliente 6: 
+
+[INFO] 05:06:55:297 Broker/(10032:10032): Se conecto un cliente!
+[INFO] 05:06:55:297 Broker/(10032:10032): Se conecto un cliente: 7
+[INFO] 05:06:55:298 Broker/(10032:10032): esperando
+[INFO] 05:06:55:298 Broker/(10032:10050): Llego un new pokemon
+[INFO] 05:06:55:298 Broker/(10032:10050): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 05:06:55:298 Broker/(10032:10050): Encontre particion Libre
+[INFO] 05:06:55:298 Broker/(10032:10050): Se toma la particion a medida
+[INFO] 05:06:55:298 Broker/(10032:10050): Se guardo el mensaje en la memoria
+[ERROR] 05:06:55:298 Broker/(10032:10050): Se desconecto el cliente 7: 
+
+[INFO] 05:07:03:613 Broker/(10032:10032): Se conecto un cliente!
+[INFO] 05:07:03:613 Broker/(10032:10032): Se conecto un cliente: 8
+[INFO] 05:07:03:614 Broker/(10032:10032): esperando
+[INFO] 05:07:03:615 Broker/(10032:10053): Llego un catch pokemon
+[ERROR] 05:07:21:381 Broker/(10032:10053): Error levantando data de la memoria
+[INFO] 05:07:25:835 Broker/(10032:10053): Levantado de la memoria posta!!!
+[INFO] 05:08:29:328 Broker/(10121:10121): Logger iniciado: Broker.log
+
+[INFO] 05:08:29:329 Broker/(10121:10121): Configuracion broker levantada!
+[INFO] 05:08:29:330 Broker/(10121:10121): Dentro de iniciar servidor
+[INFO] 05:08:29:330 Broker/(10121:10121): Listo para escuchar a mi cliente
+[INFO] 05:08:29:330 Broker/(10121:10121): esperando
+[INFO] 05:08:36:863 Broker/(10121:10121): Se conecto un cliente!
+[INFO] 05:08:36:863 Broker/(10121:10121): Se conecto un cliente: 6
+[INFO] 05:08:36:864 Broker/(10121:10121): esperando
+[INFO] 05:08:36:864 Broker/(10121:10136): Llego un new pokemon
+[INFO] 05:08:36:864 Broker/(10121:10136): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:08:36:864 Broker/(10121:10136): Encontre particion Libre
+[INFO] 05:08:36:864 Broker/(10121:10136): Se toma la particion a medida
+[INFO] 05:08:36:864 Broker/(10121:10136): Se guardo el mensaje en la memoria
+[ERROR] 05:08:36:864 Broker/(10121:10136): Se desconecto el cliente 6: 
+
+[INFO] 05:08:40:269 Broker/(10121:10121): Se conecto un cliente!
+[INFO] 05:08:40:269 Broker/(10121:10121): Se conecto un cliente: 7
+[INFO] 05:08:40:270 Broker/(10121:10139): Llego un new pokemon
+[INFO] 05:08:40:270 Broker/(10121:10139): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 05:08:40:270 Broker/(10121:10139): Encontre particion Libre
+[INFO] 05:08:40:270 Broker/(10121:10139): Se toma la particion a medida
+[INFO] 05:08:40:270 Broker/(10121:10139): Se guardo el mensaje en la memoria
+[ERROR] 05:08:40:270 Broker/(10121:10139): Se desconecto el cliente 7: 
+
+[INFO] 05:08:40:270 Broker/(10121:10121): esperando
+[INFO] 05:08:44:991 Broker/(10121:10121): Se conecto un cliente!
+[INFO] 05:08:44:991 Broker/(10121:10121): Se conecto un cliente: 8
+[INFO] 05:08:44:992 Broker/(10121:10121): esperando
+[INFO] 05:08:44:992 Broker/(10121:10142): Llego un catch pokemon
+[ERROR] 05:09:13:642 Broker/(10121:10142): Error levantando data de la memoria
+[INFO] 05:09:19:470 Broker/(10121:10142): Levantado de la memoria posta!!!
+[INFO] 05:09:42:998 Broker/(10121:10142): Levantado de la memoria posta!!!
+[INFO] 05:13:43:330 Broker/(10264:10264): Logger iniciado: Broker.log
+
+[INFO] 05:13:43:330 Broker/(10264:10264): Configuracion broker levantada!
+[INFO] 05:13:43:330 Broker/(10264:10264): Dentro de iniciar servidor
+[INFO] 05:13:43:330 Broker/(10264:10264): Listo para escuchar a mi cliente
+[INFO] 05:13:43:330 Broker/(10264:10264): esperando
+[INFO] 05:13:49:555 Broker/(10264:10264): Se conecto un cliente!
+[INFO] 05:13:49:555 Broker/(10264:10264): Se conecto un cliente: 6
+[INFO] 05:13:49:556 Broker/(10264:10264): esperando
+[INFO] 05:13:49:556 Broker/(10264:10279): Llego un new pokemon
+[INFO] 05:13:49:556 Broker/(10264:10279): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 05:13:49:556 Broker/(10264:10279): Encontre particion Libre
+[INFO] 05:13:49:556 Broker/(10264:10279): Se toma la particion a medida
+[INFO] 05:13:49:556 Broker/(10264:10279): Se guardo el mensaje en la memoria
+[ERROR] 05:13:49:556 Broker/(10264:10279): Se desconecto el cliente 6: 
+
+[INFO] 05:13:57:988 Broker/(10264:10264): Se conecto un cliente!
+[INFO] 05:13:57:988 Broker/(10264:10264): Se conecto un cliente: 7
+[INFO] 05:13:57:991 Broker/(10264:10264): esperando
+[INFO] 05:13:57:991 Broker/(10264:10282): Llego un catch pokemon
+[ERROR] 05:14:18:811 Broker/(10264:10282): Error levantando data de la memoria
+[INFO] 05:14:21:938 Broker/(10264:10282): Levantado de la memoria posta!!!
+[INFO] 05:16:51:534 Broker/(10433:10433): Logger iniciado: Broker.log
+
+[INFO] 05:16:51:535 Broker/(10433:10433): Configuracion broker levantada!
+[INFO] 05:16:51:535 Broker/(10433:10433): Dentro de iniciar servidor
+[INFO] 05:16:51:535 Broker/(10433:10433): Listo para escuchar a mi cliente
+[INFO] 05:16:51:535 Broker/(10433:10433): esperando
+[INFO] 05:16:56:190 Broker/(10433:10433): Se conecto un cliente!
+[INFO] 05:16:56:190 Broker/(10433:10433): Se conecto un cliente: 6
+[INFO] 05:16:56:191 Broker/(10433:10433): esperando
+[INFO] 05:16:56:193 Broker/(10433:10444): Llego un new pokemon
+[INFO] 05:16:56:193 Broker/(10433:10444): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 05:16:56:193 Broker/(10433:10444): Encontre particion Libre
+[INFO] 05:16:56:193 Broker/(10433:10444): Se toma la particion a medida
+[INFO] 05:16:56:193 Broker/(10433:10444): Se guardo el mensaje en la memoria
+[ERROR] 05:16:56:193 Broker/(10433:10444): Se desconecto el cliente 6: 
+
+[INFO] 05:17:05:782 Broker/(10433:10433): Se conecto un cliente!
+[INFO] 05:17:05:782 Broker/(10433:10433): Se conecto un cliente: 7
+[INFO] 05:17:05:783 Broker/(10433:10451): Llego un new pokemon
+[INFO] 05:17:05:783 Broker/(10433:10433): esperando
+[INFO] 05:17:05:783 Broker/(10433:10451): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:17:05:784 Broker/(10433:10451): Encontre particion Libre
+[INFO] 05:17:05:784 Broker/(10433:10451): Se toma la particion a medida
+[INFO] 05:17:05:784 Broker/(10433:10451): Se guardo el mensaje en la memoria
+[ERROR] 05:17:05:784 Broker/(10433:10451): Se desconecto el cliente 7: 
+
+[INFO] 05:17:10:210 Broker/(10433:10433): Se conecto un cliente!
+[INFO] 05:17:10:210 Broker/(10433:10433): Se conecto un cliente: 8
+[INFO] 05:17:10:211 Broker/(10433:10433): esperando
+[INFO] 05:17:10:211 Broker/(10433:10454): Llego un catch pokemon
+[INFO] 05:19:33:113 Broker/(10433:10454): Levantado de la memoria posta!!!
+[INFO] 05:19:33:113 Broker/(10433:10454): Levantado de la memoria posta!!!
+[INFO] 05:19:33:113 Broker/(10433:10454): Me llego mensaje catch, Pkm: 2, x: 2, y: 3
+
+[INFO] 05:19:33:113 Broker/(10433:10454): No hay suscriptores
+[ERROR] 05:19:33:113 Broker/(10433:10454): Se desconecto el cliente 8: 
+
+[INFO] 05:20:15:276 Broker/(10586:10586): Logger iniciado: Broker.log
+
+[INFO] 05:20:15:276 Broker/(10586:10586): Configuracion broker levantada!
+[INFO] 05:20:15:277 Broker/(10586:10586): Dentro de iniciar servidor
+[INFO] 05:20:15:277 Broker/(10586:10586): Listo para escuchar a mi cliente
+[INFO] 05:20:15:277 Broker/(10586:10586): esperando
+[INFO] 05:20:34:140 Broker/(10586:10586): Se conecto un cliente!
+[INFO] 05:20:34:140 Broker/(10586:10586): Se conecto un cliente: 6
+[INFO] 05:20:34:141 Broker/(10586:10586): esperando
+[INFO] 05:20:34:142 Broker/(10586:10602): Llego un new pokemon
+[INFO] 05:20:34:142 Broker/(10586:10602): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:20:34:142 Broker/(10586:10602): Encontre particion Libre
+[INFO] 05:20:34:142 Broker/(10586:10602): Se toma la particion a medida
+[INFO] 05:20:34:142 Broker/(10586:10602): Se guardo el mensaje en la memoria
+[ERROR] 05:20:34:142 Broker/(10586:10602): Se desconecto el cliente 6: 
+
+[INFO] 05:20:52:168 Broker/(10586:10586): Iniciando dump...
+[INFO] 05:21:04:699 Broker/(10586:10586): Se conecto un cliente!
+[INFO] 05:21:04:699 Broker/(10586:10586): Se conecto un cliente: 7
+[INFO] 05:21:04:700 Broker/(10586:10622): Llego un new pokemon
+[INFO] 05:21:04:700 Broker/(10586:10622): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:21:04:700 Broker/(10586:10622): Encontre particion Libre
+[INFO] 05:21:04:700 Broker/(10586:10586): esperando
+[INFO] 05:21:04:700 Broker/(10586:10622): Se toma la particion a medida
+[INFO] 05:21:04:700 Broker/(10586:10622): Se guardo el mensaje en la memoria
+[ERROR] 05:21:04:700 Broker/(10586:10622): Se desconecto el cliente 7: 
+
+[INFO] 05:22:47:145 Broker/(10694:10694): Logger iniciado: Broker.log
+
+[INFO] 05:22:47:148 Broker/(10694:10694): Configuracion broker levantada!
+[INFO] 05:22:47:149 Broker/(10694:10694): Dentro de iniciar servidor
+[INFO] 05:22:47:149 Broker/(10694:10694): Listo para escuchar a mi cliente
+[INFO] 05:22:47:149 Broker/(10694:10694): esperando
+[INFO] 05:22:58:842 Broker/(10694:10694): Iniciando dump...
+[INFO] 05:23:30:680 Broker/(10788:10788): Logger iniciado: Broker.log
+
+[INFO] 05:23:30:680 Broker/(10788:10788): Configuracion broker levantada!
+[INFO] 05:23:30:680 Broker/(10788:10788): Dentro de iniciar servidor
+[INFO] 05:23:30:680 Broker/(10788:10788): Listo para escuchar a mi cliente
+[INFO] 05:23:30:680 Broker/(10788:10788): esperando
+[INFO] 05:24:30:769 Broker/(10788:10788): Iniciando dump...
+[INFO] 05:32:18:352 Broker/(11091:11091): Logger iniciado: Broker.log
+
+[INFO] 05:32:18:352 Broker/(11091:11091): Configuracion broker levantada!
+[INFO] 05:32:18:352 Broker/(11091:11091): Dentro de iniciar servidor
+[INFO] 05:32:18:352 Broker/(11091:11091): Listo para escuchar a mi cliente
+[INFO] 05:32:18:353 Broker/(11091:11091): esperando
+[INFO] 05:32:23:876 Broker/(11091:11091): Se conecto un cliente!
+[INFO] 05:32:23:877 Broker/(11091:11091): Se conecto un cliente: 6
+[INFO] 05:32:23:877 Broker/(11091:11091): esperando
+[INFO] 05:32:23:878 Broker/(11091:11107): Llego un new pokemon
+[INFO] 05:32:23:878 Broker/(11091:11107): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:32:23:878 Broker/(11091:11107): Encontre particion Libre
+[INFO] 05:32:23:878 Broker/(11091:11107): Se toma la particion a medida
+[INFO] 05:32:23:878 Broker/(11091:11107): Se guardo el mensaje en la memoria
+[ERROR] 05:32:23:878 Broker/(11091:11107): Se desconecto el cliente 6: 
+
+[INFO] 05:32:28:589 Broker/(11091:11091): Se conecto un cliente!
+[INFO] 05:32:28:589 Broker/(11091:11091): Se conecto un cliente: 7
+[INFO] 05:32:28:590 Broker/(11091:11091): esperando
+[INFO] 05:32:28:591 Broker/(11091:11110): Llego un new pokemon
+[INFO] 05:32:28:591 Broker/(11091:11110): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 05:32:28:591 Broker/(11091:11110): Encontre particion Libre
+[INFO] 05:32:28:591 Broker/(11091:11110): Se toma la particion a medida
+[INFO] 05:32:28:591 Broker/(11091:11110): Se guardo el mensaje en la memoria
+[ERROR] 05:32:28:591 Broker/(11091:11110): Se desconecto el cliente 7: 
+
+[INFO] 05:32:45:928 Broker/(11091:11091): Iniciando dump...
+[INFO] 05:34:26:74 Broker/(11280:11280): Logger iniciado: Broker.log
+
+[INFO] 05:34:26:74 Broker/(11280:11280): Configuracion broker levantada!
+[INFO] 05:34:26:75 Broker/(11280:11280): Dentro de iniciar servidor
+[INFO] 05:34:26:75 Broker/(11280:11280): Listo para escuchar a mi cliente
+[INFO] 05:34:26:75 Broker/(11280:11280): esperando
+[INFO] 05:34:31:806 Broker/(11280:11280): Se conecto un cliente!
+[INFO] 05:34:31:806 Broker/(11280:11280): Se conecto un cliente: 6
+[INFO] 05:34:31:806 Broker/(11280:11280): esperando
+[INFO] 05:34:31:807 Broker/(11280:11295): Llego un new pokemon
+[INFO] 05:34:31:807 Broker/(11280:11295): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 05:34:31:807 Broker/(11280:11295): Encontre particion Libre
+[INFO] 05:34:31:809 Broker/(11280:11295): Se toma la particion a medida
+[INFO] 05:34:31:809 Broker/(11280:11295): Se guardo el mensaje en la memoria
+[ERROR] 05:34:31:809 Broker/(11280:11295): Se desconecto el cliente 6: 
+
+[INFO] 05:34:33:581 Broker/(11280:11280): Se conecto un cliente!
+[INFO] 05:34:33:581 Broker/(11280:11280): Se conecto un cliente: 7
+[INFO] 05:34:33:583 Broker/(11280:11280): esperando
+[INFO] 05:34:33:584 Broker/(11280:11298): Llego un new pokemon
+[INFO] 05:34:33:584 Broker/(11280:11298): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:34:33:584 Broker/(11280:11298): Encontre particion Libre
+[INFO] 05:34:33:585 Broker/(11280:11298): Se toma la particion a medida
+[INFO] 05:34:33:585 Broker/(11280:11298): Se guardo el mensaje en la memoria
+[ERROR] 05:34:33:585 Broker/(11280:11298): Se desconecto el cliente 7: 
+
+[INFO] 05:34:43:231 Broker/(11280:11280): Iniciando dump...
+[INFO] 05:35:27:101 Broker/(11368:11368): Logger iniciado: Broker.log
+
+[INFO] 05:35:27:102 Broker/(11368:11368): Configuracion broker levantada!
+[INFO] 05:35:27:102 Broker/(11368:11368): Dentro de iniciar servidor
+[INFO] 05:35:27:102 Broker/(11368:11368): Listo para escuchar a mi cliente
+[INFO] 05:35:27:102 Broker/(11368:11368): esperando
+[INFO] 05:35:34:239 Broker/(11368:11368): Se conecto un cliente!
+[INFO] 05:35:34:239 Broker/(11368:11368): Se conecto un cliente: 6
+[INFO] 05:35:34:240 Broker/(11368:11368): esperando
+[INFO] 05:35:34:241 Broker/(11368:11384): Llego un new pokemon
+[INFO] 05:35:34:241 Broker/(11368:11384): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:35:34:241 Broker/(11368:11384): Encontre particion Libre
+[INFO] 05:35:34:241 Broker/(11368:11384): Se toma la particion a medida
+[INFO] 05:35:34:241 Broker/(11368:11384): Se guardo el mensaje en la memoria
+[ERROR] 05:35:34:241 Broker/(11368:11384): Se desconecto el cliente 6: 
+
+[INFO] 05:35:37:301 Broker/(11368:11368): Se conecto un cliente!
+[INFO] 05:35:37:301 Broker/(11368:11368): Se conecto un cliente: 7
+[INFO] 05:35:37:303 Broker/(11368:11368): esperando
+[INFO] 05:35:37:303 Broker/(11368:11388): Llego un new pokemon
+[INFO] 05:35:37:304 Broker/(11368:11388): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 05:35:37:304 Broker/(11368:11388): Encontre particion Libre
+[INFO] 05:35:37:304 Broker/(11368:11388): Se toma la particion a medida
+[INFO] 05:35:37:304 Broker/(11368:11388): Se guardo el mensaje en la memoria
+[ERROR] 05:35:37:304 Broker/(11368:11388): Se desconecto el cliente 7: 
+
+[INFO] 05:35:59:257 Broker/(11368:11368): Iniciando dump...
+[INFO] 05:36:26:989 Broker/(11448:11448): Logger iniciado: Broker.log
+
+[INFO] 05:36:26:989 Broker/(11448:11448): Configuracion broker levantada!
+[INFO] 05:36:26:989 Broker/(11448:11448): Dentro de iniciar servidor
+[INFO] 05:36:26:989 Broker/(11448:11448): Listo para escuchar a mi cliente
+[INFO] 05:36:26:989 Broker/(11448:11448): esperando
+[INFO] 05:36:30:999 Broker/(11448:11448): Se conecto un cliente!
+[INFO] 05:36:30:999 Broker/(11448:11448): Se conecto un cliente: 6
+[INFO] 05:36:30:1 Broker/(11448:11448): esperando
+[INFO] 05:36:30:1 Broker/(11448:11461): Llego un new pokemon
+[INFO] 05:36:30:1 Broker/(11448:11461): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 05:36:30:1 Broker/(11448:11461): Encontre particion Libre
+[INFO] 05:36:30:1 Broker/(11448:11461): Se toma la particion a medida
+[INFO] 05:36:30:1 Broker/(11448:11461): Se guardo el mensaje en la memoria
+[ERROR] 05:36:30:1 Broker/(11448:11461): Se desconecto el cliente 6: 
+
+[INFO] 05:36:32:389 Broker/(11448:11448): Se conecto un cliente!
+[INFO] 05:36:32:389 Broker/(11448:11448): Se conecto un cliente: 7
+[INFO] 05:36:32:390 Broker/(11448:11466): Llego un new pokemon
+[INFO] 05:36:32:390 Broker/(11448:11466): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:36:32:391 Broker/(11448:11466): Encontre particion Libre
+[INFO] 05:36:32:391 Broker/(11448:11466): Se toma la particion a medida
+[INFO] 05:36:32:391 Broker/(11448:11466): Se guardo el mensaje en la memoria
+[ERROR] 05:36:32:391 Broker/(11448:11466): Se desconecto el cliente 7: 
+
+[INFO] 05:36:32:392 Broker/(11448:11448): esperando
+[INFO] 05:36:41:514 Broker/(11448:11448): Iniciando dump...
+[INFO] 05:37:15:21 Broker/(11544:11544): Logger iniciado: Broker.log
+
+[INFO] 05:37:15:22 Broker/(11544:11544): Configuracion broker levantada!
+[INFO] 05:37:15:22 Broker/(11544:11544): Dentro de iniciar servidor
+[INFO] 05:37:15:22 Broker/(11544:11544): Listo para escuchar a mi cliente
+[INFO] 05:37:15:22 Broker/(11544:11544): esperando
+[INFO] 05:37:17:905 Broker/(11544:11544): Se conecto un cliente!
+[INFO] 05:37:17:905 Broker/(11544:11544): Se conecto un cliente: 6
+[INFO] 05:37:17:906 Broker/(11544:11544): esperando
+[INFO] 05:37:17:908 Broker/(11544:11557): Llego un new pokemon
+[INFO] 05:37:17:908 Broker/(11544:11557): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 05:37:17:908 Broker/(11544:11557): Encontre particion Libre
+[INFO] 05:37:17:908 Broker/(11544:11557): Se toma la particion a medida
+[INFO] 05:37:17:908 Broker/(11544:11557): Se guardo el mensaje en la memoria
+[ERROR] 05:37:17:908 Broker/(11544:11557): Se desconecto el cliente 6: 
+
+[INFO] 05:37:19:511 Broker/(11544:11544): Se conecto un cliente!
+[INFO] 05:37:19:511 Broker/(11544:11544): Se conecto un cliente: 7
+[INFO] 05:37:19:513 Broker/(11544:11544): esperando
+[INFO] 05:37:19:513 Broker/(11544:11560): Llego un new pokemon
+[INFO] 05:37:19:513 Broker/(11544:11560): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 05:37:19:513 Broker/(11544:11560): Encontre particion Libre
+[INFO] 05:37:19:513 Broker/(11544:11560): Se toma la particion a medida
+[INFO] 05:37:19:513 Broker/(11544:11560): Se guardo el mensaje en la memoria
+[ERROR] 05:37:19:513 Broker/(11544:11560): Se desconecto el cliente 7: 
+
+[INFO] 05:37:27:151 Broker/(11544:11544): Iniciando dump...
+[INFO] 05:42:51:165 Broker/(11544:11544): Se conecto un cliente!
+[INFO] 05:42:51:165 Broker/(11544:11544): Se conecto un cliente: 8
+[INFO] 05:42:51:165 Broker/(11544:11762): Llego un catch pokemon
+[INFO] 05:42:51:166 Broker/(11544:11544): esperando
+[INFO] 05:43:19:431 Broker/(11544:11762): Levantado de la memoria posta!!!
+[INFO] 06:02:05:927 Broker/(12155:12155): Logger iniciado: Broker.log
+
+[INFO] 06:02:05:928 Broker/(12155:12155): Configuracion broker levantada!
+[INFO] 06:02:05:928 Broker/(12155:12155): Dentro de iniciar servidor
+[INFO] 06:02:05:928 Broker/(12155:12155): Listo para escuchar a mi cliente
+[INFO] 06:02:05:928 Broker/(12155:12155): esperando
+[INFO] 06:02:12:329 Broker/(12155:12155): Se conecto un cliente!
+[INFO] 06:02:12:329 Broker/(12155:12155): Se conecto un cliente: 6
+[INFO] 06:02:12:329 Broker/(12155:12155): esperando
+[INFO] 06:02:12:329 Broker/(12155:12164): Llego un new pokemon
+[INFO] 06:02:12:329 Broker/(12155:12164): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 06:02:12:329 Broker/(12155:12164): Encontre particion Libre
+[INFO] 06:02:20:681 Broker/(12155:12164): Se toma la particion a medida
+[INFO] 06:02:20:681 Broker/(12155:12164): Se guardo el mensaje en la memoria
+[ERROR] 06:02:20:681 Broker/(12155:12164): Se desconecto el cliente 6: 
+
+[INFO] 06:02:29:354 Broker/(12155:12155): Se conecto un cliente!
+[INFO] 06:02:29:354 Broker/(12155:12155): Se conecto un cliente: 7
+[INFO] 06:02:29:355 Broker/(12155:12172): Llego un new pokemon
+[INFO] 06:02:29:355 Broker/(12155:12155): esperando
+[INFO] 06:02:29:355 Broker/(12155:12172): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 06:02:29:355 Broker/(12155:12172): Encontre particion Libre
+[INFO] 06:02:29:355 Broker/(12155:12172): Se toma la particion a medida
+[INFO] 06:02:29:355 Broker/(12155:12172): Se guardo el mensaje en la memoria
+[ERROR] 06:02:29:355 Broker/(12155:12172): Se desconecto el cliente 7: 
+
+[INFO] 06:02:44:520 Broker/(12155:12155): Iniciando dump...
+[INFO] 06:03:53:635 Broker/(12155:12155): Se conecto un cliente!
+[INFO] 06:03:53:635 Broker/(12155:12155): Se conecto un cliente: 8
+[INFO] 06:03:53:636 Broker/(12155:12155): esperando
+[INFO] 06:03:53:636 Broker/(12155:12264): Llego un catch pokemon
+[INFO] 06:04:21:1 Broker/(12155:12264): Levantado de la memoria posta!!!
+[INFO] 06:04:52:219 Broker/(12155:12264): Levantado de la memoria posta!!!
+[INFO] 06:04:52:219 Broker/(12155:12264): Me llego mensaje catch, Pkm: 2, x: 2, y: 3
+
+[INFO] 06:04:52:219 Broker/(12155:12264): No hay suscriptores
+[ERROR] 06:04:52:219 Broker/(12155:12264): Se desconecto el cliente 8: 
+
+[INFO] 06:08:56:852 Broker/(12384:12384): Logger iniciado: Broker.log
+
+[INFO] 06:08:56:853 Broker/(12384:12384): Configuracion broker levantada!
+[INFO] 06:08:56:853 Broker/(12384:12384): Dentro de iniciar servidor
+[INFO] 06:08:56:853 Broker/(12384:12384): Listo para escuchar a mi cliente
+[INFO] 06:08:56:853 Broker/(12384:12384): esperando
+[INFO] 06:09:01:828 Broker/(12384:12384): Se conecto un cliente!
+[INFO] 06:09:01:828 Broker/(12384:12384): Se conecto un cliente: 6
+[INFO] 06:09:01:830 Broker/(12384:12384): esperando
+[INFO] 06:09:01:830 Broker/(12384:12395): Llego un new pokemon
+[INFO] 06:09:01:830 Broker/(12384:12395): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 06:09:01:831 Broker/(12384:12395): Encontre particion Libre
+[INFO] 06:09:01:831 Broker/(12384:12395): Se toma la particion a medida
+[INFO] 06:09:01:831 Broker/(12384:12395): Se guardo el mensaje en la memoria
+[ERROR] 06:09:01:831 Broker/(12384:12395): Se desconecto el cliente 6: 
+
+[INFO] 06:09:05:205 Broker/(12384:12384): Se conecto un cliente!
+[INFO] 06:09:05:205 Broker/(12384:12384): Se conecto un cliente: 7
+[INFO] 06:09:05:206 Broker/(12384:12398): Llego un new pokemon
+[INFO] 06:09:05:206 Broker/(12384:12384): esperando
+[INFO] 06:09:05:206 Broker/(12384:12398): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 06:09:05:206 Broker/(12384:12398): Encontre particion Libre
+[INFO] 06:09:05:206 Broker/(12384:12398): Se toma la particion a medida
+[INFO] 06:09:05:206 Broker/(12384:12398): Se guardo el mensaje en la memoria
+[ERROR] 06:09:05:207 Broker/(12384:12398): Se desconecto el cliente 7: 
+
+[INFO] 06:09:09:136 Broker/(12384:12384): Se conecto un cliente!
+[INFO] 06:09:09:136 Broker/(12384:12384): Se conecto un cliente: 8
+[INFO] 06:09:09:136 Broker/(12384:12384): esperando
+[INFO] 06:09:09:136 Broker/(12384:12400): Llego un catch pokemon
+[INFO] 06:09:26:4 Broker/(12384:12400): Levantado de la memoria posta!!!
+[INFO] 06:09:42:355 Broker/(12384:12400): Levantado de la memoria posta!!!
+[INFO] 06:09:42:355 Broker/(12384:12400): Me llego mensaje catch, Pkm: 2, x: 2, y: 3
+
+[INFO] 06:09:42:355 Broker/(12384:12400): No hay suscriptores
+[ERROR] 06:09:42:355 Broker/(12384:12400): Se desconecto el cliente 8: 
+
+[INFO] 06:09:57:910 Broker/(12384:12384): Iniciando dump...
+[INFO] 06:10:50:215 Broker/(12496:12496): Logger iniciado: Broker.log
+
+[INFO] 06:10:50:216 Broker/(12496:12496): Configuracion broker levantada!
+[INFO] 06:10:50:216 Broker/(12496:12496): Dentro de iniciar servidor
+[INFO] 06:10:50:216 Broker/(12496:12496): Listo para escuchar a mi cliente
+[INFO] 06:10:50:216 Broker/(12496:12496): esperando
+[INFO] 06:11:05:765 Broker/(12496:12496): Se conecto un cliente!
+[INFO] 06:11:05:765 Broker/(12496:12496): Se conecto un cliente: 6
+[INFO] 06:11:05:766 Broker/(12496:12507): Llego un new pokemon
+[INFO] 06:11:05:766 Broker/(12496:12507): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 06:11:05:766 Broker/(12496:12507): Encontre particion Libre
+[INFO] 06:11:05:766 Broker/(12496:12507): Se toma la particion a medida
+[INFO] 06:11:05:766 Broker/(12496:12507): Se guardo el mensaje en la memoria
+[ERROR] 06:11:05:766 Broker/(12496:12507): Se desconecto el cliente 6: 
+
+[INFO] 06:11:05:766 Broker/(12496:12496): esperando
+[INFO] 06:11:08:536 Broker/(12496:12496): Se conecto un cliente!
+[INFO] 06:11:08:536 Broker/(12496:12496): Se conecto un cliente: 7
+[INFO] 06:11:08:538 Broker/(12496:12511): Llego un new pokemon
+[INFO] 06:11:08:538 Broker/(12496:12511): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 06:11:08:538 Broker/(12496:12511): Encontre particion Libre
+[INFO] 06:11:08:538 Broker/(12496:12496): esperando
+[INFO] 06:11:08:538 Broker/(12496:12511): Se toma la particion a medida
+[INFO] 06:11:08:538 Broker/(12496:12511): Se guardo el mensaje en la memoria
+[ERROR] 06:11:08:539 Broker/(12496:12511): Se desconecto el cliente 7: 
+
+[INFO] 06:11:12:93 Broker/(12496:12496): Se conecto un cliente!
+[INFO] 06:11:12:93 Broker/(12496:12496): Se conecto un cliente: 8
+[INFO] 06:11:12:94 Broker/(12496:12496): esperando
+[INFO] 06:11:12:94 Broker/(12496:12514): Llego un catch pokemon
+[INFO] 06:11:16:81 Broker/(12496:12514): Levantado de la memoria posta!!!
+[INFO] 06:11:16:696 Broker/(12496:12514): Levantado de la memoria posta!!!
+[INFO] 06:11:16:697 Broker/(12496:12514): Me llego mensaje catch, Pkm: 2, x: 2, y: 3
+
+[INFO] 06:11:16:697 Broker/(12496:12514): No hay suscriptores
+[ERROR] 06:11:16:697 Broker/(12496:12514): Se desconecto el cliente 8: 
+
+[INFO] 06:11:37:452 Broker/(12496:12496): Iniciando dump...
+[INFO] 06:12:38:446 Broker/(12588:12588): Logger iniciado: Broker.log
+
+[INFO] 06:12:38:446 Broker/(12588:12588): Configuracion broker levantada!
+[INFO] 06:12:38:447 Broker/(12588:12588): Dentro de iniciar servidor
+[INFO] 06:12:38:447 Broker/(12588:12588): Listo para escuchar a mi cliente
+[INFO] 06:12:38:447 Broker/(12588:12588): esperando
+[INFO] 06:12:46:577 Broker/(12588:12588): Se conecto un cliente!
+[INFO] 06:12:46:577 Broker/(12588:12588): Se conecto un cliente: 6
+[INFO] 06:12:46:580 Broker/(12588:12588): esperando
+[INFO] 06:12:46:580 Broker/(12588:12603): Llego un new pokemon
+[INFO] 06:12:46:580 Broker/(12588:12603): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 06:12:46:580 Broker/(12588:12603): Encontre particion Libre
+[INFO] 06:12:46:580 Broker/(12588:12603): Se toma la particion a medida
+[INFO] 06:12:46:580 Broker/(12588:12603): Se guardo el mensaje en la memoria
+[ERROR] 06:12:46:580 Broker/(12588:12603): Se desconecto el cliente 6: 
+
+[INFO] 06:12:55:355 Broker/(12588:12588): Iniciando dump...
+[INFO] 06:13:22:747 Broker/(12588:12588): Termino el dump.
+[INFO] 06:19:05:872 Broker/(12849:12849): Logger iniciado: Broker.log
+
+[INFO] 06:19:05:872 Broker/(12849:12849): Configuracion broker levantada!
+[INFO] 06:19:05:872 Broker/(12849:12849): Dentro de iniciar servidor
+[INFO] 06:19:05:872 Broker/(12849:12849): Listo para escuchar a mi cliente
+[INFO] 06:19:05:872 Broker/(12849:12849): esperando
+[INFO] 06:19:10:293 Broker/(12849:12849): Se conecto un cliente!
+[INFO] 06:19:10:294 Broker/(12849:12849): Se conecto un cliente: 6
+[INFO] 06:19:10:294 Broker/(12849:12849): esperando
+[INFO] 06:19:10:294 Broker/(12849:12861): Llego un new pokemon
+[INFO] 06:19:10:295 Broker/(12849:12861): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 06:19:10:295 Broker/(12849:12861): Encontre particion Libre
+[INFO] 06:19:10:295 Broker/(12849:12861): Se toma la particion a medida
+[INFO] 06:19:10:295 Broker/(12849:12861): Se guardo el mensaje en la memoria
+[ERROR] 06:19:10:295 Broker/(12849:12861): Se desconecto el cliente 6: 
+
+[INFO] 06:19:13:648 Broker/(12849:12849): Se conecto un cliente!
+[INFO] 06:19:13:649 Broker/(12849:12849): Se conecto un cliente: 7
+[INFO] 06:19:13:650 Broker/(12849:12864): Llego un new pokemon
+[INFO] 06:19:13:650 Broker/(12849:12864): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 06:19:13:650 Broker/(12849:12864): Encontre particion Libre
+[INFO] 06:19:13:650 Broker/(12849:12864): Se toma la particion a medida
+[INFO] 06:19:13:650 Broker/(12849:12864): Se guardo el mensaje en la memoria
+[ERROR] 06:19:13:650 Broker/(12849:12864): Se desconecto el cliente 7: 
+
+[INFO] 06:19:13:650 Broker/(12849:12849): esperando
+[INFO] 06:19:26:616 Broker/(12849:12849): Iniciando dump...
+[INFO] 06:21:49:364 Broker/(12981:12981): Logger iniciado: Broker.log
+
+[INFO] 06:21:49:364 Broker/(12981:12981): Configuracion broker levantada!
+[INFO] 06:21:49:365 Broker/(12981:12981): Dentro de iniciar servidor
+[INFO] 06:21:49:365 Broker/(12981:12981): Listo para escuchar a mi cliente
+[INFO] 06:21:49:365 Broker/(12981:12981): esperando
+[INFO] 06:21:53:754 Broker/(12981:12981): Se conecto un cliente!
+[INFO] 06:21:53:754 Broker/(12981:12981): Se conecto un cliente: 6
+[INFO] 06:21:53:757 Broker/(12981:12981): esperando
+[INFO] 06:21:53:757 Broker/(12981:12994): Llego un new pokemon
+[INFO] 06:21:53:757 Broker/(12981:12994): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 06:21:53:757 Broker/(12981:12994): Encontre particion Libre
+[INFO] 06:21:53:757 Broker/(12981:12994): Se toma la particion a medida
+[INFO] 06:21:53:757 Broker/(12981:12994): Se guardo el mensaje en la memoria
+[ERROR] 06:21:53:757 Broker/(12981:12994): Se desconecto el cliente 6: 
+
+[INFO] 06:21:55:128 Broker/(12981:12981): Se conecto un cliente!
+[INFO] 06:21:55:128 Broker/(12981:12981): Se conecto un cliente: 7
+[INFO] 06:21:55:130 Broker/(12981:12981): esperando
+[INFO] 06:21:55:130 Broker/(12981:12998): Llego un new pokemon
+[INFO] 06:21:55:130 Broker/(12981:12998): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 06:21:55:130 Broker/(12981:12998): Encontre particion Libre
+[INFO] 06:21:55:130 Broker/(12981:12998): Se toma la particion a medida
+[INFO] 06:21:55:130 Broker/(12981:12998): Se guardo el mensaje en la memoria
+[ERROR] 06:21:55:130 Broker/(12981:12998): Se desconecto el cliente 7: 
+
+[INFO] 06:22:12:604 Broker/(12981:12981): Iniciando dump...
+[INFO] 06:25:07:242 Broker/(13110:13110): Logger iniciado: Broker.log
+
+[INFO] 06:25:07:242 Broker/(13110:13110): Configuracion broker levantada!
+[INFO] 06:25:07:242 Broker/(13110:13110): Dentro de iniciar servidor
+[INFO] 06:25:07:242 Broker/(13110:13110): Listo para escuchar a mi cliente
+[INFO] 06:25:07:242 Broker/(13110:13110): esperando
+[INFO] 06:25:10:288 Broker/(13110:13110): Se conecto un cliente!
+[INFO] 06:25:10:288 Broker/(13110:13110): Se conecto un cliente: 6
+[INFO] 06:25:10:289 Broker/(13110:13127): Llego un new pokemon
+[INFO] 06:25:10:290 Broker/(13110:13110): esperando
+[INFO] 06:25:10:291 Broker/(13110:13127): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 06:25:10:291 Broker/(13110:13127): Encontre particion Libre
+[INFO] 06:25:10:291 Broker/(13110:13127): Se toma la particion a medida
+[INFO] 06:25:10:291 Broker/(13110:13127): Se guardo el mensaje en la memoria
+[ERROR] 06:25:10:291 Broker/(13110:13127): Se desconecto el cliente 6: 
+
+[INFO] 06:25:11:160 Broker/(13110:13110): Se conecto un cliente!
+[INFO] 06:25:11:160 Broker/(13110:13110): Se conecto un cliente: 7
+[INFO] 06:25:11:161 Broker/(13110:13110): esperando
+[INFO] 06:25:11:161 Broker/(13110:13130): Llego un new pokemon
+[INFO] 06:25:11:161 Broker/(13110:13130): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 06:25:11:161 Broker/(13110:13130): Encontre particion Libre
+[INFO] 06:25:11:161 Broker/(13110:13130): Se toma la particion a medida
+[INFO] 06:25:11:161 Broker/(13110:13130): Se guardo el mensaje en la memoria
+[ERROR] 06:25:11:161 Broker/(13110:13130): Se desconecto el cliente 7: 
+
+[INFO] 06:25:18:352 Broker/(13110:13110): Iniciando dump...
+[INFO] 06:25:40:470 Broker/(13110:13110): Termino el dump.
+[INFO] 06:26:55:228 Broker/(13110:13110): Se conecto un cliente!
+[INFO] 06:26:55:228 Broker/(13110:13110): Se conecto un cliente: 8
+[INFO] 06:26:55:228 Broker/(13110:13231): Llego un catch pokemon
+[INFO] 06:26:55:228 Broker/(13110:13110): esperando
+[INFO] 06:27:14:78 Broker/(13110:13231): Levantado de la memoria posta!!!
+[INFO] 06:27:26:430 Broker/(13110:13231): Levantado de la memoria posta!!!
+[INFO] 06:27:26:430 Broker/(13110:13231): Me llego mensaje catch, Pkm: 2, x: 2, y: 3
+
+[INFO] 06:27:26:430 Broker/(13110:13231): No hay suscriptores
+[ERROR] 06:27:26:430 Broker/(13110:13231): Se desconecto el cliente 8: 
+
+[INFO] 07:16:48:834 Broker/(14625:14625): Logger iniciado: Broker.log
+
+[INFO] 07:16:48:835 Broker/(14625:14625): Configuracion broker levantada!
+[INFO] 07:16:48:836 Broker/(14625:14625): Dentro de iniciar servidor
+[INFO] 07:16:48:836 Broker/(14625:14625): Listo para escuchar a mi cliente
+[INFO] 07:16:48:836 Broker/(14625:14625): esperando
+[INFO] 07:16:55:611 Broker/(14625:14625): Se conecto un cliente!
+[INFO] 07:16:55:611 Broker/(14625:14625): Se conecto un cliente: 6
+[INFO] 07:16:55:612 Broker/(14625:14625): esperando
+[INFO] 07:16:55:613 Broker/(14625:14640): Llego un new pokemon
+[INFO] 07:16:55:613 Broker/(14625:14640): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 07:16:55:613 Broker/(14625:14640): Encontre particion Libre
+[INFO] 07:16:55:613 Broker/(14625:14640): Se toma la particion a medida
+[INFO] 07:16:55:613 Broker/(14625:14640): Se guardo el mensaje en la memoria
+[ERROR] 07:16:55:613 Broker/(14625:14640): Se desconecto el cliente 6: 
+
+[INFO] 07:16:57:170 Broker/(14625:14625): Se conecto un cliente!
+[INFO] 07:16:57:171 Broker/(14625:14625): Se conecto un cliente: 7
+[INFO] 07:16:57:172 Broker/(14625:14625): esperando
+[INFO] 07:16:57:172 Broker/(14625:14643): Llego un new pokemon
+[INFO] 07:16:57:172 Broker/(14625:14643): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 07:16:57:172 Broker/(14625:14643): Encontre particion Libre
+[INFO] 07:16:57:172 Broker/(14625:14643): Se toma la particion a medida
+[INFO] 07:16:57:172 Broker/(14625:14643): Se guardo el mensaje en la memoria
+[ERROR] 07:16:57:172 Broker/(14625:14643): Se desconecto el cliente 7: 
+
+[INFO] 07:17:12:392 Broker/(14625:14625): Iniciando dump...
+[INFO] 07:41:54:753 Broker/(15352:15352): Logger iniciado: Broker.log
+
+[INFO] 07:41:54:754 Broker/(15352:15352): Configuracion broker levantada!
+[INFO] 07:41:54:755 Broker/(15352:15352): Dentro de iniciar servidor
+[INFO] 07:41:54:756 Broker/(15352:15352): Listo para escuchar a mi cliente
+[INFO] 07:41:54:756 Broker/(15352:15352): esperando
+[INFO] 07:42:08:354 Broker/(15352:15352): Se conecto un cliente!
+[INFO] 07:42:08:354 Broker/(15352:15352): esperando
+[INFO] 07:42:08:354 Broker/(15352:15359): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 07:42:08:354 Broker/(15352:15359): Encontre particion Libre
+[INFO] 07:42:08:355 Broker/(15352:15359): Se toma la particion a medida
+[INFO] 07:42:08:355 Broker/(15352:15359): Se guardo el mensaje en la memoria
+[ERROR] 07:42:08:355 Broker/(15352:15359): Se desconecto el cliente 6: 
+
+[INFO] 07:42:10:844 Broker/(15352:15352): Se conecto un cliente!
+[INFO] 07:42:10:845 Broker/(15352:15352): esperando
+[INFO] 07:42:10:845 Broker/(15352:15361): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 07:49:33:314 Broker/(15578:15578): Logger iniciado: Broker.log
+
+[INFO] 07:49:33:315 Broker/(15578:15578): Configuracion broker levantada!
+[INFO] 07:49:33:315 Broker/(15578:15578): Dentro de iniciar servidor
+[INFO] 07:49:33:315 Broker/(15578:15578): Listo para escuchar a mi cliente
+[INFO] 07:49:33:315 Broker/(15578:15578): esperando
+[INFO] 07:49:38:288 Broker/(15578:15578): Se conecto un cliente!
+[INFO] 07:49:38:289 Broker/(15578:15578): esperando
+[INFO] 07:49:38:289 Broker/(15578:15590): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 07:49:38:289 Broker/(15578:15590): Encontre particion Libre
+[INFO] 07:49:38:289 Broker/(15578:15590): Se toma la particion a medida
+[INFO] 07:49:38:289 Broker/(15578:15590): Se guardo el mensaje en la memoria
+[ERROR] 07:49:38:289 Broker/(15578:15590): Se desconecto el cliente 6: 
+
+[INFO] 07:49:40:318 Broker/(15578:15578): Se conecto un cliente!
+[INFO] 07:49:40:319 Broker/(15578:15578): esperando
+[INFO] 07:49:40:319 Broker/(15578:15593): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 07:51:36:104 Broker/(15652:15652): Logger iniciado: Broker.log
+
+[INFO] 07:51:36:105 Broker/(15652:15652): Configuracion broker levantada!
+[INFO] 07:51:36:105 Broker/(15652:15652): Dentro de iniciar servidor
+[INFO] 07:51:36:105 Broker/(15652:15652): Listo para escuchar a mi cliente
+[INFO] 07:51:36:105 Broker/(15652:15652): esperando
+[INFO] 07:51:40:879 Broker/(15652:15652): Se conecto un cliente!
+[INFO] 07:51:40:879 Broker/(15652:15652): esperando
+[INFO] 07:51:40:879 Broker/(15652:15664): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 07:51:40:879 Broker/(15652:15664): Encontre particion Libre
+[INFO] 07:51:40:879 Broker/(15652:15664): Se toma la particion a medida
+[INFO] 07:51:40:879 Broker/(15652:15664): Se guardo el mensaje en la memoria
+[ERROR] 07:51:40:879 Broker/(15652:15664): Se desconecto el cliente 6: 
+
+[INFO] 07:51:43:169 Broker/(15652:15652): Se conecto un cliente!
+[INFO] 07:51:43:171 Broker/(15652:15666): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 07:51:47:130 Broker/(15652:15652): esperando
+[INFO] 07:53:25:553 Broker/(15766:15766): Logger iniciado: Broker.log
+
+[INFO] 07:53:25:553 Broker/(15766:15766): Configuracion broker levantada!
+[INFO] 07:53:25:553 Broker/(15766:15766): Dentro de iniciar servidor
+[INFO] 07:53:25:554 Broker/(15766:15766): Listo para escuchar a mi cliente
+[INFO] 07:53:25:554 Broker/(15766:15766): esperando
+[INFO] 07:53:30:462 Broker/(15766:15766): Se conecto un cliente!
+[INFO] 07:53:30:463 Broker/(15766:15766): esperando
+[INFO] 07:53:30:463 Broker/(15766:15775): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 07:53:30:463 Broker/(15766:15775): Encontre particion Libre
+[INFO] 07:53:30:463 Broker/(15766:15775): Se toma la particion a medida
+[INFO] 07:53:30:463 Broker/(15766:15775): Se guardo el mensaje en la memoria
+[ERROR] 07:53:30:463 Broker/(15766:15775): Se desconecto el cliente 6: 
+
+[INFO] 07:53:33:333 Broker/(15766:15766): Se conecto un cliente!
+[INFO] 07:53:33:334 Broker/(15766:15766): esperando
+[INFO] 07:53:33:334 Broker/(15766:15777): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 07:54:15:993 Broker/(15848:15848): Logger iniciado: Broker.log
+
+[INFO] 07:54:15:993 Broker/(15848:15848): Configuracion broker levantada!
+[INFO] 07:54:15:994 Broker/(15848:15848): Dentro de iniciar servidor
+[INFO] 07:54:15:994 Broker/(15848:15848): Listo para escuchar a mi cliente
+[INFO] 07:54:15:994 Broker/(15848:15848): esperando
+[INFO] 07:54:20:324 Broker/(15848:15848): Se conecto un cliente!
+[INFO] 07:54:20:325 Broker/(15848:15857): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 07:54:20:325 Broker/(15848:15857): Encontre particion Libre
+[INFO] 07:54:20:325 Broker/(15848:15857): Se toma la particion a medida
+[INFO] 07:54:20:325 Broker/(15848:15857): Se guardo el mensaje en la memoria
+[ERROR] 07:54:20:325 Broker/(15848:15857): Se desconecto el cliente 6: 
+
+[INFO] 07:54:20:326 Broker/(15848:15848): esperando
+[INFO] 07:54:22:989 Broker/(15848:15848): Se conecto un cliente!
+[INFO] 07:54:22:990 Broker/(15848:15859): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 07:54:22:990 Broker/(15848:15848): esperando
+[INFO] 07:55:07:120 Broker/(15940:15940): Logger iniciado: Broker.log
+
+[INFO] 07:55:07:120 Broker/(15940:15940): Configuracion broker levantada!
+[INFO] 07:55:07:121 Broker/(15940:15940): Dentro de iniciar servidor
+[INFO] 07:55:07:121 Broker/(15940:15940): Listo para escuchar a mi cliente
+[INFO] 07:55:07:121 Broker/(15940:15940): esperando
+[INFO] 07:55:09:967 Broker/(15940:15940): Se conecto un cliente!
+[INFO] 07:55:09:968 Broker/(15940:15940): esperando
+[INFO] 07:55:09:968 Broker/(15940:15949): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 07:55:09:968 Broker/(15940:15949): Encontre particion Libre
+[INFO] 07:55:09:968 Broker/(15940:15949): Se toma la particion a medida
+[INFO] 07:55:09:968 Broker/(15940:15949): Se guardo el mensaje en la memoria
+[ERROR] 07:55:09:968 Broker/(15940:15949): Se desconecto el cliente 6: 
+
+[INFO] 07:55:12:755 Broker/(15940:15940): Se conecto un cliente!
+[INFO] 07:55:12:756 Broker/(15940:15951): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 07:55:12:756 Broker/(15940:15940): esperando
+[INFO] 07:55:40:298 Broker/(16001:16001): Logger iniciado: Broker.log
+
+[INFO] 07:55:40:299 Broker/(16001:16001): Configuracion broker levantada!
+[INFO] 07:55:40:299 Broker/(16001:16001): Dentro de iniciar servidor
+[INFO] 07:55:40:299 Broker/(16001:16001): Listo para escuchar a mi cliente
+[INFO] 07:55:40:299 Broker/(16001:16001): esperando
+[INFO] 23:00:28:456 Broker/(17222:17222): Logger iniciado: Broker.log
+
+[INFO] 23:00:28:457 Broker/(17222:17222): Configuracion broker levantada!
+[INFO] 23:00:28:457 Broker/(17222:17222): Dentro de iniciar servidor
+[INFO] 23:00:28:457 Broker/(17222:17222): Listo para escuchar a mi cliente
+[INFO] 23:00:28:457 Broker/(17222:17222): esperando
+[INFO] 23:00:32:399 Broker/(17222:17222): Se conecto un cliente!
+[INFO] 23:00:32:401 Broker/(17222:17222): esperando
+[INFO] 23:00:32:402 Broker/(17222:17230): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 23:00:32:402 Broker/(17222:17230): Encontre particion Libre
+[INFO] 23:00:32:402 Broker/(17222:17230): Se toma la particion a medida
+[INFO] 23:00:35:390 Broker/(17222:17230): Se guardo el mensaje en la memoria
+[ERROR] 23:00:35:390 Broker/(17222:17230): Se desconecto el cliente 6: 
+
+[INFO] 23:00:38:277 Broker/(17222:17222): Se conecto un cliente!
+[INFO] 23:00:38:278 Broker/(17222:17234): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 23:00:38:278 Broker/(17222:17222): esperando
+[INFO] 23:05:54:377 Broker/(17303:17303): Logger iniciado: Broker.log
+
+[INFO] 23:05:54:377 Broker/(17303:17303): Configuracion broker levantada!
+[INFO] 23:05:54:378 Broker/(17303:17303): Dentro de iniciar servidor
+[INFO] 23:05:54:378 Broker/(17303:17303): Listo para escuchar a mi cliente
+[INFO] 23:05:54:378 Broker/(17303:17303): esperando
+[INFO] 23:06:22:60 Broker/(17303:17303): Se conecto un cliente!
+[INFO] 23:06:22:61 Broker/(17303:17303): esperando
+[INFO] 23:06:22:61 Broker/(17303:17323): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 23:06:22:61 Broker/(17303:17323): Encontre particion Libre
+[INFO] 23:06:22:61 Broker/(17303:17323): Se toma la particion a medida
+[INFO] 23:06:26:320 Broker/(17303:17323): Se guardo el mensaje en la memoria
+[ERROR] 23:06:26:320 Broker/(17303:17323): Se desconecto el cliente 6: 
+
+[INFO] 23:06:31:42 Broker/(17303:17303): Se conecto un cliente!
+[INFO] 23:06:31:43 Broker/(17303:17327): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 23:06:31:43 Broker/(17303:17303): esperando
+[INFO] 13:13:23:286 Broker/(18685:18685): Logger iniciado: Broker.log
+
+[INFO] 13:13:23:287 Broker/(18685:18685): Configuracion broker levantada!
+[INFO] 13:13:23:288 Broker/(18685:18685): Dentro de iniciar servidor
+[INFO] 13:13:23:288 Broker/(18685:18685): Listo para escuchar a mi cliente
+[INFO] 13:13:23:288 Broker/(18685:18685): esperando
+[INFO] 13:13:26:785 Broker/(18685:18685): Se conecto un cliente!
+[INFO] 13:13:26:785 Broker/(18685:18685): esperando
+[INFO] 13:13:26:785 Broker/(18685:18699): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 13:13:26:785 Broker/(18685:18699): Encontre particion Libre
+[INFO] 13:13:26:785 Broker/(18685:18699): Se toma la particion a medida
+[INFO] 13:13:31:462 Broker/(18685:18699): Se guardo el mensaje en la memoria
+[ERROR] 13:13:31:462 Broker/(18685:18699): Se desconecto el cliente 6: 
+
+[INFO] 13:13:39:591 Broker/(18685:18685): Se conecto un cliente!
+[INFO] 13:13:39:593 Broker/(18685:18685): esperando
+[INFO] 13:13:39:594 Broker/(18685:18703): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 13:35:59:383 Broker/(19281:19281): Logger iniciado: Broker.log
+
+[INFO] 13:35:59:383 Broker/(19281:19281): Configuracion broker levantada!
+[INFO] 13:35:59:383 Broker/(19281:19281): Dentro de iniciar servidor
+[INFO] 13:35:59:384 Broker/(19281:19281): Listo para escuchar a mi cliente
+[INFO] 13:35:59:384 Broker/(19281:19281): esperando
+[INFO] 13:36:26:45 Broker/(19281:19281): Se conecto un cliente!
+[INFO] 13:36:26:45 Broker/(19281:19281): esperando
+[INFO] 13:36:26:45 Broker/(19281:19298): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 13:36:26:45 Broker/(19281:19298): Encontre particion Libre
+[INFO] 13:36:26:45 Broker/(19281:19298): Se toma la particion a medida
+[INFO] 13:36:26:46 Broker/(19281:19298): Se guardo el mensaje en la memoria
+[ERROR] 13:36:26:46 Broker/(19281:19298): Se desconecto el cliente 6: 
+
+[INFO] 14:01:50:531 Broker/(19518:19518): Logger iniciado: Broker.log
+
+[INFO] 14:01:50:532 Broker/(19518:19518): Configuracion broker levantada!
+[INFO] 14:01:50:533 Broker/(19518:19518): Dentro de iniciar servidor
+[INFO] 14:01:50:533 Broker/(19518:19518): Listo para escuchar a mi cliente
+[INFO] 14:01:50:533 Broker/(19518:19518): esperando
+[INFO] 14:01:53:367 Broker/(19518:19518): Se conecto un cliente!
+[INFO] 14:01:53:367 Broker/(19518:19531): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 14:01:53:367 Broker/(19518:19531): Encontre particion Libre
+[INFO] 14:01:53:368 Broker/(19518:19531): Se toma la particion a medida
+[INFO] 14:01:53:368 Broker/(19518:19518): esperando
+[INFO] 14:02:08:948 Broker/(19518:19531): Se guardo el mensaje en la memoria
+[ERROR] 14:02:08:948 Broker/(19518:19531): Se desconecto el cliente 6: 
+
+[INFO] 14:02:18:650 Broker/(19518:19518): Se conecto un cliente!
+[INFO] 14:02:18:651 Broker/(19518:19518): esperando
+[INFO] 14:02:18:651 Broker/(19518:19551): Me llego mensaje new Pkm: pichu, x: 32, y: 3, cant: 44
+
+[INFO] 14:02:47:504 Broker/(19586:19586): Logger iniciado: Broker.log
+
+[INFO] 14:02:47:505 Broker/(19586:19586): Configuracion broker levantada!
+[INFO] 14:02:47:505 Broker/(19586:19586): Dentro de iniciar servidor
+[INFO] 14:02:47:505 Broker/(19586:19586): Listo para escuchar a mi cliente
+[INFO] 14:02:47:505 Broker/(19586:19586): esperando
+[INFO] 14:02:50:71 Broker/(19586:19586): Se conecto un cliente!
+[INFO] 14:02:50:73 Broker/(19586:19586): esperando
+[INFO] 14:02:50:75 Broker/(19586:19598): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 14:02:53:216 Broker/(19586:19598): Encontre particion Libre
+[INFO] 14:02:53:216 Broker/(19586:19598): Se toma la particion a medida
+[INFO] 14:02:53:216 Broker/(19586:19598): Se guardo el mensaje en la memoria
+[ERROR] 14:02:53:216 Broker/(19586:19598): Se desconecto el cliente 6: 
+
+[INFO] 14:02:56:749 Broker/(19586:19586): Se conecto un cliente!
+[INFO] 14:02:56:750 Broker/(19586:19586): esperando
+[INFO] 14:02:56:750 Broker/(19586:19602): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 14:03:39:937 Broker/(19659:19659): Logger iniciado: Broker.log
+
+[INFO] 14:03:39:937 Broker/(19659:19659): Configuracion broker levantada!
+[INFO] 14:03:39:937 Broker/(19659:19659): Dentro de iniciar servidor
+[INFO] 14:03:39:937 Broker/(19659:19659): Listo para escuchar a mi cliente
+[INFO] 14:03:39:937 Broker/(19659:19659): esperando
+[INFO] 14:03:48:29 Broker/(19659:19659): Se conecto un cliente!
+[INFO] 14:03:48:30 Broker/(19659:19659): esperando
+[INFO] 14:03:48:30 Broker/(19659:19671): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 14:04:10:0 Broker/(19659:19671): Encontre particion Libre
+[INFO] 14:04:10:0 Broker/(19659:19671): Se toma la particion a medida
+[INFO] 14:04:10:1 Broker/(19659:19671): Se guardo el mensaje en la memoria
+[ERROR] 14:04:10:1 Broker/(19659:19671): Se desconecto el cliente 6: 
+
+[INFO] 14:04:14:947 Broker/(19659:19659): Se conecto un cliente!
+[INFO] 14:04:14:948 Broker/(19659:19659): esperando
+[INFO] 14:04:14:949 Broker/(19659:19699): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 14:13:42:419 Broker/(19907:19907): Logger iniciado: Broker.log
+
+[INFO] 14:13:42:419 Broker/(19907:19907): Configuracion broker levantada!
+[INFO] 14:13:42:419 Broker/(19907:19907): Dentro de iniciar servidor
+[INFO] 14:13:42:419 Broker/(19907:19907): Listo para escuchar a mi cliente
+[INFO] 14:13:42:419 Broker/(19907:19907): esperando
+[INFO] 14:13:48:979 Broker/(19907:19907): Se conecto un cliente!
+[INFO] 14:13:48:980 Broker/(19907:19907): esperando
+[INFO] 14:13:48:980 Broker/(19907:19918): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 14:13:48:980 Broker/(19907:19918): Encontre particion Libre
+[INFO] 14:13:48:980 Broker/(19907:19918): Se toma la particion a medida
+[INFO] 14:13:48:980 Broker/(19907:19918): Se guardo el mensaje en la memoria
+[ERROR] 14:13:48:980 Broker/(19907:19918): Se desconecto el cliente 6: 
+
+[INFO] 14:13:50:579 Broker/(19907:19907): Se conecto un cliente!
+[INFO] 14:13:50:580 Broker/(19907:19920): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 14:13:53:160 Broker/(19907:19907): esperando
+[INFO] 14:20:08:586 Broker/(20034:20034): Logger iniciado: Broker.log
+
+[INFO] 14:20:08:586 Broker/(20034:20034): Configuracion broker levantada!
+[INFO] 14:20:08:586 Broker/(20034:20034): Dentro de iniciar servidor
+[INFO] 14:20:08:586 Broker/(20034:20034): Listo para escuchar a mi cliente
+[INFO] 14:20:08:586 Broker/(20034:20034): esperando
+[INFO] 14:20:15:846 Broker/(20034:20034): Se conecto un cliente!
+[INFO] 14:20:15:846 Broker/(20034:20034): esperando
+[INFO] 14:20:15:847 Broker/(20034:20045): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+
+[INFO] 14:20:15:847 Broker/(20034:20045): Encontre particion Libre
+[INFO] 14:20:15:847 Broker/(20034:20045): Se toma la particion a medida
+[INFO] 14:20:15:847 Broker/(20034:20045): Se guardo el mensaje en la memoria
+[ERROR] 14:20:15:847 Broker/(20034:20045): Se desconecto el cliente 6: 
+
+[INFO] 14:20:17:213 Broker/(20034:20034): Se conecto un cliente!
+[INFO] 14:20:17:214 Broker/(20034:20034): esperando
+[INFO] 14:20:17:214 Broker/(20034:20049): Me llego mensaje new Pkm: squirtle, x: 4, y: 4, cant: 23
+

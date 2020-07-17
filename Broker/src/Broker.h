@@ -107,11 +107,13 @@ void ConfigInit();
 void ListsInit();
 void MemoriaPrincipalInit();
 void SemaphoresInit();
+void DumpFileInit();
 
 //////FUNCIONES DE CONEXION//////////
 void EsperarClientes();
 void* AtenderCliente();
 void ActuarAnteMensaje();
+void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete);
 
 //////FUNCIONES VARIAS//////////
 void suscribir (uint32_t variable, int cliente);
@@ -126,6 +128,8 @@ void actualizarEnviadosPorID(int id, int socketCliente);
 void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo);
 int contarTamanio();
 bool primerFechaEsAnterior(char* unaFecha, char* otraFecha);
+int posicionALog(void* unaPosicion);
+void tratarMensaje (d_message tipoMensaje, void *paquete);
 
 //////FUNCIONES ESTRUCTURA ADMINISTRATIVA//////////
 estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar);
@@ -150,6 +154,8 @@ void compactacion();
 ////////////FUNCIONES DESTROYER//////////////////
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self);
 static void suscriptorDestroyer(int *self);
+static void estructuraAdministrativaDestroyerSinDestruirListas(estructuraAdministrativa *self);
+void destruirTodo();
 
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;
