@@ -68,7 +68,8 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			break;
 		case d_LOCALIZED_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un localized pokemon");
-			tratarMensaje(header.tipoMensaje, packCaughtPokemon);
+			void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+			tratarMensaje(header.tipoMensaje, packLocalizedPokemon);
 			break;
 		case d_SUBSCRIBE_QUEUE:
 			log_info(LOGGER_GENERAL, "Llego un Subscribe");
