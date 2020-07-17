@@ -126,7 +126,7 @@ int posicionALog(void* unaPosicion);
 void tratarMensaje (d_message tipoMensaje, void *paquete);
 void * leerInfoYActualizarUsoPorID(int id);
 t_list * tomarLosMensajes (d_message tipoMensaje);
-void enviarVariosMensajes(int cliente, d_message tipoMensaje);
+void enviarVariosMensajes(int * cliente, d_message tipoMensaje);
 void tratarMensajeACK (void* paquete, int cliente);
 void actualizarRecibidosPorID(int id, int socketCliente);
 void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministrativa * resultado, t_list * lista);
@@ -140,6 +140,7 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje);
 void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo);
 void reposicionarParticionesOcupadas(t_list * listaAuxiliar);
 void dump();
+bool noPuedoReemplazarMas();
 
 //////////FUNCION BUDDY Y PARTICION DINAMICA//////////////
 void composicion();
@@ -149,7 +150,7 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 int primeraParticion();
 int particionMenosReferenciada();
 void compactacion();
-//void reemplazar (d_message tipoMensaje, void* mensaje);
+int reemplazar (d_message tipoMensaje, void* mensaje);
 //void limpiarParticion (estructuraAdministrativa * particion);
 
 ////////////FUNCIONES DESTROYER//////////////////
@@ -169,9 +170,10 @@ t_list* ADMINISTRADOR_MEMORIA;
 int CONTADOR = 0;
 int TIEMPO = 0;
 int FLAG_COMPOSICION = 0;
-int FLAG_COMPACTACION = 0;
 int FLAG_REEMPLAZAR = 1;
+int FLAG_COMPACTACION = 1;
 const char* nombresColas[] = {"NEW_POKEMON", "CATCH_POKEMON", "GET_POKEMON", "APPEARED_POKEMON", "CAUGHT_POKEMON", "LOCALIZED_POKEMON"};
+int BUSQUEDAS_FALLIDAS = 0;
 
 ////////SEMAFOROS///////////
 sem_t MUTEX_CLIENTE;

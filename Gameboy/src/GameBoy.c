@@ -237,6 +237,7 @@ void cumplirPedido(int argc, char *argv[]){
 		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[2], argv[1]);
 		Get_pokemon(argv);
 		break;
+
 	default:;
 		log_info(logger,"DEFAULT");
 		break;

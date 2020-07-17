@@ -88,11 +88,13 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 	}
 }
 
-void suscribir(uint32_t variable, int cliente){
+void suscribir(uint32_t variable, int clienteA){
+	int * cliente = malloc(sizeof(int));
+	*cliente=clienteA;
 	switch (variable){
 	case d_NEW_POKEMON:
-		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de NEW", cliente);
-		list_add (SUSCRIPTORES_NEW, &cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de NEW", *cliente);
+		list_add (SUSCRIPTORES_NEW, cliente);
 		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 		}
@@ -101,8 +103,8 @@ void suscribir(uint32_t variable, int cliente){
 		}
 		break;
 	case d_CATCH_POKEMON:
-		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de CATCH", cliente);
-		list_add (SUSCRIPTORES_CATCH, &cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de CATCH", *cliente);
+		list_add (SUSCRIPTORES_CATCH, cliente);
 		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 			}
@@ -111,8 +113,8 @@ void suscribir(uint32_t variable, int cliente){
 			}
 		break;
 	case d_GET_POKEMON:
-		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de GET", cliente);
-		list_add (SUSCRIPTORES_GET, &cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de GET", *cliente);
+		list_add (SUSCRIPTORES_GET, cliente);
 		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 			}
@@ -121,8 +123,8 @@ void suscribir(uint32_t variable, int cliente){
 			}
 		break;
 	case d_APPEARED_POKEMON:
-		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Appeared", cliente);
-		list_add (SUSCRIPTORES_APPEARED, &cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Appeared", *cliente);
+		list_add (SUSCRIPTORES_APPEARED, cliente);
 		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 			}
@@ -131,8 +133,8 @@ void suscribir(uint32_t variable, int cliente){
 			}
 		break;
 	case d_CAUGHT_POKEMON:
-		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Caught", cliente);
-		list_add (SUSCRIPTORES_CAUGHT, &cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Caught", *cliente);
+		list_add (SUSCRIPTORES_CAUGHT, cliente);
 		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 			}
@@ -141,8 +143,8 @@ void suscribir(uint32_t variable, int cliente){
 			}
 		break;
 	case d_LOCALIZED_POKEMON:
-		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Localized", cliente);
-		list_add (SUSCRIPTORES_LOCALIZED, &cliente);
+		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Localized", *cliente);
+		list_add (SUSCRIPTORES_LOCALIZED, cliente);
 		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 			}
@@ -169,7 +171,9 @@ static void destruir(estructuraAdministrativa *estructura) {
 }
 
 /////////////////ENVIAR MENSAJE A SUSCRIPTORES/////////////////////////////////////
-void enviarVariosMensajes(int cliente, d_message tipoMensaje){
+void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
+	int * cliente = malloc(sizeof(int));
+	cliente=clienteA;
 	estructuraAdministrativa * elemento = malloc (sizeof(estructuraAdministrativa));
 	t_list * mensajesNew = list_create();
 	t_list * mensajesCatch = list_create();
@@ -190,11 +194,11 @@ void enviarVariosMensajes(int cliente, d_message tipoMensaje){
 		for (int i=0; i<tamanioNew;i++){
 			elemento = list_get (mensajesNew, i);
 			mensajeNew = leerInfoYActualizarUsoPorID(elemento->idMensaje);
-			Serialize_PackAndSend_NEW_POKEMON(cliente, elemento->idMensaje, mensajeNew->nombrePokemon ,mensajeNew->posX, mensajeNew->posY, mensajeNew->cantidad);
-			actualizarEnviadosPorID(elemento->idMensaje, cliente);
-			log_info (LOGGER_GENERAL, "Se envió el mensaje %i (NEW) al suscriptor %i", elemento->idMensaje, cliente);
+			Serialize_PackAndSend_NEW_POKEMON(*cliente, elemento->idMensaje, mensajeNew->nombrePokemon ,mensajeNew->posX, mensajeNew->posY, mensajeNew->cantidad);
+			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (NEW) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		list_clean_and_destroy_elements(mensajesNew, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesNew, (void *) destruir);
 	break;
 	case d_CATCH_POKEMON:
 		mensajesCatch = tomarLosMensajes (d_CATCH_POKEMON);
@@ -202,9 +206,9 @@ void enviarVariosMensajes(int cliente, d_message tipoMensaje){
 		for (int i=0; i<tamanioCatch;i++){
 			elemento = list_get (mensajesCatch, i);
 			mensajeCatch = leerInfoYActualizarUsoPorID(elemento->idMensaje);
-			Serialize_PackAndSend_CATCH_POKEMON(cliente, elemento->idMensaje,mensajeCatch->nombrePokemon, mensajeCatch->posX, mensajeCatch->posY);
-			actualizarEnviadosPorID(elemento->idMensaje, cliente);
-			log_info (LOGGER_GENERAL, "Se envió el mensaje %i (CATCH) al suscriptor %i", elemento->idMensaje, cliente);
+			Serialize_PackAndSend_CATCH_POKEMON(*cliente, elemento->idMensaje,mensajeCatch->nombrePokemon, mensajeCatch->posX, mensajeCatch->posY);
+			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CATCH) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		list_clean_and_destroy_elements(mensajesCatch, (void *) destruir);
 	break;
@@ -214,9 +218,9 @@ void enviarVariosMensajes(int cliente, d_message tipoMensaje){
 		for (int i=0; i<tamanioGet;i++){
 			elemento = list_get (mensajesGet, i);
 			mensajeGet = leerInfoYActualizarUsoPorID(elemento->idMensaje);
-			Serialize_PackAndSend_GET_POKEMON(cliente, elemento->idMensaje, mensajeGet->nombrePokemon);
-			actualizarEnviadosPorID(elemento->idMensaje, cliente);
-			log_info (LOGGER_GENERAL, "Se envió el mensaje %i (GET) al suscriptor %i", elemento->idMensaje, cliente);
+			Serialize_PackAndSend_GET_POKEMON(*cliente, elemento->idMensaje, mensajeGet->nombrePokemon);
+			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (GET) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		list_clean_and_destroy_elements(mensajesGet, (void *) destruir);
 	break;
@@ -226,9 +230,9 @@ void enviarVariosMensajes(int cliente, d_message tipoMensaje){
 		for (int i=0; i<tamanioAppeared;i++){
 			elemento = list_get (mensajesAppeared, i);
 			mensajeAppeared = leerInfoYActualizarUsoPorID(elemento->idMensaje);
-			Serialize_PackAndSend_APPEARED_POKEMON(cliente, elemento->idMensaje,mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
-			actualizarEnviadosPorID(elemento->idMensaje, cliente);
-			log_info (LOGGER_GENERAL, "Se envió el mensaje %i (APPEARED) al suscriptor %i", elemento->idMensaje, cliente);
+			Serialize_PackAndSend_APPEARED_POKEMON(*cliente, elemento->idMensaje,mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
+			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (APPEARED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		list_clean_and_destroy_elements(mensajesAppeared, (void *) destruir);
 	break;
@@ -238,9 +242,9 @@ void enviarVariosMensajes(int cliente, d_message tipoMensaje){
 		for (int i=0; i<tamanioCaught;i++){
 			elemento = list_get (mensajesCaught, i);
 			mensajeCaught = leerInfoYActualizarUsoPorID(elemento->idMensaje);
-			Serialize_PackAndSend_CAUGHT_POKEMON(cliente, elemento->idMensaje, mensajeCaught->atrapado);
-			actualizarEnviadosPorID(elemento->idMensaje, cliente);
-			log_info (LOGGER_GENERAL, "Se envió el mensaje %i (CAUGHT) al suscriptor %i", elemento->idMensaje, cliente);
+			Serialize_PackAndSend_CAUGHT_POKEMON(*cliente, elemento->idMensaje, mensajeCaught->atrapado);
+			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CAUGHT) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		list_clean_and_destroy_elements(mensajesCaught, (void *) destruir);
 	break;
@@ -250,9 +254,9 @@ void enviarVariosMensajes(int cliente, d_message tipoMensaje){
 		for (int i=0; i<tamanioLocalized;i++){
 			elemento = list_get (mensajesLocalized, i);
 			mensajeLocalized = leerInfoYActualizarUsoPorID(elemento->idMensaje);
-			Serialize_PackAndSend_LOCALIZED_POKEMON(cliente, elemento->idMensaje, mensajeLocalized->nombrePokemon, mensajeLocalized->puntos);
-			actualizarEnviadosPorID(elemento->idMensaje, cliente);
-			log_info (LOGGER_GENERAL, "Se envió el mensaje %i (LOCALIZED) al suscriptor %i", elemento->idMensaje, cliente);
+			Serialize_PackAndSend_LOCALIZED_POKEMON(*cliente, elemento->idMensaje, mensajeLocalized->nombrePokemon, mensajeLocalized->puntos);
+			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (LOCALIZED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		list_clean_and_destroy_elements(mensajesLocalized, (void *) destruir);
 		break;
@@ -284,24 +288,23 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	localizedEnMemoria* mensajeLocalized;
 	switch (tipoMensaje){
 	case d_NEW_POKEMON:
-	mensajeNew = mensaje;
-	int tamanioNew = list_size(lista);
-	for (int i = 0; i<tamanioNew; i++){
-		int socketCliente = list_get(lista, i);
-		Serialize_PackAndSend_NEW_POKEMON(socketCliente, resultado->idMensaje, mensajeNew->nombrePokemon, mensajeNew->posX, mensajeNew->posY, mensajeNew->cantidad);
-		actualizarEnviadosPorID(resultado->idMensaje, socketCliente);
-		log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, socketCliente);
-	}
-	log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
-	break;
+		mensajeNew = mensaje;
+		void notificarSuscriptor(int * self){
+			Serialize_PackAndSend_NEW_POKEMON(*self, resultado->idMensaje, mensajeNew->nombrePokemon, mensajeNew->posX, mensajeNew->posY, mensajeNew->cantidad);
+			actualizarEnviadosPorID(resultado->idMensaje, *self);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
+		}
+		list_iterate(lista, (void*)notificarSuscriptor);
+		log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
+		break;
 	case d_CATCH_POKEMON:
-	mensajeCatch = mensaje;
-	int tamanioCatch = list_size(lista);
-	for (int i = 0; i<tamanioCatch; i++){
-		int socketCliente = list_get(lista, i);
-		Serialize_PackAndSend_CATCH_POKEMON(socketCliente, resultado->idMensaje,mensajeCatch->nombrePokemon, mensajeCatch->posX, mensajeCatch->posY);
-		actualizarEnviadosPorID(resultado->idMensaje, socketCliente);
-		log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, socketCliente);
+		mensajeCatch = mensaje;
+		int tamanioCatch = list_size(lista);
+		for (int i = 0; i<tamanioCatch; i++){
+			int socketCliente = list_get(lista, i);
+			Serialize_PackAndSend_CATCH_POKEMON(socketCliente, resultado->idMensaje,mensajeCatch->nombrePokemon, mensajeCatch->posX, mensajeCatch->posY);
+			actualizarEnviadosPorID(resultado->idMensaje, socketCliente);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, socketCliente);
 		}
 		log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
 		break;
@@ -356,40 +359,6 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 }
 //////////////////FIN MENSAJES A SUSCRIPTORES/////////////////////////////////////
 
-void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
-	estructuraAdministrativa * resultado = malloc (sizeof(estructuraAdministrativa));
-	estructuraAdministrativa * resultado1 = malloc (sizeof(estructuraAdministrativa)); //PARA PROBAR
-	estructuraAdministrativa * resultado2 = malloc (sizeof(estructuraAdministrativa)); //PARA PROBAR
-	estructuraAdministrativa * resultado3 = malloc (sizeof(estructuraAdministrativa)); //PARA PROBAR
-	uint32_t posX, posY, cantidad;
-	char *pokemon;
-	Serialize_Unpack_NewPokemon_NoID(paquete, &pokemon, &posX, &posY, &cantidad);
-	log_info(LOGGER_GENERAL,"Me llego mensaje new Pkm: %s, x: %i, y: %i, cant: %i\n", pokemon, posX, posY, cantidad);
-	int ID = obtenerID();
-	newEnMemoria mensajeAGuardar;
-	mensajeAGuardar.cantidad = cantidad;
-	mensajeAGuardar.largoDeNombre = string_length(pokemon);
-	mensajeAGuardar.nombrePokemon = pokemon;
-	mensajeAGuardar.posX = posX;
-	mensajeAGuardar.posY = posY;
-	resultado = guardarMensaje(d_NEW_POKEMON, &mensajeAGuardar);
-	if (resultado){
-		resultado->idMensaje = ID;
-		resultado->tipoMensaje = d_NEW_POKEMON;
-		resultado->estaOcupado = 1;
-		resultado->suscriptoresConACK = list_create();
-		resultado->suscriptoresConMensajeEnviado = list_create();
-		resultado->tiempo = temporal_get_string_time();
-		resultado->ultimaReferencia = temporal_get_string_time();
-		memcpy(resultado->donde, &mensajeAGuardar, tamanioDeMensaje(d_NEW_POKEMON, &mensajeAGuardar));
-		log_info(LOGGER_OBLIGATORIO, "Se guardo el mensaje en la memoria id: %i posicion: %i", resultado->idMensaje, posicionALog(resultado->donde));
-		resultado = list_get (ADMINISTRADOR_MEMORIA, 0);
-		resultado1 = list_get (ADMINISTRADOR_MEMORIA, 1);
-		resultado2 = list_get (ADMINISTRADOR_MEMORIA, 2);
-		resultado3 = list_get (ADMINISTRADOR_MEMORIA, 3);
-	}
-}
-
 void tratarMensaje (d_message tipoMensaje, void *paquete){
 	estructuraAdministrativa * resultado = malloc (sizeof(estructuraAdministrativa));
 	void * unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete);
@@ -406,90 +375,8 @@ void tratarMensaje (d_message tipoMensaje, void *paquete){
 		memcpy(resultado->donde, unMensaje, tamanioDeMensaje(tipoMensaje, unMensaje));
 		log_info(LOGGER_OBLIGATORIO, "Se guardo el mensaje en la memoria id: %i posicion: %i", resultado->idMensaje, posicionALog(resultado->donde));
 	}
-	enviarUnMensaje(unMensaje, tipoMensaje, &resultado, suscriptoresPara(tipoMensaje));
-}
-
-void enviarMensajeCatchASuscriptores (void* paquete, t_list* lista){
-	estructuraAdministrativa cache;
-	cache.suscriptoresConMensajeEnviado = list_create();
-	uint32_t posicionCatchX, posicionCatchY;
-	char *catchNombrePokemon;
-	Serialize_Unpack_CatchPokemon_NoID(paquete, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
-	log_info(LOGGER_GENERAL,"Me llego mensaje catch, Pkm: %s, x: %i, y: %i\n", catchNombrePokemon, posicionCatchX, posicionCatchY);
-	int ID = obtenerID();
-	int lenght = list_size(lista);
-	for (int i = 0; i<lenght; i++){
-		int socketCliente = list_get(lista, i);
-		Serialize_PackAndSend_CATCH_POKEMON_NoID(socketCliente, catchNombrePokemon, posicionCatchX, posicionCatchY);
-		log_info (LOGGER_GENERAL, "Se envió el mensaje %i al suscriptor %i\n", ID, socketCliente);
-		list_add (cache.suscriptoresConMensajeEnviado, &socketCliente);
-}
-	cache.idMensaje = ID;
-	cache.tipoMensaje = d_CATCH_POKEMON;
-	list_add(ADMINISTRADOR_MEMORIA, &cache);
-	log_info(LOGGER_GENERAL, "No hay suscriptores");
-}
-
-void enviarMensajeGetASuscriptores (void* paquete, t_list* lista){
-	estructuraAdministrativa cache;
-	cache.suscriptoresConMensajeEnviado = list_create();
-	uint32_t idMensajeGet;
-	char *getNombrePokemon;
-	Serialize_Unpack_GetPokemon_NoID(paquete, &getNombrePokemon);
-	log_info(LOGGER_GENERAL,"Me llego mensaje get, Pkm: %s\n", getNombrePokemon);
-	int ID = obtenerID();
-	int lenght = list_size(lista);
-	for (int i = 0; i<lenght; i++){
-		int socketCliente = list_get(lista, i);
-		Serialize_PackAndSend_GET_POKEMON_NoID(socketCliente, getNombrePokemon);
-		log_info (LOGGER_GENERAL, "Se envió el mensaje %i al suscriptor %i\n", ID, socketCliente);
-		list_add (cache.suscriptoresConMensajeEnviado, &socketCliente);
-	}
-	cache.idMensaje = ID;
-	cache.tipoMensaje = d_GET_POKEMON;
-	list_add(ADMINISTRADOR_MEMORIA, &cache);
-	log_info(LOGGER_GENERAL, "No hay suscriptores");
-}
-
-void enviarMensajeAppearedASuscriptores (void* paquete, t_list* lista){
-	estructuraAdministrativa cache;
-	cache.suscriptoresConMensajeEnviado = list_create();
-	uint32_t idMensajeAppeared, posicionX, posicionY;
-	char *nombrePokemon;
-	Serialize_Unpack_AppearedPokemon(paquete, &idMensajeAppeared, &nombrePokemon, &posicionX, &posicionY);
-	log_info(LOGGER_GENERAL,"Me llego mensaje appeared Id: %i, Pkm: %s, x: %i, y: %i\n", idMensajeAppeared, nombrePokemon, posicionX, posicionY);
-	int ID = obtenerID();
-	int lenght = list_size(lista);
-	for (int i = 0; i<lenght; i++){
-		int socketCliente = list_get(lista, i);
-		Serialize_PackAndSend_APPEARED_POKEMON(socketCliente, &idMensajeAppeared, nombrePokemon, posicionX, posicionY);
-		log_info (LOGGER_GENERAL, "Se envió el mensaje al suscriptor %i\n", socketCliente);
-		list_add (cache.suscriptoresConMensajeEnviado, &socketCliente);
-	}
-	cache.idMensaje = ID;
-	cache.tipoMensaje = d_APPEARED_POKEMON;
-	list_add(ADMINISTRADOR_MEMORIA, &cache);
-	log_info(LOGGER_GENERAL, "No hay suscriptores");
-}
-
-void enviarMensajeCaughtASuscriptores (void* paquete, t_list* lista){
-	estructuraAdministrativa cache;
-	cache.suscriptoresConMensajeEnviado = list_create();
-	uint32_t idMensajeCaught, resultado;
-	Serialize_Unpack_CaughtPokemon(paquete, idMensajeCaught, resultado);
-	log_info(LOGGER_GENERAL,"Me llego mensaje caught Id: %i, Resultado: %i\n", idMensajeCaught, resultado);
-	int lenght = list_size(lista);
-	int ID = obtenerID();
-	for (int i = 0; i<lenght; i++){
-		int socketCliente = list_get(lista, i);
-		Serialize_PackAndSend_CAUGHT_POKEMON(socketCliente, idMensajeCaught, resultado); ////hacer funcion sin id
-		log_info (LOGGER_GENERAL, "Se envió el mensaje %i al suscriptor %i\n", ID, socketCliente);
-		list_add (cache.suscriptoresConMensajeEnviado, &socketCliente);
-	}
-	cache.idMensaje = ID;
-	cache.tipoMensaje = d_CAUGHT_POKEMON;
-	list_add(ADMINISTRADOR_MEMORIA, &cache);
-	log_info(LOGGER_GENERAL, "No hay suscriptores");
+	t_list * subs = suscriptoresPara(tipoMensaje);
+	enviarUnMensaje(unMensaje, tipoMensaje, resultado, subs);
 }
 
 ///////FUNCIONES DE INIT///////////
@@ -501,7 +388,7 @@ void Init(){
 	ListsInit();
 	MemoriaPrincipalInit();
 	SemaphoresInit();
-	DumpFileInit();
+	//DumpFileInit();
 }
 
 void ConfigInit(){
@@ -532,9 +419,14 @@ void ListsInit(){
 void MemoriaPrincipalInit(){
 		estructuraAdministrativa * estructura = malloc (sizeof (estructuraAdministrativa));
 		MEMORIA_PRINCIPAL = malloc(BROKER_CONFIG.TAMANO_MEMORIA);
+		estructura->idMensaje = 0;
 		estructura->estaOcupado = 0;
 		estructura->tamanioParticion = BROKER_CONFIG.TAMANO_MEMORIA;
 		estructura->donde = MEMORIA_PRINCIPAL;
+		estructura->tiempo = string_new();
+		estructura->tiempo = temporal_get_string_time();
+		estructura->ultimaReferencia = string_new();
+		estructura->ultimaReferencia = temporal_get_string_time();
 		list_add (ADMINISTRADOR_MEMORIA, estructura);
 }
 
@@ -658,21 +550,19 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 			return particionDondeGuardar;
 		}
 		if(particion == NULL){
-		if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
-			if(FLAG_COMPACTACION == 0){
-				compactacion();
-				FLAG_REEMPLAZAR = 0;
-				FLAG_COMPACTACION = 1;
+			BUSQUEDAS_FALLIDAS ++;
+			if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
+				if(BUSQUEDAS_FALLIDAS >= BROKER_CONFIG.FRECUENCIA_COMPACTACION || FLAG_COMPACTACION == 0){
+					BUSQUEDAS_FALLIDAS=0;
+					compactacion();
+					FLAG_REEMPLAZAR = 0;
+					return buscarParticionLibre(tipoMensaje, mensaje);
+				}
+				if(FLAG_REEMPLAZAR == 1){
+				reemplazar(tipoMensaje, mensaje);
 				return buscarParticionLibre(tipoMensaje, mensaje);
+				}
 			}
-			if (FLAG_REEMPLAZAR == 0){
-				int posicion = reemplazar(tipoMensaje, mensaje);
-				particionPrueba = list_get (ADMINISTRADOR_MEMORIA, posicion);
-				FLAG_COMPACTACION = 0;
-				FLAG_REEMPLAZAR = 1;
-				return buscarParticionLibre(tipoMensaje, mensaje);
-			}
-		}
 		if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "bs")){
 			if (FLAG_COMPOSICION == 0){
 				composicion();
@@ -750,6 +640,10 @@ int reemplazar (d_message tipoMensaje, void* mensaje){
 	estructuraAdministrativa* particion = malloc (sizeof (estructuraAdministrativa));
 	int tamanioMensaje = tamanioDeMensaje (tipoMensaje, mensaje);
 	//////////FIFO////////////////////////////////////////
+	if(noPuedoReemplazarMas()){
+		FLAG_COMPACTACION = 0;
+		log_info (LOGGER_OBLIGATORIO, "No puedo reemplazar más, necesito compactar.");
+	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "fifo")){
 		int posicion = primeraParticion();
 		particion = list_get (ADMINISTRADOR_MEMORIA, posicion);
@@ -761,6 +655,7 @@ int reemplazar (d_message tipoMensaje, void* mensaje){
 		particion->tiempo = temporal_get_string_time();
 		particion->ultimaReferencia = string_new();
 		particion->ultimaReferencia = temporal_get_string_time();
+		log_info (LOGGER_OBLIGATORIO, "Se limpio la particion Victima: %i, volvemos a buscar", posicionALog(particion->donde));
 		return posicion;
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "lru")){
@@ -778,6 +673,14 @@ int reemplazar (d_message tipoMensaje, void* mensaje){
 	}
 	///El donde no cambia, al igual que el tamaño de la particion
 	log_info (LOGGER_GENERAL, "Se limpio la particion Victima, volvemos a buscar");
+}
+
+bool noPuedoReemplazarMas(){
+	bool cualquieraOcupado(estructuraAdministrativa* elemento) {
+		return (elemento->estaOcupado == 1);
+	}
+	void * x = list_find(ADMINISTRADOR_MEMORIA, cualquieraOcupado);
+	return (x==NULL);
 }
 
 void composicion(){
@@ -812,10 +715,6 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 	int contador = 0, posicion = 0;
 	estructuraAdministrativa * particionMinima = malloc (sizeof (estructuraAdministrativa));
 	int contar = contarTamanio();
-	estructuraAdministrativa * particionPrueba1 = malloc (sizeof (estructuraAdministrativa)); // PARA PROBAR
-	estructuraAdministrativa * particionPrueba2 = malloc (sizeof (estructuraAdministrativa)); // PARA PROBAR
-	estructuraAdministrativa * particionPrueba = malloc (sizeof (estructuraAdministrativa)); // PARA PROBAR
-	estructuraAdministrativa * particionPrueba3 = malloc (sizeof (estructuraAdministrativa)); // PARA PROBAR
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
 		estructuraAdministrativa * particionVacia = malloc (sizeof (estructuraAdministrativa));
@@ -852,7 +751,7 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 						}
 				particionMinima = list_find(ADMINISTRADOR_MEMORIA, (void*) tomarLaParticionMinima); // asi arreglo de agarrar uno que este desocupado
 			}
-			while (particion->tamanioParticion / 2 > tamanioMensaje && contar == BROKER_CONFIG.TAMANO_MEMORIA){
+		while (particion->tamanioParticion / 2 > tamanioMensaje && contar == BROKER_CONFIG.TAMANO_MEMORIA){
 			estructuraAdministrativa * particionAuxiliar = malloc (sizeof (estructuraAdministrativa)); // la que le sigue al actua
 			particionAuxiliar->tamanioParticion = particion->tamanioParticion / 2;
 			particionAuxiliar->estaOcupado = 0;
@@ -873,11 +772,7 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 			list_add_in_index(ADMINISTRADOR_MEMORIA, posicion+1, particionAuxiliar);
 			particion->estaOcupado = 0;
 			particion->tamanioParticion = particionAuxiliar->tamanioParticion;
-			particionPrueba = list_get (ADMINISTRADOR_MEMORIA, 0);
-			particionPrueba1 = list_get (ADMINISTRADOR_MEMORIA, 1);
-			particionPrueba2 = list_get (ADMINISTRADOR_MEMORIA, 2);
-			particionPrueba3 = list_get (ADMINISTRADOR_MEMORIA, 3);
-			}
+		}
 	}
 	log_info (LOGGER_GENERAL, "Se toma la particion a medida");
 		return particion;
@@ -1071,7 +966,6 @@ bool primerFechaEsAnterior(char* unaFecha, char* otraFecha){
 }
 
 void destruirTodo(){
-	funcionParaVerMemoria();
 	free(MEMORIA_PRINCIPAL);
 	exit(0);
 }
@@ -1084,6 +978,7 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete) {
 	uint32_t posX, posY, cantidad, atrapado, correlativoA, id;
 	char *pokemon;
 	void *retorno;
+	t_list * listaDePuntos = list_create();
 	newEnMemoria * retornoNew;
 	catchEnMemoria * retornoCatch;
 	getEnMemoria * retornoGet;
@@ -1139,6 +1034,12 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete) {
 		break;
 	case d_LOCALIZED_POKEMON:
 		retornoLocalized = malloc(sizeof(localizedEnMemoria));
+		Serialize_Unpack_LocalizedPokemon(paquete, &id, &pokemon, &listaDePuntos);
+		log_info(LOGGER_GENERAL,"Me llego mensaje localized correlativo a: %i, pkm: %s \n", id, pokemon);
+		void mostrarPuntos(punto* self){
+			log_info(LOGGER_GENERAL,"Punto en x: %i, y: %i \n", self->posX, self->posY);
+		}
+		list_iterate(listaDePuntos, (void*)mostrarPuntos);
 		retorno = retornoLocalized;
 		break;
 	default:
