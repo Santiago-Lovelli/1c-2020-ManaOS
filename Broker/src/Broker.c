@@ -362,7 +362,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 void tratarMensaje (d_message tipoMensaje, void *paquete){
 	estructuraAdministrativa * resultado = malloc (sizeof(estructuraAdministrativa));
 	void * unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete);
-	resultado = guardarMensaje(d_NEW_POKEMON, unMensaje);
+	resultado = guardarMensaje(tipoMensaje, unMensaje);
 	if (resultado){
 		int ID = obtenerID();
 		resultado->idMensaje = ID;
@@ -392,7 +392,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -746,17 +746,32 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 		}
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "bs")){
+		//estructuraAdministrativa* particion = malloc (sizeof(estructuraAdministrativa));
+		estructuraAdministrativa* particion1 = malloc (sizeof(estructuraAdministrativa));
+		estructuraAdministrativa* particion2 = malloc (sizeof(estructuraAdministrativa));
+		estructuraAdministrativa* particion3 = malloc (sizeof(estructuraAdministrativa));
 		if (tamanioMensaje <= BROKER_CONFIG.TAMANO_MINIMO_PARTICION){
-			bool tomarLaParticionMinima(estructuraAdministrativa* elemento) { // PUEDO TENER FRAG INTERNA
-							return (elemento->estaOcupado == 0 && elemento->tamanioParticion ==BROKER_CONFIG.TAMANO_MINIMO_PARTICION);
+			bool tomarLaParticion(estructuraAdministrativa* elemento) { // PUEDO TENER FRAG INTERNA
+							return (elemento->estaOcupado == 0);
 						}
-				particionMinima = list_find(ADMINISTRADOR_MEMORIA, (void*) tomarLaParticionMinima); // asi arreglo de agarrar uno que este desocupado
+				particion = list_find(ADMINISTRADOR_MEMORIA, (void*) tomarLaParticion); // asi arreglo de agarrar uno que este desocupado
+				particionMinima->tamanioParticion = BROKER_CONFIG.TAMANO_MINIMO_PARTICION;
+				particionMinima->donde = particion->donde;
+				particion->donde = particionMinima->donde + particionMinima->tamanioParticion;
+				particion->tamanioParticion = particion->tamanioParticion - particionMinima->tamanioParticion;
+				list_add (ADMINISTRADOR_MEMORIA, particionMinima);
+				particion1 = list_get (ADMINISTRADOR_MEMORIA, 0);
+				particion2 = list_get (ADMINISTRADOR_MEMORIA,1);
+				particion3 = list_get (ADMINISTRADOR_MEMORIA, 2);
+				return particionMinima;
 			}
 		while (particion->tamanioParticion / 2 > tamanioMensaje && contar == BROKER_CONFIG.TAMANO_MEMORIA){
 			estructuraAdministrativa * particionAuxiliar = malloc (sizeof (estructuraAdministrativa)); // la que le sigue al actua
-			particionAuxiliar->tamanioParticion = particion->tamanioParticion / 2;
+			particion->estaOcupado = 0;
+			particion->tamanioParticion = particion->tamanioParticion / 2;
+			particionAuxiliar->tamanioParticion = particion->tamanioParticion;
 			particionAuxiliar->estaOcupado = 0;
-			particionAuxiliar->donde =particion->donde + particionAuxiliar->tamanioParticion;
+			particionAuxiliar->donde =particion->donde + particion->tamanioParticion;
 			particionAuxiliar->idMensaje = NULL;
 			particionAuxiliar->suscriptoresConACK = list_create();
 			particionAuxiliar->suscriptoresConMensajeEnviado = list_create();
@@ -771,8 +786,8 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 			list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
 			contador = 0;
 			list_add_in_index(ADMINISTRADOR_MEMORIA, posicion+1, particionAuxiliar);
-			particion->estaOcupado = 0;
-			particion->tamanioParticion = particionAuxiliar->tamanioParticion;
+			//particion->estaOcupado = 0;
+			//particion->tamanioParticion = particionAuxiliar->tamanioParticion;
 		}
 	}
 	log_info (LOGGER_GENERAL, "Se toma la particion a medida");
