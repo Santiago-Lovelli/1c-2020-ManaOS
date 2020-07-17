@@ -143,6 +143,7 @@ void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* poke
 		trainerObjetivo->pokemones[posicionPokemonEnObjetivo] = pokemon1;
 		DEADLOCKS_RESUELTOS = DEADLOCKS_RESUELTOS + 1;
 	}
+	analizarDeadlockEspecifico(trainer);
 	analizarDeadlockEspecifico(trainerObjetivo);
 }
 
@@ -836,7 +837,7 @@ void finalFeliz(){
 	planificarDeadlocks();
 	sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 	logearFin();
-	destruirTodo(); //Hakai
+//	destruirTodo(); //Hakai
 	matarHilos();
 }
 
@@ -998,7 +999,9 @@ void FIFO(){
 	while(!objetivoGlobalCumplido()){
 		esperarAlgunoEnReady(false);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
+		sem_wait(&semaforoCambioEstado);
 		entrenador *trainer = list_get(EstadoReady,0);
+		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
@@ -1006,13 +1009,14 @@ void FIFO(){
 	}
 	//Manejo de Deadlock
 	DEADLOCKS_PRODUCIDOS = list_size(EstadoBlock);
-	pasarTodosADeadlock();
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
 		planificarDeadlocks();
 		esperarAlgunoEnReady(true);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
+		sem_wait(&semaforoCambioEstado);
 		entrenador *trainer = list_get(EstadoReady,0);
+		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
@@ -1030,7 +1034,9 @@ void RR(){
 	while(!objetivoGlobalCumplido()){
 		esperarAlgunoEnReady(false);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
+		sem_wait(&semaforoCambioEstado);
 		entrenador *trainer = list_get(EstadoReady,0);
+		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		while(1){
@@ -1052,13 +1058,14 @@ void RR(){
 	}
 	//Manejo de Deadlock
 	DEADLOCKS_PRODUCIDOS = list_size(EstadoBlock);
-	pasarTodosADeadlock();
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
 		planificarDeadlocks();
 		esperarAlgunoEnReady(true);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
+		sem_wait(&semaforoCambioEstado);
 		entrenador *trainer = list_get(EstadoReady,0);
+		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		while(1){
@@ -1088,7 +1095,9 @@ void SJFCD(){
 		esperarAlgunoEnReady(false);
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
+		sem_wait(&semaforoCambioEstado);
 		entrenador *trainer = list_get(EstadoReady,0);
+		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		while(1){
@@ -1108,14 +1117,15 @@ void SJFCD(){
 	}
 	//Manejo de Deadlock
 	DEADLOCKS_PRODUCIDOS = list_size(EstadoBlock);
-	pasarTodosADeadlock();
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
 		planificarDeadlocks();
 		esperarAlgunoEnReady(true);
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
+		sem_wait(&semaforoCambioEstado);
 		entrenador *trainer = list_get(EstadoReady,0);
+		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		while(1){
@@ -1143,7 +1153,9 @@ void SJFSD(){
 		esperarAlgunoEnReady(false);
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
+		sem_wait(&semaforoCambioEstado);
 		entrenador *trainer = list_get(EstadoReady,0);
+		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
@@ -1151,14 +1163,15 @@ void SJFSD(){
 	}
 	//Manejo de Deadlock
 	DEADLOCKS_PRODUCIDOS = list_size(EstadoBlock);
-	pasarTodosADeadlock();
 	log_info(TEAM_LOG, "La cantidad de entrenadores actuales en deadlock es: %i\nSe procedera a manejar estos deadlock a continuacion \n", list_size(EstadoBlock));
 	while(!teamCumplioSuObjetivo()){
 		planificarDeadlocks();
 		esperarAlgunoEnReady(true);
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
+		sem_wait(&semaforoCambioEstado);
 		entrenador *trainer = list_get(EstadoReady,0);
+		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "Se planificara al entrenador nro: %i",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
 		sem_wait(&semaforoTermine);
@@ -1168,17 +1181,11 @@ void SJFSD(){
 	finalFeliz();
 }
 
-void pasarTodosADeadlock(){
-	entrenador * trainer;
-	int tamanio = list_size(EstadoBlock);
-	for(int i=0;i<tamanio; i++){
-		trainer = list_get(EstadoBlock,i);
-		bloquearEntrenador(trainer->tid, t_DEADLOCK);
-	}
-}
-
 void analizarDeadlockEspecifico(entrenador *trainer){
+	if(trainer == NULL)
+		return;
 	char **pokemonFaltante = quePokemonMeFalta(trainer);
+	//TODO Free a esto
 	if(pokemonFaltante[0] == NULL){
 		darMision(trainer->tid, "TERMINATE" , trainer->posicion, false, -1);
 		pasarEntrenadorAEstado(trainer->tid, t_READY);
@@ -1201,6 +1208,7 @@ void planificarDeadlocks(){
 	char* pokemonParaIntercambiar = NULL;
 	for(int i=0; i<cantidadEntrenadoresEnDeadlock; i++){
 		trainer1 = list_get(EstadoBlock,i);
+		analizarDeadlockEspecifico(trainer1);
 		pokemonFaltante = quePokemonMeFalta(trainer1);
 		//TODO free al pokemonFaltante?
 		if(pokemonFaltante[0] == NULL){
@@ -1210,7 +1218,7 @@ void planificarDeadlocks(){
 			return;
 		}
 		if(trainer1->razonBloqueo == t_DEADLOCK){
-			for(int j=1; j<cantidadEntrenadoresEnDeadlock; j++){
+			for(int j=0; j<cantidadEntrenadoresEnDeadlock; j++){
 				trainer2 = list_get(EstadoBlock,j);
 				pokemonSobrante = NULL;
 				pokemonSobrante = quePokemonTengoDeMas(trainer2);
@@ -1298,7 +1306,4 @@ bool todosLosEntrenadoresCumplieronObjetivo(){
 bool entrenadorCumplioObjetivo(entrenador* trainer){
 	return (sonIgualesSinInportarOrden(trainer->pokemones,trainer->pokemonesObjetivo) == 1);
 }
-
-//TODO porque la razon de bloqueo del entrenador era t_NULL, y porque uno de los punteros rompia
-//en la funcion primer elemento en comun?
 
