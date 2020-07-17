@@ -23,6 +23,7 @@ void inicializarSemaforos(){
 	sem_init(&semaforoConexionABroker,0,1);
 	sem_init(&semaforoMisiones,0,1);
 	sem_init(&semaforoDiccionario,0,1);
+	sem_init(&semaforoAppeared,0,1);
 }
 
 void inicializar(){
@@ -265,6 +266,7 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 		}
 		atender(headerRecibido, elemento->cliente, elemento->log);
 	}
+	free(elemento);
 	return 0;
 }
 
@@ -344,10 +346,12 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 	punto posicionPoke;
 	posicionPoke.x = posicionAppearedX;
 	posicionPoke.y = posicionAppearedY;
+	sem_wait(&semaforoAppeared);
 	if(!contandoMisionesActualesNecesitoEstePokemon(pokemon)){
 		t_mision* misionPendiente = crearMision(pokemon,posicionPoke,false,(-1));
 		list_add(MISIONES_PENDIENTES, misionPendiente);
 		printf("\n Este pokemon se agregara a pendientes \n");
+		sem_post(&semaforoAppeared);
 		return;
 	}
 //	while(!contandoMisionesActualesNecesitoEstePokemon(pokemon)){
@@ -361,9 +365,14 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 		log_error(logger, "No hay entrenadores disponibles, se esperara a que los haya");
 		sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 		idEntrenador = entrenadorMasCercanoDisponible(posicionPoke);
+		if(!necesitoEstePokemon(pokemon)){
+			sem_post(&semaforoAppeared);
+			return;
+		}
 	}
 	darMision(idEntrenador,pokemon,posicionPoke,false,(-1));
 	pasarEntrenadorAEstado(idEntrenador, t_READY);
+	sem_post(&semaforoAppeared);
 
 }
 
@@ -814,14 +823,23 @@ void destruirEntrenadores(){
 }
 
 void destruirSemaforos(){
-
+	sem_destroy(&semaforoCambioEstado);
+	sem_destroy(&semaforoConexionABroker);
+	sem_destroy(&semaforoDiccionario);
+	sem_destroy(&semaforoGameboy);
+	sem_destroy(&semaforoMisiones);
+	sem_destroy(&semaforoPlanifiquenme);
+	sem_destroy(&semaforoSocket);
+	sem_destroy(&semaforoTermine);
+	sem_destroy(&semaforoAppeared);
 }
 
 void destruirTodo(){
-	destruirObjetivoGlobal();
-	destruirEntrenadores();
-	destruirEstados();
+//	destruirObjetivoGlobal();
+//	destruirEntrenadores();
+//	destruirEstados();
 	destruirSemaforos();
+//	matarHilos();
 }
 
 void matarHilos(){
@@ -837,8 +855,7 @@ void finalFeliz(){
 	planificarDeadlocks();
 	sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 	logearFin();
-//	destruirTodo(); //Hakai
-	matarHilos();
+	destruirTodo(); //Hakai
 }
 
 void iniciarConfig(){

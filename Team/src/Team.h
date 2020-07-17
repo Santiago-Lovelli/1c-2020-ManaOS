@@ -652,6 +652,7 @@ sem_t semaforoCambioEstado;
 sem_t semaforoConexionABroker;
 sem_t semaforoMisiones;
 sem_t semaforoDiccionario;
+sem_t semaforoAppeared;
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;
