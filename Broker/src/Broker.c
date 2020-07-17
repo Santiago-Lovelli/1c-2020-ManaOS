@@ -64,7 +64,6 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			break;
 		case d_LOCALIZED_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un localized pokemon");
-
 			//tratarMensaje(header.tipoMensaje, packCaughtPokemon);
 			break;
 		case d_ACK:
@@ -77,6 +76,7 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			log_info(LOGGER_GENERAL, "Llego un Subscribe");
 			void * recibir = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			uint32_t variable = Serialize_Unpack_ACK(recibir);
+			//funcionParaVerMemoria();
 			suscribir(variable, cliente);
 			free(recibir);
 			break;
@@ -382,7 +382,7 @@ void tratarMensajeNewASuscriptores (void *paquete, t_list* lista){
 		resultado->tiempo = temporal_get_string_time();
 		resultado->ultimaReferencia = temporal_get_string_time();
 		memcpy(resultado->donde, &mensajeAGuardar, tamanioDeMensaje(d_NEW_POKEMON, &mensajeAGuardar));
-		log_info(LOGGER_GENERAL, "Se guardo el mensaje en la memoria id: %i posicion: ", resultado->idMensaje, posicionALog(resultado->donde));
+		log_info(LOGGER_OBLIGATORIO, "Se guardo el mensaje en la memoria id: %i posicion: %i", resultado->idMensaje, posicionALog(resultado->donde));
 		resultado = list_get (ADMINISTRADOR_MEMORIA, 0);
 		resultado1 = list_get (ADMINISTRADOR_MEMORIA, 1);
 		resultado2 = list_get (ADMINISTRADOR_MEMORIA, 2);
@@ -404,7 +404,7 @@ void tratarMensaje (d_message tipoMensaje, void *paquete){
 		resultado->tiempo = temporal_get_string_time();
 		resultado->ultimaReferencia = temporal_get_string_time();
 		memcpy(resultado->donde, unMensaje, tamanioDeMensaje(tipoMensaje, unMensaje));
-		log_info(LOGGER_GENERAL, "Se guardo el mensaje en la memoria");
+		log_info(LOGGER_OBLIGATORIO, "Se guardo el mensaje en la memoria id: %i posicion: %i", resultado->idMensaje, posicionALog(resultado->donde));
 	}
 	enviarUnMensaje(unMensaje, tipoMensaje, &resultado, suscriptoresPara(tipoMensaje));
 }
@@ -1020,7 +1020,7 @@ void * leerInfoYActualizarUsoPorID(int id){ //deuelve un tipo en memoria
 void funcionParaVerMemoria(){
 	for(int i = 0; i<list_size(ADMINISTRADOR_MEMORIA); i++){
 		estructuraAdministrativa * ElElemento = list_get(ADMINISTRADOR_MEMORIA, i);
-		if(ElElemento->estaOcupado != 0){
+		if(ElElemento->estaOcupado == 1){
 			void* prueba = levantarMensaje(ElElemento->tipoMensaje, ElElemento->donde);
 			log_info(LOGGER_GENERAL, "Levantado de la memoria posta!!!");
 		}
@@ -1071,16 +1071,17 @@ bool primerFechaEsAnterior(char* unaFecha, char* otraFecha){
 }
 
 void destruirTodo(){
+	funcionParaVerMemoria();
 	free(MEMORIA_PRINCIPAL);
 	exit(0);
 }
 
 int posicionALog(void* unaPosicion){
-	return MEMORIA_PRINCIPAL - unaPosicion;
+	return unaPosicion - MEMORIA_PRINCIPAL;
 }
 
 void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete) {
-	uint32_t posX, posY, cantidad, correlativoA, atrapado;
+	uint32_t posX, posY, cantidad, atrapado, correlativoA, id;
 	char *pokemon;
 	void *retorno;
 	newEnMemoria * retornoNew;
@@ -1121,8 +1122,8 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete) {
 		break;
 	case d_APPEARED_POKEMON:
 		retornoAppeared = malloc(sizeof(appearedEnMemoria));
-		Serialize_Unpack_AppearedPokemon_NoID(paquete, &pokemon, &posX, &posY);
-		log_info(LOGGER_GENERAL,"Me llego mensaje appeared Pkm: %s, x: %i, y: %i \n", pokemon, posX, posY);
+		Serialize_Unpack_AppearedPokemon(paquete, &id, &pokemon, &posX, &posY);
+		log_info(LOGGER_GENERAL,"Me llego mensaje appeared Pkm: %s, x: %i, y: %i , id: %i \n", pokemon, posX, posY, id);
 		retornoAppeared->largoDeNombre = string_length(pokemon);
 		retornoAppeared->nombrePokemon = pokemon;
 		retornoAppeared->posX = posX;
@@ -1132,7 +1133,7 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete) {
 	case d_CAUGHT_POKEMON:
 		retornoCaught = malloc(sizeof(caughtEnMemoria));
 		Serialize_Unpack_CaughtPokemon(paquete, &correlativoA, &atrapado);
-		log_info(LOGGER_GENERAL,"Me llego mensaje caught correlativoA: %i, resultado: %i \n", correlativoA, atrapado);
+		log_info(LOGGER_GENERAL,"Me llego mensaje caught correlativo a: %i, resultado: %i \n", correlativoA, atrapado);
 		retornoCaught->atrapado = atrapado;
 		retorno = retornoCaught;
 		break;

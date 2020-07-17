@@ -58,7 +58,9 @@ void Caught_pokemon(char *argv[]){
 	log_info(logger,"ESTADO: %s ", argv[4] );
 
 	int conexion = conectarA(argv[1]);
-	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, atoi(argv[3]), OKoFAIL(argv[4]) );
+	int numero = OKoFAIL(argv[4]);
+	log_info(logger,"Prueba numero: %i ", numero );
+	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, atoi(argv[3]), numero);
 
 }
 
@@ -176,7 +178,7 @@ void cumplirPedido(int argc, char *argv[]){
 	}
 
 	if( string_equals_ignore_case(argv[1],"SUSCRIPTOR") ){
-		if(argc < 4){
+		if(argc < 3){
 			log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
 			return;
 		}
@@ -262,6 +264,7 @@ void iniciarEstructuras(){
 
 void atenderMensajes (HeaderDelibird headerRecibido, int socket){
 	log_info(logger, "atendiendo mensaje...");
+	uint32_t ID;
 	switch (headerRecibido.tipoMensaje){
 	case d_NEW_POKEMON:
 		log_info(logger, "Llego un new pokemon");
@@ -277,16 +280,16 @@ void atenderMensajes (HeaderDelibird headerRecibido, int socket){
 		void* packCatchPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
 		uint32_t posicionCatchX,posicionCatchY;
 		char *catchNombrePokemon;
-		Serialize_Unpack_CatchPokemon_NoID(packCatchPokemon, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
-		log_info(logger,"Me llego mensaje catch: Pkm: %s, x: %i, y: %i\n", catchNombrePokemon, posicionCatchX, posicionCatchY);
+		Serialize_Unpack_CatchPokemon(packCatchPokemon, &ID, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
+		log_info(logger,"Me llego mensaje catch: Pkm: %s, x: %i, y: %i, ID: %i \n", catchNombrePokemon, posicionCatchX, posicionCatchY, ID);
 		free(packCatchPokemon);
 		break;
 	case d_GET_POKEMON:
 		log_info(logger, "Llego un get pokemon");
 		void* packGetPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
 		char *getNombrePokemon;
-		Serialize_Unpack_GetPokemon_NoID(packGetPokemon, &getNombrePokemon);
-		log_info(logger,"Me llego mensaje get: Pkm: %s\n", getNombrePokemon);
+		Serialize_Unpack_GetPokemon(packGetPokemon, &ID, &getNombrePokemon);
+		log_info(logger,"Me llego mensaje get: Pkm: %s de id: %i \n", getNombrePokemon, ID);
 		free(packGetPokemon);
 		break;
 	case d_APPEARED_POKEMON:
