@@ -694,15 +694,14 @@ void composicion(){
 	estructuraAdministrativa * particionActual = malloc (sizeof(estructuraAdministrativa));
 	estructuraAdministrativa * particionPosterior = malloc (sizeof(estructuraAdministrativa));
 	int i = 0;
-	int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
 	particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
 	particionPosterior = list_get (ADMINISTRADOR_MEMORIA, i+1);
 	if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 		particionActual->estaOcupado = 0;
 		particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
-		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, particionPosterior, (void*)destruir);
+		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)destruir);
 	}
-		for (i=1; i<particionesMemoria; i++){
+		for (i=1; i<list_size(ADMINISTRADOR_MEMORIA); i++){
 		particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
 		particionAnterior = list_get (ADMINISTRADOR_MEMORIA, i-1);
 		particionPosterior = list_get (ADMINISTRADOR_MEMORIA, i+1);
@@ -710,9 +709,11 @@ void composicion(){
 				particionActual->donde = particionAnterior->donde;
 				particionActual->estaOcupado = 0;
 				particionActual->tamanioParticion = particionAnterior->tamanioParticion + particionActual->tamanioParticion;
+				list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i-1, (void*)destruir);
 				if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 					particionActual->estaOcupado = 0;
 					particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
+					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)destruir);
 		}
 		}
 	}
