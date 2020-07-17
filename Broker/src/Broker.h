@@ -131,6 +131,7 @@ void tratarMensajeACK (void* paquete, int cliente);
 void actualizarRecibidosPorID(int id, int socketCliente);
 void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministrativa * resultado, t_list * lista);
 t_list* suscriptoresPara(d_message tipoDeMensaje);
+bool sirveCompactar(int tamanioMensaje);
 
 //////FUNCIONES ESTRUCTURA ADMINISTRATIVA//////////
 estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar);

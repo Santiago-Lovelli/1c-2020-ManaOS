@@ -210,7 +210,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CATCH) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		list_clean_and_destroy_elements(mensajesCatch, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesCatch, (void *) destruir);
 	break;
 	case d_GET_POKEMON:
 		mensajesGet = tomarLosMensajes (d_GET_POKEMON);
@@ -222,7 +222,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (GET) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		list_clean_and_destroy_elements(mensajesGet, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesGet, (void *) destruir);
 	break;
 	case d_APPEARED_POKEMON:
 		mensajesAppeared = tomarLosMensajes (d_APPEARED_POKEMON);
@@ -234,7 +234,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (APPEARED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		list_clean_and_destroy_elements(mensajesAppeared, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesAppeared, (void *) destruir);
 	break;
 	case d_CAUGHT_POKEMON:
 		mensajesCaught = tomarLosMensajes (d_CAUGHT_POKEMON);
@@ -246,7 +246,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CAUGHT) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		list_clean_and_destroy_elements(mensajesCaught, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesCaught, (void *) destruir);
 	break;
 	case d_LOCALIZED_POKEMON:
 		mensajesLocalized = tomarLosMensajes (d_LOCALIZED_POKEMON);
@@ -258,7 +258,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (LOCALIZED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		list_clean_and_destroy_elements(mensajesLocalized, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesLocalized, (void *) destruir);
 		break;
 	default:
 		log_error(LOGGER_OBLIGATORIO, "No existe el mensaje");
@@ -362,7 +362,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 void tratarMensaje (d_message tipoMensaje, void *paquete){
 	estructuraAdministrativa * resultado = malloc (sizeof(estructuraAdministrativa));
 	void * unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete);
-	resultado = guardarMensaje(d_NEW_POKEMON, unMensaje);
+	resultado = guardarMensaje(tipoMensaje, unMensaje);
 	if (resultado){
 		int ID = obtenerID();
 		resultado->idMensaje = ID;
@@ -441,6 +441,12 @@ void DumpFileInit(){
 	FILE *fp;
 	fp = fopen (BROKER_CONFIG.DUMP_FILE, "r");
 	fclose(fp);
+}
+
+void destruirTodo(){
+	//list_destroy_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void*)estructuraAdministrativaDestroyer);
+	free(MEMORIA_PRINCIPAL);
+	exit(0);
 }
 
 /////////FUNCIONES VARIAS/////////
@@ -550,18 +556,23 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 			return particionDondeGuardar;
 		}
 		if(particion == NULL){
-			BUSQUEDAS_FALLIDAS ++;
+
 			if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
 				if(BUSQUEDAS_FALLIDAS >= BROKER_CONFIG.FRECUENCIA_COMPACTACION || FLAG_COMPACTACION == 0){
 					BUSQUEDAS_FALLIDAS=0;
 					compactacion();
-					FLAG_REEMPLAZAR = 0;
+					FLAG_COMPACTACION = 1;
 					return buscarParticionLibre(tipoMensaje, mensaje);
 				}
 				if(FLAG_REEMPLAZAR == 1){
-				reemplazar(tipoMensaje, mensaje);
-				return buscarParticionLibre(tipoMensaje, mensaje);
+					reemplazar(tipoMensaje, mensaje);
+					if (sirveCompactar(tamanioMensaje)){
+						FLAG_COMPACTACION = 0;
+					}
+					BUSQUEDAS_FALLIDAS ++;
+					return buscarParticionLibre(tipoMensaje, mensaje);
 				}
+				BUSQUEDAS_FALLIDAS ++;
 			}
 		if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "bs")){
 			if (FLAG_COMPOSICION == 0){
@@ -579,6 +590,17 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 			}
 		}
 	}
+}
+
+bool sirveCompactar(int tamanioMensaje) {
+	int contador = 0;
+	void tamanioLibre(estructuraAdministrativa* self){
+		if(self->estaOcupado == 0){
+			contador += self->tamanioParticion;
+		}
+	}
+	list_iterate(ADMINISTRADOR_MEMORIA, (void*)tamanioLibre);
+	return (tamanioMensaje >= contador);
 }
 
 int primeraParticion(){
@@ -822,16 +844,14 @@ void reposicionarParticionesOcupadas(t_list * listaAuxiliar){
 	espacioFaltante->tiempo = temporal_get_string_time();
 	espacioFaltante->ultimaReferencia = temporal_get_string_time();
 	espacioFaltante->tamanioParticion = BROKER_CONFIG.TAMANO_MEMORIA - contarTamanio();
-	list_add(ADMINISTRADOR_MEMORIA, espacioFaltante);
+	list_add_in_index(ADMINISTRADOR_MEMORIA, 0, espacioFaltante);
 }
 
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self) {
-/*void estructuraAdministrativaDestroyer(estructuraAdministrativa *self) {
     free(self->donde);
     free(self->estaOcupado);
     free(self->idMensaje);
     free(self->tamanioParticion);
-    */
     free(self->tiempo);
     free(self->ultimaReferencia);
     list_clean_and_destroy_elements(self->suscriptoresConACK, (void*)suscriptorDestroyer);
@@ -960,16 +980,11 @@ bool primerFechaEsAnterior(char* unaFecha, char* otraFecha){
 	char** primerFechaSeparada = string_split(unaFecha, ":");
 	char** segundaFechaSeparada = string_split(otraFecha, ":");
 	for(int i = 0; primerFechaSeparada[i]!=NULL; i++){
-		if (primerFechaSeparada[i] != segundaFechaSeparada[i]){
+		if (atoi(primerFechaSeparada[i]) != atoi(segundaFechaSeparada[i])){
 			return (atoi(primerFechaSeparada[i]) < atoi(segundaFechaSeparada[i]));
 		}
 	}
 	return true;
-}
-
-void destruirTodo(){
-	free(MEMORIA_PRINCIPAL);
-	exit(0);
 }
 
 int posicionALog(void* unaPosicion){
