@@ -103,6 +103,13 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 
 }
 
+int memoriaVacia (){
+	sem_wait(&MUTEX_LISTA);
+	int valor = (list_is_empty(ADMINISTRADOR_MEMORIA));
+	sem_post(&MUTEX_LISTA);
+	return valor;
+}
+
 void suscribir(uint32_t variable, int clienteA){
 	int * cliente = malloc(sizeof(int));
 	*cliente=clienteA;
@@ -110,7 +117,7 @@ void suscribir(uint32_t variable, int clienteA){
 	case d_NEW_POKEMON:
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de NEW", *cliente);
 		list_add (SUSCRIPTORES_NEW, cliente);
-		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
+		if (memoriaVacia()){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 		}
 		else{
@@ -120,7 +127,7 @@ void suscribir(uint32_t variable, int clienteA){
 	case d_CATCH_POKEMON:
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de CATCH", *cliente);
 		list_add (SUSCRIPTORES_CATCH, cliente);
-		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
+		if (memoriaVacia()){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 			}
 			else{
@@ -130,7 +137,7 @@ void suscribir(uint32_t variable, int clienteA){
 	case d_GET_POKEMON:
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de GET", *cliente);
 		list_add (SUSCRIPTORES_GET, cliente);
-		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
+		if (memoriaVacia()){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 			}
 			else{
@@ -140,7 +147,7 @@ void suscribir(uint32_t variable, int clienteA){
 	case d_APPEARED_POKEMON:
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Appeared", *cliente);
 		list_add (SUSCRIPTORES_APPEARED, cliente);
-		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
+		if (memoriaVacia()){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 			}
 			else{
@@ -150,7 +157,7 @@ void suscribir(uint32_t variable, int clienteA){
 	case d_CAUGHT_POKEMON:
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Caught", *cliente);
 		list_add (SUSCRIPTORES_CAUGHT, cliente);
-		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
+		if (memoriaVacia()){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 			}
 			else{
@@ -160,7 +167,7 @@ void suscribir(uint32_t variable, int clienteA){
 	case d_LOCALIZED_POKEMON:
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Localized", *cliente);
 		list_add (SUSCRIPTORES_LOCALIZED, cliente);
-		if (list_is_empty (ADMINISTRADOR_MEMORIA)){
+		if (memoriaVacia()){
 			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
 			}
 			else{
@@ -455,8 +462,12 @@ void SemaphoresInit(){
 	sem_init(&MUTEX_CLIENTE, 0, 1);
 	sem_init(&MUTEX_CONTADOR, 0, 1);
 	sem_init(&MUTEX_MEMORIA, 0, 1);
-	sem_init(&MUTEX_TIEMPO, 0, 1);
+	sem_init(&MUTEX_LISTA, 0, 1);
 	sem_init(&MUTEX_SOCKET, 0, 1);
+	sem_init(&MUTEX_REEMPLAZAR, 0, 1);
+	sem_init(&MUTEX_COMPOSICION, 0, 1);
+	sem_init(&MUTEX_COMPACTACION, 0, 1);
+	sem_init(&MUTEX_BUSQUEDA, 0, 1);
 }
 
 void DumpFileInit(){
@@ -482,7 +493,11 @@ void limpiarSemaforos(){
 	sem_destroy(&MUTEX_CLIENTE);
 	sem_destroy(&MUTEX_CONTADOR);
 	sem_destroy(&MUTEX_MEMORIA);
-	sem_destroy(&MUTEX_TIEMPO);
+	sem_destroy(&MUTEX_LISTA);
+	sem_destroy(&MUTEX_REEMPLAZAR);
+	sem_destroy(&MUTEX_COMPOSICION);
+	sem_destroy(&MUTEX_COMPACTACION);
+	sem_destroy(&MUTEX_BUSQUEDA);
 }
 
 /////////FUNCIONES VARIAS/////////
@@ -557,10 +572,37 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
 	}
 }
 
+int valorBusquedaFallida (){
+	sem_wait(&MUTEX_BUSQUEDA);
+	int valor = FLAG_REEMPLAZAR;
+	sem_post(&MUTEX_BUSQUEDA);
+	return valor;
+}
+
+int valorCompactacion (){
+	sem_wait(&MUTEX_COMPACTACION);
+	int valor = FLAG_COMPACTACION;
+	sem_post(&MUTEX_COMPACTACION);
+	return valor;
+}
+
+int valorReemplazar (){
+	sem_wait(&MUTEX_REEMPLAZAR);
+	int valor = FLAG_REEMPLAZAR;
+	sem_post(&MUTEX_REEMPLAZAR);
+	return valor;
+}
+
+int valorComposicion (){
+	sem_wait(&MUTEX_COMPOSICION);
+	int valor = FLAG_COMPOSICION;
+	sem_post(&MUTEX_COMPOSICION);
+	return valor;
+}
+
 /////////////BUDDY SYSTEM & PARTICIONES/////////////////
 estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mensaje){
 	estructuraAdministrativa* particion = malloc (sizeof (estructuraAdministrativa));
-	estructuraAdministrativa* particionPrueba = malloc (sizeof (estructuraAdministrativa));
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
 	int i = BROKER_CONFIG.TAMANO_MEMORIA;
 	int j = 0, k = -1;
@@ -592,36 +634,50 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 			return particionDondeGuardar;
 		}
 		if(particion == NULL){
-
 			if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
-				if(BUSQUEDAS_FALLIDAS >= BROKER_CONFIG.FRECUENCIA_COMPACTACION || FLAG_COMPACTACION == 0){
+				if(valorBusquedaFallida() >= BROKER_CONFIG.FRECUENCIA_COMPACTACION || valorCompactacion() == 0){
+					sem_wait(&MUTEX_BUSQUEDA);
 					BUSQUEDAS_FALLIDAS=0;
+					sem_post(&MUTEX_BUSQUEDA);
 					compactacion();
 					FLAG_COMPACTACION = 1;
 					return buscarParticionLibre(tipoMensaje, mensaje);
 				}
-				if(FLAG_REEMPLAZAR == 1){
+				if(valorReemplazar() == 1){
 					reemplazar(tipoMensaje, mensaje);
 					if (sirveCompactar(tamanioMensaje)){
+						sem_wait(&MUTEX_COMPACTACION);
 						FLAG_COMPACTACION = 0;
+						sem_post(&MUTEX_COMPACTACION);
 					}
+					sem_wait(&MUTEX_BUSQUEDA);
 					BUSQUEDAS_FALLIDAS ++;
+					sem_post(&MUTEX_BUSQUEDA);
 					return buscarParticionLibre(tipoMensaje, mensaje);
 				}
+				sem_wait(&MUTEX_BUSQUEDA);
 				BUSQUEDAS_FALLIDAS ++;
+				sem_post(&MUTEX_BUSQUEDA);
 			}
 		if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "bs")){
-			if (FLAG_COMPOSICION == 0){
+			if (valorComposicion() == 0){
 				composicion();
+				sem_wait(&MUTEX_COMPOSICION);
 				FLAG_COMPOSICION = 1;
+				sem_post(&MUTEX_COMPOSICION);
+				sem_wait(&MUTEX_REEMPLAZAR);
 				FLAG_REEMPLAZAR = 0;
+				sem_post(&MUTEX_REEMPLAZAR);
 				return buscarParticionLibre(tipoMensaje, mensaje);
 			}
-			if (FLAG_REEMPLAZAR == 0){
+			if (valorReemplazar() == 0){
 				int posicion = reemplazar(tipoMensaje, mensaje);
-				particionPrueba = list_get (ADMINISTRADOR_MEMORIA, posicion);
+				sem_wait(&MUTEX_COMPOSICION);
 				FLAG_COMPOSICION = 0;
+				sem_post(&MUTEX_COMPOSICION);
+				sem_wait(&MUTEX_REEMPLAZAR);
 				FLAG_REEMPLAZAR = 1;
+				sem_post(&MUTEX_REEMPLAZAR);
 				return buscarParticionLibre(tipoMensaje, mensaje);
 			}
 		}

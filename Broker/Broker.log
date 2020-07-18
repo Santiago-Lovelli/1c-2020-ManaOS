@@ -2499,3 +2499,23 @@
 [INFO] 21:43:15:154 Broker/(26605:26605): Dentro de iniciar servidor
 [INFO] 21:43:15:155 Broker/(26605:26605): Listo para escuchar a mi cliente
 [INFO] 21:43:15:155 Broker/(26605:26605): esperando
+[INFO] 15:56:41:516 Broker/(6362:6362): Logger iniciado: Broker.log
+
+[INFO] 15:56:41:557 Broker/(6362:6362): Configuracion broker levantada!
+[INFO] 15:56:41:604 Broker/(6362:6362): Dentro de iniciar servidor
+[INFO] 15:56:41:604 Broker/(6362:6362): Listo para escuchar a mi cliente
+[INFO] 15:56:41:604 Broker/(6362:6362): esperando
+[INFO] 16:00:39:780 Broker/(6362:6362): Se conecto un cliente!
+[INFO] 16:00:39:781 Broker/(6362:6362): esperando
+[ERROR] 16:00:41:597 Broker/(6362:6466): Se desconecto el cliente 6: 
+
+[INFO] 16:01:02:39 Broker/(6494:6494): Logger iniciado: Broker.log
+
+[INFO] 16:01:02:58 Broker/(6494:6494): Configuracion broker levantada!
+[INFO] 16:01:02:58 Broker/(6494:6494): Dentro de iniciar servidor
+[INFO] 16:01:02:58 Broker/(6494:6494): Listo para escuchar a mi cliente
+[INFO] 16:01:02:59 Broker/(6494:6494): esperando
+[INFO] 16:01:07:201 Broker/(6494:6494): Se conecto un cliente!
+[INFO] 16:01:07:210 Broker/(6494:6494): esperando
+[ERROR] 16:01:07:997 Broker/(6494:6506): Se desconecto el cliente 6: 
+
