@@ -1,5 +1,6 @@
 for i in {1..100}
 do
+echo "----------------------------------------Vuelta numero: $i"
 ./gameboy BROKER CAUGHT_POKEMON 1 OK
 ./gameboy BROKER CAUGHT_POKEMON 2 FAIL
 ./gameboy BROKER NEW_POKEMON Pikachu 2 3 1

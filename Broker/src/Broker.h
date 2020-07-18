@@ -113,7 +113,7 @@ void DumpFileInit();
 void EsperarClientes();
 void* AtenderCliente();
 void ActuarAnteMensaje();
-void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete);
+void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t * id);
 
 //////FUNCIONES VARIAS//////////
 void suscribir (uint32_t variable, int cliente);
@@ -129,7 +129,7 @@ t_list * tomarLosMensajes (d_message tipoMensaje);
 void enviarVariosMensajes(int * cliente, d_message tipoMensaje);
 void tratarMensajeACK (void* paquete, int cliente);
 void actualizarRecibidosPorID(int id, int socketCliente);
-void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministrativa * resultado, t_list * lista);
+void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministrativa * resultado, t_list * lista, uint32_t id);
 t_list* suscriptoresPara(d_message tipoDeMensaje);
 bool sirveCompactar(int tamanioMensaje);
 void enviarACK(int cliente, int ID);
@@ -182,6 +182,7 @@ sem_t MUTEX_CLIENTE;
 sem_t MUTEX_CONTADOR;
 sem_t MUTEX_MEMORIA;
 sem_t MUTEX_TIEMPO;
+sem_t MUTEX_SOCKET;
 
 ////////LISTA DE SUSCRIPTORES//////
 t_list* SUSCRIPTORES_NEW;
