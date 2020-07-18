@@ -640,7 +640,9 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 					BUSQUEDAS_FALLIDAS=0;
 					sem_post(&MUTEX_BUSQUEDA);
 					compactacion();
+					sem_wait(&MUTEX_COMPACTACION);
 					FLAG_COMPACTACION = 1;
+					sem_post(&MUTEX_COMPACTACION);
 					return buscarParticionLibre(tipoMensaje, mensaje);
 				}
 				if(valorReemplazar() == 1){
@@ -671,7 +673,7 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 				return buscarParticionLibre(tipoMensaje, mensaje);
 			}
 			if (valorReemplazar() == 0){
-				int posicion = reemplazar(tipoMensaje, mensaje);
+				reemplazar(tipoMensaje, mensaje);
 				sem_wait(&MUTEX_COMPOSICION);
 				FLAG_COMPOSICION = 0;
 				sem_post(&MUTEX_COMPOSICION);

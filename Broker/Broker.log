@@ -2519,3 +2519,35 @@
 [INFO] 16:01:07:210 Broker/(6494:6494): esperando
 [ERROR] 16:01:07:997 Broker/(6494:6506): Se desconecto el cliente 6: 
 
+[INFO] 17:41:11:990 Broker/(9157:9157): Logger iniciado: Broker.log
+
+[INFO] 17:41:12:30 Broker/(9157:9157): Configuracion broker levantada!
+[INFO] 17:41:12:30 Broker/(9157:9157): Dentro de iniciar servidor
+[INFO] 17:41:12:30 Broker/(9157:9157): Listo para escuchar a mi cliente
+[INFO] 17:41:12:30 Broker/(9157:9157): esperando
+[INFO] 17:41:23:127 Broker/(9157:9157): Se conecto un cliente!
+[INFO] 17:41:23:129 Broker/(9157:9157): esperando
+[INFO] 17:41:23:147 Broker/(9157:9170): Me llego mensaje new Pkm: Pikachu, x: 9, y: 9, cant: 1
+
+[INFO] 17:41:35:860 Broker/(9157:9170): Encontre particion Libre
+[INFO] 17:41:39:242 Broker/(9157:9170): Se toma la particion a medida
+[INFO] 17:41:45:646 Broker/(9157:9170): No hay mas suscriptores! 
+
+[INFO] 17:41:45:646 Broker/(9157:9170): Se agregó el cliente 6 a la cola de ACK del mensaje 1 
+[ERROR] 17:41:45:646 Broker/(9157:9170): Se desconecto el cliente 6: 
+
+[INFO] 17:41:45:661 Broker/(9157:9157): Se conecto un cliente!
+[INFO] 17:41:45:665 Broker/(9157:9157): esperando
+[INFO] 17:41:45:667 Broker/(9157:9188): Me llego mensaje new Pkm: Squirtle, x: 5, y: 2, cant: 1
+
+[INFO] 17:41:52:287 Broker/(9157:9188): Encontre particion Libre
+[INFO] 17:41:53:950 Broker/(9157:9188): Se toma la particion a medida
+[INFO] 17:41:53:950 Broker/(9157:9188): No hay mas suscriptores! 
+
+[INFO] 17:41:53:951 Broker/(9157:9188): Se agregó el cliente 7 a la cola de ACK del mensaje 2 
+[ERROR] 17:41:53:951 Broker/(9157:9188): Se desconecto el cliente 7: 
+
+[INFO] 17:41:53:967 Broker/(9157:9157): Se conecto un cliente!
+[INFO] 17:41:53:969 Broker/(9157:9157): esperando
+[INFO] 17:41:53:970 Broker/(9157:9202): Me llego mensaje new Pkm: Jolteon, x: 2, y: 2, cant: 1
+
