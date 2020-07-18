@@ -68,6 +68,8 @@ void inicializar(){
 	suscriptoCaughtPokemon = malloc(sizeof(pthread_t));
 	conectarmeColaDe(suscriptoCaughtPokemon, d_CAUGHT_POKEMON);
 
+//	enviarGetXCadaPokemonObjetivo();
+
 	pthread_join(*servidor, NULL);
 	pthread_join(*suscriptoAppearedPokemon, NULL);
 	pthread_join(*suscriptoLocalizedPokemon, NULL);
