@@ -14,13 +14,13 @@ void EsperarClientes(){
 		int cliente = esperar_cliente_con_accept(server, LOGGER_GENERAL);
 		log_info(LOGGER_OBLIGATORIO, "Se conecto un cliente: %i", cliente);
 		pthread_t* hiloDeAtencion = malloc(sizeof(pthread_t));
-		//Falta un sem acá
 		pthread_create(hiloDeAtencion, NULL, AtenderCliente, cliente);
 	}
 }
 
 void* AtenderCliente(void* cliente) {
 	while(1){
+		sem_wait(&MUTEX_CLIENTE);
 		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(cliente);
 		if(headerRecibido.tipoMensaje == -1){
 			log_error(LOGGER_GENERAL, "Se desconecto el cliente %i: \n", cliente);
@@ -31,23 +31,27 @@ void* AtenderCliente(void* cliente) {
 }
 
 void ActuarAnteMensaje(HeaderDelibird header, int cliente){
+	int ID;
 	switch (header.tipoMensaje) {
 		case d_NEW_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un new pokemon");
 			void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			tratarMensaje(header.tipoMensaje, packNewPokemon);
+			ID = tratarMensaje(header.tipoMensaje, packNewPokemon);
+			enviarACK(cliente, ID);
 			free(packNewPokemon);
 			break;
 		case d_CATCH_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un catch pokemon");
 			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			tratarMensaje(header.tipoMensaje, packCatchPokemon);
+			ID = tratarMensaje(header.tipoMensaje, packCatchPokemon);
+			enviarACK(cliente, ID);
 			free(packCatchPokemon);
 			break;
 		case d_GET_POKEMON:
 			log_info(LOGGER_OBLIGATORIO, "Llego un get pokemon");
 			void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-			tratarMensaje(header.tipoMensaje, packGetPokemon);
+			ID = tratarMensaje(header.tipoMensaje, packGetPokemon);
+			enviarACK(cliente, ID);
 			free(packGetPokemon);
 			break;
 		case d_APPEARED_POKEMON:
@@ -66,17 +70,17 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			log_info(LOGGER_OBLIGATORIO, "Llego un localized pokemon");
 			//tratarMensaje(header.tipoMensaje, packCaughtPokemon);
 			break;
-		case d_ACK:
+		/*case d_ACK:
 			log_info(LOGGER_GENERAL, "Llego un acknowledged");
 			void* packACK = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			tratarMensajeACK (packACK, cliente);
 			free(packACK);
 			break;
+		*/
 		case d_SUBSCRIBE_QUEUE:
 			log_info(LOGGER_GENERAL, "Llego un Subscribe");
 			void * recibir = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			uint32_t variable = Serialize_Unpack_ACK(recibir);
-			//funcionParaVerMemoria();
 			suscribir(variable, cliente);
 			free(recibir);
 			break;
@@ -86,6 +90,7 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			free(packBasura);
 			break;
 	}
+	sem_post(&MUTEX_CLIENTE);
 }
 
 void suscribir(uint32_t variable, int clienteA){
@@ -279,6 +284,13 @@ t_list * tomarLosMensajes (d_message tipoMensaje){
 	return listaTipo;
 }
 
+void enviarACK(int cliente, int ID){
+	if(Serialize_PackAndSend_ACK(cliente, (uint32_t) ID)){
+		log_info(LOGGER_OBLIGATORIO, "Envio ACK ID: %i al cliente: %i", ID, cliente);
+		actualizarRecibidosPorID((int)ID, cliente);
+	}
+}
+
 void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministrativa* resultado, t_list * lista){
 	newEnMemoria* mensajeNew;
 	catchEnMemoria * mensajeCatch;
@@ -359,12 +371,13 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 }
 //////////////////FIN MENSAJES A SUSCRIPTORES/////////////////////////////////////
 
-void tratarMensaje (d_message tipoMensaje, void *paquete){
+int tratarMensaje (d_message tipoMensaje, void *paquete){
 	estructuraAdministrativa * resultado = malloc (sizeof(estructuraAdministrativa));
 	void * unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete);
 	resultado = guardarMensaje(tipoMensaje, unMensaje);
+	int ID = 0;
 	if (resultado){
-		int ID = obtenerID();
+		ID = obtenerID();
 		resultado->idMensaje = ID;
 		resultado->tipoMensaje = tipoMensaje;
 		resultado->estaOcupado = 1;
@@ -377,6 +390,7 @@ void tratarMensaje (d_message tipoMensaje, void *paquete){
 	}
 	t_list * subs = suscriptoresPara(tipoMensaje);
 	enviarUnMensaje(unMensaje, tipoMensaje, resultado, subs);
+	return ID;
 }
 
 ///////FUNCIONES DE INIT///////////
@@ -392,7 +406,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -974,6 +988,7 @@ void dump () {
 	FILE * archivoDump = txt_open_for_append(BROKER_CONFIG.DUMP_FILE);
 	char* unaLinea = string_new();
 	char* extra = string_new();
+	char* tipo = string_new();
 	string_append(&unaLinea, "Dump: ");
 	extra = temporal_get_string_time();
 	string_append(&unaLinea, extra);
@@ -991,11 +1006,20 @@ void dump () {
 			string_append(&extra, "[X]");
 			string_append(&nombreCola, nombresColas[ElElemento->tipoMensaje]);
 		}
+		if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_REEMPLAZO, "LRU")){
+			string_append(&tipo, "LRU: ");
+			string_append(&tipo, ElElemento->ultimaReferencia);
+		}
+		else {
+			string_append(&tipo, "CREATED: ");
+			string_append(&tipo, ElElemento->tiempo);
+		}
 		void* finParticion = ElElemento->donde + ElElemento->tamanioParticion - 1;
-		unaLinea = string_from_format("Partición %i: %06p - %06p %s  Size: %i b     LRU:%s Cola:%s ID:%i \n", i, ElElemento->donde, finParticion, extra, ElElemento->tamanioParticion, ElElemento->ultimaReferencia, nombreCola, ElElemento->idMensaje);
+		unaLinea = string_from_format("Partición %i: %06p - %06p %s  Size: %i b     %s Cola:%s ID:%i \n", i, ElElemento->donde, finParticion, extra, ElElemento->tamanioParticion, tipo, nombreCola, ElElemento->idMensaje);
 		txt_write_in_file(archivoDump, unaLinea);
 	}
 	txt_close_file(archivoDump);
+	free(unaLinea);free(extra);free(tipo);free(archivoDump);
 	sem_post(&MUTEX_MEMORIA);
 	return;
 }

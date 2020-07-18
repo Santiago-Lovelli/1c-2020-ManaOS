@@ -17,8 +17,13 @@ void New_pokemon(char *argv[]){
 	//log_info(logger,"IDMENSAJE: %i ", atoi( argv[7] ) );
 	int conexion = conectarA(argv[1]);
 	d_process procesoActual = obtenerNroProceso(argv[1]);
-	if( procesoActual == d_BROKER)
+	if( procesoActual == d_BROKER){
 		Serialize_PackAndSend_NEW_POKEMON_NoID(conexion, argv[3], atoi(argv[4]), atoi(argv[5]), atoi( argv[6]) );
+		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(conexion);
+		void* packACK = Serialize_ReceiveAndUnpack(conexion, headerRecibido.tamanioMensaje);
+		uint32_t ID = Serialize_Unpack_ACK(packACK);
+		log_info(logger, "Llego un ACK con el ID: %i", ID);
+	}
 	else if ( procesoActual == d_GAMECARD)
 		Serialize_PackAndSend_NEW_POKEMON(conexion, atoi(argv[7]), argv[3], atoi(argv[4]), atoi(argv[5]), atoi( argv[6]) );
 }
@@ -45,8 +50,13 @@ void Catch_pokemon(char *argv[]){
 	//log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
 	int conexion = conectarA(argv[1]);
 	d_process procesoActual = obtenerNroProceso(argv[1]);
-	if( procesoActual == d_BROKER)
+	if( procesoActual == d_BROKER){
 		Serialize_PackAndSend_CATCH_POKEMON_NoID(conexion,argv[3], atoi(argv[4]), atoi(argv[5]) );
+		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(conexion);
+		void* packACK = Serialize_ReceiveAndUnpack(conexion, headerRecibido.tamanioMensaje);
+		uint32_t ID = Serialize_Unpack_ACK(packACK);
+		log_info(logger, "Llego un ACK con el ID: %i", ID);
+	}
 	else if ( procesoActual == d_GAMECARD)
 		Serialize_PackAndSend_CATCH_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoi(argv[4]), atoi(argv[5]) );
 
@@ -69,8 +79,13 @@ void Get_pokemon(char *argv[]){
 	log_info(logger,"POKEMON: %s ", argv[3] );
 	int conexion = conectarA(argv[1]);
 	d_process procesoActual = obtenerNroProceso(argv[1]);
-	if( procesoActual == d_BROKER)
+	if( procesoActual == d_BROKER){
 		Serialize_PackAndSend_GET_POKEMON_NoID(conexion, argv[3]);
+		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(conexion);
+		void* packACK = Serialize_ReceiveAndUnpack(conexion, headerRecibido.tamanioMensaje);
+		uint32_t ID = Serialize_Unpack_ACK(packACK);
+		log_info(logger, "Llego un ACK con el ID: %i", ID);
+	}
 	else if ( procesoActual == d_GAMECARD)
 		Serialize_PackAndSend_GET_POKEMON(conexion, atoi(argv[4]), argv[3] );
 }
