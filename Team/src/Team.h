@@ -12,6 +12,7 @@
 #include <pthread.h>
 #include "Logger/Logger.h"
 #include <semaphore.h>
+#include "ManejoDePunterosDobles/ManejoDePunterosDobles.h"
 
 /////////ESTRUCTURA/////////
 
@@ -28,7 +29,8 @@ typedef enum t_razonBloqueo {
 	t_NULL,
 	t_DESOCUPADO,
 	t_ESPERANDO_RESPUESTA,
-	t_DEADLOCK
+	t_DEADLOCK,
+	t_ESPERANDO_INTERCAMBIO
 } t_razonBloqueo;
 
 typedef struct config{
@@ -57,6 +59,7 @@ typedef struct t_mision {
 	char* pokemon;
 	punto point;
 	bool esIntercambio;
+	int tidObjetivo;
 }t_mision;
 
 typedef struct entrenador{
@@ -68,6 +71,7 @@ typedef struct entrenador{
 	t_razonBloqueo razonBloqueo;
 	t_mision *mision;
 	int ciclosCPUEjecutados;
+	int ciclosCPUEjecutadosEnTotal;
 	int ciclosCPUEjeutadosAnteriormente;
 	int ciclosCPUEstimados;
 	sem_t semaforoDeEntrenador;
@@ -89,6 +93,7 @@ typedef struct objetoID_QUE_NECESITO{
 //////FUNCIONES INICIALES/////////
 void iniciarConfig();
 void inicializar();
+void inicializarSemaforos();
 void crearEntrenadores();
 void escucharMensajes();
 punto crearPunto(char * posiciones); // x|y
@@ -107,8 +112,46 @@ void iniciarVariablesDePlanificacion();
 void descontarPokemonsActualesDeOBJGlobal(entrenador* trainer);
 
 //////FUNCIONES FINALES/////////
+
+/*
+ * ESTA FUNCION ES LLAMADA CUANDO TEAM FINALIZA Y
+ * SE OCUPA DE LLAMAR A TODAS LAS FUNCIONES NECESARIAS
+ * PARA DICHO FIN
+ */
+
 void finalFeliz();
-static void entrenadorDestroy(entrenador *self);
+
+/*
+ * ESTA FUNCION LOGEA TODO LO PEDIDO POR ENUNCIADO A LA
+ * HORA DE FINALIZAR EL PROCESO TEAM
+ */
+
+void logearFin();
+
+/*
+ * ESTA FUNCION SE OCUPA DE LIBERAR TODA LA MEMORIA
+ * QUE HAYA OCUPADO EL TEAM DURANTE SU EJECUCION
+ */
+
+void destruirTodo();
+
+/*
+ * ESTA FUNCION FINALIZA LA EJECUCION DE LOS HILOS
+ */
+
+void matarHilos();
+
+void destruirObjetivoGlobal();
+
+void destruirEstados();
+
+void destruirEntrenadores();
+
+void destruirSemaforos();
+
+void destruirElementoGlobal();
+
+void entrenadorDestroy(entrenador *self);
 
 /*
  * FUNCION DE CONTROL PARA IDENTIFICAR SI
@@ -143,12 +186,6 @@ bool todosLosEntrenadoresCumplieronObjetivo();
 
 bool entrenadorCumplioObjetivo(entrenador* trainer);
 
-/*
- * FUNCION QUE DADOS DOS POKEMON RETORNA TRUE SI SON IGUALES
- */
-
-bool sonLosMismosPokemon(char **pokemons1, char **pokemons2);
-
 /////////FUNCIONES PROPIAS TEAMS/////////////
 
 /*
@@ -176,11 +213,57 @@ int entrenadorMasCercanoDisponible(punto point);
 int diferenciaEntrePuntos(punto origen, punto destino);
 
 /*
+ * ESTA FUNCION DADO UN ENTRENADOR Y UN POKEMON SE LO SUMA
+ * A SU LISTA DE POKEMONS CAPTURADOS
+ */
+
+void sumarPokemon(entrenador* trainer, char* pokemon);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR, EL ID DE UN ENTRENADOR OBJETIVO Y UN POKEMON,
+ * REALIZA EL INTERCAMBIO MAS EFICIENTE ENTRE LOS DOS (YENDO EL POKEMON PASADO POR
+ * PARAMETROS AL ENTRENADOR Y UN POKEMON SOBRANTE DEL ENTRENADOR AL ENTRENADOR OBJETIVO)
+ */
+
+void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* pokemon);
+
+/*
  * ESTA FUNCION DADO UN POKEMON NOS DEVUELVE
  * SI ESTE SE ENCUENTRA EN NUESTRO OBJETIVO GLOBAL
  */
 
 bool necesitoEstePokemon(char *pokemon);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR Y UN POKEMON
+ * NOS DICE CUANTOS DE ESE POKEMON YA ESTAN EN POSESION
+ * DE ESE ENTRENADOR
+ */
+
+int cuantosDeEstePokemonTengo(entrenador* trainer, char* pokemon);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR Y UN POKEMON
+ * NOS DICE CUANTOS DE ESE POKEMON NECESITA ESE ENTRENADOR
+ */
+
+int cuantosDeEstePokemonNecesito(entrenador* trainer, char*pokemon);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR NOS DEVUELVE
+ * TODOS LOS POKEMON POKEMON EN SU LISTA DE OBJETIVOS
+ * QUE NO ESTEN EN SU LISTA DE POKEMONS ACTUAL
+ */
+
+char** quePokemonMeFalta(entrenador* trainer);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR NOS DEVUELVE
+ * TODOS LOS POKEMON EN SU LISTA DE POKEMONES ACTUALES
+ * QUE NO ESTEN EN SU LISTA DE OBJETIVOS
+ */
+
+char** quePokemonTengoDeMas(entrenador *trainer);
 
 /*
  * ESTA FUNCION DADO UN POKEMON NOS DEVUELVE SI ESTE
@@ -218,7 +301,7 @@ void sacarMision(int idEntrenador);
  * LE ASIGNA ESA MISION A ESE ENTRENADOR
  */
 
-void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio);
+void darMision(int idEntrenador, char* pokemon, punto point, bool esIntercambio, int tidObjetivo);
 
 /*
  * ESTA FUNCION DADO EL ENTRENADOR PASADO POR PARAMETROS
@@ -232,7 +315,13 @@ void cumplirMision(entrenador* trainer);
  * CREA UNA MISION Y LA RETORNA
  */
 
-t_mision* crearMision(char *pokemon, punto point, bool esIntercambio);
+t_mision* crearMision(char *pokemon, punto point, bool esIntercambio, int tidObjetivo);
+
+/*
+ * ESTA FUNCION RETORNA SI EXISTE ALGUNA MISION ACTIVA
+ */
+
+bool hayAlgunaMision();
 
 /*
  * ESTA FUNCION DADO EL ID DE UN  ENTRENADOR
@@ -413,6 +502,14 @@ void planificarSegun(char* tipoPlanificacion);
 void sumarXCiclos(entrenador *trainer, int ciclos);
 
 /*
+ * ESTA FUNCION ESPERA A QUE HAYA AL MENOS
+ * UN ENTRENADOR EN ESTADO READY
+ */
+
+void esperarAlgunoEnReady(bool isDeadlock);
+
+
+/*
  * ESTA FUNCION PLANIFICA LOS ENTRENADORES
  * EN ESTADO READY EN FORMA FIFO
  */
@@ -423,6 +520,21 @@ void SJFCD();
 void SJFSD();
 unsigned long int getClockTime();
 void agregarTiempo(int cantidad);
+
+/*
+ * ESTA FUNCION DADO UN ENTRENADOR ANALIZA SU DEADLOCK
+ * SI SIGUE EN DEADLOCK LO VUELVE A PONER EN BLOCKED POR RAZON
+ * DEADLOCK, Y SI NO LE DA LA MISION DE TERMINAR
+ */
+
+void analizarDeadlockEspecifico(entrenador *trainer);
+
+/*
+ * ESTA FUNCION PONE EN READY CON UNA MISION
+ * A UN ENTRENADOR PARA PLANIFICARLO HACIA OTRO
+ */
+
+void planificarDeadlocks();
 
 /*
  * ESTA FUNCION DADA UNA LISTA
@@ -542,6 +654,15 @@ int DEADLOCKS_RESUELTOS;
 int CICLOS_TOTALES;
 sem_t semaforoPlanifiquenme;
 sem_t semaforoTermine;
+sem_t semaforoSocket;
+sem_t semaforoGameboy;
+sem_t semaforoCambioEstado;
+sem_t semaforoConexionABroker;
+sem_t semaforoMisiones;
+sem_t semaforoDiccionario;
+sem_t semaforoAppeared;
+sem_t semaforoMovimiento;
+sem_t semaforoPokemon;
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;
@@ -552,6 +673,7 @@ t_list * POKEMONES_ATRAPADOS;
 t_list * ID_QUE_NECESITO;
 t_list * MISIONES_PENDIENTES;
 int AUX_ID_TRAINER;
+bool SEGUIR_ATENDIENDO;
 
 ///////Estados//////////
 t_list* EstadoNew;
@@ -562,6 +684,8 @@ t_list* EstadoExit;
 
 /////////HILOS///////////
 pthread_t hiloPlanificacion;
-pthread_t hiloEscucha;
-pthread_t hiloConexionBroker;
+pthread_t* servidor;
+pthread_t* suscriptoAppearedPokemon;
+pthread_t* suscriptoLocalizedPokemon;
+pthread_t* suscriptoCaughtPokemon;
 #endif /* TEAM_H_ */
