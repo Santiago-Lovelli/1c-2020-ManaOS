@@ -1,10 +1,12 @@
 #ifndef ARCHIVOS_H_
 #define ARCHIVOS_H_
+
 #include <string.h>
 #include <stdlib.h>
-#include <stddef.h>
+#include <sys/mman.h>
+#include <fcntl.h>
 #include <stdint.h>
-#include <stdio.h>
+#include <commons/log.h>
 
 
 typedef uint32_t ptrGBloque;
@@ -60,6 +62,5 @@ const char* get_filename(const char* path);
  * get_file_extension("casa") => ""
  */
 const char* get_file_extension(const char* path);
-
 
 #endif /* ARCHIVOS_H_ */
