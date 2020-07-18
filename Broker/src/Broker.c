@@ -409,7 +409,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -485,16 +485,9 @@ void limpiarSemaforos(){
 int obtenerID(){
 	sem_wait(&MUTEX_CONTADOR);
 	CONTADOR ++;
-	int x = CONTADOR;
+	int i = CONTADOR;
 	sem_post(&MUTEX_CONTADOR);
-	list_add (listaID, &x);
-	for (int i = 0; i<list_size(listaID);i++){
-		int id = list_get(listaID, i);
-		if (id == x){
-			obtenerID();
-		}
-	}
-	return x;
+	return i;
 }
 
 //////FUNCIONES CACHE//////////
