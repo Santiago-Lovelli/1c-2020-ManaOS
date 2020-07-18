@@ -190,6 +190,7 @@ t_list* SUSCRIPTORES_GET;
 t_list* SUSCRIPTORES_CATCH;
 t_list* SUSCRIPTORES_CAUGHT;
 t_list* SUSCRIPTORES_LOCALIZED;
+t_list* listaID;
 
 void funcionParaVerMemoria();
 

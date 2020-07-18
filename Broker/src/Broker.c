@@ -431,6 +431,7 @@ void ListsInit(){
 	SUSCRIPTORES_CAUGHT = list_create();
 	SUSCRIPTORES_LOCALIZED = list_create();
 	ADMINISTRADOR_MEMORIA = list_create();
+	listaID = list_create();
 }
 
 void MemoriaPrincipalInit(){
@@ -484,9 +485,16 @@ void limpiarSemaforos(){
 int obtenerID(){
 	sem_wait(&MUTEX_CONTADOR);
 	CONTADOR ++;
-	int i = CONTADOR;
+	int x = CONTADOR;
 	sem_post(&MUTEX_CONTADOR);
-	return i;
+	list_add (listaID, &x);
+	for (int i = 0; i<list_size(listaID);i++){
+		int id = list_get(listaID, i);
+		if (id == x){
+			obtenerID();
+		}
+	}
+	return x;
 }
 
 //////FUNCIONES CACHE//////////
