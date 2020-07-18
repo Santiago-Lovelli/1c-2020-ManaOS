@@ -1,0 +1,1362 @@
+[INFO] 03:51:50:839 Broker/(20078:20078): Logger iniciado: Broker.log
+
+[INFO] 03:51:50:839 Broker/(20078:20078): Configuracion broker levantada!
+[INFO] 03:51:50:840 Broker/(20078:20078): Dentro de iniciar servidor
+[INFO] 03:51:50:840 Broker/(20078:20078): Listo para escuchar a mi cliente
+[INFO] 03:51:50:840 Broker/(20078:20078): esperando
+[INFO] 03:52:00:49 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 03:52:00:49 Broker/(20078:20078): esperando
+[INFO] 03:52:00:49 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 03:52:00:49 Broker/(20078:20087): Llego un Subscribe
+[INFO] 03:52:00:52 Broker/(20078:20078): esperando
+[INFO] 03:52:00:52 Broker/(20078:20078): Se conecto un cliente!
+[ERROR] 03:52:00:241 Broker/(20078:20090): Se desconecto el cliente 8: 
+
+[ERROR] 03:52:00:241 Broker/(20078:20087): Se desconecto el cliente 7: 
+
+[INFO] 03:52:00:243 Broker/(20078:20078): esperando
+[ERROR] 03:52:00:243 Broker/(20078:20091): Se desconecto el cliente 9: 
+
+[INFO] 03:52:13:612 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 03:52:13:612 Broker/(20078:20078): esperando
+[INFO] 03:52:13:622 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 03:52:13:622 Broker/(20078:20078): esperando
+[INFO] 03:52:13:629 Broker/(20078:20098): Llego un Subscribe
+[ERROR] 03:52:13:863 Broker/(20078:20101): Se desconecto el cliente 11: 
+
+[ERROR] 03:52:13:863 Broker/(20078:20098): Se desconecto el cliente 10: 
+
+[INFO] 03:52:36:22 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 03:52:36:23 Broker/(20078:20078): esperando
+[INFO] 03:52:36:23 Broker/(20078:20116): Llego un Subscribe
+[INFO] 03:52:36:23 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 03:52:36:23 Broker/(20078:20078): esperando
+[INFO] 03:52:36:23 Broker/(20078:20117): Llego un Subscribe
+[INFO] 03:52:36:23 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 03:52:36:24 Broker/(20078:20078): esperando
+[INFO] 03:52:36:24 Broker/(20078:20118): Llego un Subscribe
+[INFO] 04:00:07:764 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 04:00:07:765 Broker/(20078:20078): esperando
+[INFO] 04:00:07:765 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 04:00:07:765 Broker/(20078:20753): Llego un Subscribe
+[INFO] 04:00:07:766 Broker/(20078:20078): esperando
+[INFO] 04:00:07:766 Broker/(20078:20755): Llego un Subscribe
+[INFO] 04:00:07:766 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 04:00:07:767 Broker/(20078:20078): esperando
+[INFO] 04:00:07:767 Broker/(20078:20756): Llego un Subscribe
+[INFO] 04:04:19:963 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 04:04:19:963 Broker/(20078:20078): esperando
+[INFO] 04:04:19:964 Broker/(20078:20877): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 04:04:19:964 Broker/(20078:20877): Encontre particion Libre
+[INFO] 04:04:19:964 Broker/(20078:20877): Se toma la particion a medida
+[INFO] 04:04:19:964 Broker/(20078:20877): No hay mas suscriptores! 
+
+[ERROR] 04:04:19:964 Broker/(20078:20877): Se desconecto el cliente 18: 
+
+[INFO] 04:04:19:966 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 04:04:19:966 Broker/(20078:20078): esperando
+[INFO] 04:04:19:966 Broker/(20078:20880): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 04:04:19:966 Broker/(20078:20880): Encontre particion Libre
+[INFO] 04:04:19:968 Broker/(20078:20880): Se toma la particion a medida
+[INFO] 04:04:19:969 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 04:04:19:969 Broker/(20078:20882): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 04:04:19:969 Broker/(20078:20882): Encontre particion Libre
+[INFO] 04:04:19:969 Broker/(20078:20882): Se toma la particion a medida
+[INFO] 04:04:19:969 Broker/(20078:20882): No hay mas suscriptores! 
+
+[INFO] 04:04:19:970 Broker/(20078:20882): Se agregó el cliente 20 a la cola de ACK del mensaje 3 
+[ERROR] 04:04:19:970 Broker/(20078:20882): Se desconecto el cliente 20: 
+
+[INFO] 04:04:19:973 Broker/(20078:20078): esperando
+[INFO] 04:04:19:973 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 04:04:19:973 Broker/(20078:20880): No hay mas suscriptores! 
+
+[ERROR] 04:04:19:973 Broker/(20078:20880): Se desconecto el cliente 19: 
+
+[INFO] 04:04:19:973 Broker/(20078:20078): esperando
+[INFO] 04:04:19:973 Broker/(20078:20884): Me llego mensaje caught correlativo a: 3, resultado: 0 
+
+[INFO] 04:04:19:973 Broker/(20078:20884): Encontre particion Libre
+[INFO] 04:04:19:973 Broker/(20078:20884): Se toma la particion a medida
+[INFO] 04:04:19:974 Broker/(20078:20884): No hay mas suscriptores! 
+
+[INFO] 04:04:19:975 Broker/(20078:20078): Se conecto un cliente!
+[INFO] 04:04:19:975 Broker/(20078:20078): esperando
+[INFO] 04:04:19:975 Broker/(20078:20885): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 04:04:19:976 Broker/(20078:20885): Encontre particion Libre
+[INFO] 04:04:19:976 Broker/(20078:20885): Se toma la particion a medida
+[INFO] 04:05:55:168 Broker/(20906:20906): Logger iniciado: Broker.log
+
+[INFO] 04:05:55:236 Broker/(20906:20906): Configuracion broker levantada!
+[INFO] 04:05:55:248 Broker/(20906:20906): Dentro de iniciar servidor
+[INFO] 04:05:55:261 Broker/(20906:20906): Listo para escuchar a mi cliente
+[INFO] 04:05:55:263 Broker/(20906:20906): esperando
+[INFO] 04:06:21:828 Broker/(20906:20906): Se conecto un cliente!
+[INFO] 04:06:21:843 Broker/(20906:20906): esperando
+[INFO] 04:06:21:853 Broker/(20906:20915): Llego un Subscribe
+[INFO] 04:06:21:857 Broker/(20906:20906): Se conecto un cliente!
+[INFO] 04:06:21:870 Broker/(20906:20906): esperando
+[INFO] 04:06:21:870 Broker/(20906:20918): Llego un Subscribe
+[INFO] 04:06:21:871 Broker/(20906:20906): Se conecto un cliente!
+[INFO] 04:06:21:876 Broker/(20906:20906): esperando
+[INFO] 04:06:21:876 Broker/(20906:20919): Llego un Subscribe
+[INFO] 04:28:04:346 Broker/(21238:21238): Logger iniciado: Broker.log
+
+[INFO] 04:28:04:417 Broker/(21238:21238): Configuracion broker levantada!
+[INFO] 04:28:04:430 Broker/(21238:21238): Dentro de iniciar servidor
+[INFO] 04:28:04:445 Broker/(21238:21238): Listo para escuchar a mi cliente
+[INFO] 04:28:04:446 Broker/(21238:21238): esperando
+[INFO] 04:28:08:901 Broker/(21238:21238): Se conecto un cliente!
+[INFO] 04:28:08:917 Broker/(21238:21238): esperando
+[INFO] 04:28:08:931 Broker/(21238:21246): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 04:28:08:934 Broker/(21238:21238): Se conecto un cliente!
+[INFO] 04:28:08:942 Broker/(21238:21246): Encontre particion Libre
+[INFO] 04:28:08:952 Broker/(21238:21246): Se toma la particion a medida
+[INFO] 04:48:24:98 Broker/(21920:21920): Logger iniciado: Broker.log
+
+[INFO] 04:48:24:167 Broker/(21920:21920): Configuracion broker levantada!
+[INFO] 04:48:24:181 Broker/(21920:21920): Dentro de iniciar servidor
+[INFO] 04:48:24:195 Broker/(21920:21920): Listo para escuchar a mi cliente
+[INFO] 04:48:24:196 Broker/(21920:21920): esperando
+[INFO] 04:51:27:880 Broker/(22039:22039): Logger iniciado: Broker.log
+
+[INFO] 04:51:27:948 Broker/(22039:22039): Configuracion broker levantada!
+[INFO] 04:51:39:127 Broker/(22049:22049): Logger iniciado: Broker.log
+
+[INFO] 04:51:39:197 Broker/(22049:22049): Configuracion broker levantada!
+[INFO] 04:55:08:229 Broker/(22230:22230): Logger iniciado: Broker.log
+
+[INFO] 04:55:08:298 Broker/(22230:22230): Configuracion broker levantada!
+[INFO] 04:55:08:314 Broker/(22230:22230): Dentro de iniciar servidor
+[INFO] 04:55:08:328 Broker/(22230:22230): Listo para escuchar a mi cliente
+[INFO] 04:55:08:329 Broker/(22230:22230): esperando
+[INFO] 04:58:08:754 Broker/(22322:22322): Logger iniciado: Broker.log
+
+[INFO] 04:58:08:821 Broker/(22322:22322): Configuracion broker levantada!
+[INFO] 04:58:08:836 Broker/(22322:22322): Dentro de iniciar servidor
+[INFO] 04:58:08:851 Broker/(22322:22322): Listo para escuchar a mi cliente
+[INFO] 04:58:08:852 Broker/(22322:22322): esperando
+[INFO] 05:04:26:380 Broker/(22445:22445): Logger iniciado: Broker.log
+
+[INFO] 05:04:26:449 Broker/(22445:22445): Configuracion broker levantada!
+[INFO] 05:04:26:461 Broker/(22445:22445): Dentro de iniciar servidor
+[INFO] 05:04:26:475 Broker/(22445:22445): Listo para escuchar a mi cliente
+[INFO] 05:04:26:477 Broker/(22445:22445): esperando
+[INFO] 05:04:35:136 Broker/(22448:22448): Logger iniciado: Broker.log
+
+[INFO] 05:04:35:204 Broker/(22448:22448): Configuracion broker levantada!
+[INFO] 05:04:35:216 Broker/(22448:22448): Dentro de iniciar servidor
+[INFO] 05:04:35:231 Broker/(22448:22448): Listo para escuchar a mi cliente
+[INFO] 05:04:35:232 Broker/(22448:22448): esperando
+[INFO] 05:07:45:344 Broker/(22906:22906): Logger iniciado: Broker.log
+
+[INFO] 05:07:45:419 Broker/(22906:22906): Configuracion broker levantada!
+[INFO] 05:09:09:98 Broker/(22985:22985): Logger iniciado: Broker.log
+
+[INFO] 05:09:09:170 Broker/(22985:22985): Configuracion broker levantada!
+[INFO] 05:09:58:888 Broker/(23048:23048): Logger iniciado: Broker.log
+
+[INFO] 05:09:58:956 Broker/(23048:23048): Configuracion broker levantada!
+[INFO] 05:09:58:968 Broker/(23048:23048): Dentro de iniciar servidor
+[INFO] 05:09:58:982 Broker/(23048:23048): Listo para escuchar a mi cliente
+[INFO] 05:09:58:984 Broker/(23048:23048): esperando
+[INFO] 05:11:10:112 Broker/(23076:23076): Logger iniciado: Broker.log
+
+[INFO] 05:11:10:183 Broker/(23076:23076): Configuracion broker levantada!
+[INFO] 05:11:10:196 Broker/(23076:23076): Dentro de iniciar servidor
+[INFO] 05:11:10:210 Broker/(23076:23076): Listo para escuchar a mi cliente
+[INFO] 05:11:10:212 Broker/(23076:23076): esperando
+[INFO] 05:11:20:509 Broker/(23076:23076): Se conecto un cliente!
+[INFO] 05:11:20:523 Broker/(23076:23076): esperando
+[INFO] 05:11:20:526 Broker/(23076:23076): Se conecto un cliente!
+[INFO] 05:11:20:539 Broker/(23076:23085): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 05:11:20:546 Broker/(23076:23085): Encontre particion Libre
+[INFO] 05:11:20:553 Broker/(23076:23085): Se toma la particion a medida
+[INFO] 05:11:20:562 Broker/(23076:23085): No hay mas suscriptores! 
+
+[ERROR] 05:11:20:564 Broker/(23076:23085): Se desconecto el cliente 7: 
+
+[INFO] 05:11:20:573 Broker/(23076:23076): esperando
+[INFO] 05:11:20:574 Broker/(23076:23076): Se conecto un cliente!
+[INFO] 05:11:20:575 Broker/(23076:23086): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 05:11:20:576 Broker/(23076:23086): Encontre particion Libre
+[INFO] 05:11:20:577 Broker/(23076:23086): Se toma la particion a medida
+[INFO] 05:11:20:578 Broker/(23076:23086): No hay mas suscriptores! 
+
+[ERROR] 05:11:20:578 Broker/(23076:23086): Se desconecto el cliente 8: 
+
+[INFO] 05:11:20:581 Broker/(23076:23076): esperando
+[INFO] 05:11:20:590 Broker/(23076:23087): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 05:11:20:592 Broker/(23076:23087): Encontre particion Libre
+[INFO] 05:11:20:592 Broker/(23076:23087): Se toma la particion a medida
+[INFO] 05:11:20:595 Broker/(23076:23087): No hay mas suscriptores! 
+
+[INFO] 05:11:20:602 Broker/(23076:23087): Se agregó el cliente 9 a la cola de ACK del mensaje 3 
+[INFO] 05:11:20:602 Broker/(23076:23076): Se conecto un cliente!
+[ERROR] 05:11:20:604 Broker/(23076:23087): Se desconecto el cliente 9: 
+
+[INFO] 05:11:20:605 Broker/(23076:23076): esperando
+[INFO] 05:11:20:607 Broker/(23076:23090): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 05:11:20:607 Broker/(23076:23090): Encontre particion Libre
+[INFO] 05:11:20:608 Broker/(23076:23090): Se toma la particion a medida
+[INFO] 05:11:20:609 Broker/(23076:23090): No hay mas suscriptores! 
+
+[INFO] 05:11:20:610 Broker/(23076:23090): Se agregó el cliente 10 a la cola de ACK del mensaje 4 
+[ERROR] 05:11:20:611 Broker/(23076:23090): Se desconecto el cliente 10: 
+
+[INFO] 05:11:20:612 Broker/(23076:23076): Se conecto un cliente!
+[INFO] 05:11:20:613 Broker/(23076:23076): esperando
+[INFO] 05:11:20:614 Broker/(23076:23092): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 05:11:20:615 Broker/(23076:23092): Encontre particion Libre
+[INFO] 05:11:20:616 Broker/(23076:23092): Se toma la particion a medida
+[INFO] 05:11:20:616 Broker/(23076:23092): No hay mas suscriptores! 
+
+[INFO] 05:11:20:617 Broker/(23076:23092): Se agregó el cliente 11 a la cola de ACK del mensaje 5 
+[ERROR] 05:11:20:617 Broker/(23076:23092): Se desconecto el cliente 11: 
+
+[INFO] 05:11:20:619 Broker/(23076:23076): Se conecto un cliente!
+[INFO] 05:11:20:620 Broker/(23076:23095): Llego un Subscribe
+[INFO] 05:11:20:630 Broker/(23076:23076): esperando
+[ERROR] 05:11:30:621 Broker/(23076:23095): Se desconecto el cliente 12: 
+
+[INFO] 05:11:30:629 Broker/(23076:23076): Se conecto un cliente!
+[INFO] 05:11:30:633 Broker/(23076:23076): esperando
+[INFO] 05:11:30:636 Broker/(23076:23103): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 05:11:30:679 Broker/(23076:23103): Encontre particion Libre
+[INFO] 05:11:30:679 Broker/(23076:23103): Se toma la particion a medida
+[INFO] 05:11:30:680 Broker/(23076:23103): No hay mas suscriptores! 
+
+[INFO] 05:11:30:681 Broker/(23076:23103): Se agregó el cliente 13 a la cola de ACK del mensaje 6 
+[ERROR] 05:11:30:682 Broker/(23076:23103): Se desconecto el cliente 13: 
+
+[INFO] 05:11:41:35 Broker/(23108:23108): Logger iniciado: Broker.log
+
+[INFO] 05:11:42:144 Broker/(23108:23108): Configuracion broker levantada!
+[INFO] 05:11:42:159 Broker/(23108:23108): Dentro de iniciar servidor
+[INFO] 05:11:42:176 Broker/(23108:23108): Listo para escuchar a mi cliente
+[INFO] 05:11:42:177 Broker/(23108:23108): esperando
+[INFO] 05:12:26:190 Broker/(23108:23108): Se conecto un cliente!
+[INFO] 05:12:26:206 Broker/(23108:23108): esperando
+[INFO] 05:12:26:222 Broker/(23108:23115): Me llego mensaje caught correlativo a: 23, resultado: 1 
+
+[INFO] 05:12:26:230 Broker/(23108:23115): Encontre particion Libre
+[INFO] 05:12:26:236 Broker/(23108:23115): Se toma la particion a medida
+[INFO] 05:12:26:244 Broker/(23108:23115): No hay mas suscriptores! 
+
+[ERROR] 05:12:26:247 Broker/(23108:23115): Se desconecto el cliente 7: 
+
+[INFO] 05:13:29:2 Broker/(23126:23126): Logger iniciado: Broker.log
+
+[INFO] 05:13:30:72 Broker/(23126:23126): Configuracion broker levantada!
+[INFO] 05:13:30:84 Broker/(23126:23126): Dentro de iniciar servidor
+[INFO] 05:13:30:97 Broker/(23126:23126): Listo para escuchar a mi cliente
+[INFO] 05:13:30:99 Broker/(23126:23126): esperando
+[INFO] 05:13:35:758 Broker/(23126:23126): Se conecto un cliente!
+[INFO] 05:13:35:772 Broker/(23126:23126): esperando
+[INFO] 05:13:35:784 Broker/(23126:23134): Me llego mensaje caught correlativo a: 23, resultado: 1 
+
+[INFO] 05:13:35:794 Broker/(23126:23134): Encontre particion Libre
+[INFO] 05:13:35:800 Broker/(23126:23134): Se toma la particion a medida
+[INFO] 05:13:35:809 Broker/(23126:23134): No hay mas suscriptores! 
+
+[ERROR] 05:13:35:813 Broker/(23126:23134): Se desconecto el cliente 8: 
+
+[INFO] 05:14:14:877 Broker/(23126:23126): Se conecto un cliente!
+[INFO] 05:14:14:879 Broker/(23126:23126): esperando
+[INFO] 05:14:14:879 Broker/(23126:23151): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 05:14:14:880 Broker/(23126:23126): Se conecto un cliente!
+[INFO] 05:14:14:881 Broker/(23126:23151): Encontre particion Libre
+[INFO] 05:14:14:882 Broker/(23126:23151): Se toma la particion a medida
+[INFO] 05:14:14:883 Broker/(23126:23151): No hay mas suscriptores! 
+
+[ERROR] 05:14:14:883 Broker/(23126:23151): Se desconecto el cliente 9: 
+
+[INFO] 05:14:14:885 Broker/(23126:23126): esperando
+[INFO] 05:14:14:886 Broker/(23126:23153): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 05:14:14:887 Broker/(23126:23126): Se conecto un cliente!
+[INFO] 05:14:14:889 Broker/(23126:23126): esperando
+[INFO] 05:14:14:891 Broker/(23126:23153): Encontre particion Libre
+[INFO] 05:14:14:897 Broker/(23126:23154): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 05:14:14:898 Broker/(23126:23154): Encontre particion Libre
+[INFO] 05:14:14:899 Broker/(23126:23154): Se toma la particion a medida
+[INFO] 05:14:14:901 Broker/(23126:23154): No hay mas suscriptores! 
+
+[INFO] 05:14:14:905 Broker/(23126:23153): Se toma la particion a medida
+[INFO] 05:14:14:907 Broker/(23126:23153): No hay mas suscriptores! 
+
+[ERROR] 05:14:14:908 Broker/(23126:23153): Se desconecto el cliente 10: 
+
+[INFO] 05:14:14:910 Broker/(23126:23154): Se agregó el cliente 11 a la cola de ACK del mensaje 3 
+[INFO] 05:14:14:910 Broker/(23126:23126): Se conecto un cliente!
+[ERROR] 05:14:14:912 Broker/(23126:23154): Se desconecto el cliente 11: 
+
+[INFO] 05:14:14:913 Broker/(23126:23126): esperando
+[INFO] 05:14:14:914 Broker/(23126:23156): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 05:14:14:915 Broker/(23126:23156): Encontre particion Libre
+[INFO] 05:14:14:915 Broker/(23126:23156): Se toma la particion a medida
+[INFO] 05:14:14:917 Broker/(23126:23156): No hay mas suscriptores! 
+
+[INFO] 05:14:14:918 Broker/(23126:23156): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 05:14:14:918 Broker/(23126:23156): Se desconecto el cliente 12: 
+
+[INFO] 05:14:14:920 Broker/(23126:23126): Se conecto un cliente!
+[INFO] 05:14:14:921 Broker/(23126:23126): esperando
+[INFO] 05:14:14:923 Broker/(23126:23158): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 05:14:14:924 Broker/(23126:23158): Encontre particion Libre
+[INFO] 05:14:14:924 Broker/(23126:23158): Se toma la particion a medida
+[INFO] 05:14:14:925 Broker/(23126:23158): No hay mas suscriptores! 
+
+[INFO] 05:14:14:926 Broker/(23126:23158): Se agregó el cliente 13 a la cola de ACK del mensaje 6 
+[ERROR] 05:14:14:927 Broker/(23126:23158): Se desconecto el cliente 13: 
+
+[INFO] 05:14:14:928 Broker/(23126:23126): Se conecto un cliente!
+[INFO] 05:14:14:929 Broker/(23126:23126): esperando
+[INFO] 05:14:14:930 Broker/(23126:23161): Llego un Subscribe
+[ERROR] 05:14:24:928 Broker/(23126:23161): Se desconecto el cliente 14: 
+
+[INFO] 05:14:24:931 Broker/(23126:23126): Se conecto un cliente!
+[INFO] 05:14:24:931 Broker/(23126:23126): esperando
+[INFO] 05:14:24:932 Broker/(23126:23174): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 05:14:24:960 Broker/(23126:23174): Encontre particion Libre
+[INFO] 05:14:24:960 Broker/(23126:23174): Se toma la particion a medida
+[INFO] 05:14:24:961 Broker/(23126:23174): No hay mas suscriptores! 
+
+[INFO] 05:14:24:963 Broker/(23126:23174): Se agregó el cliente 15 a la cola de ACK del mensaje 7 
+[ERROR] 05:14:24:963 Broker/(23126:23174): Se desconecto el cliente 15: 
+
+[INFO] 05:17:39:561 Broker/(23284:23284): Logger iniciado: Broker.log
+
+[INFO] 05:17:39:628 Broker/(23284:23284): Configuracion broker levantada!
+[INFO] 05:17:39:640 Broker/(23284:23284): Dentro de iniciar servidor
+[INFO] 05:17:39:654 Broker/(23284:23284): Listo para escuchar a mi cliente
+[INFO] 05:17:39:655 Broker/(23284:23284): esperando
+[INFO] 05:17:44:193 Broker/(23284:23284): Se conecto un cliente!
+[INFO] 05:17:44:206 Broker/(23284:23284): esperando
+[INFO] 05:17:44:208 Broker/(23284:23284): Se conecto un cliente!
+[INFO] 05:17:44:221 Broker/(23284:23296): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 05:17:44:228 Broker/(23284:23296): Encontre particion Libre
+[INFO] 05:17:44:236 Broker/(23284:23296): Se toma la particion a medida
+[INFO] 05:17:44:244 Broker/(23284:23296): No hay mas suscriptores! 
+
+[ERROR] 05:17:44:250 Broker/(23284:23296): Se desconecto el cliente 8: 
+
+[INFO] 05:17:44:253 Broker/(23284:23284): esperando
+[INFO] 05:17:44:259 Broker/(23284:23284): Se conecto un cliente!
+[INFO] 05:17:44:260 Broker/(23284:23297): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 05:17:44:260 Broker/(23284:23297): Encontre particion Libre
+[INFO] 05:17:44:261 Broker/(23284:23297): Se toma la particion a medida
+[INFO] 05:17:44:262 Broker/(23284:23297): No hay mas suscriptores! 
+
+[ERROR] 05:17:44:263 Broker/(23284:23297): Se desconecto el cliente 9: 
+
+[INFO] 05:17:44:264 Broker/(23284:23284): esperando
+[INFO] 05:17:44:270 Broker/(23284:23298): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 05:17:44:272 Broker/(23284:23298): Encontre particion Libre
+[INFO] 05:17:44:272 Broker/(23284:23298): Se toma la particion a medida
+[INFO] 05:17:44:275 Broker/(23284:23298): No hay mas suscriptores! 
+
+[INFO] 05:17:44:280 Broker/(23284:23298): Se agregó el cliente 10 a la cola de ACK del mensaje 3 
+[ERROR] 05:17:44:281 Broker/(23284:23298): Se desconecto el cliente 10: 
+
+[INFO] 05:17:44:282 Broker/(23284:23284): Se conecto un cliente!
+[INFO] 05:17:44:284 Broker/(23284:23284): esperando
+[INFO] 05:17:44:285 Broker/(23284:23300): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 05:17:44:286 Broker/(23284:23300): Encontre particion Libre
+[INFO] 05:17:44:286 Broker/(23284:23300): Se toma la particion a medida
+[INFO] 05:17:44:287 Broker/(23284:23300): No hay mas suscriptores! 
+
+[INFO] 05:17:44:288 Broker/(23284:23300): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 05:17:44:289 Broker/(23284:23300): Se desconecto el cliente 11: 
+
+[INFO] 05:17:44:290 Broker/(23284:23284): Se conecto un cliente!
+[INFO] 05:17:44:292 Broker/(23284:23284): esperando
+[INFO] 05:17:44:293 Broker/(23284:23302): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 05:17:44:293 Broker/(23284:23302): Encontre particion Libre
+[INFO] 05:17:44:294 Broker/(23284:23302): Se toma la particion a medida
+[INFO] 05:17:44:295 Broker/(23284:23302): No hay mas suscriptores! 
+
+[INFO] 05:17:44:297 Broker/(23284:23302): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 05:17:44:297 Broker/(23284:23302): Se desconecto el cliente 12: 
+
+[INFO] 05:17:44:299 Broker/(23284:23284): Se conecto un cliente!
+[INFO] 05:17:44:300 Broker/(23284:23284): esperando
+[INFO] 05:17:44:300 Broker/(23284:23305): Llego un Subscribe
+[INFO] 14:29:25:414 Broker/(25110:25110): Logger iniciado: Broker.log
+
+[INFO] 14:29:44:379 Broker/(25118:25118): Logger iniciado: Broker.log
+
+[INFO] 14:30:19:790 Broker/(25164:25164): Logger iniciado: Broker.log
+
+[INFO] 14:30:19:864 Broker/(25164:25164): Configuracion broker levantada!
+[INFO] 14:30:19:877 Broker/(25164:25164): Dentro de iniciar servidor
+[INFO] 14:30:19:891 Broker/(25164:25164): Listo para escuchar a mi cliente
+[INFO] 14:30:19:892 Broker/(25164:25164): esperando
+[INFO] 14:30:26:299 Broker/(25164:25164): Se conecto un cliente!
+[INFO] 14:30:26:311 Broker/(25164:25164): esperando
+[INFO] 14:30:26:314 Broker/(25164:25164): Se conecto un cliente!
+[INFO] 14:30:26:326 Broker/(25164:25174): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 14:30:26:333 Broker/(25164:25174): Encontre particion Libre
+[INFO] 14:30:26:339 Broker/(25164:25174): Se toma la particion a medida
+[INFO] 14:30:26:348 Broker/(25164:25174): No hay mas suscriptores! 
+
+[ERROR] 14:30:26:350 Broker/(25164:25174): Se desconecto el cliente 8: 
+
+[INFO] 14:30:26:360 Broker/(25164:25164): esperando
+[INFO] 14:30:26:360 Broker/(25164:25164): Se conecto un cliente!
+[INFO] 14:30:26:362 Broker/(25164:25175): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 14:30:26:363 Broker/(25164:25175): Encontre particion Libre
+[INFO] 14:30:26:366 Broker/(25164:25175): Se toma la particion a medida
+[INFO] 14:30:26:367 Broker/(25164:25164): esperando
+[INFO] 14:30:26:372 Broker/(25164:25176): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 14:33:37:80 Broker/(25280:25280): Logger iniciado: Broker.log
+
+[INFO] 14:33:37:145 Broker/(25280:25280): Configuracion broker levantada!
+[INFO] 14:33:37:157 Broker/(25280:25280): Dentro de iniciar servidor
+[INFO] 14:33:37:171 Broker/(25280:25280): Listo para escuchar a mi cliente
+[INFO] 14:33:37:172 Broker/(25280:25280): esperando
+[INFO] 14:33:43:178 Broker/(25280:25280): Se conecto un cliente!
+[INFO] 14:33:43:192 Broker/(25280:25280): esperando
+[INFO] 14:33:43:206 Broker/(25280:25291): Me llego mensaje caught correlativo a: 23, resultado: 1 
+
+[INFO] 14:33:43:213 Broker/(25280:25291): Encontre particion Libre
+[INFO] 14:33:43:220 Broker/(25280:25291): Se toma la particion a medida
+[INFO] 14:33:43:227 Broker/(25280:25291): No hay mas suscriptores! 
+
+[ERROR] 14:33:43:230 Broker/(25280:25291): Se desconecto el cliente 8: 
+
+[INFO] 14:33:47:158 Broker/(25280:25280): Se conecto un cliente!
+[INFO] 14:33:47:159 Broker/(25280:25280): esperando
+[INFO] 14:33:47:161 Broker/(25280:25295): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 14:33:47:161 Broker/(25280:25295): Encontre particion Libre
+[INFO] 14:33:47:162 Broker/(25280:25295): Se toma la particion a medida
+[INFO] 14:33:47:163 Broker/(25280:25280): Se conecto un cliente!
+[INFO] 14:33:47:165 Broker/(25280:25295): No hay mas suscriptores! 
+
+[INFO] 14:33:47:166 Broker/(25280:25280): esperando
+[ERROR] 14:33:47:166 Broker/(25280:25295): Se desconecto el cliente 9: 
+
+[INFO] 14:33:47:167 Broker/(25280:25297): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 14:33:47:168 Broker/(25280:25280): Se conecto un cliente!
+[INFO] 14:33:47:170 Broker/(25280:25297): Encontre particion Libre
+[INFO] 14:33:47:172 Broker/(25280:25280): esperando
+[INFO] 14:33:47:173 Broker/(25280:25297): Se toma la particion a medida
+[INFO] 14:33:47:174 Broker/(25280:25297): No hay mas suscriptores! 
+
+[ERROR] 14:33:47:175 Broker/(25280:25297): Se desconecto el cliente 10: 
+
+[INFO] 14:33:47:181 Broker/(25280:25298): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 14:57:12:398 Broker/(25910:25910): Logger iniciado: Broker.log
+
+[INFO] 14:57:12:472 Broker/(25910:25910): Configuracion broker levantada!
+[INFO] 14:57:12:488 Broker/(25910:25910): Dentro de iniciar servidor
+[INFO] 14:57:12:504 Broker/(25910:25910): Listo para escuchar a mi cliente
+[INFO] 14:57:12:505 Broker/(25910:25910): esperando
+[INFO] 14:57:14:269 Broker/(25910:25910): Se conecto un cliente!
+[INFO] 14:57:14:282 Broker/(25910:25910): esperando
+[INFO] 14:57:14:285 Broker/(25910:25910): Se conecto un cliente!
+[INFO] 14:57:14:297 Broker/(25910:25919): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 14:57:14:305 Broker/(25910:25919): Encontre particion Libre
+[INFO] 14:57:14:311 Broker/(25910:25919): Se toma la particion a medida
+[INFO] 14:57:14:319 Broker/(25910:25919): No hay mas suscriptores! 
+
+[ERROR] 14:57:14:322 Broker/(25910:25919): Se desconecto el cliente 8: 
+
+[INFO] 14:57:14:330 Broker/(25910:25910): esperando
+[INFO] 14:57:14:331 Broker/(25910:25910): Se conecto un cliente!
+[INFO] 14:57:14:334 Broker/(25910:25910): esperando
+[INFO] 14:57:14:335 Broker/(25910:25920): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 14:57:14:340 Broker/(25910:25921): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 14:57:14:343 Broker/(25910:25921): Encontre particion Libre
+[INFO] 14:57:14:344 Broker/(25910:25920): Encontre particion Libre
+[INFO] 14:57:14:344 Broker/(25910:25920): Se toma la particion a medida
+[INFO] 14:57:14:345 Broker/(25910:25920): No hay mas suscriptores! 
+
+[ERROR] 14:57:14:345 Broker/(25910:25920): Se desconecto el cliente 9: 
+
+[INFO] 14:57:14:346 Broker/(25910:25921): Se toma la particion a medida
+[INFO] 14:57:14:348 Broker/(25910:25921): No hay mas suscriptores! 
+
+[INFO] 14:57:14:354 Broker/(25910:25921): Se agregó el cliente 10 a la cola de ACK del mensaje 3 
+[INFO] 14:57:14:355 Broker/(25910:25910): Se conecto un cliente!
+[ERROR] 14:57:14:356 Broker/(25910:25921): Se desconecto el cliente 10: 
+
+[INFO] 14:57:14:358 Broker/(25910:25910): esperando
+[INFO] 14:57:14:358 Broker/(25910:25923): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 14:57:14:359 Broker/(25910:25923): Encontre particion Libre
+[INFO] 14:57:14:359 Broker/(25910:25923): Se toma la particion a medida
+[INFO] 14:57:14:362 Broker/(25910:25923): No hay mas suscriptores! 
+
+[INFO] 14:57:14:363 Broker/(25910:25923): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 14:57:14:364 Broker/(25910:25923): Se desconecto el cliente 11: 
+
+[INFO] 14:57:14:367 Broker/(25910:25910): Se conecto un cliente!
+[INFO] 14:57:14:368 Broker/(25910:25910): esperando
+[INFO] 14:57:14:370 Broker/(25910:25925): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 14:57:14:370 Broker/(25910:25925): Encontre particion Libre
+[INFO] 14:57:14:370 Broker/(25910:25925): Se toma la particion a medida
+[INFO] 14:57:14:371 Broker/(25910:25925): No hay mas suscriptores! 
+
+[INFO] 14:57:14:372 Broker/(25910:25925): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 14:57:14:373 Broker/(25910:25925): Se desconecto el cliente 12: 
+
+[INFO] 14:57:14:374 Broker/(25910:25910): Se conecto un cliente!
+[INFO] 14:57:14:375 Broker/(25910:25910): esperando
+[INFO] 14:57:14:376 Broker/(25910:25928): Llego un Subscribe
+[ERROR] 14:57:24:376 Broker/(25910:25928): Se desconecto el cliente 13: 
+
+[INFO] 14:57:24:382 Broker/(25910:25910): Se conecto un cliente!
+[INFO] 14:57:24:385 Broker/(25910:25910): esperando
+[INFO] 14:57:24:388 Broker/(25910:25933): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 14:57:24:417 Broker/(25910:25933): Encontre particion Libre
+[INFO] 14:57:24:418 Broker/(25910:25933): Se toma la particion a medida
+[INFO] 14:57:24:419 Broker/(25910:25933): No hay mas suscriptores! 
+
+[INFO] 14:57:24:420 Broker/(25910:25933): Se agregó el cliente 14 a la cola de ACK del mensaje 6 
+[ERROR] 14:57:24:421 Broker/(25910:25933): Se desconecto el cliente 14: 
+
+[INFO] 14:59:52:346 Broker/(26018:26018): Logger iniciado: Broker.log
+
+[INFO] 14:59:52:409 Broker/(26018:26018): Configuracion broker levantada!
+[INFO] 14:59:52:420 Broker/(26018:26018): Dentro de iniciar servidor
+[INFO] 14:59:52:434 Broker/(26018:26018): Listo para escuchar a mi cliente
+[INFO] 14:59:52:435 Broker/(26018:26018): esperando
+[INFO] 14:59:58:17 Broker/(26018:26018): Se conecto un cliente!
+[INFO] 14:59:58:29 Broker/(26018:26018): esperando
+[INFO] 14:59:58:32 Broker/(26018:26018): Se conecto un cliente!
+[INFO] 14:59:58:43 Broker/(26018:26027): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 14:59:58:50 Broker/(26018:26027): Encontre particion Libre
+[INFO] 14:59:58:58 Broker/(26018:26027): Se toma la particion a medida
+[INFO] 14:59:58:66 Broker/(26018:26027): No hay mas suscriptores! 
+
+[ERROR] 14:59:58:71 Broker/(26018:26027): Se desconecto el cliente 8: 
+
+[INFO] 14:59:58:80 Broker/(26018:26018): esperando
+[INFO] 14:59:58:80 Broker/(26018:26018): Se conecto un cliente!
+[INFO] 14:59:58:86 Broker/(26018:26018): esperando
+[INFO] 14:59:58:92 Broker/(26018:26029): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 14:59:58:92 Broker/(26018:26028): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 14:59:58:96 Broker/(26018:26029): Encontre particion Libre
+[INFO] 14:59:58:97 Broker/(26018:26029): Se toma la particion a medida
+[INFO] 14:59:58:99 Broker/(26018:26029): No hay mas suscriptores! 
+
+[INFO] 14:59:58:102 Broker/(26018:26028): Encontre particion Libre
+[INFO] 14:59:58:103 Broker/(26018:26028): Se toma la particion a medida
+[INFO] 14:59:58:104 Broker/(26018:26028): No hay mas suscriptores! 
+
+[ERROR] 14:59:58:104 Broker/(26018:26028): Se desconecto el cliente 9: 
+
+[INFO] 14:59:58:106 Broker/(26018:26018): Se conecto un cliente!
+[INFO] 14:59:58:111 Broker/(26018:26029): Se agregó el cliente 10 a la cola de ACK del mensaje 2 
+[ERROR] 14:59:58:112 Broker/(26018:26029): Se desconecto el cliente 10: 
+
+[INFO] 14:59:58:114 Broker/(26018:26018): esperando
+[INFO] 14:59:58:115 Broker/(26018:26031): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 14:59:58:116 Broker/(26018:26031): Encontre particion Libre
+[INFO] 14:59:58:116 Broker/(26018:26031): Se toma la particion a medida
+[INFO] 14:59:58:118 Broker/(26018:26031): No hay mas suscriptores! 
+
+[INFO] 14:59:58:119 Broker/(26018:26031): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 14:59:58:122 Broker/(26018:26031): Se desconecto el cliente 11: 
+
+[INFO] 14:59:58:124 Broker/(26018:26018): Se conecto un cliente!
+[INFO] 14:59:58:125 Broker/(26018:26018): esperando
+[INFO] 14:59:58:126 Broker/(26018:26033): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 14:59:58:127 Broker/(26018:26033): Encontre particion Libre
+[INFO] 14:59:58:128 Broker/(26018:26033): Se toma la particion a medida
+[INFO] 14:59:58:128 Broker/(26018:26033): No hay mas suscriptores! 
+
+[INFO] 14:59:58:130 Broker/(26018:26033): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 14:59:58:130 Broker/(26018:26033): Se desconecto el cliente 12: 
+
+[INFO] 14:59:58:132 Broker/(26018:26018): Se conecto un cliente!
+[INFO] 14:59:58:133 Broker/(26018:26018): esperando
+[INFO] 14:59:58:140 Broker/(26018:26036): Llego un Subscribe
+[ERROR] 15:00:08:133 Broker/(26018:26036): Se desconecto el cliente 13: 
+
+[INFO] 15:00:08:135 Broker/(26018:26018): Se conecto un cliente!
+[INFO] 15:00:08:137 Broker/(26018:26018): esperando
+[INFO] 15:00:08:138 Broker/(26018:26049): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 15:00:08:169 Broker/(26018:26049): Encontre particion Libre
+[INFO] 15:00:08:169 Broker/(26018:26049): Se toma la particion a medida
+[INFO] 15:00:08:171 Broker/(26018:26049): No hay mas suscriptores! 
+
+[INFO] 15:00:08:172 Broker/(26018:26049): Se agregó el cliente 14 a la cola de ACK del mensaje 6 
+[ERROR] 15:00:08:173 Broker/(26018:26049): Se desconecto el cliente 14: 
+
+[INFO] 15:02:02:455 Broker/(26118:26118): Logger iniciado: Broker.log
+
+[INFO] 15:02:02:518 Broker/(26118:26118): Configuracion broker levantada!
+[INFO] 15:02:02:530 Broker/(26118:26118): Dentro de iniciar servidor
+[INFO] 15:02:02:544 Broker/(26118:26118): Listo para escuchar a mi cliente
+[INFO] 15:02:02:545 Broker/(26118:26118): esperando
+[INFO] 15:02:05:645 Broker/(26118:26118): Se conecto un cliente!
+[INFO] 15:02:05:659 Broker/(26118:26118): esperando
+[INFO] 15:02:05:669 Broker/(26118:26118): Se conecto un cliente!
+[INFO] 15:02:05:673 Broker/(26118:26128): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 15:02:05:681 Broker/(26118:26128): Encontre particion Libre
+[INFO] 15:02:05:687 Broker/(26118:26128): Se toma la particion a medida
+[INFO] 15:02:05:696 Broker/(26118:26128): No hay mas suscriptores! 
+
+[ERROR] 15:02:05:698 Broker/(26118:26128): Se desconecto el cliente 8: 
+
+[INFO] 15:02:05:704 Broker/(26118:26118): esperando
+[INFO] 15:02:05:705 Broker/(26118:26118): Se conecto un cliente!
+[INFO] 15:02:05:708 Broker/(26118:26118): esperando
+[INFO] 15:02:05:713 Broker/(26118:26130): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 15:02:05:717 Broker/(26118:26130): Encontre particion Libre
+[INFO] 15:02:05:717 Broker/(26118:26130): Se toma la particion a medida
+[INFO] 15:02:05:720 Broker/(26118:26129): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 15:02:05:720 Broker/(26118:26129): Encontre particion Libre
+[INFO] 15:02:05:722 Broker/(26118:26130): No hay mas suscriptores! 
+
+[INFO] 15:02:05:727 Broker/(26118:26129): Se toma la particion a medida
+[INFO] 15:02:05:728 Broker/(26118:26118): Se conecto un cliente!
+[INFO] 15:02:05:729 Broker/(26118:26129): No hay mas suscriptores! 
+
+[ERROR] 15:02:05:729 Broker/(26118:26129): Se desconecto el cliente 9: 
+
+[INFO] 15:02:05:732 Broker/(26118:26118): esperando
+[INFO] 15:02:05:734 Broker/(26118:26130): Se agregó el cliente 10 a la cola de ACK del mensaje 2 
+[ERROR] 15:02:05:735 Broker/(26118:26130): Se desconecto el cliente 10: 
+
+[INFO] 15:02:05:741 Broker/(26118:26132): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 15:02:05:741 Broker/(26118:26132): Encontre particion Libre
+[INFO] 15:02:05:742 Broker/(26118:26132): Se toma la particion a medida
+[INFO] 15:02:05:743 Broker/(26118:26132): No hay mas suscriptores! 
+
+[INFO] 15:02:05:745 Broker/(26118:26132): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 15:02:05:745 Broker/(26118:26132): Se desconecto el cliente 11: 
+
+[INFO] 15:02:05:747 Broker/(26118:26118): Se conecto un cliente!
+[INFO] 15:02:05:748 Broker/(26118:26118): esperando
+[INFO] 15:02:05:749 Broker/(26118:26134): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 15:02:05:750 Broker/(26118:26134): Encontre particion Libre
+[INFO] 15:02:05:750 Broker/(26118:26134): Se toma la particion a medida
+[INFO] 15:02:05:751 Broker/(26118:26134): No hay mas suscriptores! 
+
+[INFO] 15:02:05:752 Broker/(26118:26134): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 15:02:05:752 Broker/(26118:26134): Se desconecto el cliente 12: 
+
+[INFO] 15:02:05:754 Broker/(26118:26118): Se conecto un cliente!
+[INFO] 15:02:05:756 Broker/(26118:26118): esperando
+[INFO] 15:02:05:757 Broker/(26118:26137): Llego un Subscribe
+[ERROR] 15:02:15:759 Broker/(26118:26137): Se desconecto el cliente 13: 
+
+[INFO] 15:02:15:762 Broker/(26118:26118): Se conecto un cliente!
+[INFO] 15:02:15:764 Broker/(26118:26118): esperando
+[INFO] 15:02:15:765 Broker/(26118:26146): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 15:02:15:798 Broker/(26118:26146): Encontre particion Libre
+[INFO] 15:02:15:798 Broker/(26118:26146): Se toma la particion a medida
+[INFO] 15:02:15:801 Broker/(26118:26146): No hay mas suscriptores! 
+
+[INFO] 15:02:15:803 Broker/(26118:26146): Se agregó el cliente 14 a la cola de ACK del mensaje 6 
+[ERROR] 15:02:15:804 Broker/(26118:26146): Se desconecto el cliente 14: 
+
+[INFO] 15:06:20:291 Broker/(26259:26259): Logger iniciado: Broker.log
+
+[INFO] 15:06:20:371 Broker/(26259:26259): Configuracion broker levantada!
+[INFO] 15:06:20:387 Broker/(26259:26259): Dentro de iniciar servidor
+[INFO] 15:06:20:405 Broker/(26259:26259): Listo para escuchar a mi cliente
+[INFO] 15:06:20:406 Broker/(26259:26259): esperando
+[INFO] 15:06:22:260 Broker/(26259:26259): Se conecto un cliente!
+[INFO] 15:06:22:273 Broker/(26259:26259): esperando
+[INFO] 15:06:22:282 Broker/(26259:26259): Se conecto un cliente!
+[INFO] 15:06:22:287 Broker/(26259:26267): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 15:06:22:294 Broker/(26259:26267): Encontre particion Libre
+[INFO] 15:06:22:300 Broker/(26259:26267): Se toma la particion a medida
+[INFO] 15:06:22:311 Broker/(26259:26267): No hay mas suscriptores! 
+
+[ERROR] 15:06:22:314 Broker/(26259:26267): Se desconecto el cliente 8: 
+
+[INFO] 15:06:22:322 Broker/(26259:26259): esperando
+[INFO] 15:06:22:323 Broker/(26259:26259): Se conecto un cliente!
+[INFO] 15:06:22:325 Broker/(26259:26259): esperando
+[INFO] 15:06:22:330 Broker/(26259:26269): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 15:06:22:334 Broker/(26259:26269): Encontre particion Libre
+[INFO] 15:06:22:335 Broker/(26259:26269): Se toma la particion a medida
+[INFO] 15:06:22:337 Broker/(26259:26268): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 15:06:22:338 Broker/(26259:26268): Encontre particion Libre
+[INFO] 15:06:22:338 Broker/(26259:26268): Se toma la particion a medida
+[INFO] 15:06:22:340 Broker/(26259:26268): No hay mas suscriptores! 
+
+[ERROR] 15:06:22:340 Broker/(26259:26268): Se desconecto el cliente 9: 
+
+[INFO] 15:06:22:341 Broker/(26259:26269): No hay mas suscriptores! 
+
+[INFO] 15:06:22:347 Broker/(26259:26269): Se agregó el cliente 10 a la cola de ACK del mensaje 2 
+[INFO] 15:06:22:347 Broker/(26259:26259): Se conecto un cliente!
+[ERROR] 15:06:22:348 Broker/(26259:26269): Se desconecto el cliente 10: 
+
+[INFO] 15:06:22:350 Broker/(26259:26259): esperando
+[INFO] 15:06:22:351 Broker/(26259:26271): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 15:06:22:352 Broker/(26259:26271): Encontre particion Libre
+[INFO] 15:06:22:352 Broker/(26259:26271): Se toma la particion a medida
+[INFO] 15:06:22:353 Broker/(26259:26271): No hay mas suscriptores! 
+
+[INFO] 15:06:22:354 Broker/(26259:26271): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 15:06:22:354 Broker/(26259:26271): Se desconecto el cliente 11: 
+
+[INFO] 15:06:22:355 Broker/(26259:26259): Se conecto un cliente!
+[INFO] 15:06:22:357 Broker/(26259:26259): esperando
+[INFO] 15:06:22:358 Broker/(26259:26273): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 15:06:22:358 Broker/(26259:26273): Encontre particion Libre
+[INFO] 15:06:22:359 Broker/(26259:26273): Se toma la particion a medida
+[INFO] 15:06:22:359 Broker/(26259:26273): No hay mas suscriptores! 
+
+[INFO] 15:06:22:360 Broker/(26259:26273): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 15:06:22:361 Broker/(26259:26273): Se desconecto el cliente 12: 
+
+[INFO] 15:06:22:363 Broker/(26259:26259): Se conecto un cliente!
+[INFO] 15:06:22:364 Broker/(26259:26259): esperando
+[INFO] 15:06:22:365 Broker/(26259:26275): Llego un Subscribe
+[ERROR] 15:06:32:367 Broker/(26259:26275): Se desconecto el cliente 13: 
+
+[INFO] 15:06:32:369 Broker/(26259:26259): Se conecto un cliente!
+[INFO] 15:06:32:370 Broker/(26259:26259): esperando
+[INFO] 15:06:32:371 Broker/(26259:26291): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 15:06:32:400 Broker/(26259:26291): Encontre particion Libre
+[INFO] 15:06:32:401 Broker/(26259:26291): Se toma la particion a medida
+[INFO] 15:06:32:402 Broker/(26259:26291): No hay mas suscriptores! 
+
+[INFO] 15:06:32:403 Broker/(26259:26291): Se agregó el cliente 14 a la cola de ACK del mensaje 6 
+[ERROR] 15:06:32:403 Broker/(26259:26291): Se desconecto el cliente 14: 
+
+[INFO] 15:10:06:137 Broker/(26386:26386): Logger iniciado: Broker.log
+
+[INFO] 15:10:06:207 Broker/(26386:26386): Configuracion broker levantada!
+[INFO] 15:10:06:220 Broker/(26386:26386): Dentro de iniciar servidor
+[INFO] 15:10:06:237 Broker/(26386:26386): Listo para escuchar a mi cliente
+[INFO] 15:10:06:240 Broker/(26386:26386): esperando
+[INFO] 15:10:13:417 Broker/(26386:26386): Se conecto un cliente!
+[INFO] 15:10:13:432 Broker/(26386:26386): esperando
+[INFO] 15:10:13:443 Broker/(26386:26386): Se conecto un cliente!
+[INFO] 15:10:13:448 Broker/(26386:26403): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 15:10:13:457 Broker/(26386:26403): Encontre particion Libre
+[INFO] 15:10:13:466 Broker/(26386:26403): Se toma la particion a medida
+[INFO] 15:10:13:474 Broker/(26386:26403): No hay mas suscriptores! 
+
+[ERROR] 15:10:13:477 Broker/(26386:26403): Se desconecto el cliente 8: 
+
+[INFO] 15:10:13:489 Broker/(26386:26386): esperando
+[INFO] 15:10:13:489 Broker/(26386:26386): Se conecto un cliente!
+[INFO] 15:10:13:492 Broker/(26386:26404): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 15:10:13:493 Broker/(26386:26404): Encontre particion Libre
+[INFO] 15:10:13:495 Broker/(26386:26404): Se toma la particion a medida
+[INFO] 15:10:13:495 Broker/(26386:26404): No hay mas suscriptores! 
+
+[ERROR] 15:10:13:496 Broker/(26386:26404): Se desconecto el cliente 9: 
+
+[INFO] 15:10:13:496 Broker/(26386:26386): esperando
+[INFO] 15:10:13:503 Broker/(26386:26405): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 15:10:13:507 Broker/(26386:26405): Encontre particion Libre
+[INFO] 15:10:13:507 Broker/(26386:26405): Se toma la particion a medida
+[INFO] 15:10:13:509 Broker/(26386:26405): No hay mas suscriptores! 
+
+[INFO] 15:10:13:516 Broker/(26386:26405): Se agregó el cliente 10 a la cola de ACK del mensaje 3 
+[ERROR] 15:10:13:517 Broker/(26386:26405): Se desconecto el cliente 10: 
+
+[INFO] 15:10:13:517 Broker/(26386:26386): Se conecto un cliente!
+[INFO] 15:10:13:519 Broker/(26386:26386): esperando
+[INFO] 15:10:13:520 Broker/(26386:26407): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 15:10:13:521 Broker/(26386:26407): Encontre particion Libre
+[INFO] 15:10:13:522 Broker/(26386:26407): Se toma la particion a medida
+[INFO] 15:10:13:524 Broker/(26386:26407): No hay mas suscriptores! 
+
+[INFO] 15:10:13:525 Broker/(26386:26407): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 15:10:13:526 Broker/(26386:26407): Se desconecto el cliente 11: 
+
+[INFO] 15:10:13:528 Broker/(26386:26386): Se conecto un cliente!
+[INFO] 15:10:13:529 Broker/(26386:26386): esperando
+[INFO] 15:10:13:530 Broker/(26386:26409): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 15:10:13:531 Broker/(26386:26409): Encontre particion Libre
+[INFO] 15:10:13:532 Broker/(26386:26409): Se toma la particion a medida
+[INFO] 15:10:13:532 Broker/(26386:26409): No hay mas suscriptores! 
+
+[INFO] 15:10:13:533 Broker/(26386:26409): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 15:10:13:534 Broker/(26386:26409): Se desconecto el cliente 12: 
+
+[INFO] 15:10:13:536 Broker/(26386:26386): Se conecto un cliente!
+[INFO] 15:10:13:537 Broker/(26386:26386): esperando
+[INFO] 15:10:13:538 Broker/(26386:26412): Llego un Subscribe
+[ERROR] 15:10:23:537 Broker/(26386:26412): Se desconecto el cliente 13: 
+
+[INFO] 15:10:23:540 Broker/(26386:26386): Se conecto un cliente!
+[INFO] 15:10:23:542 Broker/(26386:26386): esperando
+[INFO] 15:10:23:544 Broker/(26386:26416): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 15:10:23:579 Broker/(26386:26416): Encontre particion Libre
+[INFO] 15:10:23:579 Broker/(26386:26416): Se toma la particion a medida
+[INFO] 15:10:23:581 Broker/(26386:26416): No hay mas suscriptores! 
+
+[INFO] 15:10:23:583 Broker/(26386:26416): Se agregó el cliente 14 a la cola de ACK del mensaje 6 
+[ERROR] 15:10:23:584 Broker/(26386:26416): Se desconecto el cliente 14: 
+
+[INFO] 15:15:15:557 Broker/(26530:26530): Logger iniciado: Broker.log
+
+[INFO] 15:15:15:637 Broker/(26530:26530): Configuracion broker levantada!
+[INFO] 15:15:15:652 Broker/(26530:26530): Dentro de iniciar servidor
+[INFO] 15:15:15:671 Broker/(26530:26530): Listo para escuchar a mi cliente
+[INFO] 15:15:15:672 Broker/(26530:26530): esperando
+[INFO] 15:15:16:899 Broker/(26530:26530): Se conecto un cliente!
+[INFO] 15:15:16:921 Broker/(26530:26530): esperando
+[INFO] 15:15:16:923 Broker/(26530:26530): Se conecto un cliente!
+[INFO] 15:15:16:929 Broker/(26530:26539): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 15:15:16:936 Broker/(26530:26539): Encontre particion Libre
+[INFO] 15:15:16:942 Broker/(26530:26539): Se toma la particion a medida
+[INFO] 15:15:16:951 Broker/(26530:26539): No hay mas suscriptores! 
+
+[ERROR] 15:15:16:953 Broker/(26530:26539): Se desconecto el cliente 8: 
+
+[INFO] 15:15:16:963 Broker/(26530:26530): esperando
+[INFO] 15:15:16:964 Broker/(26530:26530): Se conecto un cliente!
+[INFO] 15:15:16:965 Broker/(26530:26540): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 15:15:16:965 Broker/(26530:26540): Encontre particion Libre
+[INFO] 15:15:16:966 Broker/(26530:26540): Se toma la particion a medida
+[INFO] 15:15:16:967 Broker/(26530:26540): No hay mas suscriptores! 
+
+[ERROR] 15:15:16:967 Broker/(26530:26540): Se desconecto el cliente 9: 
+
+[INFO] 15:15:16:969 Broker/(26530:26530): esperando
+[INFO] 15:15:16:975 Broker/(26530:26541): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 15:15:16:978 Broker/(26530:26541): Encontre particion Libre
+[INFO] 15:15:16:978 Broker/(26530:26541): Se toma la particion a medida
+[INFO] 15:15:16:980 Broker/(26530:26541): No hay mas suscriptores! 
+
+[INFO] 15:15:16:986 Broker/(26530:26541): Se agregó el cliente 10 a la cola de ACK del mensaje 3 
+[ERROR] 15:15:16:987 Broker/(26530:26541): Se desconecto el cliente 10: 
+
+[INFO] 15:15:16:987 Broker/(26530:26530): Se conecto un cliente!
+[INFO] 15:15:16:989 Broker/(26530:26530): esperando
+[INFO] 15:15:16:993 Broker/(26530:26543): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 15:15:16:994 Broker/(26530:26543): Encontre particion Libre
+[INFO] 15:15:16:994 Broker/(26530:26543): Se toma la particion a medida
+[INFO] 15:15:16:996 Broker/(26530:26543): No hay mas suscriptores! 
+
+[INFO] 15:15:16:997 Broker/(26530:26543): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 15:15:16:997 Broker/(26530:26543): Se desconecto el cliente 11: 
+
+[INFO] 15:15:16:0 Broker/(26530:26530): Se conecto un cliente!
+[INFO] 15:15:16:2 Broker/(26530:26530): esperando
+[INFO] 15:15:17:3 Broker/(26530:26545): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 15:15:17:3 Broker/(26530:26545): Encontre particion Libre
+[INFO] 15:15:17:4 Broker/(26530:26545): Se toma la particion a medida
+[INFO] 15:15:17:4 Broker/(26530:26545): No hay mas suscriptores! 
+
+[INFO] 15:15:17:6 Broker/(26530:26545): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 15:15:17:6 Broker/(26530:26545): Se desconecto el cliente 12: 
+
+[INFO] 15:15:17:8 Broker/(26530:26530): Se conecto un cliente!
+[INFO] 15:15:17:9 Broker/(26530:26530): esperando
+[INFO] 15:15:17:10 Broker/(26530:26548): Llego un Subscribe
+[ERROR] 15:15:27:11 Broker/(26530:26548): Se desconecto el cliente 13: 
+
+[INFO] 15:15:27:14 Broker/(26530:26530): Se conecto un cliente!
+[INFO] 15:15:27:15 Broker/(26530:26530): esperando
+[INFO] 15:15:27:16 Broker/(26530:26562): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 15:15:27:49 Broker/(26530:26562): Encontre particion Libre
+[INFO] 15:15:27:50 Broker/(26530:26562): Se toma la particion a medida
+[INFO] 15:15:27:51 Broker/(26530:26562): No hay mas suscriptores! 
+
+[INFO] 15:15:27:52 Broker/(26530:26562): Se agregó el cliente 14 a la cola de ACK del mensaje 6 
+[ERROR] 15:15:27:52 Broker/(26530:26562): Se desconecto el cliente 14: 
+
+[INFO] 15:20:15:688 Broker/(26697:26697): Logger iniciado: Broker.log
+
+[INFO] 15:20:15:752 Broker/(26697:26697): Configuracion broker levantada!
+[INFO] 15:20:15:767 Broker/(26697:26697): Dentro de iniciar servidor
+[INFO] 15:20:15:781 Broker/(26697:26697): Listo para escuchar a mi cliente
+[INFO] 15:20:15:782 Broker/(26697:26697): esperando
+[INFO] 15:20:18:141 Broker/(26697:26697): Se conecto un cliente!
+[INFO] 15:20:18:154 Broker/(26697:26697): esperando
+[INFO] 15:20:18:163 Broker/(26697:26697): Se conecto un cliente!
+[INFO] 15:20:18:170 Broker/(26697:26706): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 15:20:18:177 Broker/(26697:26706): Encontre particion Libre
+[INFO] 15:20:18:184 Broker/(26697:26706): Se toma la particion a medida
+[INFO] 15:20:18:192 Broker/(26697:26706): No hay mas suscriptores! 
+
+[ERROR] 15:20:18:194 Broker/(26697:26706): Se desconecto el cliente 8: 
+
+[INFO] 15:20:18:203 Broker/(26697:26697): esperando
+[INFO] 15:20:18:204 Broker/(26697:26708): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 15:20:18:204 Broker/(26697:26697): Se conecto un cliente!
+[INFO] 15:20:18:206 Broker/(26697:26708): Encontre particion Libre
+[INFO] 15:20:18:207 Broker/(26697:26708): Se toma la particion a medida
+[INFO] 15:20:18:210 Broker/(26697:26697): esperando
+[INFO] 15:20:18:216 Broker/(26697:26709): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 15:20:18:220 Broker/(26697:26709): Encontre particion Libre
+[INFO] 15:20:18:220 Broker/(26697:26709): Se toma la particion a medida
+[INFO] 15:20:18:222 Broker/(26697:26708): No hay mas suscriptores! 
+
+[ERROR] 15:20:18:223 Broker/(26697:26708): Se desconecto el cliente 9: 
+
+[INFO] 15:20:18:227 Broker/(26697:26709): No hay mas suscriptores! 
+
+[INFO] 15:20:18:234 Broker/(26697:26709): Se agregó el cliente 10 a la cola de ACK del mensaje 3 
+[INFO] 15:20:18:235 Broker/(26697:26697): Se conecto un cliente!
+[ERROR] 15:20:18:236 Broker/(26697:26709): Se desconecto el cliente 10: 
+
+[INFO] 15:20:18:238 Broker/(26697:26697): esperando
+[INFO] 15:20:18:238 Broker/(26697:26711): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 15:20:18:239 Broker/(26697:26711): Encontre particion Libre
+[INFO] 15:20:18:240 Broker/(26697:26711): Se toma la particion a medida
+[INFO] 15:20:18:242 Broker/(26697:26711): No hay mas suscriptores! 
+
+[INFO] 15:20:18:243 Broker/(26697:26711): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 15:20:18:243 Broker/(26697:26711): Se desconecto el cliente 11: 
+
+[INFO] 15:20:18:245 Broker/(26697:26697): Se conecto un cliente!
+[INFO] 15:20:18:246 Broker/(26697:26697): esperando
+[INFO] 15:20:18:247 Broker/(26697:26713): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 15:20:18:248 Broker/(26697:26713): Encontre particion Libre
+[INFO] 15:20:18:248 Broker/(26697:26713): Se toma la particion a medida
+[INFO] 15:20:18:250 Broker/(26697:26713): No hay mas suscriptores! 
+
+[INFO] 15:20:18:251 Broker/(26697:26713): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 15:20:18:251 Broker/(26697:26713): Se desconecto el cliente 12: 
+
+[INFO] 15:20:18:253 Broker/(26697:26697): Se conecto un cliente!
+[INFO] 15:20:18:255 Broker/(26697:26697): esperando
+[INFO] 15:20:18:255 Broker/(26697:26716): Llego un Subscribe
+[ERROR] 15:20:28:255 Broker/(26697:26716): Se desconecto el cliente 13: 
+
+[INFO] 15:20:28:259 Broker/(26697:26697): Se conecto un cliente!
+[INFO] 15:20:28:261 Broker/(26697:26697): esperando
+[INFO] 15:20:28:262 Broker/(26697:26721): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 15:20:28:300 Broker/(26697:26721): Encontre particion Libre
+[INFO] 15:20:28:300 Broker/(26697:26721): Se toma la particion a medida
+[INFO] 15:20:28:302 Broker/(26697:26721): No hay mas suscriptores! 
+
+[INFO] 15:20:28:303 Broker/(26697:26721): Se agregó el cliente 14 a la cola de ACK del mensaje 6 
+[ERROR] 15:20:28:303 Broker/(26697:26721): Se desconecto el cliente 14: 
+
+[INFO] 15:21:56:107 Broker/(26773:26773): Logger iniciado: Broker.log
+
+[INFO] 15:21:56:189 Broker/(26773:26773): Configuracion broker levantada!
+[INFO] 15:21:56:203 Broker/(26773:26773): Dentro de iniciar servidor
+[INFO] 15:21:56:218 Broker/(26773:26773): Listo para escuchar a mi cliente
+[INFO] 15:21:56:219 Broker/(26773:26773): esperando
+[INFO] 15:21:57:408 Broker/(26773:26773): Se conecto un cliente!
+[INFO] 15:21:57:423 Broker/(26773:26773): esperando
+[INFO] 15:21:57:425 Broker/(26773:26773): Se conecto un cliente!
+[INFO] 15:21:57:437 Broker/(26773:26781): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 15:21:57:445 Broker/(26773:26781): Encontre particion Libre
+[INFO] 15:21:57:451 Broker/(26773:26781): Se toma la particion a medida
+[INFO] 15:21:57:460 Broker/(26773:26781): No hay mas suscriptores! 
+
+[ERROR] 15:21:57:463 Broker/(26773:26781): Se desconecto el cliente 8: 
+
+[INFO] 15:21:57:475 Broker/(26773:26773): esperando
+[INFO] 15:21:57:476 Broker/(26773:26773): Se conecto un cliente!
+[INFO] 15:21:57:479 Broker/(26773:26773): esperando
+[INFO] 15:21:57:481 Broker/(26773:26782): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 15:21:57:482 Broker/(26773:26782): Encontre particion Libre
+[INFO] 15:21:57:488 Broker/(26773:26783): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 15:21:57:503 Broker/(26773:26783): Encontre particion Libre
+[INFO] 15:21:57:503 Broker/(26773:26783): Se toma la particion a medida
+[INFO] 15:21:57:505 Broker/(26773:26783): No hay mas suscriptores! 
+
+[INFO] 15:21:57:509 Broker/(26773:26782): Se toma la particion a medida
+[INFO] 15:21:57:512 Broker/(26773:26773): Se conecto un cliente!
+[INFO] 15:21:57:514 Broker/(26773:26783): Se agregó el cliente 10 a la cola de ACK del mensaje 2 
+[ERROR] 15:21:57:515 Broker/(26773:26783): Se desconecto el cliente 10: 
+
+[INFO] 15:21:57:516 Broker/(26773:26782): No hay mas suscriptores! 
+
+[ERROR] 15:21:57:518 Broker/(26773:26782): Se desconecto el cliente 9: 
+
+[INFO] 15:21:57:519 Broker/(26773:26773): esperando
+[INFO] 15:21:57:520 Broker/(26773:26785): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 15:21:57:521 Broker/(26773:26785): Encontre particion Libre
+[INFO] 15:21:57:521 Broker/(26773:26785): Se toma la particion a medida
+[INFO] 15:21:57:523 Broker/(26773:26785): No hay mas suscriptores! 
+
+[INFO] 15:21:57:524 Broker/(26773:26785): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 15:21:57:524 Broker/(26773:26785): Se desconecto el cliente 11: 
+
+[INFO] 15:21:57:526 Broker/(26773:26773): Se conecto un cliente!
+[INFO] 15:21:57:527 Broker/(26773:26773): esperando
+[INFO] 15:21:57:533 Broker/(26773:26787): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 15:21:57:534 Broker/(26773:26787): Encontre particion Libre
+[INFO] 15:21:57:534 Broker/(26773:26787): Se toma la particion a medida
+[INFO] 15:21:57:535 Broker/(26773:26787): No hay mas suscriptores! 
+
+[INFO] 15:21:57:536 Broker/(26773:26787): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 15:21:57:537 Broker/(26773:26787): Se desconecto el cliente 12: 
+
+[INFO] 15:21:57:539 Broker/(26773:26773): Se conecto un cliente!
+[INFO] 15:21:57:541 Broker/(26773:26773): esperando
+[INFO] 15:21:57:541 Broker/(26773:26791): Llego un Subscribe
+[ERROR] 15:22:07:543 Broker/(26773:26791): Se desconecto el cliente 13: 
+
+[INFO] 15:22:07:546 Broker/(26773:26773): Se conecto un cliente!
+[INFO] 15:22:07:547 Broker/(26773:26773): esperando
+[INFO] 15:22:07:548 Broker/(26773:26803): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 15:22:07:571 Broker/(26773:26803): Encontre particion Libre
+[INFO] 15:22:07:572 Broker/(26773:26803): Se toma la particion a medida
+[INFO] 15:22:07:574 Broker/(26773:26803): No hay mas suscriptores! 
+
+[INFO] 15:22:07:575 Broker/(26773:26803): Se agregó el cliente 14 a la cola de ACK del mensaje 6 
+[ERROR] 15:22:07:575 Broker/(26773:26803): Se desconecto el cliente 14: 
+
+[INFO] 15:43:01:503 Broker/(27416:27416): Logger iniciado: Broker.log
+
+[INFO] 15:43:01:568 Broker/(27416:27416): Configuracion broker levantada!
+[INFO] 15:43:01:581 Broker/(27416:27416): Dentro de iniciar servidor
+[INFO] 15:43:01:594 Broker/(27416:27416): Listo para escuchar a mi cliente
+[INFO] 15:43:01:595 Broker/(27416:27416): esperando
+[INFO] 15:43:10:961 Broker/(27416:27416): Se conecto un cliente!
+[INFO] 15:43:10:976 Broker/(27416:27416): esperando
+[INFO] 15:43:10:993 Broker/(27416:27430): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 15:43:11:3 Broker/(27416:27430): Encontre particion Libre
+[INFO] 15:43:11:10 Broker/(27416:27430): Se toma la particion a medida
+[INFO] 15:43:11:17 Broker/(27416:27430): No hay mas suscriptores! 
+
+[INFO] 15:43:11:24 Broker/(27416:27430): Se agregó el cliente 8 a la cola de ACK del mensaje 1 
+[ERROR] 15:43:11:26 Broker/(27416:27430): Se desconecto el cliente 8: 
+
+[INFO] 15:46:52:656 Broker/(27528:27528): Logger iniciado: Broker.log
+
+[INFO] 15:46:52:723 Broker/(27528:27528): Configuracion broker levantada!
+[INFO] 15:46:52:734 Broker/(27528:27528): Dentro de iniciar servidor
+[INFO] 15:46:52:748 Broker/(27528:27528): Listo para escuchar a mi cliente
+[INFO] 15:46:52:749 Broker/(27528:27528): esperando
+[INFO] 15:46:55:776 Broker/(27528:27528): Se conecto un cliente!
+[INFO] 15:46:55:790 Broker/(27528:27528): esperando
+[INFO] 15:46:55:808 Broker/(27528:27534): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 15:46:55:816 Broker/(27528:27534): Encontre particion Libre
+[INFO] 15:46:55:822 Broker/(27528:27534): Se toma la particion a medida
+[INFO] 15:46:55:829 Broker/(27528:27534): No hay mas suscriptores! 
+
+[INFO] 15:46:55:835 Broker/(27528:27534): Se agregó el cliente 8 a la cola de ACK del mensaje 1 
+[ERROR] 15:46:55:837 Broker/(27528:27534): Se desconecto el cliente 8: 
+
+[INFO] 15:47:57:572 Broker/(27552:27552): Logger iniciado: Broker.log
+
+[INFO] 15:47:57:637 Broker/(27552:27552): Configuracion broker levantada!
+[INFO] 15:47:57:649 Broker/(27552:27552): Dentro de iniciar servidor
+[INFO] 15:47:57:663 Broker/(27552:27552): Listo para escuchar a mi cliente
+[INFO] 15:47:57:665 Broker/(27552:27552): esperando
+[INFO] 15:48:05:315 Broker/(27552:27552): Se conecto un cliente!
+[INFO] 15:48:05:330 Broker/(27552:27552): esperando
+[INFO] 15:48:05:343 Broker/(27552:27562): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 15:48:05:351 Broker/(27552:27562): Encontre particion Libre
+[INFO] 15:48:05:358 Broker/(27552:27562): Se toma la particion a medida
+[INFO] 15:48:05:366 Broker/(27552:27562): No hay mas suscriptores! 
+
+[INFO] 15:48:05:368 Broker/(27552:27552): Se conecto un cliente!
+[ERROR] 15:48:05:370 Broker/(27552:27562): Se desconecto el cliente 8: 
+
+[INFO] 15:48:05:376 Broker/(27552:27552): esperando
+[INFO] 15:48:05:377 Broker/(27552:27552): Se conecto un cliente!
+[INFO] 15:48:05:385 Broker/(27552:27552): esperando
+[INFO] 15:48:05:391 Broker/(27552:27564): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 15:48:05:394 Broker/(27552:27564): Encontre particion Libre
+[INFO] 15:48:05:395 Broker/(27552:27564): Se toma la particion a medida
+[INFO] 15:48:05:396 Broker/(27552:27563): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 15:48:05:397 Broker/(27552:27564): No hay mas suscriptores! 
+
+[INFO] 15:48:05:401 Broker/(27552:27563): Encontre particion Libre
+[INFO] 15:48:05:401 Broker/(27552:27563): Se toma la particion a medida
+[INFO] 15:48:05:403 Broker/(27552:27563): No hay mas suscriptores! 
+
+[ERROR] 15:48:05:403 Broker/(27552:27563): Se desconecto el cliente 9: 
+
+[INFO] 15:48:05:406 Broker/(27552:27564): Se agregó el cliente 10 a la cola de ACK del mensaje 2 
+[INFO] 15:48:05:407 Broker/(27552:27552): Se conecto un cliente!
+[ERROR] 15:48:05:409 Broker/(27552:27564): Se desconecto el cliente 10: 
+
+[INFO] 15:48:05:409 Broker/(27552:27552): esperando
+[INFO] 15:48:05:415 Broker/(27552:27566): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 15:48:05:415 Broker/(27552:27566): Encontre particion Libre
+[INFO] 15:48:05:415 Broker/(27552:27566): Se toma la particion a medida
+[INFO] 15:48:05:419 Broker/(27552:27566): No hay mas suscriptores! 
+
+[INFO] 15:48:05:420 Broker/(27552:27566): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 15:48:05:421 Broker/(27552:27566): Se desconecto el cliente 11: 
+
+[INFO] 15:48:05:423 Broker/(27552:27552): Se conecto un cliente!
+[INFO] 15:48:05:425 Broker/(27552:27552): esperando
+[INFO] 15:48:05:426 Broker/(27552:27572): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 15:48:05:426 Broker/(27552:27572): Encontre particion Libre
+[INFO] 15:48:05:427 Broker/(27552:27572): Se toma la particion a medida
+[INFO] 15:48:05:428 Broker/(27552:27572): No hay mas suscriptores! 
+
+[INFO] 15:48:05:429 Broker/(27552:27572): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 15:48:05:429 Broker/(27552:27572): Se desconecto el cliente 12: 
+
+[INFO] 15:48:05:431 Broker/(27552:27552): Se conecto un cliente!
+[INFO] 15:48:05:432 Broker/(27552:27552): esperando
+[INFO] 15:48:05:433 Broker/(27552:27575): Llego un Subscribe
+[ERROR] 15:48:15:433 Broker/(27552:27575): Se desconecto el cliente 13: 
+
+[INFO] 15:48:15:435 Broker/(27552:27552): Se conecto un cliente!
+[INFO] 15:48:15:437 Broker/(27552:27552): esperando
+[INFO] 15:48:15:438 Broker/(27552:27583): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 15:48:15:465 Broker/(27552:27583): Encontre particion Libre
+[INFO] 15:48:15:466 Broker/(27552:27583): Se toma la particion a medida
+[INFO] 15:48:15:467 Broker/(27552:27583): No hay mas suscriptores! 
+
+[INFO] 15:48:15:468 Broker/(27552:27583): Se agregó el cliente 14 a la cola de ACK del mensaje 6 
+[ERROR] 15:48:15:469 Broker/(27552:27583): Se desconecto el cliente 14: 
+
+[INFO] 15:53:04:121 Broker/(27652:27652): Logger iniciado: Broker.log
+
+[INFO] 15:53:04:195 Broker/(27652:27652): Configuracion broker levantada!
+[INFO] 15:53:04:210 Broker/(27652:27652): Dentro de iniciar servidor
+[INFO] 15:53:04:224 Broker/(27652:27652): Listo para escuchar a mi cliente
+[INFO] 15:53:04:226 Broker/(27652:27652): esperando
+[INFO] 15:53:12:989 Broker/(27652:27652): Se conecto un cliente!
+[INFO] 15:53:13:5 Broker/(27652:27652): esperando
+[INFO] 15:53:13:18 Broker/(27652:27665): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 15:53:13:24 Broker/(27652:27665): Encontre particion Libre
+[INFO] 15:53:13:31 Broker/(27652:27665): Se toma la particion a medida
+[INFO] 15:53:13:41 Broker/(27652:27665): No hay mas suscriptores! 
+
+[ERROR] 15:53:13:43 Broker/(27652:27665): Se desconecto el cliente 8: 
+
+[INFO] 15:54:37:38 Broker/(27677:27677): Logger iniciado: Broker.log
+
+[INFO] 15:54:38:104 Broker/(27677:27677): Configuracion broker levantada!
+[INFO] 15:54:38:116 Broker/(27677:27677): Dentro de iniciar servidor
+[INFO] 15:54:38:133 Broker/(27677:27677): Listo para escuchar a mi cliente
+[INFO] 15:54:38:135 Broker/(27677:27677): esperando
+[INFO] 15:54:42:128 Broker/(27677:27677): Se conecto un cliente!
+[INFO] 15:54:42:141 Broker/(27677:27677): esperando
+[INFO] 15:54:42:150 Broker/(27677:27684): Llego un Subscribe
+[ERROR] 15:54:52:129 Broker/(27677:27684): Se desconecto el cliente 8: 
+
+[INFO] 16:23:49:877 Broker/(28419:28419): Logger iniciado: Broker.log
+
+[INFO] 16:23:49:950 Broker/(28419:28419): Configuracion broker levantada!
+[INFO] 16:23:49:962 Broker/(28419:28419): Dentro de iniciar servidor
+[INFO] 16:23:49:975 Broker/(28419:28419): Listo para escuchar a mi cliente
+[INFO] 16:23:49:976 Broker/(28419:28419): esperando
+[INFO] 16:23:59:96 Broker/(28419:28419): Se conecto un cliente!
+[INFO] 16:23:59:108 Broker/(28419:28419): esperando
+[INFO] 16:23:59:117 Broker/(28419:28419): Se conecto un cliente!
+[INFO] 16:23:59:122 Broker/(28419:28430): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 16:23:59:129 Broker/(28419:28430): Encontre particion Libre
+[INFO] 16:23:59:135 Broker/(28419:28430): Se toma la particion a medida
+[INFO] 16:23:59:144 Broker/(28419:28430): No hay mas suscriptores! 
+
+[ERROR] 16:23:59:147 Broker/(28419:28430): Se desconecto el cliente 8: 
+
+[INFO] 16:23:59:153 Broker/(28419:28419): esperando
+[INFO] 16:23:59:153 Broker/(28419:28419): Se conecto un cliente!
+[INFO] 16:23:59:156 Broker/(28419:28419): esperando
+[INFO] 16:23:59:158 Broker/(28419:28431): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 16:23:59:159 Broker/(28419:28431): Encontre particion Libre
+[INFO] 16:23:59:160 Broker/(28419:28431): Se toma la particion a medida
+[INFO] 16:23:59:161 Broker/(28419:28431): No hay mas suscriptores! 
+
+[ERROR] 16:23:59:161 Broker/(28419:28431): Se desconecto el cliente 9: 
+
+[INFO] 16:23:59:166 Broker/(28419:28432): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 16:23:59:168 Broker/(28419:28432): Encontre particion Libre
+[INFO] 16:23:59:169 Broker/(28419:28432): Se toma la particion a medida
+[INFO] 16:23:59:172 Broker/(28419:28432): No hay mas suscriptores! 
+
+[INFO] 16:23:59:178 Broker/(28419:28432): Se agregó el cliente 10 a la cola de ACK del mensaje 3 
+[INFO] 16:23:59:178 Broker/(28419:28419): Se conecto un cliente!
+[ERROR] 16:23:59:179 Broker/(28419:28432): Se desconecto el cliente 10: 
+
+[INFO] 16:23:59:181 Broker/(28419:28419): esperando
+[INFO] 16:23:59:182 Broker/(28419:28434): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 16:23:59:183 Broker/(28419:28434): Encontre particion Libre
+[INFO] 16:23:59:183 Broker/(28419:28434): Se toma la particion a medida
+[INFO] 16:23:59:184 Broker/(28419:28434): No hay mas suscriptores! 
+
+[INFO] 16:23:59:185 Broker/(28419:28434): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 16:23:59:186 Broker/(28419:28434): Se desconecto el cliente 11: 
+
+[INFO] 16:23:59:187 Broker/(28419:28419): Se conecto un cliente!
+[INFO] 16:23:59:188 Broker/(28419:28419): esperando
+[INFO] 16:23:59:189 Broker/(28419:28437): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 16:23:59:189 Broker/(28419:28437): Encontre particion Libre
+[INFO] 16:23:59:190 Broker/(28419:28437): Se toma la particion a medida
+[INFO] 16:23:59:191 Broker/(28419:28437): No hay mas suscriptores! 
+
+[INFO] 16:23:59:192 Broker/(28419:28437): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 16:23:59:192 Broker/(28419:28437): Se desconecto el cliente 12: 
+
+[INFO] 16:23:59:194 Broker/(28419:28419): Se conecto un cliente!
+[INFO] 16:23:59:195 Broker/(28419:28419): esperando
+[INFO] 16:23:59:196 Broker/(28419:28439): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 16:23:59:229 Broker/(28419:28439): Encontre particion Libre
+[INFO] 16:23:59:230 Broker/(28419:28439): Se toma la particion a medida
+[INFO] 16:23:59:231 Broker/(28419:28439): No hay mas suscriptores! 
+
+[INFO] 16:23:59:232 Broker/(28419:28439): Se agregó el cliente 13 a la cola de ACK del mensaje 6 
+[ERROR] 16:23:59:232 Broker/(28419:28439): Se desconecto el cliente 13: 
+
+[INFO] 16:39:10:937 Broker/(28937:28937): Logger iniciado: Broker.log
+
+[INFO] 16:39:10:0 Broker/(28937:28937): Configuracion broker levantada!
+[INFO] 16:39:11:14 Broker/(28937:28937): Dentro de iniciar servidor
+[INFO] 16:39:11:29 Broker/(28937:28937): Listo para escuchar a mi cliente
+[INFO] 16:39:11:30 Broker/(28937:28937): esperando
+[INFO] 16:39:19:746 Broker/(28937:28937): Se conecto un cliente!
+[INFO] 16:39:19:760 Broker/(28937:28937): esperando
+[INFO] 16:39:19:770 Broker/(28937:28937): Se conecto un cliente!
+[INFO] 16:39:19:776 Broker/(28937:28951): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 16:39:19:783 Broker/(28937:28951): Encontre particion Libre
+[INFO] 16:39:19:789 Broker/(28937:28951): Se toma la particion a medida
+[INFO] 16:39:19:797 Broker/(28937:28951): No hay mas suscriptores! 
+
+[ERROR] 16:39:19:799 Broker/(28937:28951): Se desconecto el cliente 8: 
+
+[INFO] 16:39:19:807 Broker/(28937:28937): esperando
+[INFO] 16:39:19:808 Broker/(28937:28937): Se conecto un cliente!
+[INFO] 16:39:19:809 Broker/(28937:28952): Me llego mensaje caught correlativo a: 2, resultado: 0 
+
+[INFO] 16:39:19:814 Broker/(28937:28937): esperando
+[INFO] 16:39:19:815 Broker/(28937:28952): Encontre particion Libre
+[INFO] 16:39:19:820 Broker/(28937:28953): Me llego mensaje catch Pkm: Pikachu, x: 2, y: 3 
+
+[INFO] 16:39:19:822 Broker/(28937:28953): Encontre particion Libre
+[INFO] 16:39:19:824 Broker/(28937:28953): Se toma la particion a medida
+[INFO] 16:39:19:826 Broker/(28937:28952): Se toma la particion a medida
+[INFO] 16:39:19:827 Broker/(28937:28952): No hay mas suscriptores! 
+
+[ERROR] 16:39:19:828 Broker/(28937:28952): Se desconecto el cliente 9: 
+
+[INFO] 16:39:19:829 Broker/(28937:28953): No hay mas suscriptores! 
+
+[INFO] 16:39:19:834 Broker/(28937:28953): Se agregó el cliente 10 a la cola de ACK del mensaje 2 
+[ERROR] 16:39:19:835 Broker/(28937:28953): Se desconecto el cliente 10: 
+
+[INFO] 16:39:19:835 Broker/(28937:28937): Se conecto un cliente!
+[INFO] 16:39:19:837 Broker/(28937:28937): esperando
+[INFO] 16:39:19:838 Broker/(28937:28955): Me llego mensaje catch Pkm: Squirtle, x: 5, y: 2 
+
+[INFO] 16:39:19:839 Broker/(28937:28955): Encontre particion Libre
+[INFO] 16:39:19:839 Broker/(28937:28955): Se toma la particion a medida
+[INFO] 16:39:19:841 Broker/(28937:28955): No hay mas suscriptores! 
+
+[INFO] 16:39:19:842 Broker/(28937:28955): Se agregó el cliente 11 a la cola de ACK del mensaje 4 
+[ERROR] 16:39:19:850 Broker/(28937:28955): Se desconecto el cliente 11: 
+
+[INFO] 16:39:19:853 Broker/(28937:28937): Se conecto un cliente!
+[INFO] 16:39:19:855 Broker/(28937:28937): esperando
+[INFO] 16:39:19:856 Broker/(28937:28960): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 16:39:19:856 Broker/(28937:28960): Encontre particion Libre
+[INFO] 16:39:19:857 Broker/(28937:28960): Se toma la particion a medida
+[INFO] 16:39:19:857 Broker/(28937:28960): No hay mas suscriptores! 
+
+[INFO] 16:39:19:859 Broker/(28937:28960): Se agregó el cliente 12 a la cola de ACK del mensaje 5 
+[ERROR] 16:39:19:859 Broker/(28937:28960): Se desconecto el cliente 12: 
+
+[INFO] 16:39:19:860 Broker/(28937:28937): Se conecto un cliente!
+[INFO] 16:39:19:862 Broker/(28937:28963): Llego un Subscribe
+[INFO] 16:39:19:865 Broker/(28937:28937): esperando
+[ERROR] 16:39:29:862 Broker/(28937:28963): Se desconecto el cliente 13: 
+
+[INFO] 16:39:29:864 Broker/(28937:28937): Se conecto un cliente!
+[INFO] 16:39:29:866 Broker/(28937:28968): Me llego mensaje catch Pkm: Charmander, x: 4, y: 5 
+
+[INFO] 16:39:29:867 Broker/(28937:28937): esperando
+[INFO] 16:39:29:890 Broker/(28937:28968): Encontre particion Libre
+[INFO] 16:39:29:890 Broker/(28937:28968): Se toma la particion a medida
+[INFO] 16:39:29:892 Broker/(28937:28968): No hay mas suscriptores! 
+
+[INFO] 16:39:29:893 Broker/(28937:28968): Se agregó el cliente 14 a la cola de ACK del mensaje 6 
+[ERROR] 16:39:29:893 Broker/(28937:28968): Se desconecto el cliente 14: 
+
+[INFO] 16:49:02:26 Broker/(29134:29134): Logger iniciado: Broker.log
+
+[INFO] 16:49:02:27 Broker/(29134:29134): Configuracion broker levantada!
+[INFO] 16:49:02:28 Broker/(29134:29134): Dentro de iniciar servidor
+[INFO] 16:49:02:28 Broker/(29134:29134): Listo para escuchar a mi cliente
+[INFO] 16:49:02:28 Broker/(29134:29134): esperando
