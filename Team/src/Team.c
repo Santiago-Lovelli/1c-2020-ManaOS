@@ -68,7 +68,7 @@ void inicializar(){
 	suscriptoCaughtPokemon = malloc(sizeof(pthread_t));
 	conectarmeColaDe(suscriptoCaughtPokemon, d_CAUGHT_POKEMON);
 
-//	enviarGetXCadaPokemonObjetivo();
+	enviarGetXCadaPokemonObjetivo();
 
 	pthread_join(*servidor, NULL);
 	pthread_join(*suscriptoAppearedPokemon, NULL);
@@ -254,13 +254,14 @@ void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion) {
 
 
 void* suscribirme(d_message colaDeSuscripcion) {
-	int conexion = iniciarConexionABroker();
-	Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
-	p_elementoDeHilo* elemento = malloc(sizeof(p_elementoDeHilo));
-	elemento->cliente = conexion;
-	elemento->log = TEAM_LOG;
-
-	recibirYAtenderUnCliente(elemento);
+	while(1){
+		int conexion = iniciarConexionABroker();
+		Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
+		p_elementoDeHilo* elemento = malloc(sizeof(p_elementoDeHilo));
+		elemento->cliente = conexion;
+		elemento->log = TEAM_LOG;
+		recibirYAtenderUnCliente(elemento);
+	}
 	return 0;
 }
 
