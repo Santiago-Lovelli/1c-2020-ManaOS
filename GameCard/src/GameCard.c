@@ -472,6 +472,8 @@ void enviarAperedPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 				"No se pudo conectar al Broker para un aperedPokemon");
 		return;
 	}
+	log_info(loggerGeneral,"Envio el apperes_pokemon: id: %i, pkm: %s, posx: %i, posy: %i",idMensajeNew, pkm,
+			posicionX, posicionY);
 	Serialize_PackAndSend_APPEARED_POKEMON(conexion, idMensajeNew, pkm,
 			posicionX, posicionY);
 }

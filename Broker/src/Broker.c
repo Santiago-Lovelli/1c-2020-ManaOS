@@ -209,6 +209,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 		for (int i=0; i<tamanioNew;i++){
 			elemento = list_get (mensajesNew, i);
 			mensajeNew = leerInfoYActualizarUsoPorID(elemento->idMensaje);
+			log_info(LOGGER_OBLIGATORIO, "Voy a mandar a: %s",mensajeNew->nombrePokemon);
 			Serialize_PackAndSend_NEW_POKEMON(*cliente, elemento->idMensaje, mensajeNew->nombrePokemon ,mensajeNew->posX, mensajeNew->posY, mensajeNew->cantidad);
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (NEW) al suscriptor %i", elemento->idMensaje, *cliente);
@@ -312,6 +313,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_NEW_POKEMON:
 		mensajeNew = mensaje;
 		void notificarSuscriptorNew(int * self){
+			log_info(LOGGER_OBLIGATORIO, "Voy a mandar a: %s",mensajeNew->nombrePokemon);
 			Serialize_PackAndSend_NEW_POKEMON(*self, resultado->idMensaje, mensajeNew->nombrePokemon, mensajeNew->posX, mensajeNew->posY, mensajeNew->cantidad);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
@@ -379,7 +381,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 int tratarMensaje (d_message tipoMensaje, void *paquete){
 	estructuraAdministrativa * resultado = malloc (sizeof(estructuraAdministrativa));
 	uint32_t * id = malloc(sizeof(uint32_t));
-	void * unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete, id);
+	void* unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete, id);
 	resultado = guardarMensaje(tipoMensaje, unMensaje);
 	int ID = 0;
 	if (resultado){
@@ -728,6 +730,7 @@ int reemplazar (d_message tipoMensaje, void* mensaje){
 		particion->tiempo = temporal_get_string_time();
 		particion->ultimaReferencia = string_new();
 		particion->ultimaReferencia = temporal_get_string_time();
+		log_info (LOGGER_OBLIGATORIO, "Se limpio la particion Victima: %i, volvemos a buscar", posicionALog(particion->donde));
 		return posicion;
 	}
 	///El donde no cambia, al igual que el tamaño de la particion
@@ -752,9 +755,9 @@ void composicion(){
 	if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 		particionActual->estaOcupado = 0;
 		particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
+		log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)destruir);
 		log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
-		log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 	}
 		for (i=1; i<list_size(ADMINISTRADOR_MEMORIA); i++){
 		particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
@@ -764,15 +767,15 @@ void composicion(){
 				particionActual->donde = particionAnterior->donde;
 				particionActual->estaOcupado = 0;
 				particionActual->tamanioParticion = particionAnterior->tamanioParticion + particionActual->tamanioParticion;
+				log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionAnterior->donde));
 				log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
 				list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i-1, (void*)destruir);
-				log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionAnterior->donde));
 				if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 					particionActual->estaOcupado = 0;
 					particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
+					log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)destruir);
 					log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
-					log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 		}
 		}
 	}
