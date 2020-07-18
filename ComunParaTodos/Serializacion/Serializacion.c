@@ -172,7 +172,7 @@ bool Serialize_PackAndSend_CAUGHT_POKEMON(int socketCliente, uint32_t idMensaje,
 	void* pack = malloc(2*sizeof(uint32_t));
 	memcpy(pack, &idMensaje, sizeof(uint32_t));
 	memcpy(pack+sizeof(uint32_t), &resultado, sizeof(uint32_t));
-	int resultadoenvio = Serialize_PackAndSend(socketCliente, pack, sizeof(uint32_t), d_CAUGHT_POKEMON);
+	int resultadoenvio = Serialize_PackAndSend(socketCliente, pack, 2*sizeof(uint32_t), d_CAUGHT_POKEMON);
 	free(pack);
 	return resultadoenvio;
 }

@@ -34,49 +34,63 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 	int ID;
 	switch (header.tipoMensaje) {
 		case d_NEW_POKEMON:
+			sem_wait(&MUTEX_CLIENTE);
 			log_info(LOGGER_OBLIGATORIO, "Llego un new pokemon");
 			void* packNewPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			ID = tratarMensaje(header.tipoMensaje, packNewPokemon);
 			enviarACK(cliente, ID);
+			sem_post(&MUTEX_CLIENTE);
 			free(packNewPokemon);
 			break;
 		case d_CATCH_POKEMON:
+			sem_wait(&MUTEX_CLIENTE);
 			log_info(LOGGER_OBLIGATORIO, "Llego un catch pokemon");
 			void* packCatchPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			ID = tratarMensaje(header.tipoMensaje, packCatchPokemon);
 			enviarACK(cliente, ID);
 			free(packCatchPokemon);
+			sem_post(&MUTEX_CLIENTE);
 			break;
 		case d_GET_POKEMON:
+			sem_wait(&MUTEX_CLIENTE);
 			log_info(LOGGER_OBLIGATORIO, "Llego un get pokemon");
 			void* packGetPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			ID = tratarMensaje(header.tipoMensaje, packGetPokemon);
 			enviarACK(cliente, ID);
 			free(packGetPokemon);
+			sem_post(&MUTEX_CLIENTE);
 			break;
 		case d_APPEARED_POKEMON:
+			sem_wait(&MUTEX_CLIENTE);
 			log_info(LOGGER_OBLIGATORIO, "Llego un appeared pokemon");
 			void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			tratarMensaje(header.tipoMensaje, packAppearedPokemon);
 			free(packAppearedPokemon);
+			sem_post(&MUTEX_CLIENTE);
 			break;
 		case d_CAUGHT_POKEMON:
+			sem_wait(&MUTEX_CLIENTE);
 			log_info(LOGGER_OBLIGATORIO, "Llego un caught pokemon");
 			void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			tratarMensaje(header.tipoMensaje, packCaughtPokemon);
 			free(packCaughtPokemon);
+			sem_post(&MUTEX_CLIENTE);
 			break;
 		case d_LOCALIZED_POKEMON:
+			sem_wait(&MUTEX_CLIENTE);
 			log_info(LOGGER_OBLIGATORIO, "Llego un localized pokemon");
 			void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			tratarMensaje(header.tipoMensaje, packLocalizedPokemon);
+			sem_post(&MUTEX_CLIENTE);
 			break;
 		case d_SUBSCRIBE_QUEUE:
+			sem_wait(&MUTEX_CLIENTE);
 			log_info(LOGGER_GENERAL, "Llego un Subscribe");
 			void * recibir = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			uint32_t variable = Serialize_Unpack_ACK(recibir);
 			suscribir(variable, cliente);
 			free(recibir);
+			sem_post(&MUTEX_CLIENTE);
 			break;
 		default:
 			log_error(LOGGER_GENERAL, "Mensaje no entendido: %i\n", header);
@@ -84,7 +98,7 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			free(packBasura);
 			break;
 	}
-	sem_post(&MUTEX_CLIENTE);
+
 }
 
 void suscribir(uint32_t variable, int clienteA){
@@ -406,10 +420,10 @@ void ConfigInit(){
 	BROKER_CONFIG.TAMANO_MEMORIA = config_get_int_value(configCreator, "TAMANO_MEMORIA");
 	BROKER_CONFIG.TAMANO_MINIMO_PARTICION = config_get_int_value(configCreator, "TAMANO_MINIMO_PARTICION");
 	BROKER_CONFIG.DUMP_FILE = config_get_string_value(configCreator, "DUMP_FILE");
+	free (configCreator);
 }
 
 void ListsInit(){
-	CONEXIONES = list_create();
 	SUSCRIPTORES_NEW = list_create();
 	SUSCRIPTORES_APPEARED = list_create();
 	SUSCRIPTORES_GET = list_create();
@@ -447,9 +461,23 @@ void DumpFileInit(){
 }
 
 void destruirTodo(){
-	//list_destroy_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void*)estructuraAdministrativaDestroyer);
+	list_destroy_and_destroy_elements(SUSCRIPTORES_NEW, (void*)suscriptorDestroyer);
+	list_destroy_and_destroy_elements(SUSCRIPTORES_APPEARED, (void*)suscriptorDestroyer);
+	list_destroy_and_destroy_elements(SUSCRIPTORES_GET, (void*)suscriptorDestroyer);
+	list_destroy_and_destroy_elements(SUSCRIPTORES_CATCH, (void*)suscriptorDestroyer);
+	list_destroy_and_destroy_elements(SUSCRIPTORES_CAUGHT, (void*)suscriptorDestroyer);
+	list_destroy_and_destroy_elements(SUSCRIPTORES_LOCALIZED, (void*)suscriptorDestroyer);
+	//list_destroy_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void*)estructuraAdministrativaDestroyer); //Rompe
+	limpiarSemaforos();
 	free(MEMORIA_PRINCIPAL);
 	exit(0);
+}
+
+void limpiarSemaforos(){
+	sem_destroy(&MUTEX_CLIENTE);
+	sem_destroy(&MUTEX_CONTADOR);
+	sem_destroy(&MUTEX_MEMORIA);
+	sem_destroy(&MUTEX_TIEMPO);
 }
 
 /////////FUNCIONES VARIAS/////////

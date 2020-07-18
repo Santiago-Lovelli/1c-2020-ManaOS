@@ -160,13 +160,13 @@ static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self);
 static void suscriptorDestroyer(int *self);
 static void estructuraAdministrativaDestroyerSinDestruirListas(estructuraAdministrativa *self);
 void destruirTodo();
+void limpiarSemaforos();
 
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;
 t_log * LOGGER_GENERAL;
 t_log * LOGGER_OBLIGATORIO;
 enum queueName COLAS;
-t_list* CONEXIONES;
 void * MEMORIA_PRINCIPAL;
 t_list* ADMINISTRADOR_MEMORIA;
 int CONTADOR = 0;
