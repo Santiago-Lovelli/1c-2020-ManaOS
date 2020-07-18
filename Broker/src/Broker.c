@@ -409,7 +409,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -992,7 +992,7 @@ void dump () {
 	string_append(&unaLinea, "\n");
 	txt_write_in_file(archivoDump, unaLinea);
 	for(int i = 1; i-1<list_size(ADMINISTRADOR_MEMORIA); i++){
-		char* unaLinea = string_new();	char* nombreCola = string_new();
+		char* unaLinea = string_new();	char* nombreCola = string_new(); char* tipo = string_new();
 		estructuraAdministrativa * ElElemento = list_get(ADMINISTRADOR_MEMORIA, i-1);
 		char* extra = string_new();
 		if(ElElemento->estaOcupado == 0){
@@ -1016,7 +1016,7 @@ void dump () {
 		txt_write_in_file(archivoDump, unaLinea);
 	}
 	txt_close_file(archivoDump);
-	free(unaLinea);free(extra);free(tipo);free(archivoDump);
+	//free(&unaLinea);free(&extra);free(archivoDump);free(&tipo);
 	sem_post(&MUTEX_MEMORIA);
 	return;
 }
