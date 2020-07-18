@@ -388,6 +388,10 @@ void esperarTiempoDeOperacion() {
 	sleep(espera);
 }
 
+void destruirMetadata(p_metadata* metadataDePokemon){
+	free(metadataDePokemon);
+}
+
 void abrirArchivoPokemon(char*pkm) {
 	uint32_t reconectar = config_get_int_value(archivo_de_configuracion,
 			"TIEMPO_DE_REINTENTO_OPERACION");
@@ -399,12 +403,13 @@ void abrirArchivoPokemon(char*pkm) {
 			memcpy(metadataDePokemon->inicioOpen, "Y", strlen("Y"));
 			sem_post(&semaforoDePokemon->semaforoDePokemon);
 			log_info(loggerGeneral, "Se puede abrir %s", pkm);
-			free(metadataDePokemon);
+			destruirMetadata(metadataDePokemon);
 			break;
 		}
 		sem_post(&semaforoDePokemon->semaforoDePokemon);
 		log_error(loggerGeneral,
 				"El archivo %s ya esta abierto por otro proceso", pkm);
+		destruirMetadata(metadataDePokemon);
 		sleep(reconectar);
 	}
 }
@@ -592,7 +597,7 @@ void agregarPokemonesNuevos(char* pkm, uint32_t posicionX, uint32_t posicionY,
 		string_append(&megaChar, lineaHastaIgual);
 
 		free(lineaHastaIgual);
-		free(lineasDeBloque);
+		liberarDoblePuntero(lineasDeBloque);
 		lineasDeBloque = string_split(megaChar, "\n");
 
 		cantidadDeLineas = numeroDeLineas(lineasDeBloque, posicionX, posicionY,
