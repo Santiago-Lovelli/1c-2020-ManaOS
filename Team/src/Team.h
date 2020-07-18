@@ -150,7 +150,7 @@ void destruirEntrenadores();
 void destruirSemaforos();
 
 
-static void entrenadorDestroy(entrenador *self);
+void entrenadorDestroy(entrenador *self);
 
 /*
  * FUNCION DE CONTROL PARA IDENTIFICAR SI
@@ -315,6 +315,12 @@ void cumplirMision(entrenador* trainer);
  */
 
 t_mision* crearMision(char *pokemon, punto point, bool esIntercambio, int tidObjetivo);
+
+/*
+ * ESTA FUNCION RETORNA SI EXISTE ALGUNA MISION ACTIVA
+ */
+
+bool hayAlgunaMision();
 
 /*
  * ESTA FUNCION DADO EL ID DE UN  ENTRENADOR
