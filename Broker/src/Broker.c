@@ -412,7 +412,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -434,6 +434,7 @@ void ListsInit(){
 	SUSCRIPTORES_CAUGHT = list_create();
 	SUSCRIPTORES_LOCALIZED = list_create();
 	ADMINISTRADOR_MEMORIA = list_create();
+	listaID = list_create();
 }
 
 void MemoriaPrincipalInit(){
