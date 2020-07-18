@@ -379,7 +379,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 int tratarMensaje (d_message tipoMensaje, void *paquete){
 	estructuraAdministrativa * resultado = malloc (sizeof(estructuraAdministrativa));
 	uint32_t * id = malloc(sizeof(uint32_t));
-	void * unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete, id);
+	void* unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete, id);
 	resultado = guardarMensaje(tipoMensaje, unMensaje);
 	int ID = 0;
 	if (resultado){
@@ -413,7 +413,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -728,6 +728,7 @@ int reemplazar (d_message tipoMensaje, void* mensaje){
 		particion->tiempo = temporal_get_string_time();
 		particion->ultimaReferencia = string_new();
 		particion->ultimaReferencia = temporal_get_string_time();
+		log_info (LOGGER_OBLIGATORIO, "Se limpio la particion Victima: %i, volvemos a buscar", posicionALog(particion->donde));
 		return posicion;
 	}
 	///El donde no cambia, al igual que el tamaño de la particion
@@ -752,9 +753,9 @@ void composicion(){
 	if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 		particionActual->estaOcupado = 0;
 		particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
+		log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)destruir);
 		log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
-		log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 	}
 		for (i=1; i<list_size(ADMINISTRADOR_MEMORIA); i++){
 		particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
@@ -764,15 +765,15 @@ void composicion(){
 				particionActual->donde = particionAnterior->donde;
 				particionActual->estaOcupado = 0;
 				particionActual->tamanioParticion = particionAnterior->tamanioParticion + particionActual->tamanioParticion;
+				log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionAnterior->donde));
 				log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
 				list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i-1, (void*)destruir);
-				log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionAnterior->donde));
 				if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 					particionActual->estaOcupado = 0;
 					particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
+					log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)destruir);
 					log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
-					log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 		}
 		}
 	}
