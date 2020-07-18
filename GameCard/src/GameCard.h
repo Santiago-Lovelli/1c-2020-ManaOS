@@ -21,6 +21,7 @@
 #include <ManejoDePunterosDobles/ManejoDePunterosDobles.h>
 #include <dirent.h>
 #include <semaphore.h>
+#include <Archivos/archivos.h>
 
 t_log * loggerGeneral;
 t_config *archivo_de_configuracion;

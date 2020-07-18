@@ -709,7 +709,7 @@ void atraparPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 			int pos = listaDeBloques->elements_count - cont - 1;
 			int numeroDeBloque = atoi(list_get(listaDeBloques, pos));
 			limpiarBloque(numeroDeBloque);
-			list_remove(listaDeBloques, pos);
+			list_remove_and_destroy_element(listaDeBloques, pos,free);
 		}
 	}
 	char* metadataPost = metadataNueva(tamanioDelPokemon, tamanioNuevoFinal,
@@ -947,6 +947,7 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 		list_add(semaforo,&mutexCliente);
 		atender(headerRecibido, elemento, semaforo);
 	}
+	free(elemento);
 	return 0;
 }
 
