@@ -312,7 +312,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_NEW_POKEMON:
 		mensajeNew = mensaje;
 		void notificarSuscriptorNew(int * self){
-			Serialize_PackAndSend_NEW_POKEMON(*self, id, mensajeNew->nombrePokemon, mensajeNew->posX, mensajeNew->posY, mensajeNew->cantidad);
+			Serialize_PackAndSend_NEW_POKEMON(*self, resultado->idMensaje, mensajeNew->nombrePokemon, mensajeNew->posX, mensajeNew->posY, mensajeNew->cantidad);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
@@ -362,7 +362,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_LOCALIZED_POKEMON:
 		mensajeLocalized = mensaje;
 		void notificarSuscriptorLocalized(int * self){
-			Serialize_PackAndSend_LOCALIZED_POKEMON(*self, resultado->idMensaje, mensajeLocalized->nombrePokemon, mensajeLocalized->puntos);
+			Serialize_PackAndSend_LOCALIZED_POKEMON(*self, id, mensajeLocalized->nombrePokemon, mensajeLocalized->puntos);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
@@ -378,7 +378,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 
 int tratarMensaje (d_message tipoMensaje, void *paquete){
 	estructuraAdministrativa * resultado = malloc (sizeof(estructuraAdministrativa));
-	uint32_t * id;
+	uint32_t * id = malloc(sizeof(uint32_t));
 	void * unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete, id);
 	resultado = guardarMensaje(tipoMensaje, unMensaje);
 	int ID = 0;
@@ -396,6 +396,7 @@ int tratarMensaje (d_message tipoMensaje, void *paquete){
 	}
 	t_list * subs = suscriptoresPara(tipoMensaje);
 	enviarUnMensaje(unMensaje, tipoMensaje, resultado, subs, *id);
+	free (id);
 	return ID;
 }
 
@@ -412,7 +413,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -434,7 +435,6 @@ void ListsInit(){
 	SUSCRIPTORES_CAUGHT = list_create();
 	SUSCRIPTORES_LOCALIZED = list_create();
 	ADMINISTRADOR_MEMORIA = list_create();
-	listaID = list_create();
 }
 
 void MemoriaPrincipalInit(){
@@ -1095,6 +1095,7 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t* id)
 	case d_CAUGHT_POKEMON:
 		retornoCaught = malloc(sizeof(caughtEnMemoria));
 		Serialize_Unpack_CaughtPokemon(paquete, &correlativoA, &atrapado);
+		*id = correlativoA;
 		log_info(LOGGER_GENERAL,"Me llego mensaje caught correlativo a: %i, resultado: %i \n", correlativoA, atrapado);
 		retornoCaught->atrapado = atrapado;
 		retorno = retornoCaught;
