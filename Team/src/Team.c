@@ -136,7 +136,6 @@ void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* poke
 		trainerObjetivo->pokemones[posicionPokemonEnObjetivo] = pokemon1;
 		sem_post(&semaforoPokemon);
 		log_info(TEAM_LOG, "El entrenador %i intercambio a %s por %s con el entrenador %i", trainer->tid, pokemon1, trainer->pokemones[posicionDeIntercambio], trainerObjetivo->tid);
-		DEADLOCKS_RESUELTOS = DEADLOCKS_RESUELTOS + 2;
 	}
 	else if(sobrantes[0] != NULL){
 		int posicionDeIntercambio = damePosicionDeObjetoEnDoblePuntero(trainer->pokemones, sobrantes[0]);
@@ -146,7 +145,6 @@ void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* poke
 		trainerObjetivo->pokemones[posicionPokemonEnObjetivo] = pokemon1;
 		sem_post(&semaforoPokemon);
 		log_info(TEAM_LOG, "El entrenador %i intercambio a %s por %s con el entrenador %i", trainer->tid, pokemon1, trainer->pokemones[posicionDeIntercambio], trainerObjetivo->tid);
-		DEADLOCKS_RESUELTOS = DEADLOCKS_RESUELTOS + 1;
 	}
 	free(sobrantes);
 	free(faltantes);
@@ -843,10 +841,14 @@ void logearFin(){
 	}
 }
 
+void destruirElementoGlobal(void* element, void*key){
+	free(element);
+}
 
 void destruirObjetivoGlobal(){
 	sem_wait(&semaforoDiccionario);
-	dictionary_destroy(OBJETIVO_GLOBAL);
+	dictionary_destroy_and_destroy_elements(OBJETIVO_GLOBAL, (void*)destruirElementoGlobal);
+//	dictionary_destroy(OBJETIVO_GLOBAL);
 	sem_post(&semaforoDiccionario);
 }
 
@@ -1250,6 +1252,7 @@ void analizarDeadlockEspecifico(entrenador *trainer){
 		pasarEntrenadorAEstado(trainer->tid, t_EXIT);
 		printf("El entrenador: %i cumplio su objetivo! Yupiiii!!!! \n", trainer->tid);
 		free(pokemonFaltante);
+		DEADLOCKS_RESUELTOS = DEADLOCKS_RESUELTOS + 1;
 		return;
 	}
 	free(pokemonFaltante);

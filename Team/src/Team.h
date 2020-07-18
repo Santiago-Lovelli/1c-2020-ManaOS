@@ -149,6 +149,7 @@ void destruirEntrenadores();
 
 void destruirSemaforos();
 
+void destruirElementoGlobal();
 
 void entrenadorDestroy(entrenador *self);
 
