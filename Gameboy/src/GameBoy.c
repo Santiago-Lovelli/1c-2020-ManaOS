@@ -17,8 +17,13 @@ void New_pokemon(char *argv[]){
 	//log_info(logger,"IDMENSAJE: %i ", atoi( argv[7] ) );
 	int conexion = conectarA(argv[1]);
 	d_process procesoActual = obtenerNroProceso(argv[1]);
-	if( procesoActual == d_BROKER)
+	if( procesoActual == d_BROKER){
 		Serialize_PackAndSend_NEW_POKEMON_NoID(conexion, argv[3], atoi(argv[4]), atoi(argv[5]), atoi( argv[6]) );
+		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(conexion);
+		void* packACK = Serialize_ReceiveAndUnpack(conexion, headerRecibido.tamanioMensaje);
+		uint32_t ID = Serialize_Unpack_ACK(packACK);
+		log_info(logger, "Llego un ACK con el ID: %i", ID);
+	}
 	else if ( procesoActual == d_GAMECARD)
 		Serialize_PackAndSend_NEW_POKEMON(conexion, atoi(argv[7]), argv[3], atoi(argv[4]), atoi(argv[5]), atoi( argv[6]) );
 }
@@ -45,8 +50,13 @@ void Catch_pokemon(char *argv[]){
 	//log_info(logger,"IDMENSAJE: %i ", atoi( argv[6] ) );
 	int conexion = conectarA(argv[1]);
 	d_process procesoActual = obtenerNroProceso(argv[1]);
-	if( procesoActual == d_BROKER)
+	if( procesoActual == d_BROKER){
 		Serialize_PackAndSend_CATCH_POKEMON_NoID(conexion,argv[3], atoi(argv[4]), atoi(argv[5]) );
+		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(conexion);
+		void* packACK = Serialize_ReceiveAndUnpack(conexion, headerRecibido.tamanioMensaje);
+		uint32_t ID = Serialize_Unpack_ACK(packACK);
+		log_info(logger, "Llego un ACK con el ID: %i", ID);
+	}
 	else if ( procesoActual == d_GAMECARD)
 		Serialize_PackAndSend_CATCH_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoi(argv[4]), atoi(argv[5]) );
 
@@ -58,7 +68,9 @@ void Caught_pokemon(char *argv[]){
 	log_info(logger,"ESTADO: %s ", argv[4] );
 
 	int conexion = conectarA(argv[1]);
-	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, atoi(argv[3]), OKoFAIL(argv[4]) );
+	int numero = OKoFAIL(argv[4]);
+	log_info(logger,"Prueba numero: %i ", numero );
+	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, atoi(argv[3]), numero);
 
 }
 
@@ -67,8 +79,13 @@ void Get_pokemon(char *argv[]){
 	log_info(logger,"POKEMON: %s ", argv[3] );
 	int conexion = conectarA(argv[1]);
 	d_process procesoActual = obtenerNroProceso(argv[1]);
-	if( procesoActual == d_BROKER)
+	if( procesoActual == d_BROKER){
 		Serialize_PackAndSend_GET_POKEMON_NoID(conexion, argv[3]);
+		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(conexion);
+		void* packACK = Serialize_ReceiveAndUnpack(conexion, headerRecibido.tamanioMensaje);
+		uint32_t ID = Serialize_Unpack_ACK(packACK);
+		log_info(logger, "Llego un ACK con el ID: %i", ID);
+	}
 	else if ( procesoActual == d_GAMECARD)
 		Serialize_PackAndSend_GET_POKEMON(conexion, atoi(argv[4]), argv[3] );
 }
@@ -76,10 +93,31 @@ void Get_pokemon(char *argv[]){
 void Subscribe_Queue(char *argv[]){
 	log_info(logger, "SE ENVIARA EL SIGUIENTE PAQUETE:");
 	log_info(logger,"COLA DE MENSAJES: %s ", argv[2] );
-	log_info(logger, "TIEMPO", atoi(argv[3]));
-	int conexion = conectarA("BROKER");
+	if(argv[3] != NULL){
+		log_info(logger, "TIEMPO: %i", atoi(argv[3]));
+		int conexion = conectarA("BROKER");
+		Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));
+		pthread_t* hiloDeAtencion = malloc(sizeof(pthread_t));
+		int hilo = pthread_create(hiloDeAtencion, NULL, AtenderCliente, conexion);
+		sleep(atoi(argv[3]));
+		pthread_cancel(hilo);
+	}
+	else{
+		int conexion = conectarA("BROKER");
+		Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));
+		AtenderCliente(conexion);
+	}
+}
 
-	Serialize_PackAndSend_SubscribeQueue(conexion, obtenerNroMensaje(argv[2]));
+void AtenderCliente (void * conexion){
+	while(1){
+		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(conexion);
+		if(headerRecibido.tipoMensaje == -1){
+			log_error(logger, "Se desconecto el broker %i: \n", conexion);
+			break;
+		}
+		atenderMensajes(headerRecibido, conexion);
+	}
 }
 
 int obtenerNroMensaje(char *actual){
@@ -153,6 +191,17 @@ void cumplirPedido(int argc, char *argv[]){
 		log_info(logger, "Argumentos insuficientes");
 		return;
 	}
+
+	if( string_equals_ignore_case(argv[1],"SUSCRIPTOR") ){
+		if(argc < 3){
+			log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
+			return;
+		}
+		log_info(logger,"RECIBI EL PEDIDO: %s PARA LA COLA DE MENSAJES: %s", argv[1], argv[2]);
+		Subscribe_Queue(argv);
+		return;
+	}
+
 	switch( obtenerNroMensaje(argv[2]) ) {
 
 	case d_NEW_POKEMON:;
@@ -203,23 +252,15 @@ void cumplirPedido(int argc, char *argv[]){
 		log_info(logger,"RECIBI EL PEDIDO: %s PARA EL PROCESO: %s", argv[2], argv[1]);
 		Get_pokemon(argv);
 		break;
+
 	default:;
-		if( string_equals_ignore_case(argv[1],"SUSCRIPTOR") ){
-			if(argc < 4){
-				log_info(logger,"Argumentos insuficientes para la operacion: %s", argv[2]);
-				break;
-			}
-			log_info(logger,"RECIBI EL PEDIDO: %s PARA LA COLA DE MENSAJES: %s", argv[1], argv[2]);
-			Subscribe_Queue(argv);
-			break;
-		}
 		log_info(logger,"DEFAULT");
 		break;
 	}
 }
 
 void iniciarConfiguracion(){
-	t_config* archivo_de_configuracion = config_create("../Gameboy.config");
+	t_config* archivo_de_configuracion = config_create("/home/utnso/tp-2020-1c-ManaOS-/Gameboy/Gameboy.config");
 	puertoBroker = config_get_string_value(archivo_de_configuracion, "PUERTO_BROKER");
 	ipBroker = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
 	puertoTeam = config_get_string_value(archivo_de_configuracion, "PUERTO_TEAM");
@@ -230,10 +271,63 @@ void iniciarConfiguracion(){
 
 void iniciarEstructuras(){
 	iniciarConfiguracion();
-	logger = iniciar_log("GameBoy");
+	logger = iniciar_log("GameBoy"); /////////////////////////////////////
+	iniciar_servidor("127.0.0.1", "8081", logger);
 	log_info(logger,"PUERTO BROKER: %s IP BROKER: %s\n", puertoBroker, ipBroker);
 	log_info(logger,"PUERTO TEAM: %s IP TEAM: %s\n", puertoTeam, ipTeam);
 	log_info(logger,"PUERTO GAMECARD: %s IP GAMECARD: %s\n", puertoGameCard, ipGamecard);
+}
+
+void atenderMensajes (HeaderDelibird headerRecibido, int socket){
+	log_info(logger, "atendiendo mensaje...");
+	uint32_t ID;
+	switch (headerRecibido.tipoMensaje){
+	case d_NEW_POKEMON:
+		log_info(logger, "Llego un new pokemon");
+		void* packNewPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+		uint32_t posicionNewX,posicionNewY,newCantidad, id;
+		char *newNombrePokemon;
+		Serialize_Unpack_NewPokemon(packNewPokemon, &id, &newNombrePokemon, &posicionNewX, &posicionNewY, &newCantidad);
+		log_info(logger,"Me llego mensaje de %i. Pkm: %s, x: %i, y: %i, cant: %i. ID Mensaje: %i\n", socket, newNombrePokemon, posicionNewX, posicionNewY, newCantidad, id);
+		free(packNewPokemon);
+		break;
+	case d_CATCH_POKEMON:
+		log_info(logger, "Llego un catch pokemon");
+		void* packCatchPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+		uint32_t posicionCatchX,posicionCatchY;
+		char *catchNombrePokemon;
+		Serialize_Unpack_CatchPokemon(packCatchPokemon, &ID, &catchNombrePokemon, &posicionCatchX, &posicionCatchY);
+		log_info(logger,"Me llego mensaje catch: Pkm: %s, x: %i, y: %i, ID: %i \n", catchNombrePokemon, posicionCatchX, posicionCatchY, ID);
+		free(packCatchPokemon);
+		break;
+	case d_GET_POKEMON:
+		log_info(logger, "Llego un get pokemon");
+		void* packGetPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+		char *getNombrePokemon;
+		Serialize_Unpack_GetPokemon(packGetPokemon, &ID, &getNombrePokemon);
+		log_info(logger,"Me llego mensaje get: Pkm: %s de id: %i \n", getNombrePokemon, ID);
+		free(packGetPokemon);
+		break;
+	case d_APPEARED_POKEMON:
+		log_info(logger, "Llego un appeared pokemon");
+		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+		uint32_t idMensajeAppeared, posicionX, posicionY;
+		char *nombrePokemon;
+		Serialize_Unpack_AppearedPokemon(packAppearedPokemon, &idMensajeAppeared, &nombrePokemon, &posicionX, &posicionY);
+		log_info(logger,"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n", headerRecibido.tipoMensaje, idMensajeAppeared, nombrePokemon, posicionX, posicionY);
+		free(packAppearedPokemon);
+		break;
+	case d_CAUGHT_POKEMON:
+		log_info(logger, "Llego un caught pokemon");
+		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+		uint32_t idMensajeCaught, resultado;
+		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught, &resultado);
+		log_info(logger,"Me llego mensaje de %i. Id: %i, Resultado: %i\n", headerRecibido.tipoMensaje, idMensajeCaught, resultado);
+		free(packCaughtPokemon);
+		break;
+	//case d_LOCALIZED_POKEMON:
+	default: log_info(logger, "Llego cualquiera");
+	}
 }
 
 int main(int argc, char *argv[]) {
