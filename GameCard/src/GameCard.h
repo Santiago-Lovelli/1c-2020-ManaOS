@@ -21,6 +21,7 @@
 #include <ManejoDePunterosDobles/ManejoDePunterosDobles.h>
 #include <dirent.h>
 #include <semaphore.h>
+#include <Archivos/archivos.h>
 
 t_log * loggerGeneral;
 t_config *archivo_de_configuracion;
@@ -63,7 +64,7 @@ int crearDirectorioEn(char *path);
 void* atenderGameboy();
 void iniciarServidorDeGameBoy();
 void levantarLogYArchivoDeConfiguracion();
-void atender(HeaderDelibird header, int cliente, t_log* logger);
+void atender(HeaderDelibird header, p_elementoDeHilo* elemento, t_list* semaforos);
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento);
 void conectarmeColaDe(pthread_t* hilo, d_message colaDeSuscripcion);
 void cargarMetadata();

@@ -10,6 +10,7 @@
 
 #include <commons/log.h>
 #include <commons/string.h>
+#include <stdlib.h>
 
 t_log* iniciar_log(char* nombreDeLog);
 
