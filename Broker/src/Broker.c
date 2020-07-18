@@ -728,10 +728,10 @@ int reemplazar (d_message tipoMensaje, void* mensaje){
 		particion->tiempo = temporal_get_string_time();
 		particion->ultimaReferencia = string_new();
 		particion->ultimaReferencia = temporal_get_string_time();
+		log_info (LOGGER_OBLIGATORIO, "Se limpio la particion Victima: %i, volvemos a buscar", posicionALog(particion->donde));
 		return posicion;
 	}
 	///El donde no cambia, al igual que el tamaño de la particion
-	log_info (LOGGER_GENERAL, "Se limpio la particion Victima, volvemos a buscar");
 }
 
 bool noPuedoReemplazarMas(){
