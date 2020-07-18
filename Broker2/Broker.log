@@ -1,0 +1,48 @@
+[INFO] 15:35:10:792 Broker/(27149:27149): Logger iniciado: Broker.log
+
+[INFO] 15:35:10:793 Broker/(27149:27149): Configuracion broker levantada!
+[INFO] 15:35:10:793 Broker/(27149:27149): Dentro de iniciar servidor
+[INFO] 15:35:10:793 Broker/(27149:27149): Listo para escuchar a mi cliente
+[INFO] 15:35:10:793 Broker/(27149:27149): esperando
+[INFO] 15:35:50:426 Broker/(27184:27184): Logger iniciado: Broker.log
+
+[INFO] 15:35:50:426 Broker/(27184:27184): Configuracion broker levantada!
+[INFO] 15:35:50:426 Broker/(27184:27184): Dentro de iniciar servidor
+[INFO] 15:35:50:426 Broker/(27184:27184): Listo para escuchar a mi cliente
+[INFO] 15:35:50:426 Broker/(27184:27184): esperando
+[INFO] 15:36:03:115 Broker/(27184:27184): Se conecto un cliente!
+[INFO] 15:36:03:116 Broker/(27184:27197): Me llego mensaje caught correlativo a: 1, resultado: 1 
+
+[INFO] 15:36:03:116 Broker/(27184:27197): Encontre particion Libre
+[INFO] 15:36:03:116 Broker/(27184:27184): esperando
+[INFO] 15:36:03:116 Broker/(27184:27197): Se toma la particion a medida
+[INFO] 15:36:12:605 Broker/(27184:27197): No hay mas suscriptores! 
+
+[ERROR] 15:36:12:605 Broker/(27184:27197): Se desconecto el cliente 6: 
+
+[INFO] 15:36:46:253 Broker/(27184:27184): Se conecto un cliente!
+[INFO] 15:36:46:255 Broker/(27184:27184): esperando
+[INFO] 15:36:46:255 Broker/(27184:27239): Me llego mensaje catch Pkm: Onyx, x: 4, y: 5 
+
+[INFO] 15:36:46:255 Broker/(27184:27239): Encontre particion Libre
+[INFO] 15:36:46:255 Broker/(27184:27239): Se toma la particion a medida
+[INFO] 15:37:06:961 Broker/(27184:27239): No hay mas suscriptores! 
+
+[INFO] 15:37:06:961 Broker/(27184:27239): Se agregó el cliente 7 a la cola de ACK del mensaje 2 
+[ERROR] 15:37:06:961 Broker/(27184:27239): Se desconecto el cliente 7: 
+
+[INFO] 15:37:18:433 Broker/(27184:27184): Se conecto un cliente!
+[INFO] 15:37:18:434 Broker/(27184:27184): esperando
+[INFO] 15:37:18:434 Broker/(27184:27258): Me llego mensaje catch Pkm: Onyxx, x: 4, y: 5 
+
+[INFO] 15:37:18:434 Broker/(27184:27258): Encontre particion Libre
+[INFO] 15:37:18:434 Broker/(27184:27258): Se toma la particion a medida
+[INFO] 15:37:46:585 Broker/(27288:27288): Logger iniciado: Broker.log
+
+[INFO] 15:37:46:585 Broker/(27288:27288): Configuracion broker levantada!
+[INFO] 15:37:46:586 Broker/(27288:27288): Dentro de iniciar servidor
+[INFO] 15:37:46:586 Broker/(27288:27288): Listo para escuchar a mi cliente
+[INFO] 15:37:46:586 Broker/(27288:27288): esperando
+[INFO] 15:37:46:586 Broker/(27288:27288): Se conecto un cliente!
+[INFO] 15:41:09:140 Broker/(27288:27288): esperando
+[INFO] 15:41:09:140 Broker/(27288:27288): Se conecto un cliente!
