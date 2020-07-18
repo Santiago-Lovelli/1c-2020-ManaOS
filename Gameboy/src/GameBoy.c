@@ -260,7 +260,7 @@ void cumplirPedido(int argc, char *argv[]){
 }
 
 void iniciarConfiguracion(){
-	t_config* archivo_de_configuracion = config_create("/home/utnso/tp-2020-1c-ManaOS-/Gameboy/Gameboy.config");
+	t_config* archivo_de_configuracion = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Gameboy/Gameboy.config");
 	puertoBroker = config_get_string_value(archivo_de_configuracion, "PUERTO_BROKER");
 	ipBroker = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
 	puertoTeam = config_get_string_value(archivo_de_configuracion, "PUERTO_TEAM");
