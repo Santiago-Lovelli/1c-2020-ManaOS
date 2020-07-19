@@ -1,0 +1,10 @@
+[INFO] 20:16:56:917 GameBoy/(2809:2814): Logger iniciado: GameBoy.log
+
+[INFO] 20:16:56:917 GameBoy/(2809:2814): Dentro de iniciar servidor
+[INFO] 20:16:56:917 GameBoy/(2809:2814): Listo para escuchar a mi cliente
+[INFO] 20:16:56:917 GameBoy/(2809:2814): esperando
+[INFO] 20:25:24:155 GameBoy/(3064:3069): Logger iniciado: GameBoy.log
+
+[INFO] 20:25:24:155 GameBoy/(3064:3069): Dentro de iniciar servidor
+[INFO] 20:25:24:155 GameBoy/(3064:3069): Listo para escuchar a mi cliente
+[INFO] 20:25:24:155 GameBoy/(3064:3069): esperando

@@ -1,0 +1,86 @@
+[INFO] 20:16:56:915 Team/(2809:2809): Logger iniciado: Team.log
+
+[INFO] 20:16:56:916 Team/(2809:2809): TEAM OK
+[INFO] 20:16:56:916 Team/(2809:2809): ::::Se creo hilo de GameBoy::::
+[INFO] 20:16:56:917 Team/(2809:2809): ::::Se creo hilo de suscripcion para: 3::::
+[INFO] 20:16:56:918 Team/(2809:2809): ::::Se creo hilo de suscripcion para: 5::::
+[INFO] 20:16:56:918 Team/(2809:2809): ::::Se creo hilo de suscripcion para: 4::::
+[INFO] 20:16:56:918 Team/(2809:2815): Conexion correcta
+
+[INFO] 20:16:56:918 Team/(2809:2816): Conexion correcta
+
+[INFO] 20:16:56:918 Team/(2809:2809): Conexion correcta
+
+[INFO] 20:16:56:920 Team/(2809:2817): Conexion correcta
+
+[INFO] 20:16:56:928 Team/(2809:2815): Llego un APPEARED POKEMON
+[INFO] 20:16:56:928 Team/(2809:2815): Me llego mensaje de 3. Pkm: , x: 1852794228, y: 512
+
+[INFO] 20:16:56:947 Team/(2809:2809): Conexion correcta
+
+[INFO] 20:16:58:72 Team/(2809:2809): Conexion correcta
+
+[ERROR] 20:16:58:72 Team/(2809:2816): Se desconecto el cliente
+
+[ERROR] 20:16:58:72 Team/(2809:2817): Se desconecto el cliente
+
+[ERROR] 20:16:58:73 Team/(2809:2809): Error de conexion
+
+[ERROR] 20:16:58:73 Team/(2809:2816): Error de conexion
+
+[ERROR] 20:16:58:74 Team/(2809:2809): No se pudo conectar con el Broker. Se procede con comportamiento DEFAULT
+[INFO] 20:16:58:74 Team/(2809:2815): Llego un APPEARED POKEMON
+[INFO] 20:16:58:74 Team/(2809:2815): Me llego mensaje de 3. Pkm: , x: 7237477, y: 4
+
+[ERROR] 20:16:58:75 Team/(2809:2815): Se desconecto el cliente
+
+[ERROR] 20:16:58:75 Team/(2809:2816): No se pudo conectar con el Broker
+[ERROR] 20:16:58:75 Team/(2809:2817): Error de conexion
+
+[ERROR] 20:16:58:75 Team/(2809:2817): No se pudo conectar con el Broker
+[ERROR] 20:16:58:75 Team/(2809:2815): Error de conexion
+
+[ERROR] 20:16:58:75 Team/(2809:2815): No se pudo conectar con el Broker
+[INFO] 20:25:24:154 Team/(3064:3064): Logger iniciado: Team.log
+
+[INFO] 20:25:24:154 Team/(3064:3064): TEAM OK
+[INFO] 20:25:24:155 Team/(3064:3064): ::::Se creo hilo de GameBoy::::
+[INFO] 20:25:24:155 Team/(3064:3064): ::::Se creo hilo de suscripcion para: 3::::
+[INFO] 20:25:24:156 Team/(3064:3070): Conexion correcta
+
+[INFO] 20:25:24:156 Team/(3064:3064): ::::Se creo hilo de suscripcion para: 5::::
+[INFO] 20:25:24:156 Team/(3064:3064): ::::Se creo hilo de suscripcion para: 4::::
+[INFO] 20:25:24:156 Team/(3064:3064): Conexion correcta
+
+[INFO] 20:25:24:156 Team/(3064:3071): Conexion correcta
+
+[INFO] 20:25:24:156 Team/(3064:3072): Conexion correcta
+
+[INFO] 20:25:24:169 Team/(3064:3070): Llego un APPEARED POKEMON
+[INFO] 20:25:24:169 Team/(3064:3070): Me llego mensaje de 3. Pkm: , x: 1852794228, y: 512
+
+[INFO] 20:25:24:206 Team/(3064:3064): Conexion correcta
+
+[ERROR] 20:25:25:229 Team/(3064:3071): Se desconecto el cliente
+
+[INFO] 20:25:25:229 Team/(3064:3064): Conexion correcta
+
+[ERROR] 20:25:25:230 Team/(3064:3064): Error de conexion
+
+[ERROR] 20:25:25:230 Team/(3064:3072): Se desconecto el cliente
+
+[ERROR] 20:25:25:230 Team/(3064:3071): Error de conexion
+
+[ERROR] 20:25:25:230 Team/(3064:3071): No se pudo conectar con el Broker
+[ERROR] 20:25:25:231 Team/(3064:3072): Error de conexion
+
+[ERROR] 20:25:25:231 Team/(3064:3072): No se pudo conectar con el Broker
+[ERROR] 20:25:25:231 Team/(3064:3064): No se pudo conectar con el Broker. Se procede con comportamiento DEFAULT
+[INFO] 20:25:25:231 Team/(3064:3070): Llego un APPEARED POKEMON
+[INFO] 20:25:25:231 Team/(3064:3070): Me llego mensaje de 3. Pkm: , x: 7237477, y: 4
+
+[ERROR] 20:25:25:231 Team/(3064:3070): Se desconecto el cliente
+
+[ERROR] 20:25:25:231 Team/(3064:3070): Error de conexion
+
+[ERROR] 20:25:25:231 Team/(3064:3070): No se pudo conectar con el Broker
