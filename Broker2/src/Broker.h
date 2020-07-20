@@ -143,6 +143,7 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo);
 void reposicionarParticionesOcupadas(t_list * listaAuxiliar);
 void dump();
 bool noPuedoReemplazarMas();
+void guardarMensajeEnMemoria(d_message tipoMensaje, void * mensaje, void * lugarDeComienzo);
 
 //////////FUNCION BUDDY Y PARTICION DINAMICA//////////////
 void composicion();
@@ -152,7 +153,7 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 int primeraParticion();
 int particionMenosReferenciada();
 void compactacion();
-int reemplazar (d_message tipoMensaje, void* mensaje);
+int reemplazar ();
 //void limpiarParticion (estructuraAdministrativa * particion);
 
 ////////////FUNCIONES DESTROYER//////////////////

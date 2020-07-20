@@ -504,6 +504,7 @@ void enviarLocalizedPokemon(char* pkm, t_list* posicionesConCantidad,
 				"No se pudo conectar al Broker para un LocalizedPokemon");
 		return;
 	}
+	log_info(loggerGeneral, "Mando Localized: cantidad de puntos: %i", list_size(posicionesConCantidad));
 	Serialize_PackAndSend_LOCALIZED_POKEMON(conexion, idMensajeNew, pkm,
 			posicionesConCantidad);
 }
@@ -751,10 +752,10 @@ void localizarPokemon(char *pkm, uint32_t idMensajeNew) {
 		char** posiciones = string_split(separadoIgual[0], "-");
 
 		d_PosCant* posicion = malloc(sizeof(d_PosCant));
-		posicion->cantidad = atoi(separadoIgual[1]);
+		//posicion->cantidad = atoi(separadoIgual[1]);
 		posicion->posX = atoi(posiciones[0]);
 		posicion->posY = atoi(posiciones[1]);
-		log_info(loggerGeneral,"cant: %i, x: %i, y: %i",posicion->cantidad,posicion->posX,posicion->posY);
+		log_info(loggerGeneral,"x: %i, y: %i", posicion->posX, posicion->posY);
 		list_add(posicionCantidad, posicion);
 		i=i+1;
 	}
