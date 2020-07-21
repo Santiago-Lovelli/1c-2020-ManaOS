@@ -165,7 +165,6 @@ void limpiarSemaforos();
 
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;
-t_log * LOGGER_GENERAL;
 t_log * LOGGER_OBLIGATORIO;
 void * MEMORIA_PRINCIPAL;
 t_list* ADMINISTRADOR_MEMORIA;

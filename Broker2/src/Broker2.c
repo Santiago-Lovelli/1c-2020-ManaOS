@@ -9,10 +9,10 @@ int main(void) {
 }
 
 void EsperarClientes(){
-	int server = iniciar_servidor(BROKER_CONFIG.IP_BROKER, BROKER_CONFIG.PUERTO_BROKER, LOGGER_GENERAL);
+	int server = iniciar_servidor(BROKER_CONFIG.IP_BROKER, BROKER_CONFIG.PUERTO_BROKER, LOGGER_OBLIGATORIO);
 	while(1){
 		sem_wait(&MUTEX_CLIENTE);
-		int cliente = esperar_cliente_con_accept(server, LOGGER_GENERAL);
+		int cliente = esperar_cliente_con_accept(server, LOGGER_OBLIGATORIO);
 		log_info(LOGGER_OBLIGATORIO, "Se conecto un cliente: %i", cliente);
 		pthread_t* hiloDeAtencion = malloc(sizeof(pthread_t));
 		if (pthread_create(hiloDeAtencion, NULL, (void* )AtenderCliente, &cliente) != 0){
@@ -25,7 +25,7 @@ void* AtenderCliente(int* cliente) {
 	while(1){
 		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(*cliente);
 		if(headerRecibido.tipoMensaje == -1){
-			log_error(LOGGER_GENERAL, "Se desconecto el cliente %i: \n", *cliente);
+			log_error(LOGGER_OBLIGATORIO, "Se desconecto el cliente %i: \n", *cliente);
 			sem_post(&MUTEX_CLIENTE);
 			return (NULL);
 		}
@@ -87,7 +87,7 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			break;
 		case d_SUBSCRIBE_QUEUE:
 			//sem_wait(&MUTEX_CLIENTE);
-			log_info(LOGGER_GENERAL, "Llego un Subscribe");
+			log_info(LOGGER_OBLIGATORIO, "Llego un Subscribe");
 			void * recibir = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			uint32_t variable = Serialize_Unpack_ACK(recibir);
 			suscribir(variable, cliente);
@@ -101,9 +101,10 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			actualizarRecibidosPorID(idMensaje, cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de ACK del mensaje %i ", cliente, idMensaje);
 			sem_post(&MUTEX_CLIENTE);
+			free(packACKPokemon);
 			break;
 		default:
-			log_error(LOGGER_GENERAL, "Mensaje no entendido: %i\n", header);
+			log_error(LOGGER_OBLIGATORIO, "Mensaje no entendido: %i\n", header);
 			void* packBasura = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			free(packBasura);
 			break;
@@ -126,7 +127,7 @@ void suscribir(uint32_t variable, int clienteA){
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de NEW", *cliente);
 		list_add (SUSCRIPTORES_NEW, cliente);
 		if (memoriaVacia()){
-			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
+			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 		}
 		else{
 			enviarVariosMensajes(cliente, d_NEW_POKEMON);
@@ -136,7 +137,7 @@ void suscribir(uint32_t variable, int clienteA){
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de CATCH", *cliente);
 		list_add (SUSCRIPTORES_CATCH, cliente);
 		if (memoriaVacia()){
-			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
+			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 			}
 			else{
 				enviarVariosMensajes(cliente, d_CATCH_POKEMON);
@@ -146,7 +147,7 @@ void suscribir(uint32_t variable, int clienteA){
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de GET", *cliente);
 		list_add (SUSCRIPTORES_GET, cliente);
 		if (memoriaVacia()){
-			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
+			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 			}
 			else{
 				enviarVariosMensajes(cliente, d_GET_POKEMON);
@@ -156,7 +157,7 @@ void suscribir(uint32_t variable, int clienteA){
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Appeared", *cliente);
 		list_add (SUSCRIPTORES_APPEARED, cliente);
 		if (memoriaVacia()){
-			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
+			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 			}
 			else{
 				enviarVariosMensajes(cliente, d_APPEARED_POKEMON);
@@ -166,7 +167,7 @@ void suscribir(uint32_t variable, int clienteA){
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Caught", *cliente);
 		list_add (SUSCRIPTORES_CAUGHT, cliente);
 		if (memoriaVacia()){
-			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
+			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 			}
 			else{
 				enviarVariosMensajes(cliente, d_CAUGHT_POKEMON);
@@ -176,7 +177,7 @@ void suscribir(uint32_t variable, int clienteA){
 		log_info (LOGGER_OBLIGATORIO, "Se agrego el suscriptor %i a la cola de Localized", *cliente);
 		list_add (SUSCRIPTORES_LOCALIZED, cliente);
 		if (memoriaVacia()){
-			log_info (LOGGER_GENERAL, "No hay mensajes anteriores");
+			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 			}
 			else{
 				enviarVariosMensajes(cliente, d_LOCALIZED_POKEMON);
@@ -188,21 +189,17 @@ void suscribir(uint32_t variable, int clienteA){
 	}
 }
 
-static void destruir(estructuraAdministrativa *estructura) {
-    free(estructura);
-}
-
 /////////////////ENVIAR MENSAJE A SUSCRIPTORES/////////////////////////////////////
 void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 	int * cliente = malloc(sizeof(int));
 	cliente=clienteA;
 	estructuraAdministrativa * elemento = malloc (sizeof(estructuraAdministrativa));
-	t_list * mensajesNew = list_create();
-	t_list * mensajesCatch = list_create();
-	t_list * mensajesAppeared = list_create();
-	t_list * mensajesGet = list_create();
-	t_list* mensajesCaught = list_create();
-	t_list * mensajesLocalized = list_create();
+	t_list * mensajesNew;
+	t_list * mensajesCatch;
+	t_list * mensajesAppeared;
+	t_list * mensajesGet;
+	t_list* mensajesCaught;
+	t_list * mensajesLocalized;
 	newEnMemoria* mensajeNew;
 	catchEnMemoria * mensajeCatch;
 	appearedEnMemoria * mensajeAppeared;
@@ -220,7 +217,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (NEW) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesNew, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesNew, (void*)estructuraAdministrativaDestroyer);
 	break;
 	case d_CATCH_POKEMON:
 		mensajesCatch = tomarLosMensajes (d_CATCH_POKEMON);
@@ -232,7 +229,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CATCH) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesCatch, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesCatch, (void *) estructuraAdministrativaDestroyer);
 	break;
 	case d_GET_POKEMON:
 		mensajesGet = tomarLosMensajes (d_GET_POKEMON);
@@ -244,7 +241,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (GET) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesGet, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesGet, (void *) estructuraAdministrativaDestroyer);
 	break;
 	case d_APPEARED_POKEMON:
 		mensajesAppeared = tomarLosMensajes (d_APPEARED_POKEMON);
@@ -256,7 +253,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (APPEARED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesAppeared, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesAppeared, (void *) estructuraAdministrativaDestroyer);
 	break;
 	case d_CAUGHT_POKEMON:
 		mensajesCaught = tomarLosMensajes (d_CAUGHT_POKEMON);
@@ -268,7 +265,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CAUGHT) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesCaught, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesCaught, (void *) estructuraAdministrativaDestroyer);
 	break;
 	case d_LOCALIZED_POKEMON:
 		mensajesLocalized = tomarLosMensajes (d_LOCALIZED_POKEMON);
@@ -280,7 +277,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (LOCALIZED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesLocalized, (void *) destruir);
+		//list_clean_and_destroy_elements(mensajesLocalized, (void *) estructuraAdministrativaDestroyer);
 		break;
 	default:
 		log_error(LOGGER_OBLIGATORIO, "No existe el mensaje");
@@ -289,7 +286,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 }
 
 t_list * tomarLosMensajes (d_message tipoMensaje){
-	estructuraAdministrativa* elemento = malloc (sizeof(estructuraAdministrativa));
+	estructuraAdministrativa* elemento;
 	t_list * listaTipo = list_create();
 	int tamanioLista = list_size(ADMINISTRADOR_MEMORIA);
 	for (int i = 0; i < tamanioLista; i++){
@@ -324,7 +321,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
 		list_iterate(lista, (void*)notificarSuscriptorNew);
-		log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
+		log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
 		break;
 	case d_CATCH_POKEMON:
 		mensajeCatch = (catchEnMemoria*)mensaje;
@@ -334,7 +331,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
 			list_iterate(lista, (void*)notificarSuscriptorCatch);
-			log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
+			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
 		break;
 	case d_GET_POKEMON:
 		mensajeGet = (getEnMemoria*)mensaje;
@@ -344,7 +341,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
 			list_iterate(lista, (void*)notificarSuscriptorGet);
-			log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
+			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
 			break;
 	case d_APPEARED_POKEMON:
 		mensajeAppeared = (appearedEnMemoria*)mensaje;
@@ -354,7 +351,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
 			list_iterate(lista, (void*)notificarSuscriptorAppeared);
-			log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
+			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
 			break;
 	case d_CAUGHT_POKEMON:
 		mensajeCaught = (caughtEnMemoria*)mensaje;
@@ -364,7 +361,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
 			list_iterate(lista, (void*)notificarSuscriptorCaught);
-			log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
+			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
 			break;
 	case d_LOCALIZED_POKEMON:
 		mensajeLocalized = (localizedEnMemoria*)mensaje;
@@ -374,7 +371,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
 			list_iterate(lista, (void*)notificarSuscriptorLocalized);
-			log_info(LOGGER_GENERAL, "No hay mas suscriptores! \n");
+			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
 			break;
 	default:
 		log_error(LOGGER_OBLIGATORIO, "No existe el mensaje");
@@ -384,7 +381,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 //////////////////FIN MENSAJES A SUSCRIPTORES/////////////////////////////////////
 
 int tratarMensaje (d_message tipoMensaje, void *paquete){
-	estructuraAdministrativa * resultado = malloc (sizeof(estructuraAdministrativa));
+	estructuraAdministrativa * resultado;
 	uint32_t * id = malloc(sizeof(uint32_t));
 	void* unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete, id);
 	resultado = guardarMensaje(tipoMensaje, unMensaje);
@@ -410,10 +407,8 @@ int tratarMensaje (d_message tipoMensaje, void *paquete){
 
 ///////FUNCIONES DE INIT///////////
 void Init(){
-	LOGGER_GENERAL = iniciar_log("Broker");
 	ConfigInit();
-	log_info(LOGGER_GENERAL, "Configuracion broker levantada!");
-	LOGGER_OBLIGATORIO = iniciar_log(BROKER_CONFIG.LOG_FILE);
+	LOGGER_OBLIGATORIO = iniciar_log("Broker");//BROKER_CONFIG.LOG_FILE);
 	ListsInit();
 	MemoriaPrincipalInit();
 	SemaphoresInit();
@@ -432,7 +427,6 @@ void ConfigInit(){
 	BROKER_CONFIG.TAMANO_MEMORIA = config_get_int_value(configCreator, "TAMANO_MEMORIA");
 	BROKER_CONFIG.TAMANO_MINIMO_PARTICION = config_get_int_value(configCreator, "TAMANO_MINIMO_PARTICION");
 	BROKER_CONFIG.DUMP_FILE = config_get_string_value(configCreator, "DUMP_FILE");
-	free (configCreator);
 }
 
 void ListsInit(){
@@ -452,12 +446,11 @@ void MemoriaPrincipalInit(){
 		estructura->estaOcupado = 0;
 		estructura->tipoMensaje = 20;
 		estructura->tamanioParticion = BROKER_CONFIG.TAMANO_MEMORIA;
-		estructura->donde = malloc(sizeof(void*));
 		estructura->donde = MEMORIA_PRINCIPAL;
 		estructura->tiempo = string_new();
-		estructura->tiempo = (char*)temporal_get_string_time();
+		string_append(&estructura->tiempo, temporal_get_string_time());
 		estructura->ultimaReferencia = string_new();
-		estructura->ultimaReferencia = (char*)temporal_get_string_time();
+		string_append(&estructura->ultimaReferencia, temporal_get_string_time());
 		list_add (ADMINISTRADOR_MEMORIA, estructura);
 }
 
@@ -480,15 +473,22 @@ void DumpFileInit(){
 }
 
 void destruirTodo(){
-	list_destroy_and_destroy_elements(SUSCRIPTORES_NEW, (void*)suscriptorDestroyer);
+	/*list_destroy_and_destroy_elements(SUSCRIPTORES_NEW, (void*)suscriptorDestroyer);
 	list_destroy_and_destroy_elements(SUSCRIPTORES_APPEARED, (void*)suscriptorDestroyer);
 	list_destroy_and_destroy_elements(SUSCRIPTORES_GET, (void*)suscriptorDestroyer);
 	list_destroy_and_destroy_elements(SUSCRIPTORES_CATCH, (void*)suscriptorDestroyer);
 	list_destroy_and_destroy_elements(SUSCRIPTORES_CAUGHT, (void*)suscriptorDestroyer);
-	list_destroy_and_destroy_elements(SUSCRIPTORES_LOCALIZED, (void*)suscriptorDestroyer);
-	//list_destroy_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void*)estructuraAdministrativaDestroyer); //Rompe
+	list_destroy_and_destroy_elements(SUSCRIPTORES_LOCALIZED, (void*)suscriptorDestroyer);*/
+	list_destroy(SUSCRIPTORES_NEW);
+	list_destroy(SUSCRIPTORES_APPEARED);
+	list_destroy(SUSCRIPTORES_GET);
+	list_destroy(SUSCRIPTORES_CATCH);
+	list_destroy(SUSCRIPTORES_CAUGHT);
+	list_destroy(SUSCRIPTORES_LOCALIZED);
+	list_destroy_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void*)estructuraAdministrativaDestroyer);
 	limpiarSemaforos();
 	free(MEMORIA_PRINCIPAL);
+	log_destroy(LOGGER_OBLIGATORIO);
 	exit(0);
 }
 
@@ -563,14 +563,14 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
 		return (((localizedEnMemoria *)unMensaje)->largoDeNombre * sizeof(char) + sizeof(punto) * ((localizedEnMemoria *)unMensaje)->cantidadDePuntos);
 		break;
 	default:
-		log_error(LOGGER_GENERAL, "Tamanio de mensaje de nada, no se puede");
+		log_error(LOGGER_OBLIGATORIO, "Tamanio de mensaje de nada, no se puede");
 		return 0;
 	}
 }
 
 int valorBusquedaFallida (){
 	sem_wait(&MUTEX_BUSQUEDA);
-	int valor = FLAG_REEMPLAZAR;
+	int valor = BUSQUEDAS_FALLIDAS;
 	sem_post(&MUTEX_BUSQUEDA);
 	return valor;
 }
@@ -624,7 +624,7 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 
 		}
 		if (particion != NULL){
-			log_info(LOGGER_GENERAL, "Encontre particion Libre");
+			log_info(LOGGER_OBLIGATORIO, "Encontre particion Libre");
 			estructuraAdministrativa * particionDondeGuardar;
 			particionDondeGuardar = particionAMedida(tipoMensaje, mensaje, particion);
 			return particionDondeGuardar;
@@ -767,9 +767,9 @@ int reemplazar(){
 		list_clean (particion->suscriptoresConACK); //Podemos necesitar destruir los elementos
 		list_clean (particion->suscriptoresConMensajeEnviado);
 		particion->tiempo = string_new();
-		particion->tiempo = (char*)temporal_get_string_time();
+		string_append(&particion->tiempo, (char*)temporal_get_string_time());
 		particion->ultimaReferencia = string_new();
-		particion->ultimaReferencia = (char*)temporal_get_string_time();
+		string_append(&particion->ultimaReferencia, (char*)temporal_get_string_time());
 		log_info (LOGGER_OBLIGATORIO, "Se limpio la particion Victima: %i, volvemos a buscar", posicionALog(particion->donde));
 		return posicion;
 	}
@@ -782,14 +782,14 @@ int reemplazar(){
 		list_clean(particion->suscriptoresConACK);
 		list_clean (particion->suscriptoresConMensajeEnviado);
 		particion->tiempo = string_new();
-		particion->tiempo = (char*)temporal_get_string_time();
+		string_append(&particion->tiempo, (char*)temporal_get_string_time());
 		particion->ultimaReferencia = string_new();
-		particion->ultimaReferencia = (char*)temporal_get_string_time();
+		string_append(&particion->ultimaReferencia, (char*)temporal_get_string_time());
 		log_info (LOGGER_OBLIGATORIO, "Se limpio la particion Victima: %i, volvemos a buscar", posicionALog(particion->donde));
 		return posicion;
 	}
 	///El donde no cambia, al igual que el tamaño de la particion
-	log_info (LOGGER_GENERAL, "Se limpio la particion Victima, volvemos a buscar");
+	log_info (LOGGER_OBLIGATORIO, "Se limpio la particion Victima, volvemos a buscar");
 	return (-1);
 }
 
@@ -811,9 +811,9 @@ void composicion(){
 	if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 		particionActual->estaOcupado = 0;
 		particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
-		log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
-		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)destruir);
-		log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
+		log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
+		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)estructuraAdministrativaDestroyer);
+		log_info (LOGGER_OBLIGATORIO, "Se realizó la composicion del BS");
 	}
 		for (i=1; i<list_size(ADMINISTRADOR_MEMORIA); i++){
 		particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
@@ -823,15 +823,15 @@ void composicion(){
 				particionActual->donde = particionAnterior->donde;
 				particionActual->estaOcupado = 0;
 				particionActual->tamanioParticion = particionAnterior->tamanioParticion + particionActual->tamanioParticion;
-				log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionAnterior->donde));
-				log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
-				list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i-1, (void*)destruir);
+				log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionAnterior->donde));
+				log_info (LOGGER_OBLIGATORIO, "Se realizó la composicion del BS");
+				list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i-1, (void*)estructuraAdministrativaDestroyer);
 				if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 					particionActual->estaOcupado = 0;
 					particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
-					log_info (LOGGER_GENERAL, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
-					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)destruir);
-					log_info (LOGGER_GENERAL, "Se realizó la composicion del BS");
+					log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
+					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)estructuraAdministrativaDestroyer);
+					log_info (LOGGER_OBLIGATORIO, "Se realizó la composicion del BS");
 		}
 		}
 	}
@@ -853,8 +853,8 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 		particion->tipoMensaje = 20;
 		particion->suscriptoresConACK = list_create();
 		particion->suscriptoresConMensajeEnviado = list_create();
-		particion->tiempo = string_new();
-		particion->ultimaReferencia = string_new();
+		particion->tiempo = (char*)temporal_get_string_time();
+		particion->ultimaReferencia = (char*)temporal_get_string_time();
 		if(tamanioInicial - particion->tamanioParticion > BROKER_CONFIG.TAMANO_MINIMO_PARTICION){
 			particionVacia->tamanioParticion = tamanioInicial - particion->tamanioParticion;
 			particionVacia->estaOcupado = 0;
@@ -864,7 +864,9 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 			particionVacia->suscriptoresConACK = list_create();
 			particionVacia->suscriptoresConMensajeEnviado = list_create();
 			particionVacia->tiempo = string_new();
+			string_append(&particionVacia->tiempo, (char*)temporal_get_string_time());
 			particionVacia->ultimaReferencia = string_new();
+			string_append(&particionVacia->ultimaReferencia, (char*)temporal_get_string_time());
 			list_add(ADMINISTRADOR_MEMORIA, particionVacia);
 		}
 		else{
@@ -899,7 +901,7 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 			list_add_in_index(ADMINISTRADOR_MEMORIA,posicion+1, particionAuxiliar);
 		}
 	}
-	log_info (LOGGER_GENERAL, "Se toma la particion a medida");
+	log_info (LOGGER_OBLIGATORIO, "Se toma la particion a medida");
 		return particion;
 	}
 
@@ -927,7 +929,7 @@ void reposicionarParticionesOcupadas(t_list * listaAuxiliar){
 	void * nuevoDonde = MEMORIA_PRINCIPAL;
 	if(!list_is_empty(listaAuxiliar)){
 		void cambiarInfo(estructuraAdministrativa* elemento) {
-				memcpy(nuevoDonde, elemento->donde, elemento->tamanioParticion);
+				memmove(nuevoDonde, elemento->donde, elemento->tamanioParticion);
 				elemento->donde = nuevoDonde;
 				nuevoDonde = nuevoDonde + elemento->tamanioParticion;
 				return;
@@ -942,33 +944,32 @@ void reposicionarParticionesOcupadas(t_list * listaAuxiliar){
 	espacioFaltante->suscriptoresConACK = list_create();
 	espacioFaltante->suscriptoresConMensajeEnviado = list_create();
 	espacioFaltante->tiempo = string_new();
+	string_append(&espacioFaltante->tiempo, (char*)temporal_get_string_time());
 	espacioFaltante->ultimaReferencia = string_new();
-	espacioFaltante->tiempo = (char*)temporal_get_string_time();
-	espacioFaltante->ultimaReferencia = (char*)temporal_get_string_time();
+	string_append(&espacioFaltante->ultimaReferencia, (char*)temporal_get_string_time());
 	espacioFaltante->tamanioParticion = BROKER_CONFIG.TAMANO_MEMORIA - contarTamanio();
 	list_add_in_index(ADMINISTRADOR_MEMORIA, 0, espacioFaltante);
 }
 
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self) {
-    free(self->donde);
     free(self->tiempo);
     free(self->ultimaReferencia);
-    list_clean_and_destroy_elements(self->suscriptoresConACK, (void*)suscriptorDestroyer);
+    //list_clean_and_destroy_elements(self->suscriptoresConACK, (void*)suscriptorDestroyer);
     list_destroy(self->suscriptoresConACK);
-    list_clean_and_destroy_elements(self->suscriptoresConMensajeEnviado, (void*)suscriptorDestroyer);
+    //list_clean_and_destroy_elements(self->suscriptoresConMensajeEnviado, (void*)suscriptorDestroyer);
     list_destroy(self->suscriptoresConMensajeEnviado);
     free(self);
 }
 
-static void estructuraAdministrativaDestroyerSinDestruirListas(estructuraAdministrativa *self) {
+/*static void estructuraAdministrativaDestroyerSinDestruirListas(estructuraAdministrativa *self) {
     free(self->tiempo);
     free(self->ultimaReferencia);
     free(self);
-}
+}*/
 
-static void suscriptorDestroyer(int *self) {
+/*static void suscriptorDestroyer(int *self) {
     free(self);
-}
+}*/
 
 void * leerInfoYActualizarUsoPorID(int id){ //deuelve un tipo en memoria
 	bool igualID(estructuraAdministrativa* elemento) {
@@ -976,7 +977,7 @@ void * leerInfoYActualizarUsoPorID(int id){ //deuelve un tipo en memoria
 			}
 	estructuraAdministrativa * ElElemento = list_find(ADMINISTRADOR_MEMORIA, (void*)igualID);
 	ElElemento->ultimaReferencia = string_new();
-	ElElemento->ultimaReferencia = temporal_get_string_time();
+	string_append(&ElElemento->ultimaReferencia, (char*)temporal_get_string_time());
 	return(levantarMensaje(ElElemento->tipoMensaje, ElElemento->donde));
 }
 
@@ -1025,9 +1026,14 @@ bool primerFechaEsAnterior(char* unaFecha, char* otraFecha){
 	char** segundaFechaSeparada = string_split(otraFecha, ":");
 	for(int i = 0; primerFechaSeparada[i]!=NULL; i++){
 		if (atoi(primerFechaSeparada[i]) != atoi(segundaFechaSeparada[i])){
-			return (atoi(primerFechaSeparada[i]) < atoi(segundaFechaSeparada[i]));
+			bool retorno = atoi(primerFechaSeparada[i]) < atoi(segundaFechaSeparada[i]);
+			string_iterate_lines(primerFechaSeparada, (void*) free);
+			string_iterate_lines(segundaFechaSeparada, (void*) free);
+			return (retorno);
 		}
 	}
+	string_iterate_lines(primerFechaSeparada, (void*) free);
+	string_iterate_lines(segundaFechaSeparada, (void*) free);
 	return true;
 }
 
@@ -1050,7 +1056,7 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t* id)
 	case d_NEW_POKEMON:
 		retornoNew = malloc(sizeof(newEnMemoria));
 		Serialize_Unpack_NewPokemon_NoID(paquete, &pokemon, &posX, &posY, &cantidad);
-		log_info(LOGGER_GENERAL,"Me llego mensaje new Pkm: %s, x: %i, y: %i, cant: %i\n", pokemon, posX, posY, cantidad);
+		log_info(LOGGER_OBLIGATORIO,"Me llego mensaje new Pkm: %s, x: %i, y: %i, cant: %i\n", pokemon, posX, posY, cantidad);
 		retornoNew->cantidad = cantidad;
 		retornoNew->largoDeNombre = string_length(pokemon);
 		retornoNew->nombrePokemon = pokemon;
@@ -1061,7 +1067,7 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t* id)
 	case d_CATCH_POKEMON:
 		retornoCatch = malloc(sizeof(catchEnMemoria));
 		Serialize_Unpack_CatchPokemon_NoID(paquete, &pokemon, &posX, &posY);
-		log_info(LOGGER_GENERAL,"Me llego mensaje catch Pkm: %s, x: %i, y: %i \n", pokemon, posX, posY);
+		log_info(LOGGER_OBLIGATORIO,"Me llego mensaje catch Pkm: %s, x: %i, y: %i \n", pokemon, posX, posY);
 		retornoCatch->largoDeNombre = string_length(pokemon);
 		retornoCatch->nombrePokemon = pokemon;
 		retornoCatch->posX = posX;
@@ -1071,7 +1077,7 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t* id)
 	case d_GET_POKEMON:
 		retornoGet = malloc(sizeof(getEnMemoria));
 		Serialize_Unpack_GetPokemon_NoID(paquete, &pokemon);
-		log_info(LOGGER_GENERAL,"Me llego mensaje get Pkm: %s\n", pokemon);
+		log_info(LOGGER_OBLIGATORIO,"Me llego mensaje get Pkm: %s\n", pokemon);
 		retornoGet->largoDeNombre = string_length(pokemon);
 		retornoGet->nombrePokemon = pokemon;
 		retorno = retornoGet;
@@ -1079,7 +1085,7 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t* id)
 	case d_APPEARED_POKEMON:
 		retornoAppeared = malloc(sizeof(appearedEnMemoria));
 		Serialize_Unpack_AppearedPokemon(paquete, id, &pokemon, &posX, &posY);
-		log_info(LOGGER_GENERAL,"Me llego mensaje appeared Pkm: %s, x: %i, y: %i , id: %i \n", pokemon, posX, posY, *id);
+		log_info(LOGGER_OBLIGATORIO,"Me llego mensaje appeared Pkm: %s, x: %i, y: %i , id: %i \n", pokemon, posX, posY, *id);
 		retornoAppeared->largoDeNombre = string_length(pokemon);
 		retornoAppeared->nombrePokemon = pokemon;
 		retornoAppeared->posX = posX;
@@ -1090,22 +1096,22 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t* id)
 		retornoCaught = malloc(sizeof(caughtEnMemoria));
 		Serialize_Unpack_CaughtPokemon(paquete, &correlativoA, &atrapado);
 		*id = correlativoA;
-		log_info(LOGGER_GENERAL,"Me llego mensaje caught correlativo a: %i, resultado: %i \n", correlativoA, atrapado);
+		log_info(LOGGER_OBLIGATORIO,"Me llego mensaje caught correlativo a: %i, resultado: %i \n", correlativoA, atrapado);
 		retornoCaught->atrapado = atrapado;
 		retorno = retornoCaught;
 		break;
 	case d_LOCALIZED_POKEMON:
 		retornoLocalized = malloc(sizeof(localizedEnMemoria));
 		Serialize_Unpack_LocalizedPokemon(paquete, id, &pokemon, &listaDePuntos);
-		log_info(LOGGER_GENERAL,"Me llego mensaje localized correlativo a: %i, pkm: %s \n", *id, pokemon);
+		log_info(LOGGER_OBLIGATORIO,"Me llego mensaje localized correlativo a: %i, pkm: %s \n", *id, pokemon);
 		void mostrarPuntos(d_PosCant self){
-			log_info(LOGGER_GENERAL,"Punto en x: %i, y: %i \n", self.posX, self.posY);
+			log_info(LOGGER_OBLIGATORIO,"Punto en x: %i, y: %i \n", self.posX, self.posY);
 		}
 		list_iterate(listaDePuntos, (void*)mostrarPuntos);
 		retorno = retornoLocalized;
 		break;
 	default:
-		log_error(LOGGER_GENERAL, "Error descomponiendo el mensaje");
+		log_error(LOGGER_OBLIGATORIO, "Error descomponiendo el mensaje");
 		return NULL;
 	}
 	return retorno;
@@ -1213,7 +1219,7 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo){
 		return retornoLocalized;
 		break;
 	default:
-		log_error(LOGGER_GENERAL, "Error levantando data de la memoria");
+		log_error(LOGGER_OBLIGATORIO, "Error levantando data de la memoria");
 		sem_post(&MUTEX_MEMORIA);
 		return NULL;
 	}
@@ -1283,7 +1289,7 @@ void guardarMensajeEnMemoria(d_message tipoMensaje, void * mensaje, void * lugar
 		sem_post(&MUTEX_MEMORIA);
 		return;
 	default:
-		log_error(LOGGER_GENERAL, "Error escribiendo en memoria");
+		log_error(LOGGER_OBLIGATORIO, "Error escribiendo en memoria");
 		sem_post(&MUTEX_MEMORIA);
 		return;
 	}

@@ -14,6 +14,8 @@ bool Serialize_PackAndSend(int socketCliente, const void *pack, uint32_t tamPack
 	memcpy(buffer+desplazamiento, &tamPack , sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
 	memcpy(buffer+desplazamiento, pack, tamPack);
+	uint32_t prueba = 0;
+	uint32_t dprueba = 0;
 	desplazamiento += tamPack;
 		if(desplazamiento != tamMessage){ return (-1); }
 	int resultado = send(socketCliente, buffer, tamMessage, 0);
@@ -189,8 +191,7 @@ bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensa
 	memcpy(buffer + desplazamiento, pokemon, tamNombrePokemon);
 	desplazamiento += tamNombrePokemon;
 	uint32_t cantidadElementos = list_size(poscant);
-	memcpy(cantidadElementos, &cantidadElementos, sizeof(uint32_t));
-	memcpy(buffer + desplazamiento, cantidadElementos, sizeof(uint32_t));
+	memcpy(buffer + desplazamiento, &cantidadElementos, sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
 	for(int i=0; i<cantidadElementos; i++){
 		d_PosCant * elemento = list_get(poscant,i);
@@ -254,8 +255,8 @@ uint32_t Serialize_Unpack_idMensaje(void *pack) {
 char* Serialize_Unpack_pokemonName(void *buffer) {
 	uint32_t tamPokemon = 0;
 	memcpy(&tamPokemon, buffer+sizeof(uint32_t), sizeof(uint32_t));
-	char *pokemon = malloc(tamPokemon);
-	memcpy(pokemon,buffer+(2*sizeof(uint32_t)),tamPokemon);
+	char *pokemon = malloc(tamPokemon + 1);
+	memcpy(pokemon,buffer+(2*sizeof(uint32_t)),tamPokemon + 1);
 	return pokemon;
 }
 
@@ -363,12 +364,12 @@ void Serialize_Unpack_LocalizedPokemon(void *packLocalizedPokemon, uint32_t *idM
 	uint32_t tamTlist = 0;
 	uint32_t tamPokemon = 0;
 	memcpy(&tamPokemon, packLocalizedPokemon+sizeof(uint32_t), sizeof(uint32_t));
-	uint32_t desplazamiento = (2*sizeof(uint32_t))+tamPokemon;
+	uint32_t desplazamiento = (2*sizeof(uint32_t))+tamPokemon*sizeof(char)-1;
 	memcpy(&tamTlist, packLocalizedPokemon+desplazamiento, sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
 	d_PosCant * aux;
 	for(int i=0; i<tamTlist; i++){
-		aux = malloc(sizeof(d_PosCant));
+		aux = malloc(2*sizeof(uint32_t));
 		uint32_t posX, posY;
 		memcpy(&posX, packLocalizedPokemon+desplazamiento, sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
