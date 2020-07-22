@@ -133,6 +133,8 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 t_list* suscriptoresPara(d_message tipoDeMensaje);
 bool sirveCompactar(int tamanioMensaje);
 void enviarACK(int cliente, int ID);
+estructuraAdministrativa * newParticion();
+void limpiarParticion(estructuraAdministrativa * unaParticion);
 
 //////FUNCIONES ESTRUCTURA ADMINISTRATIVA//////////
 estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar);
@@ -185,6 +187,10 @@ sem_t MUTEX_REEMPLAZAR;
 sem_t MUTEX_COMPACTACION;
 sem_t MUTEX_COMPOSICION;
 sem_t MUTEX_BUSQUEDA;
+sem_t MUTEX_LEERBUSQUEDA;
+sem_t MUTEX_LEERREEMPLAZAR;
+sem_t MUTEX_LEERCOMPACTACION;
+sem_t MUTEX_LEERCOMPOSICION;
 
 ////////LISTA DE SUSCRIPTORES//////
 t_list* SUSCRIPTORES_NEW;

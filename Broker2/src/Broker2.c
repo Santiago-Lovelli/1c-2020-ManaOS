@@ -218,6 +218,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (NEW) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		//list_clean_and_destroy_elements(mensajesNew, (void*)estructuraAdministrativaDestroyer);
+		free(elemento); ///////TERMINO DE MANDARLO Y LIBERO
 	break;
 	case d_CATCH_POKEMON:
 		mensajesCatch = tomarLosMensajes (d_CATCH_POKEMON);
@@ -287,12 +288,15 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 
 t_list * tomarLosMensajes (d_message tipoMensaje){
 	estructuraAdministrativa* elemento;
+	estructuraAdministrativa * particionAGuardar = malloc (sizeof(estructuraAdministrativa));
 	t_list * listaTipo = list_create();
 	int tamanioLista = list_size(ADMINISTRADOR_MEMORIA);
 	for (int i = 0; i < tamanioLista; i++){
 		elemento = list_get(ADMINISTRADOR_MEMORIA, i);
 		if (elemento->tipoMensaje == tipoMensaje && elemento->estaOcupado == 1){
-			list_add (listaTipo, elemento);
+			memcpy (particionAGuardar, elemento, sizeof(estructuraAdministrativa));
+			list_add (listaTipo, particionAGuardar);
+			/////////DONDE HAGO EL FREE?
 		}
 	}
 	return listaTipo;
@@ -416,7 +420,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker2/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker2/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -440,17 +444,10 @@ void ListsInit(){
 }
 
 void MemoriaPrincipalInit(){
-		estructuraAdministrativa * estructura = malloc (sizeof (estructuraAdministrativa));
 		MEMORIA_PRINCIPAL = malloc(BROKER_CONFIG.TAMANO_MEMORIA);
-		estructura->idMensaje = 0;
-		estructura->estaOcupado = 0;
-		estructura->tipoMensaje = 20;
+		estructuraAdministrativa * estructura = newParticion();
 		estructura->tamanioParticion = BROKER_CONFIG.TAMANO_MEMORIA;
 		estructura->donde = MEMORIA_PRINCIPAL;
-		estructura->tiempo = string_new();
-		string_append(&estructura->tiempo, temporal_get_string_time());
-		estructura->ultimaReferencia = string_new();
-		string_append(&estructura->ultimaReferencia, temporal_get_string_time());
 		list_add (ADMINISTRADOR_MEMORIA, estructura);
 }
 
@@ -464,6 +461,10 @@ void SemaphoresInit(){
 	sem_init(&MUTEX_COMPOSICION, 0, 1);
 	sem_init(&MUTEX_COMPACTACION, 0, 1);
 	sem_init(&MUTEX_BUSQUEDA, 0, 1);
+	sem_init(&MUTEX_LEERBUSQUEDA, 0, 1);
+	sem_init(&MUTEX_LEERREEMPLAZAR, 0, 1);
+	sem_init(&MUTEX_LEERCOMPOSICION, 0, 1);
+	sem_init(&MUTEX_LEERCOMPACTACION, 0, 1);
 }
 
 void DumpFileInit(){
@@ -501,6 +502,10 @@ void limpiarSemaforos(){
 	sem_destroy(&MUTEX_COMPOSICION);
 	sem_destroy(&MUTEX_COMPACTACION);
 	sem_destroy(&MUTEX_BUSQUEDA);
+	sem_destroy(&MUTEX_LEERBUSQUEDA);
+	sem_destroy(&MUTEX_LEERREEMPLAZAR);
+	sem_destroy(&MUTEX_LEERCOMPOSICION);
+	sem_destroy(&MUTEX_LEERCOMPACTACION);
 }
 
 /////////FUNCIONES VARIAS/////////
@@ -569,30 +574,30 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
 }
 
 int valorBusquedaFallida (){
-	sem_wait(&MUTEX_BUSQUEDA);
+	sem_wait(&MUTEX_LEERBUSQUEDA);
 	int valor = BUSQUEDAS_FALLIDAS;
-	sem_post(&MUTEX_BUSQUEDA);
+	sem_post(&MUTEX_LEERBUSQUEDA);
 	return valor;
 }
 
 int valorCompactacion (){
-	sem_wait(&MUTEX_COMPACTACION);
+	sem_wait(&MUTEX_LEERCOMPACTACION);
 	int valor = FLAG_COMPACTACION;
-	sem_post(&MUTEX_COMPACTACION);
+	sem_post(&MUTEX_LEERCOMPACTACION);
 	return valor;
 }
 
 int valorReemplazar (){
-	sem_wait(&MUTEX_REEMPLAZAR);
+	sem_wait(&MUTEX_LEERREEMPLAZAR);
 	int valor = FLAG_REEMPLAZAR;
-	sem_post(&MUTEX_REEMPLAZAR);
+	sem_post(&MUTEX_LEERREEMPLAZAR);
 	return valor;
 }
 
 int valorComposicion (){
-	sem_wait(&MUTEX_COMPOSICION);
+	sem_wait(&MUTEX_LEERCOMPOSICION);
 	int valor = FLAG_COMPOSICION;
-	sem_post(&MUTEX_COMPOSICION);
+	sem_post(&MUTEX_LEERCOMPOSICION);
 	return valor;
 }
 
@@ -749,22 +754,39 @@ int particionMenosReferenciada(){
 		return posicionMenor;
 	}
 
-
-void limpiarParticion (estructuraAdministrativa* particion){
-	//// ya se hace el malloc, por eso no lo vuelvo hacer
+////////////////FUNCIONES A PARTICIONES /////////////////////////
+//////////////CREAR UNA NUEVA/////////////////////NO TIENE EL TAMAÑO Y DONDE DE PARTICION
+estructuraAdministrativa* newParticion (){
+	estructuraAdministrativa * particion = malloc (sizeof(estructuraAdministrativa));
 	particion->estaOcupado = 0;
 	particion->idMensaje = 0;
 	particion->tipoMensaje = 20;
-	list_clean (particion->suscriptoresConACK); //Podemos necesitar destruir los elementos
-	list_clean (particion->suscriptoresConMensajeEnviado);
+	particion->suscriptoresConACK = list_create();
+	particion->suscriptoresConMensajeEnviado = list_create();
 	particion->tiempo = string_new();
 	string_append(&particion->tiempo, (char*)temporal_get_string_time());
 	particion->ultimaReferencia = string_new();
 	string_append(&particion->ultimaReferencia, (char*)temporal_get_string_time());
+	return particion;
 }
 
+///////////MODIFICAR UNA PARTICION, MAS QUE NADA PARA LIMPIARLA Y USARLA EN REEMPLAZAR////////////NO TIENE TAMAÑO Y DONDE DE PARTICION
+void limpiarParticion(estructuraAdministrativa * particion){
+	////////ya me viene con el malloc, porque lo realice en la funcion newParticion
+	particion->estaOcupado = 0;
+	particion->idMensaje = 0; ///////UN ID MENSAJE NO PUEDE SER 0, POR LO QUE SE LO CONSIDERA COMO NULO
+	list_clean(particion->suscriptoresConACK); /////SON SOLO INT,
+	list_clean(particion->suscriptoresConMensajeEnviado);
+	particion->tiempo = string_new();
+	particion->tiempo = temporal_get_string_time();
+	particion->ultimaReferencia = string_new();
+	particion->ultimaReferencia = temporal_get_string_time();
+}
+
+/////////////////////////////////////FIN PARTICIONES /////////////
+
 int reemplazar(){
-	estructuraAdministrativa* particion;
+	estructuraAdministrativa * particion;
 	//////////FIFO////////////////////////////////////////
 	if(noPuedoReemplazarMas()){
 		FLAG_COMPACTACION = 0;
@@ -810,7 +832,6 @@ void composicion(){
 		particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
 		log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)estructuraAdministrativaDestroyer);
-		log_info (LOGGER_OBLIGATORIO, "Se realizó la composicion del BS");
 	}
 		for (i=1; i<list_size(ADMINISTRADOR_MEMORIA); i++){
 		particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
@@ -821,14 +842,12 @@ void composicion(){
 				particionActual->estaOcupado = 0;
 				particionActual->tamanioParticion = particionAnterior->tamanioParticion + particionActual->tamanioParticion;
 				log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionAnterior->donde));
-				log_info (LOGGER_OBLIGATORIO, "Se realizó la composicion del BS");
 				list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i-1, (void*)estructuraAdministrativaDestroyer);
 				if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 					particionActual->estaOcupado = 0;
 					particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
 					log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)estructuraAdministrativaDestroyer);
-					log_info (LOGGER_OBLIGATORIO, "Se realizó la composicion del BS");
 		}
 		}
 	}
@@ -861,10 +880,8 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 			return particion;
 		}
 		while (particion->tamanioParticion / 2 >= tamanioMensaje && contar == BROKER_CONFIG.TAMANO_MEMORIA && particion->tamanioParticion >= BROKER_CONFIG.TAMANO_MINIMO_PARTICION){
-			estructuraAdministrativa * particionAuxiliar = malloc (sizeof (estructuraAdministrativa)); // la que le sigue al actua
-			particion->estaOcupado = 0;
+			estructuraAdministrativa * particionAuxiliar = newParticion();
 			particion->tamanioParticion = particion->tamanioParticion / 2;
-			limpiarParticion (particionAuxiliar);
 			particionAuxiliar->tamanioParticion = particion->tamanioParticion;
 			particionAuxiliar->donde =particion->donde + particion->tamanioParticion;
 			void tomarParticion(estructuraAdministrativa* elemento){
@@ -915,8 +932,7 @@ void reposicionarParticionesOcupadas(t_list * listaAuxiliar){
 	}
 	list_clean(ADMINISTRADOR_MEMORIA);//list_clean_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void *)estructuraAdministrativaDestroyerSinDestruirListas);
 	list_add_all(ADMINISTRADOR_MEMORIA, listaAuxiliar);
-	estructuraAdministrativa * espacioFaltante = malloc (sizeof(estructuraAdministrativa));
-	limpiarParticion(espacioFaltante);
+	estructuraAdministrativa * espacioFaltante = newParticion();
 	espacioFaltante->donde = nuevoDonde;
 	espacioFaltante->tamanioParticion = BROKER_CONFIG.TAMANO_MEMORIA - contarTamanio();
 	list_add_in_index(ADMINISTRADOR_MEMORIA, 0, espacioFaltante);
