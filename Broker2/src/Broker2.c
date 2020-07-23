@@ -218,7 +218,6 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (NEW) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		//list_clean_and_destroy_elements(mensajesNew, (void*)estructuraAdministrativaDestroyer);
-		free(elemento); ///////TERMINO DE MANDARLO Y LIBERO
 	break;
 	case d_CATCH_POKEMON:
 		mensajesCatch = tomarLosMensajes (d_CATCH_POKEMON);
@@ -287,16 +286,13 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 }
 
 t_list * tomarLosMensajes (d_message tipoMensaje){
-	estructuraAdministrativa* elemento;
-	estructuraAdministrativa * particionAGuardar = malloc (sizeof(estructuraAdministrativa));
+	estructuraAdministrativa* elemento = malloc (sizeof(estructuraAdministrativa));
 	t_list * listaTipo = list_create();
 	int tamanioLista = list_size(ADMINISTRADOR_MEMORIA);
 	for (int i = 0; i < tamanioLista; i++){
 		elemento = list_get(ADMINISTRADOR_MEMORIA, i);
 		if (elemento->tipoMensaje == tipoMensaje && elemento->estaOcupado == 1){
-			memcpy (particionAGuardar, elemento, sizeof(estructuraAdministrativa));
-			list_add (listaTipo, particionAGuardar);
-			/////////DONDE HAGO EL FREE?
+			list_add (listaTipo, elemento);
 		}
 	}
 	return listaTipo;
