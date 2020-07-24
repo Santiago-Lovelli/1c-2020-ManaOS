@@ -258,8 +258,8 @@ uint32_t Serialize_Unpack_idMensaje(void *pack) {
 char* Serialize_Unpack_pokemonName(void *buffer) {
 	uint32_t tamPokemon = 0;
 	memcpy(&tamPokemon, buffer+sizeof(uint32_t), sizeof(uint32_t));
-	char *pokemon = malloc(tamPokemon + 1);
-	memcpy(pokemon,buffer+(2*sizeof(uint32_t)),tamPokemon + 1);
+	char *pokemon = malloc(tamPokemon);
+	memcpy(pokemon,buffer+(2*sizeof(uint32_t)),tamPokemon);
 	return pokemon;
 }
 

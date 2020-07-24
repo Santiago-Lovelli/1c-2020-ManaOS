@@ -753,7 +753,7 @@ void localizarPokemon(char *pkm, uint32_t idMensajeNew) {
 		char** separadoIgual = string_split(lineasDeBloque[i], "=");
 		char** posiciones = string_split(separadoIgual[0], "-");
 
-		d_PosCant* posicion = malloc(sizeof(d_PosCant*));
+		d_PosCant* posicion = malloc(sizeof(d_PosCant));
 		//posicion->cantidad = atoi(separadoIgual[1]);
 		posicion->posX = atoi(posiciones[0]);
 		posicion->posY = atoi(posiciones[1]);

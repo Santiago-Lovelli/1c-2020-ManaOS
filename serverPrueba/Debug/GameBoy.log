@@ -1,0 +1,221 @@
+[INFO] 22:47:23:529 GameBoy/(5364:5364): Logger iniciado: GameBoy.log
+
+[INFO] 22:47:23:529 GameBoy/(5364:5364): Puerto GameCard: 9480
+[INFO] 22:47:23:529 GameBoy/(5364:5364): Ip GameCard: 127.0.0.1
+[INFO] 22:47:23:530 GameBoy/(5364:5364): Dentro de iniciar servidor
+[INFO] 22:47:23:530 GameBoy/(5364:5364): Listo para escuchar a mi cliente
+[INFO] 22:47:23:530 GameBoy/(5364:5364): esperando
+[INFO] 22:49:32:615 GameBoy/(5643:5643): Logger iniciado: GameBoy.log
+
+[INFO] 22:49:32:615 GameBoy/(5643:5643): Puerto GameCard: 9480
+[INFO] 22:49:32:615 GameBoy/(5643:5643): Ip GameCard: 127.0.0.1
+[INFO] 22:49:32:615 GameBoy/(5643:5643): Dentro de iniciar servidor
+[INFO] 22:49:32:616 GameBoy/(5643:5643): Listo para escuchar a mi cliente
+[INFO] 22:49:32:616 GameBoy/(5643:5643): esperando
+[INFO] 22:49:36:751 GameBoy/(5643:5643): Se conecto un cliente!
+[ERROR] 22:49:36:751 GameBoy/(5643:5643): Mensaje no entendido: 4
+
+[INFO] 22:49:36:751 GameBoy/(5643:5643): esperando
+[INFO] 22:49:36:752 GameBoy/(5643:5643): Se conecto un cliente!
+[ERROR] 22:49:36:752 GameBoy/(5643:5643): Mensaje no entendido: 4
+
+[INFO] 22:49:36:752 GameBoy/(5643:5643): esperando
+[INFO] 22:49:36:753 GameBoy/(5643:5643): Se conecto un cliente!
+[ERROR] 22:49:36:753 GameBoy/(5643:5643): Mensaje no entendido: 4
+
+[INFO] 22:49:36:753 GameBoy/(5643:5643): esperando
+[INFO] 22:50:05:7 GameBoy/(5643:5643): Se conecto un cliente!
+[ERROR] 22:50:05:8 GameBoy/(5643:5643): Mensaje no entendido: 24
+
+[INFO] 22:50:05:8 GameBoy/(5643:5643): esperando
+[INFO] 22:51:46:218 GameBoy/(5643:5643): Se conecto un cliente!
+[ERROR] 22:51:46:218 GameBoy/(5643:5643): Mensaje no entendido: 28
+
+[INFO] 22:51:46:218 GameBoy/(5643:5643): esperando
+[INFO] 22:53:14:172 GameBoy/(5759:5759): Logger iniciado: GameBoy.log
+
+[INFO] 22:53:14:173 GameBoy/(5759:5759): Puerto GameCard: 9480
+[INFO] 22:53:14:173 GameBoy/(5759:5759): Ip GameCard: 127.0.0.1
+[INFO] 22:53:14:173 GameBoy/(5759:5759): Dentro de iniciar servidor
+[INFO] 22:53:14:173 GameBoy/(5759:5759): Listo para escuchar a mi cliente
+[INFO] 22:53:14:173 GameBoy/(5759:5759): esperando
+[INFO] 22:53:18:361 GameBoy/(5759:5759): Se conecto un cliente!
+[ERROR] 22:53:18:361 GameBoy/(5759:5759): Mensaje no entendido: 4
+
+[INFO] 22:53:18:361 GameBoy/(5759:5759): esperando
+[INFO] 22:53:18:361 GameBoy/(5759:5759): Se conecto un cliente!
+[ERROR] 22:53:18:361 GameBoy/(5759:5759): Mensaje no entendido: 4
+
+[INFO] 22:53:18:361 GameBoy/(5759:5759): esperando
+[INFO] 22:53:18:362 GameBoy/(5759:5759): Se conecto un cliente!
+[ERROR] 22:53:18:362 GameBoy/(5759:5759): Mensaje no entendido: 4
+
+[INFO] 22:53:18:362 GameBoy/(5759:5759): esperando
+[INFO] 22:53:33:818 GameBoy/(5759:5759): Se conecto un cliente!
+[ERROR] 22:53:33:818 GameBoy/(5759:5759): Mensaje no entendido: 24
+
+[INFO] 22:53:33:818 GameBoy/(5759:5759): esperando
+[INFO] 22:53:37:390 GameBoy/(5759:5759): Se conecto un cliente!
+[INFO] 22:53:37:391 GameBoy/(5759:5759): id: 9, pkm: Pikachu
+[INFO] 22:53:37:391 GameBoy/(5759:5759): x: 2, y:5
+[INFO] 22:53:37:391 GameBoy/(5759:5759): esperando
+[INFO] 22:54:48:144 GameBoy/(5759:5759): Se conecto un cliente!
+[ERROR] 22:54:48:144 GameBoy/(5759:5759): Mensaje no entendido: 24
+
+[INFO] 22:54:48:144 GameBoy/(5759:5759): esperando
+[INFO] 22:54:59:466 GameBoy/(5759:5759): Se conecto un cliente!
+[INFO] 22:54:59:466 GameBoy/(5759:5759): id: 2, pkm: Pikachu
+[INFO] 22:54:59:466 GameBoy/(5759:5759): x: 2, y:5
+[INFO] 22:54:59:466 GameBoy/(5759:5759): x: 9, y:9
+[INFO] 22:54:59:466 GameBoy/(5759:5759): esperando
+[INFO] 22:55:38:360 GameBoy/(5804:5804): Logger iniciado: GameBoy.log
+
+[INFO] 22:55:38:360 GameBoy/(5804:5804): Puerto GameCard: 9480
+[INFO] 22:55:38:360 GameBoy/(5804:5804): Ip GameCard: 127.0.0.1
+[INFO] 22:55:38:360 GameBoy/(5804:5804): Dentro de iniciar servidor
+[INFO] 22:55:38:360 GameBoy/(5804:5804): Listo para escuchar a mi cliente
+[INFO] 22:55:38:360 GameBoy/(5804:5804): esperando
+[INFO] 22:55:44:1 GameBoy/(5804:5804): Se conecto un cliente!
+[ERROR] 22:55:45:9 GameBoy/(5804:5804): Mensaje no entendido: 4
+
+[INFO] 22:55:45:9 GameBoy/(5804:5804): esperando
+[INFO] 22:55:45:9 GameBoy/(5804:5804): Se conecto un cliente!
+[ERROR] 22:55:45:9 GameBoy/(5804:5804): Mensaje no entendido: 4
+
+[INFO] 22:55:45:9 GameBoy/(5804:5804): esperando
+[INFO] 22:55:45:9 GameBoy/(5804:5804): Se conecto un cliente!
+[ERROR] 22:55:45:13 GameBoy/(5804:5804): Mensaje no entendido: 4
+
+[INFO] 22:55:45:13 GameBoy/(5804:5804): esperando
+[INFO] 22:55:51:835 GameBoy/(5804:5804): Se conecto un cliente!
+[ERROR] 22:55:51:838 GameBoy/(5804:5804): Mensaje no entendido: 24
+
+[INFO] 22:55:51:838 GameBoy/(5804:5804): esperando
+[INFO] 22:55:57:1 GameBoy/(5804:5804): Se conecto un cliente!
+[ERROR] 22:55:57:1 GameBoy/(5804:5804): Mensaje no entendido: 24
+
+[INFO] 22:55:57:1 GameBoy/(5804:5804): esperando
+[INFO] 22:56:00:421 GameBoy/(5804:5804): Se conecto un cliente!
+[INFO] 22:56:00:423 GameBoy/(5804:5804): id: 2, pkm: Pikachu
+[INFO] 22:56:00:423 GameBoy/(5804:5804): x: 9, y:9
+[INFO] 22:56:00:423 GameBoy/(5804:5804): x: 2, y:5
+[INFO] 22:56:00:423 GameBoy/(5804:5804): esperando
+[INFO] 22:59:51:558 GameBoy/(5956:5956): Logger iniciado: GameBoy.log
+
+[INFO] 22:59:51:558 GameBoy/(5956:5956): Puerto GameCard: 9480
+[INFO] 22:59:51:558 GameBoy/(5956:5956): Ip GameCard: 127.0.0.1
+[INFO] 22:59:51:558 GameBoy/(5956:5956): Dentro de iniciar servidor
+[INFO] 22:59:51:559 GameBoy/(5956:5956): Listo para escuchar a mi cliente
+[INFO] 22:59:51:559 GameBoy/(5956:5956): esperando
+[INFO] 23:00:00:892 GameBoy/(5956:5956): Se conecto un cliente!
+[ERROR] 23:00:00:926 GameBoy/(5956:5956): Mensaje no entendido: 4
+
+[INFO] 23:00:00:926 GameBoy/(5956:5956): esperando
+[INFO] 23:00:00:926 GameBoy/(5956:5956): Se conecto un cliente!
+[ERROR] 23:00:00:926 GameBoy/(5956:5956): Mensaje no entendido: 4
+
+[INFO] 23:00:00:927 GameBoy/(5956:5956): esperando
+[INFO] 23:00:00:927 GameBoy/(5956:5956): Se conecto un cliente!
+[ERROR] 23:00:00:927 GameBoy/(5956:5956): Mensaje no entendido: 4
+
+[INFO] 23:00:00:927 GameBoy/(5956:5956): esperando
+[INFO] 23:00:30:656 GameBoy/(5971:5971): Logger iniciado: GameBoy.log
+
+[INFO] 23:00:30:656 GameBoy/(5971:5971): Puerto GameCard: 9480
+[INFO] 23:00:30:656 GameBoy/(5971:5971): Ip GameCard: 127.0.0.1
+[INFO] 23:00:30:656 GameBoy/(5971:5971): Dentro de iniciar servidor
+[INFO] 23:00:30:656 GameBoy/(5971:5971): Listo para escuchar a mi cliente
+[INFO] 23:00:30:656 GameBoy/(5971:5971): esperando
+[INFO] 23:00:36:543 GameBoy/(5971:5971): Se conecto un cliente!
+[ERROR] 23:00:36:562 GameBoy/(5971:5971): Mensaje no entendido: 4
+
+[INFO] 23:00:36:562 GameBoy/(5971:5971): esperando
+[INFO] 23:00:36:562 GameBoy/(5971:5971): Se conecto un cliente!
+[ERROR] 23:00:36:562 GameBoy/(5971:5971): Mensaje no entendido: 4
+
+[INFO] 23:00:36:562 GameBoy/(5971:5971): esperando
+[INFO] 23:00:36:562 GameBoy/(5971:5971): Se conecto un cliente!
+[ERROR] 23:00:36:563 GameBoy/(5971:5971): Mensaje no entendido: 4
+
+[INFO] 23:00:36:563 GameBoy/(5971:5971): esperando
+[INFO] 23:00:43:404 GameBoy/(5971:5971): Se conecto un cliente!
+[ERROR] 23:00:43:407 GameBoy/(5971:5971): Mensaje no entendido: 24
+
+[INFO] 23:00:43:407 GameBoy/(5971:5971): esperando
+[INFO] 23:00:50:3 GameBoy/(5971:5971): Se conecto un cliente!
+[INFO] 23:00:50:10 GameBoy/(5971:5971): id: 2, pkm: Pikachu
+[INFO] 23:00:50:10 GameBoy/(5971:5971): x: 9, y:9
+[INFO] 23:00:50:10 GameBoy/(5971:5971): esperando
+[INFO] 23:03:58:378 GameBoy/(6088:6088): Logger iniciado: GameBoy.log
+
+[INFO] 23:03:58:378 GameBoy/(6088:6088): Puerto GameCard: 9480
+[INFO] 23:03:58:378 GameBoy/(6088:6088): Ip GameCard: 127.0.0.1
+[INFO] 23:03:58:378 GameBoy/(6088:6088): Dentro de iniciar servidor
+[INFO] 23:03:58:379 GameBoy/(6088:6088): Listo para escuchar a mi cliente
+[INFO] 23:03:58:379 GameBoy/(6088:6088): esperando
+[INFO] 23:04:04:822 GameBoy/(6088:6088): Se conecto un cliente!
+[ERROR] 23:04:04:845 GameBoy/(6088:6088): Mensaje no entendido: 4
+
+[INFO] 23:04:04:845 GameBoy/(6088:6088): esperando
+[INFO] 23:04:04:845 GameBoy/(6088:6088): Se conecto un cliente!
+[ERROR] 23:04:04:845 GameBoy/(6088:6088): Mensaje no entendido: 4
+
+[INFO] 23:04:04:845 GameBoy/(6088:6088): esperando
+[INFO] 23:04:04:845 GameBoy/(6088:6088): Se conecto un cliente!
+[ERROR] 23:04:04:846 GameBoy/(6088:6088): Mensaje no entendido: 4
+
+[INFO] 23:04:04:846 GameBoy/(6088:6088): esperando
+[INFO] 23:04:36:179 GameBoy/(6100:6100): Logger iniciado: GameBoy.log
+
+[INFO] 23:04:36:179 GameBoy/(6100:6100): Puerto GameCard: 9480
+[INFO] 23:04:36:179 GameBoy/(6100:6100): Ip GameCard: 127.0.0.1
+[INFO] 23:04:36:179 GameBoy/(6100:6100): Dentro de iniciar servidor
+[INFO] 23:04:36:179 GameBoy/(6100:6100): Listo para escuchar a mi cliente
+[INFO] 23:04:36:179 GameBoy/(6100:6100): esperando
+[INFO] 23:04:42:389 GameBoy/(6100:6100): Se conecto un cliente!
+[ERROR] 23:04:42:419 GameBoy/(6100:6100): Mensaje no entendido: 4
+
+[INFO] 23:04:42:419 GameBoy/(6100:6100): esperando
+[INFO] 23:04:42:419 GameBoy/(6100:6100): Se conecto un cliente!
+[ERROR] 23:04:42:424 GameBoy/(6100:6100): Mensaje no entendido: 4
+
+[INFO] 23:04:42:424 GameBoy/(6100:6100): esperando
+[INFO] 23:04:42:424 GameBoy/(6100:6100): Se conecto un cliente!
+[ERROR] 23:04:42:424 GameBoy/(6100:6100): Mensaje no entendido: 4
+
+[INFO] 23:04:42:424 GameBoy/(6100:6100): esperando
+[INFO] 23:04:49:573 GameBoy/(6100:6100): Se conecto un cliente!
+[ERROR] 23:04:49:576 GameBoy/(6100:6100): Mensaje no entendido: 24
+
+[INFO] 23:04:49:576 GameBoy/(6100:6100): esperando
+[INFO] 23:04:53:367 GameBoy/(6100:6100): Se conecto un cliente!
+[INFO] 23:04:53:370 GameBoy/(6100:6100): id: 2, pkm: Pikachu
+[INFO] 23:04:53:370 GameBoy/(6100:6100): x: 9, y:9
+[INFO] 23:04:53:370 GameBoy/(6100:6100): esperando
+[INFO] 23:05:35:330 GameBoy/(6119:6119): Logger iniciado: GameBoy.log
+
+[INFO] 23:05:35:359 GameBoy/(6119:6119): Puerto GameCard: 9480
+[INFO] 23:05:35:360 GameBoy/(6119:6119): Ip GameCard: 127.0.0.1
+[INFO] 23:05:35:361 GameBoy/(6119:6119): Dentro de iniciar servidor
+[INFO] 23:05:35:374 GameBoy/(6119:6119): Listo para escuchar a mi cliente
+[INFO] 23:05:35:376 GameBoy/(6119:6119): esperando
+[INFO] 23:05:40:809 GameBoy/(6119:6119): Se conecto un cliente!
+[ERROR] 23:05:40:812 GameBoy/(6119:6119): Mensaje no entendido: 4
+
+[INFO] 23:05:40:814 GameBoy/(6119:6119): esperando
+[INFO] 23:05:40:814 GameBoy/(6119:6119): Se conecto un cliente!
+[ERROR] 23:05:40:814 GameBoy/(6119:6119): Mensaje no entendido: 4
+
+[INFO] 23:05:40:815 GameBoy/(6119:6119): esperando
+[INFO] 23:05:40:815 GameBoy/(6119:6119): Se conecto un cliente!
+[ERROR] 23:05:40:815 GameBoy/(6119:6119): Mensaje no entendido: 4
+
+[INFO] 23:05:40:815 GameBoy/(6119:6119): esperando
+[INFO] 23:06:38:297 GameBoy/(6119:6119): Se conecto un cliente!
+[ERROR] 23:06:38:298 GameBoy/(6119:6119): Mensaje no entendido: 24
+
+[INFO] 23:06:38:299 GameBoy/(6119:6119): esperando
+[INFO] 23:06:42:978 GameBoy/(6119:6119): Se conecto un cliente!
+[INFO] 23:06:42:989 GameBoy/(6119:6119): id: 2, pkm: Pikachu
+[INFO] 23:06:42:992 GameBoy/(6119:6119): x: 9, y:9
+[INFO] 23:06:42:993 GameBoy/(6119:6119): esperando
