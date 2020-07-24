@@ -492,7 +492,7 @@ void enviarCaughtPokemon(char* pkm, uint32_t resultado, uint32_t idMensajeNew) {
 	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, idMensajeNew, resultado);
 }
 
-void enviarLocalizedPokemon(char* pkm, t_list* posicionesConCantidad,
+void enviarLocalizedPokemon(char* pkm, d_PosCant** posicionesConCantidad,
 		uint32_t idMensajeNew) {
 	char *ip = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
 	char *puerto = config_get_string_value(archivo_de_configuracion,
@@ -504,7 +504,7 @@ void enviarLocalizedPokemon(char* pkm, t_list* posicionesConCantidad,
 				"No se pudo conectar al Broker para un LocalizedPokemon");
 		return;
 	}
-	log_info(loggerGeneral, "Mando Localized: cantidad de puntos: %i", list_size(posicionesConCantidad));
+	log_info(loggerGeneral, "Mando Localized: cantidad de puntos: %i", damePosicionFinalDoblePuntero(posicionesConCantidad));
 	Serialize_PackAndSend_LOCALIZED_POKEMON(conexion, idMensajeNew, pkm,
 			posicionesConCantidad);
 }
@@ -745,23 +745,27 @@ void localizarPokemon(char *pkm, uint32_t idMensajeNew) {
 
 	int i = 0;
 
-	t_list* posicionCantidad = list_create();
+	d_PosCant** posicionCantidad = malloc(sizeof(d_PosCant**) + sizeof(uint32_t));
+	posicionCantidad[0] = NULL;
+
 
 	while (lineasDeBloque[i] != NULL) {
 		char** separadoIgual = string_split(lineasDeBloque[i], "=");
 		char** posiciones = string_split(separadoIgual[0], "-");
 
-		d_PosCant* posicion = malloc(sizeof(d_PosCant));
+		d_PosCant* posicion = malloc(sizeof(d_PosCant*));
 		//posicion->cantidad = atoi(separadoIgual[1]);
 		posicion->posX = atoi(posiciones[0]);
 		posicion->posY = atoi(posiciones[1]);
 		log_info(loggerGeneral,"x: %i, y: %i", posicion->posX, posicion->posY);
-		list_add(posicionCantidad, posicion);
+		posicionCantidad = realloc(posicionCantidad, (sizeof(d_PosCant**) + (i+1)*(sizeof(d_PosCant*)) + sizeof(uint32_t) ) );
+		posicionCantidad[i] = posicion;
+		posicionCantidad[i+1] = NULL;
 		i=i+1;
 	}
 
 	enviarLocalizedPokemon(pkm, posicionCantidad, idMensajeNew);
-	list_destroy_and_destroy_elements(posicionCantidad,free);
+	liberarDoblePuntero(posicionCantidad);
 	list_destroy_and_destroy_elements(listaDeBloques,free);
 	free(megaChar);
 	cerrarArchivoPokemon(pkm);

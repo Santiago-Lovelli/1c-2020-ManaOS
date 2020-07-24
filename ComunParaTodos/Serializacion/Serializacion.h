@@ -168,7 +168,7 @@ bool Serialize_PackAndSend_CAUGHT_POKEMON(int socketCliente, uint32_t idMensaje,
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO LOCALIZED_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 
-bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensaje, char *pokemon, t_list *poscant);
+bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensaje, char *pokemon, d_PosCant** posiciones);
 
 /**
  * ESTA FUNCION SIRVE COMO UNA ABSTRACCION PARA NO REPETIR LOGICA, SE USA A TRAVES DE
