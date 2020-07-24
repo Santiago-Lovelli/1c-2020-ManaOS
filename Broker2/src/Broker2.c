@@ -12,12 +12,15 @@ void EsperarClientes(){
 	int server = iniciar_servidor(BROKER_CONFIG.IP_BROKER, BROKER_CONFIG.PUERTO_BROKER, LOGGER_OBLIGATORIO);
 	while(1){
 		sem_wait(&MUTEX_CLIENTE);
-		int cliente = esperar_cliente_con_accept(server, LOGGER_OBLIGATORIO);
-		log_info(LOGGER_OBLIGATORIO, "Se conecto un cliente: %i", cliente);
+		int *cliente = malloc(sizeof(int));
+		*cliente = esperar_cliente_con_accept(server, LOGGER_OBLIGATORIO);
+		log_info(LOGGER_OBLIGATORIO, "Se conecto un cliente: %i", *cliente);
 		pthread_t* hiloDeAtencion = malloc(sizeof(pthread_t));
-		if (pthread_create(hiloDeAtencion, NULL, (void* )AtenderCliente, &cliente) != 0){
+		int hilo = pthread_create(hiloDeAtencion, NULL, (void* )AtenderCliente, cliente);
+		if (hilo != 0){
 			sem_post(&MUTEX_CLIENTE);
 		}
+		pthread_detach(hilo);
 	}
 }
 
@@ -26,6 +29,7 @@ void* AtenderCliente(int* cliente) {
 		HeaderDelibird headerRecibido =  Serialize_RecieveHeader(*cliente);
 		if(headerRecibido.tipoMensaje == -1){
 			log_error(LOGGER_OBLIGATORIO, "Se desconecto el cliente %i: \n", *cliente);
+			close(*cliente);
 			sem_post(&MUTEX_CLIENTE);
 			return (NULL);
 		}
@@ -273,7 +277,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 		for (int i=0; i<tamanioLocalized;i++){
 			elemento = list_get (mensajesLocalized, i);
 			mensajeLocalized = leerInfoYActualizarUsoPorID(elemento->idMensaje);
-			Serialize_PackAndSend_LOCALIZED_POKEMON(*cliente, elemento->idMensaje, mensajeLocalized->nombrePokemon, mensajeLocalized->puntos);
+			Serialize_PackAndSend_LOCALIZED_POKEMON(*cliente, elemento->idMensaje, mensajeLocalized->nombrePokemon, &mensajeLocalized->puntos);
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (LOCALIZED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
@@ -366,7 +370,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_LOCALIZED_POKEMON:
 		mensajeLocalized = (localizedEnMemoria*)mensaje;
 		void notificarSuscriptorLocalized(int * self){
-			Serialize_PackAndSend_LOCALIZED_POKEMON(*self, id, mensajeLocalized->nombrePokemon, mensajeLocalized->puntos);
+			Serialize_PackAndSend_LOCALIZED_POKEMON(*self, id, mensajeLocalized->nombrePokemon, &mensajeLocalized->puntos);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
@@ -416,7 +420,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/tp-2020-1c-ManaOS-/Broker2/Broker.config");
+	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker2/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -616,7 +620,9 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 		bool hayParticionParaGuardarlo(estructuraAdministrativa* elemento) {
 				return (elemento->estaOcupado == 0 && elemento->tamanioParticion >= tamanioMensaje);
 			}
+		sem_wait(&MUTEX_LISTA);
 		particion = list_find(ADMINISTRADOR_MEMORIA, (void*) hayParticionParaGuardarlo);
+		sem_post(&MUTEX_LISTA);
 		}
 	//////////BEST FIT///////////////////////
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "bf")){
@@ -712,7 +718,9 @@ int primeraParticion(){
 	bool estaOcupado(estructuraAdministrativa* elemento) {
 					return (elemento->estaOcupado == 1);
 				}
+	sem_wait(&MUTEX_LISTA);
 	particionMenor = list_find(ADMINISTRADOR_MEMORIA, (void*) estaOcupado); // asi arreglo de agarrar uno que este desocupado
+	sem_post(&MUTEX_LISTA);
 	void tomarParticion(estructuraAdministrativa* elemento){
 					if(elemento->donde == particionMenor->donde){
 					posicionMenor = contador;
@@ -740,7 +748,9 @@ int particionMenosReferenciada(){
 		bool estaOcupado(estructuraAdministrativa* elemento) {
 						return (elemento->estaOcupado == 1);
 					}
+		sem_wait(&MUTEX_LISTA);
 		particionMenor = list_find(ADMINISTRADOR_MEMORIA, (void*) estaOcupado); // asi arreglo de agarrar uno que este desocupado
+		sem_post(&MUTEX_LISTA);
 		void tomarParticion(estructuraAdministrativa* elemento){
 						if(elemento->donde == particionMenor->donde){
 						posicionMenor = contador;
@@ -820,7 +830,9 @@ bool noPuedoReemplazarMas(){
 	bool cualquieraOcupado(estructuraAdministrativa* elemento) {
 		return (elemento->estaOcupado == 1);
 	}
+	sem_wait(&MUTEX_LISTA);
 	void * x = list_find(ADMINISTRADOR_MEMORIA, (void*)cualquieraOcupado);
+	sem_post(&MUTEX_LISTA);
 	return (x==NULL);
 }
 
@@ -862,7 +874,6 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 	int contar = contarTamanio();
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
-		estructuraAdministrativa * particionVacia = malloc (sizeof (estructuraAdministrativa));
 		int tamanioInicial = particion->tamanioParticion;
 		particion->tamanioParticion = tamanioDeMensaje(tipoMensaje, mensaje);
 		if(particion->tamanioParticion < BROKER_CONFIG.TAMANO_MINIMO_PARTICION){
@@ -870,7 +881,7 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 		}
 		limpiarParticion(particion);
 		if(tamanioInicial - particion->tamanioParticion > BROKER_CONFIG.TAMANO_MINIMO_PARTICION){
-			limpiarParticion (particionVacia);
+			estructuraAdministrativa * particionVacia = newParticion();
 			particionVacia->tamanioParticion = tamanioInicial - particion->tamanioParticion;
 			particionVacia->donde = particion->donde + particion->tamanioParticion;
 			list_add(ADMINISTRADOR_MEMORIA, particionVacia);
@@ -966,7 +977,9 @@ void * leerInfoYActualizarUsoPorID(int id){ //deuelve un tipo en memoria
 	bool igualID(estructuraAdministrativa* elemento) {
 				return (elemento->idMensaje == id);
 			}
+	sem_wait(&MUTEX_LISTA);
 	estructuraAdministrativa * ElElemento = list_find(ADMINISTRADOR_MEMORIA, (void*)igualID);
+	sem_post(&MUTEX_LISTA);
 	ElElemento->ultimaReferencia = string_new();
 	string_append(&ElElemento->ultimaReferencia, (char*)temporal_get_string_time());
 	return(levantarMensaje(ElElemento->tipoMensaje, ElElemento->donde));
@@ -1205,7 +1218,19 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo){
 		break;
 	case d_LOCALIZED_POKEMON:
 		retornoLocalized = malloc(sizeof(localizedEnMemoria));
-		retornoLocalized = lugarDeComienzo;
+		memcpy(&retornoLocalized->largoDeNombre, lugarDeComienzo, sizeof(uint32_t));
+		desplazamiento += sizeof(uint32_t);
+		retornoLocalized->nombrePokemon = malloc(retornoLocalized->largoDeNombre);
+		memcpy(retornoLocalized->nombrePokemon, lugarDeComienzo + desplazamiento, retornoLocalized->largoDeNombre);
+		desplazamiento += retornoLocalized->largoDeNombre;
+		memcpy(&retornoLocalized->cantidadDePuntos, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
+		desplazamiento += sizeof(uint32_t);
+		for(int i=0; retornoLocalized->cantidadDePuntos>i; i++){
+			memcpy(&retornoLocalized->puntos->posX, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
+			desplazamiento += sizeof(uint32_t);
+			memcpy(&retornoLocalized->puntos->posY, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
+			desplazamiento += sizeof(uint32_t);
+		}
 		sem_post(&MUTEX_MEMORIA);
 		return retornoLocalized;
 		break;
@@ -1276,7 +1301,18 @@ void guardarMensajeEnMemoria(d_message tipoMensaje, void * mensaje, void * lugar
 		return;
 	case d_LOCALIZED_POKEMON:
 		retornoLocalized = mensaje;
-		retornoLocalized = lugarDeComienzo;
+		memcpy(lugarDeComienzo, &retornoLocalized->largoDeNombre, sizeof(uint32_t));
+		desplazamiento += sizeof(uint32_t);
+		memcpy(lugarDeComienzo + desplazamiento, retornoLocalized->nombrePokemon, retornoLocalized->largoDeNombre);
+		desplazamiento += retornoLocalized->largoDeNombre;
+		memcpy(lugarDeComienzo + desplazamiento, &retornoLocalized->cantidadDePuntos, sizeof(uint32_t));
+		desplazamiento += sizeof(uint32_t);
+		for(int i=0; retornoLocalized->cantidadDePuntos>i; i++){
+			memcpy(lugarDeComienzo + desplazamiento, &retornoLocalized->puntos->posX, sizeof(uint32_t));
+			desplazamiento += sizeof(uint32_t);
+			memcpy(lugarDeComienzo + desplazamiento, &retornoLocalized->puntos->posY, sizeof(uint32_t));
+			desplazamiento += sizeof(uint32_t);
+		}
 		sem_post(&MUTEX_MEMORIA);
 		return;
 	default:
