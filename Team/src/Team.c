@@ -186,7 +186,7 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
 	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
 	if(conexion == -1){
-		log_error(TEAM_LOG,"No se pudo conectar con el Broker. Se procede con comportamiento DEFAULT");
+		log_error(TEAM_LOG,"No se pudo conectar con el Broker para enviar GET %s. Se procede con comportamiento DEFAULT",pokemon);
 		return; //comportamiento Default es asumir que el pokemon no esta
 	}
 	Serialize_PackAndSend_GET_POKEMON_NoID(conexion,pokemon);
@@ -282,29 +282,24 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 
 
 void atender(HeaderDelibird header, int cliente, t_log* logger) {
-	//es el atender del gamecard, ahora hay que tunearlo para que atienda el team
 	switch (header.tipoMensaje) {
-	case d_APPEARED_POKEMON:
-		;
+	case d_APPEARED_POKEMON:;
 		log_info(logger, "Llego un APPEARED POKEMON");
 		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 		sem_post(&semaforoSocket);
 		uint32_t posicionAppearedX, posicionAppearedY;
 		char *AppearedNombrePokemon;
 		Serialize_Unpack_AppearedPokemon_NoID(packAppearedPokemon, &AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
-		log_info(logger, "Me llego mensaje de %i. Pkm: %s, x: %i, y: %i\n", header.tipoMensaje, AppearedNombrePokemon, posicionAppearedX, posicionAppearedY);
-
+		log_info(logger, "Contenidos del mensaje: Pkm: %s, x: %i, y: %i\n", AppearedNombrePokemon, posicionAppearedX, posicionAppearedY);
+		Serialize_PackAndSend_ACK(cliente, 1);
 		if(necesitoEstePokemon(AppearedNombrePokemon)){
 			printf("Necesito este pokemon!!! \n ");
 			hacerAppeared(AppearedNombrePokemon,posicionAppearedX,posicionAppearedY,logger);
 		}
 		else{ printf("No necesito este pokemon!!! \n "); }
 		free(packAppearedPokemon);
-
 		break;
-	case d_LOCALIZED_POKEMON:
-		;
-//		SERIALIZACION PENDIENTE
+	case d_LOCALIZED_POKEMON:;
 		log_info(logger, "Llego un LOCALIZED POKEMON");
 		void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 		sem_post(&semaforoSocket);
@@ -312,7 +307,12 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		uint32_t idMensajeLocalized;
 		char *localizedNombrePokemon;
 		Serialize_Unpack_LocalizedPokemon(packLocalizedPokemon,&idMensajeLocalized,&localizedNombrePokemon,&posCant);
-		//logear lo que llego
+		log_info(logger,"Contenidos del mensaje: id: %i, Pkm: %s",idMensajeLocalized,localizedNombrePokemon);
+		for(int i = 0; i<posCant->elements_count; i++){
+			d_PosCant* asd = list_get(posCant,i);
+			log_info(logger,"x: %i, y:%i",asd->posX,asd->posY);
+		}
+		Serialize_PackAndSend_ACK(cliente, 1);
 		if(necesitoEstePokemon(localizedNombrePokemon)){
 			printf("Necesito este pokemon!!! \n ");
 			for(int i=0; i<list_size(posCant);i++){
@@ -324,8 +324,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		free(packLocalizedPokemon);
 		break;
 
-	case d_CAUGHT_POKEMON:
-		;
+	case d_CAUGHT_POKEMON:;
 		log_info(logger, "Llego un CAUGHT POKEMON");
 		//recibimos el resto del paquete
 		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
@@ -333,8 +332,8 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		//Con estas dos variables desempaquetamos el paquete
 		uint32_t idMensajeCaught, resultadoCaught;
 		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught, &resultadoCaught);
-		log_info(logger, "Me llego mensaje de %i. Id: %i, Result: %i\n", header.tipoMensaje, idMensajeCaught, resultadoCaught);
-
+		log_info(logger, "Contenidos del mensaje: Id: %i, Result: %i\n", idMensajeCaught, resultadoCaught);
+		Serialize_PackAndSend_ACK(cliente, 1);
 		if(necesitoEsteID(idMensajeCaught)){
 			hacerCaught(idMensajeCaught,resultadoCaught);
 		}
@@ -346,6 +345,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		log_error(logger, "Mensaje no entendido: %i\n", header);
 		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
+		Serialize_PackAndSend_ACK(cliente, 0);
 		free(packBasura);
 		sem_post(&semaforoSocket);
 		break;

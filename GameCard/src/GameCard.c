@@ -888,7 +888,7 @@ void atender(HeaderDelibird header, p_elementoDeHilo* elemento, t_list* semaforo
 				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i, cant: %i\n",
 				header.tipoMensaje, idMensajeNew, newNombrePokemon,
 				posicionNewX, posicionNewY, newCantidad);
-
+		Serialize_PackAndSend_ACK(cliente, 1);
 		liberarSemaforos(semaforos);
 		newPokemon(newNombrePokemon, posicionNewX, posicionNewY, newCantidad,
 				idMensajeNew);
@@ -910,6 +910,7 @@ void atender(HeaderDelibird header, p_elementoDeHilo* elemento, t_list* semaforo
 				"Me llego mensaje de %i. Id: %i, Pkm: %s, x: %i, y: %i\n",
 				header.tipoMensaje, idMensajeCatch, catchNombrePokemon,
 				posicionCatchX, posicionCatchY);
+		Serialize_PackAndSend_ACK(cliente, 1);
 		liberarSemaforos(semaforos);
 		catchPokemon(catchNombrePokemon, posicionCatchX, posicionCatchY,
 				idMensajeCatch);
@@ -928,6 +929,7 @@ void atender(HeaderDelibird header, p_elementoDeHilo* elemento, t_list* semaforo
 				&getNombrePokemon);
 		log_info(logger, "Me llego mensaje de %i. Id: %i, Pkm: %s\n",
 				header.tipoMensaje, idMensajeGet, getNombrePokemon);
+		Serialize_PackAndSend_ACK(cliente, 1);
 		liberarSemaforos(semaforos);
 		getPokemon(getNombrePokemon, idMensajeGet);
 		free(packGetPokemon);
@@ -936,6 +938,7 @@ void atender(HeaderDelibird header, p_elementoDeHilo* elemento, t_list* semaforo
 		log_error(logger, "Mensaje no entendido: %i\n", header);
 		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
+		Serialize_PackAndSend_ACK(cliente, 0);
 		liberarSemaforos(semaforos);
 		free(packBasura);
 		break;
