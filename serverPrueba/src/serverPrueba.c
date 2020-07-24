@@ -43,6 +43,29 @@ int main(void) {
 					d_PosCant* asd = list_get(list,i);
 					log_info(log,"x: %i, y:%i",asd->posX,asd->posY);
 				}
+
+				int server = conectarse_a_un_servidor("127.0.0.1","7269",log);
+
+				d_PosCant** posicionCantidad = malloc(sizeof(d_PosCant**) + sizeof(uint32_t));
+				posicionCantidad[0] = NULL;
+
+				for (int i = 0; i < list_size(list); ++i) {
+					d_PosCant* posicion = list_get(list,i);
+					log_info(log,"x: %i, y: %i", posicion->posX, posicion->posY);
+					posicionCantidad = realloc(posicionCantidad, (sizeof(d_PosCant**) + (i+1)*(sizeof(d_PosCant*)) + sizeof(uint32_t) ) );
+					posicionCantidad[i] = posicion;
+					posicionCantidad[i+1] = NULL;
+				}
+
+				Serialize_PackAndSend_LOCALIZED_POKEMON(server,id,pokemon,posicionCantidad);
+
+				HeaderDelibird headerack = Serialize_RecieveHeader(server);
+				void* paqueteack = Serialize_ReceiveAndUnpack(server, headerack.tamanioMensaje);
+
+				uint32_t result = Serialize_Unpack_ACK(paqueteack);
+
+				log_info(log,"ack= %i", result);
+
 				break;
 			default:;
 				log_error(log, "Mensaje no entendido: %i\n", headerRecibido);
