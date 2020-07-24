@@ -7,6 +7,8 @@
 bool Serialize_PackAndSend(int socketCliente, const void *pack, uint32_t tamPack, d_message tipoMensaje) {
 
 	uint32_t tamMessage = tamPack + sizeof(d_message) + sizeof(uint32_t);
+	printf("Tam mensaje: %d \n", tamMessage);
+	fflush(stdout);
 	void* buffer = malloc( tamMessage );
 	int desplazamiento = 0;
 	memcpy(buffer, &tipoMensaje ,sizeof(d_message));
@@ -14,8 +16,6 @@ bool Serialize_PackAndSend(int socketCliente, const void *pack, uint32_t tamPack
 	memcpy(buffer+desplazamiento, &tamPack , sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
 	memcpy(buffer+desplazamiento, pack, tamPack);
-	uint32_t prueba = 0;
-	uint32_t dprueba = 0;
 	desplazamiento += tamPack;
 		if(desplazamiento != tamMessage){ return (-1); }
 	int resultado = send(socketCliente, buffer, tamMessage, 0);
@@ -179,31 +179,34 @@ bool Serialize_PackAndSend_CAUGHT_POKEMON(int socketCliente, uint32_t idMensaje,
 	return resultadoenvio;
 }
 
-bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensaje, char *pokemon, t_list *poscant) {
-	uint32_t tamMessage = strlen(pokemon) + 1 + (3*sizeof(uint32_t)) + (2 * (sizeof(uint32_t) * list_size(poscant))); //+1 por el /0
-	uint32_t tamNombrePokemon = strlen(pokemon) + 1;
-	void* buffer = malloc( tamMessage );
-	int desplazamiento = 0;
-	memcpy(buffer, &idMensaje, sizeof(uint32_t));
+bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensaje, char *pokemon, d_PosCant** posiciones) {
+	uint32_t cantidadPunteros = damePosicionFinalDoblePuntero(posiciones);
+	uint32_t tamNombrePoke = strlen(pokemon)+1;
+	uint32_t tamPack = (3*sizeof(uint32_t)) + tamNombrePoke + ((cantidadPunteros+1)*(2*sizeof(uint32_t)));
+	uint32_t desplazamiento = 0;
+	void* pack = malloc(tamPack);
+	memcpy(pack+desplazamiento, &idMensaje, sizeof(uint32_t)); //Memcpy el IDMENSAJE
+	desplazamiento += sizeof(uint32_t); //Me muevo la longitud del IDMENSAJE
+	memcpy(pack+desplazamiento, &tamNombrePoke, sizeof(uint32_t)); //Memcpy el TAMAÑO del NOMBRE del POKEMON
+	desplazamiento += sizeof(uint32_t); //Me muevo la longitud del TAMAÑO del NOMBRE del POKEMON
+	memcpy(pack+desplazamiento, pokemon, tamNombrePoke); //memcpy el nombre del pokemon
+	desplazamiento += tamNombrePoke; //Me muevo lo escrito por el nombre del pokemon
+	memcpy(pack+desplazamiento, &cantidadPunteros, sizeof(uint32_t)); //Memcpy la CANTIDAD de PUNTEROS
 	desplazamiento += sizeof(uint32_t);
-	memcpy(buffer + desplazamiento, &tamNombrePokemon, sizeof(uint32_t));
-	desplazamiento += sizeof(uint32_t);
-	memcpy(buffer + desplazamiento, pokemon, tamNombrePokemon);
-	desplazamiento += tamNombrePokemon;
-	uint32_t cantidadElementos = list_size(poscant);
-	memcpy(buffer + desplazamiento, &cantidadElementos, sizeof(uint32_t));
-	desplazamiento += sizeof(uint32_t);
-	for(int i=0; i<cantidadElementos; i++){
-		d_PosCant * elemento = list_get(poscant,i);
-		memcpy(buffer+desplazamiento, &elemento->posX, sizeof(uint32_t));
-		desplazamiento += sizeof(uint32_t);
-		memcpy(buffer+desplazamiento, &elemento->posY, sizeof(uint32_t));
-		desplazamiento += sizeof(uint32_t);
+	for(int i=0; i<=cantidadPunteros; i++){
+		memcpy(pack+desplazamiento, &(posiciones[i]->posX), sizeof(uint32_t)); //memcpy posX
+		desplazamiento += sizeof(uint32_t); //Me muevo posX
+		memcpy(pack+desplazamiento, &(posiciones[i]->posY), sizeof(uint32_t)); //memcpy posY
+		desplazamiento += sizeof(uint32_t); //Me muevo posY
 	}
-	int resultado = Serialize_PackAndSend(socketCliente, buffer, tamMessage, d_LOCALIZED_POKEMON);
-	free(buffer);
-	return resultado;
-	//pendiente
+	if( desplazamiento != tamPack){
+		printf(" HUBO PROBLEMAS ");
+		fflush(stdout);
+		sleep(10);
+	}
+	int resultadoEnvio = Serialize_PackAndSend(socketCliente, pack, tamPack, d_LOCALIZED_POKEMON);
+	free(pack);
+	return resultadoEnvio;
 }
 
 ////////////////////////////
@@ -255,8 +258,8 @@ uint32_t Serialize_Unpack_idMensaje(void *pack) {
 char* Serialize_Unpack_pokemonName(void *buffer) {
 	uint32_t tamPokemon = 0;
 	memcpy(&tamPokemon, buffer+sizeof(uint32_t), sizeof(uint32_t));
-	char *pokemon = malloc(tamPokemon + 1);
-	memcpy(pokemon,buffer+(2*sizeof(uint32_t)),tamPokemon + 1);
+	char *pokemon = malloc(tamPokemon);
+	memcpy(pokemon,buffer+(2*sizeof(uint32_t)),tamPokemon);
 	return pokemon;
 }
 
@@ -361,25 +364,19 @@ void Serialize_Unpack_CaughtPokemon(void *packCaughtPokemon, uint32_t *idMensaje
 void Serialize_Unpack_LocalizedPokemon(void *packLocalizedPokemon, uint32_t *idMensaje, char **nombre, t_list **poscant){
 	*idMensaje = Serialize_Unpack_idMensaje(packLocalizedPokemon);
 	*nombre = Serialize_Unpack_pokemonName(packLocalizedPokemon);
-	uint32_t tamTlist = 0;
-	uint32_t tamPokemon = 0;
-	memcpy(&tamPokemon, packLocalizedPokemon+sizeof(uint32_t), sizeof(uint32_t));
-	uint32_t desplazamiento = (2*sizeof(uint32_t))+tamPokemon*sizeof(char)-1;
-	memcpy(&tamTlist, packLocalizedPokemon+desplazamiento, sizeof(uint32_t));
+	uint32_t desplazamiento = (2*sizeof(uint32_t)) + strlen(*nombre) + 1;
+	uint32_t cantidadPunteros = 0;
+	memcpy(&cantidadPunteros, packLocalizedPokemon+desplazamiento, sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
-	d_PosCant * aux;
-	for(int i=0; i<tamTlist; i++){
-		aux = malloc(2*sizeof(uint32_t));
-		uint32_t posX, posY;
-		memcpy(&posX, packLocalizedPokemon+desplazamiento, sizeof(uint32_t));
+	d_PosCant* posicionActual;
+	for(int i=0; i<=cantidadPunteros; i++){
+		posicionActual = malloc(sizeof(typeof(d_PosCant)));
+		memcpy(&(posicionActual->posX),packLocalizedPokemon+desplazamiento,sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
-		memcpy(&posY, packLocalizedPokemon+desplazamiento, sizeof(uint32_t));
+		memcpy(&(posicionActual->posY),packLocalizedPokemon+desplazamiento,sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
-		aux->posX = posX;
-		aux->posY = posY;
-		list_add(*poscant, aux);
+		list_add(*poscant, posicionActual);
 	}
-	//pendiente
 }
 
 void Serialize_Unpack_NewPokemon_NoID(void *packNewPokemon, char **nombre, uint32_t *posX, uint32_t *posY, uint32_t *cantidad){

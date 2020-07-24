@@ -779,8 +779,8 @@ void limpiarParticion(estructuraAdministrativa * particion){
 	////////ya me viene con el malloc, porque lo realice en la funcion newParticion
 	particion->estaOcupado = 0;
 	particion->idMensaje = 0; ///////UN ID MENSAJE NO PUEDE SER 0, POR LO QUE SE LO CONSIDERA COMO NULO
-	list_clean(particion->suscriptoresConACK); /////SON SOLO INT,
-	list_clean(particion->suscriptoresConMensajeEnviado);
+	//list_clean(particion->suscriptoresConACK); /////SON SOLO INT,
+	//list_clean(particion->suscriptoresConMensajeEnviado);
 	particion->tiempo = string_new();
 	particion->tiempo = temporal_get_string_time();
 	particion->ultimaReferencia = string_new();
