@@ -532,11 +532,19 @@ void actualizarRecibidosPorID(int id, int socketCliente){
 }
 
 estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id){
-	bool _is_the_one(estructuraAdministrativa* p) {
-		return (p->idMensaje = id);
-	}
-
-	return list_find(ADMINISTRADOR_MEMORIA, (void*) _is_the_one);
+	estructuraAdministrativa * retorno;
+	int posicion;
+	int contador = 0;
+	void tomarParticion(estructuraAdministrativa* elemento){
+		if(elemento->idMensaje == id){
+			posicion = contador;
+		}
+			contador ++;
+		}
+	list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
+	retorno = list_get (ADMINISTRADOR_MEMORIA, posicion);
+	return retorno;
+	//return list_find(ADMINISTRADOR_MEMORIA, (void*) _is_the_one);
 }
 
 int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
