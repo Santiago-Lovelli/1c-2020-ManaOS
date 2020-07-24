@@ -854,8 +854,8 @@ void getPokemon(char* pkm, uint32_t idMensajeNew) {
 
 	if (!existe) {
 		log_error(loggerGeneral, "NO existe el pokemon: %s", pkm);
-		t_list* posicionesNull = list_create();
-		enviarLocalizedPokemon(pkm, posicionesNull, idMensajeNew);
+//		t_list* posicionesNull = list_create();
+//		enviarLocalizedPokemon(pkm, posicionesNull, idMensajeNew);
 		return;
 	} else {
 		log_info(loggerGeneral, "Existe el pokemon %s", pkm);
@@ -1055,17 +1055,15 @@ void* suscribirme(d_message colaDeSuscripcion) {
 					"No se pudo conectar con el Broken a la cola de: %i\n",
 					colaDeSuscripcion);
 			sleep(reconectar);
-		} else {
-			break;
-		}
-	}
-	Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
-	while(1){
+		}else{
+		Serialize_PackAndSend_SubscribeQueue(conexion, colaDeSuscripcion);
+
 		p_elementoDeHilo *elemento = malloc(sizeof(p_elementoDeHilo));
 		elemento->log = loggerGeneral;
 		elemento->cliente = conexion;
 
 		recibirYAtenderUnaSuscripcion(elemento);
+		}
 	}
 	return 0;
 }
