@@ -1,7 +1,7 @@
 #include "Team.h"
 
-int main (void){
-	inicializar();
+int main (int argc, char *argv[]){
+	inicializar(argc, argv);
 //	while(objetivoTerminado() == 0){
 //		proceso* procesoAEjecutar = planificarSegun(TEAM_CONFIG.ALGORITMO_PLANIFICACION, EstadoReady);
 //	}
@@ -26,10 +26,10 @@ void inicializarSemaforos(){
 	sem_init(&semaforoPokemon,0,1);
 }
 
-void inicializar(){
+void inicializar(int argc, char *argv[]){
 	TEAM_LOG = iniciar_log("Team");
 	inicializarSemaforos();
-	iniciarConfig();
+	iniciarConfig(argc, argv);
 	crearEstados();
 	crearEntrenadores();
 	iniciarVariablesDePlanificacion();
@@ -902,8 +902,10 @@ void finalFeliz(){
 	destruirTodo(); //Hakai
 }
 
-void iniciarConfig(){
-	t_config* creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team.config");
+void iniciarConfig(int argc, char *argv[]){
+	t_config* creacionConfig = config_create("../Team.config");
+	if(argc == 2)
+		creacionConfig = config_create(argv[1]);
 	TEAM_CONFIG.POSICIONES_ENTRENADORES = config_get_array_value(creacionConfig, "POSICIONES_ENTRENADORES");
 	TEAM_CONFIG.POKEMON_ENTRENADORES = config_get_array_value(creacionConfig, "POKEMON_ENTRENADORES");
 	TEAM_CONFIG.OBJETIVOS_ENTRENADORES = config_get_array_value(creacionConfig, "OBJETIVOS_ENTRENADORES");

@@ -91,8 +91,8 @@ typedef struct objetoID_QUE_NECESITO{
 
 
 //////FUNCIONES INICIALES/////////
-void iniciarConfig();
-void inicializar();
+void iniciarConfig(int argc, char *argv[]);
+void inicializar(int argc, char *argv[]);
 void inicializarSemaforos();
 void crearEntrenadores();
 void escucharMensajes();
