@@ -7,6 +7,8 @@
 bool Serialize_PackAndSend(int socketCliente, const void *pack, uint32_t tamPack, d_message tipoMensaje) {
 
 	uint32_t tamMessage = tamPack + sizeof(d_message) + sizeof(uint32_t);
+	printf("Tam mensaje: %d \n", tamMessage);
+	fflush(stdout);
 	void* buffer = malloc( tamMessage );
 	int desplazamiento = 0;
 	memcpy(buffer, &tipoMensaje ,sizeof(d_message));
@@ -14,8 +16,6 @@ bool Serialize_PackAndSend(int socketCliente, const void *pack, uint32_t tamPack
 	memcpy(buffer+desplazamiento, &tamPack , sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
 	memcpy(buffer+desplazamiento, pack, tamPack);
-	uint32_t prueba = 0;
-	uint32_t dprueba = 0;
 	desplazamiento += tamPack;
 		if(desplazamiento != tamMessage){ return (-1); }
 	int resultado = send(socketCliente, buffer, tamMessage, 0);
@@ -192,6 +192,8 @@ bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensa
 	desplazamiento += tamNombrePokemon;
 	uint32_t cantidadElementos = list_size(poscant);
 	memcpy(buffer + desplazamiento, &cantidadElementos, sizeof(uint32_t));
+	printf("Cantidad de elementos: %i \n", cantidadElementos);
+	fflush(stdout);
 	desplazamiento += sizeof(uint32_t);
 	for(int i=0; i<cantidadElementos; i++){
 		d_PosCant * elemento = list_get(poscant,i);
@@ -364,13 +366,14 @@ void Serialize_Unpack_LocalizedPokemon(void *packLocalizedPokemon, uint32_t *idM
 	uint32_t tamTlist = 0;
 	uint32_t tamPokemon = 0;
 	memcpy(&tamPokemon, packLocalizedPokemon+sizeof(uint32_t), sizeof(uint32_t));
-	uint32_t desplazamiento = (2*sizeof(uint32_t))+tamPokemon*sizeof(char)-1;
+	uint32_t desplazamiento = (2*sizeof(uint32_t))+tamPokemon;
 	memcpy(&tamTlist, packLocalizedPokemon+desplazamiento, sizeof(uint32_t));
 	desplazamiento += sizeof(uint32_t);
 	d_PosCant * aux;
 	for(int i=0; i<tamTlist; i++){
-		aux = malloc(2*sizeof(uint32_t));
-		uint32_t posX, posY;
+		aux = malloc(sizeof(typeof(d_PosCant)));
+		uint32_t posX;
+		uint32_t posY;
 		memcpy(&posX, packLocalizedPokemon+desplazamiento, sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
 		memcpy(&posY, packLocalizedPokemon+desplazamiento, sizeof(uint32_t));
