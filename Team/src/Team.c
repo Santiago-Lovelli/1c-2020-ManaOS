@@ -24,6 +24,7 @@ void inicializarSemaforos(){
 	sem_init(&semaforoAppeared,0,1);
 	sem_init(&semaforoMovimiento,0,1);
 	sem_init(&semaforoPokemon,0,1);
+	sem_init(&semaforoGet,0,1);
 }
 
 void inicializar(int argc, char *argv[]){
@@ -194,7 +195,9 @@ void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
 	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
 	int* idResponse = malloc(sizeof(int));
 	*idResponse = recibirResponse(conexion, headerACK);
+	sem_wait(&semaforoGet);
 	list_add(IDs_GET, idResponse);
+	sem_post(&semaforoGet);
 }
 
 void enviarGetXCadaPokemonObjetivo(){
@@ -284,11 +287,15 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 
 bool idEstaEnLista(uint32_t id, t_list *lista){
 	int *aux;
+	sem_wait(&semaforoGet);
 	for(int i =0; i<list_size(lista); i++){
 		aux = list_get(lista,i);
-		if(id == *aux)
+		if(id == *aux){
+			sem_post(&semaforoGet);
 			return true;
+		}
 	}
+	sem_post(&semaforoGet);
 	return false;
 }
 
@@ -919,7 +926,8 @@ void finalFeliz(){
 }
 
 void iniciarConfig(int argc, char *argv[]){
-	t_config* creacionConfig = config_create("../Team.config");
+	//t_config* creacionConfig = config_create("../Team.config");
+	t_config* creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team.config");
 	if(argc == 2)
 		creacionConfig = config_create(argv[1]);
 	TEAM_CONFIG.POSICIONES_ENTRENADORES = config_get_array_value(creacionConfig, "POSICIONES_ENTRENADORES");

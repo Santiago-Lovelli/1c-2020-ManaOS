@@ -840,6 +840,7 @@ void catchPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	if (!existe) {
 		log_error(loggerGeneral, "NO existe el pokemon: %s", pkm);
 		enviarCaughtPokemon(pkm, 0, idMensajeNew);
+		sem_post(&existencia);
 		return;
 	} else {
 		log_info(loggerGeneral, "Existe el pokemon %s", pkm);
@@ -856,6 +857,7 @@ void getPokemon(char* pkm, uint32_t idMensajeNew) {
 		log_error(loggerGeneral, "NO existe el pokemon: %s", pkm);
 //		t_list* posicionesNull = list_create();
 //		enviarLocalizedPokemon(pkm, posicionesNull, idMensajeNew);
+		sem_post(&existencia);
 		return;
 	} else {
 		log_info(loggerGeneral, "Existe el pokemon %s", pkm);

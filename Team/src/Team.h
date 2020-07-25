@@ -663,6 +663,7 @@ sem_t semaforoDiccionario;
 sem_t semaforoAppeared;
 sem_t semaforoMovimiento;
 sem_t semaforoPokemon;
+sem_t semaforoGet;
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;
