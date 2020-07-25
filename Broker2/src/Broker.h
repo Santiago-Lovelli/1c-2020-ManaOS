@@ -117,6 +117,7 @@ void ActuarAnteMensaje();
 void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t * id);
 
 //////FUNCIONES VARIAS//////////
+void consolidarParticiones(int pos);
 void suscribir (uint32_t variable, int cliente);
 mensajeConID agregarIDMensaje (void* paquete);
 void actualizarEnviadosPorID(int id, int socketCliente);
