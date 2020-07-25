@@ -299,9 +299,9 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		log_info(logger, "Llego un APPEARED POKEMON");
 		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 		sem_post(&semaforoSocket);
-		uint32_t posicionAppearedX, posicionAppearedY, idMensajeAppeared;
+		uint32_t posicionAppearedX, posicionAppearedY, idMensajeAppeared, idCorrelativoAppeared;
 		char *AppearedNombrePokemon;
-		Serialize_Unpack_AppearedPokemon(packAppearedPokemon, &idMensajeAppeared, &AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
+		Serialize_Unpack_AppearedPokemon_IDCorrelativo(packAppearedPokemon, &idMensajeAppeared, &idCorrelativoAppeared, &AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
 		log_info(logger, "Contenidos del mensaje: Pkm: %s, x: %i, y: %i\n", AppearedNombrePokemon, posicionAppearedX, posicionAppearedY);
 		Serialize_PackAndSend_ACK(cliente, idMensajeAppeared);
 		if(necesitoEstePokemon(AppearedNombrePokemon)){
@@ -316,16 +316,16 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 		sem_post(&semaforoSocket);
 		t_list *posCant = list_create();
-		uint32_t idMensajeLocalized;
+		uint32_t idMensajeLocalized, idMensajeCorrelativo;
 		char *localizedNombrePokemon;
-		Serialize_Unpack_LocalizedPokemon(packLocalizedPokemon,&idMensajeLocalized,&localizedNombrePokemon,&posCant);
+		Serialize_Unpack_LocalizedPokemon_IDCorrelativo(packLocalizedPokemon,&idMensajeLocalized, &idMensajeCorrelativo,&localizedNombrePokemon,&posCant);
 		log_info(logger,"Contenidos del mensaje: id: %i, Pkm: %s",idMensajeLocalized,localizedNombrePokemon);
 		for(int i = 0; i<posCant->elements_count; i++){
 			d_PosCant* asd = list_get(posCant,i);
 			log_info(logger,"x: %i, y:%i",asd->posX,asd->posY);
 		}
 		Serialize_PackAndSend_ACK(cliente, idMensajeLocalized);
-		if(!idEstaEnLista(idMensajeLocalized,IDs_GET)){
+		if(!idEstaEnLista(idMensajeCorrelativo,IDs_GET)){
 			log_error(logger, "NO NECESITO ESTE ID DE LOCALIZED");
 			break;
 		}
@@ -346,12 +346,12 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 		sem_post(&semaforoSocket);
 		//Con estas dos variables desempaquetamos el paquete
-		uint32_t idMensajeCaught, resultadoCaught;
-		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught, &resultadoCaught);
+		uint32_t idMensajeCaught, resultadoCaught, idCorrelativoCaught;
+		Serialize_Unpack_CaughtPokemon_IDCorrelativo(packCaughtPokemon, &idMensajeCaught, &idCorrelativoCaught, &resultadoCaught);
 		log_info(logger, "Contenidos del mensaje: Id: %i, Result: %i\n", idMensajeCaught, resultadoCaught);
 		Serialize_PackAndSend_ACK(cliente, idMensajeCaught);
-		if(necesitoEsteID(idMensajeCaught)){
-			hacerCaught(idMensajeCaught,resultadoCaught);
+		if(necesitoEsteID(idCorrelativoCaught)){
+			hacerCaught(idCorrelativoCaught,resultadoCaught);
 		}
 
 		free(packCaughtPokemon);
