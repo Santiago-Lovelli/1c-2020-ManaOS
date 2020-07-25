@@ -405,7 +405,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 		void notificarSuscriptorCaught(int * self){
 			Serialize_PackAndSend_CAUGHT_POKEMON_IDCorrelativo(*self, resultado->idMensaje, id, mensajeCaught->atrapado);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
-			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i correlativo: %i al suscriptor %i", resultado->idMensaje, id, *self);
 		}
 			list_iterate(lista, (void*)notificarSuscriptorCaught);
 			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
