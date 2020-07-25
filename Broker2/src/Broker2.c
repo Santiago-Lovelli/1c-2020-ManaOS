@@ -94,8 +94,8 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			log_info(LOGGER_OBLIGATORIO, "Llego un Subscribe");
 			void * recibir = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			uint32_t variable = Serialize_Unpack_ACK(recibir);
-			sem_post(&MUTEX_CLIENTE);
 			suscribir(variable, cliente);
+			sem_post(&MUTEX_CLIENTE);
 			free(recibir);
 			break;
 		case d_ACK:
@@ -285,7 +285,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			unID = obtenerRelacion(elemento->idMensaje);
 			Serialize_PackAndSend_CAUGHT_POKEMON_IDCorrelativo(*cliente, elemento->idMensaje, unID, mensajeCaught->atrapado);
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
-			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CAUGHT) al suscriptor %i", elemento->idMensaje, *cliente);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i correlativo a: %i (CAUGHT) al suscriptor %i", elemento->idMensaje,unID, *cliente);
 		}
 		list_destroy_and_destroy_elements(mensajesCaught, (void *) estructuraAdministrativaDestroyer);
 	break;
@@ -931,7 +931,8 @@ void composicion(){
 		log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)estructuraAdministrativaDestroyer);
 	}
-		for (i=1; i<list_size(ADMINISTRADOR_MEMORIA); i++){
+	int tamanio = list_size(ADMINISTRADOR_MEMORIA);
+		for (i=1; i<tamanio-1; i++){
 		particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
 		particionAnterior = list_get (ADMINISTRADOR_MEMORIA, i-1);
 		particionPosterior = list_get (ADMINISTRADOR_MEMORIA, i+1);
@@ -1174,7 +1175,7 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t* id)
 		retornoAppeared = malloc(sizeof(appearedEnMemoria));
 		Serialize_Unpack_AppearedPokemon(paquete, id, &pokemon, &posX, &posY);
 		log_info(LOGGER_OBLIGATORIO,"Me llego mensaje appeared Pkm: %s, x: %i, y: %i , id: %i \n", pokemon, posX, posY, *id);
-		retornoAppeared->largoDeNombre = string_length(pokemon);
+		retornoAppeared->largoDeNombre = string_length(pokemon) + 1;
 		retornoAppeared->nombrePokemon = pokemon;
 		retornoAppeared->posX = posX;
 		retornoAppeared->posY = posY;
@@ -1313,12 +1314,12 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo){
 		retornoLocalized = malloc(sizeof(localizedEnMemoria));
 		retornoLocalized->puntos = list_create();
 		memcpy(&retornoLocalized->largoDeNombre, lugarDeComienzo, sizeof(uint32_t));
-		retornoLocalized->largoDeNombre +=1;
+		uint32_t largoAux = retornoLocalized->largoDeNombre + 1;
 		desplazamiento += sizeof(uint32_t);
-		retornoLocalized->nombrePokemon = malloc(retornoLocalized->largoDeNombre);
-		memcpy(retornoLocalized->nombrePokemon, lugarDeComienzo + desplazamiento, retornoLocalized->largoDeNombre -1);
-		memcpy(retornoLocalized->nombrePokemon + retornoLocalized->largoDeNombre -1, &barraCero, 1);
-		desplazamiento += retornoLocalized->largoDeNombre-1;
+		retornoLocalized->nombrePokemon = malloc(largoAux);
+		memcpy(retornoLocalized->nombrePokemon, lugarDeComienzo + desplazamiento, retornoLocalized->largoDeNombre);
+		memcpy(retornoLocalized->nombrePokemon + retornoLocalized->largoDeNombre, &barraCero, 1);
+		desplazamiento += retornoLocalized->largoDeNombre;
 		memcpy(&retornoLocalized->cantidadDePuntos, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
 		for(int i=0; retornoLocalized->cantidadDePuntos>i; i++){
@@ -1383,10 +1384,11 @@ void guardarMensajeEnMemoria(d_message tipoMensaje, void * mensaje, void * lugar
 		return;
 	case d_APPEARED_POKEMON:
 		retornoAppeared = mensaje;
-		memcpy(lugarDeComienzo, &retornoAppeared->largoDeNombre, sizeof(uint32_t));
+		uint32_t largoAuxiliar = retornoAppeared->largoDeNombre - 1;
+		memcpy(lugarDeComienzo, &largoAuxiliar, sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
-		memcpy(lugarDeComienzo + desplazamiento, retornoAppeared->nombrePokemon, retornoAppeared->largoDeNombre);
-		desplazamiento += retornoAppeared->largoDeNombre;
+		memcpy(lugarDeComienzo + desplazamiento, retornoAppeared->nombrePokemon, largoAuxiliar);
+		desplazamiento += largoAuxiliar;
 		memcpy(lugarDeComienzo + desplazamiento, &retornoAppeared->posX, sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
 		memcpy(lugarDeComienzo + desplazamiento, &retornoAppeared->posY, sizeof(uint32_t));
