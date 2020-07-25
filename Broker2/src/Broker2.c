@@ -210,6 +210,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 	getEnMemoria* mensajeGet;
 	caughtEnMemoria* mensajeCaught;
 	localizedEnMemoria* mensajeLocalized;
+
 	switch (tipoMensaje){
 	case d_NEW_POKEMON:
 		mensajesNew = tomarLosMensajes (d_NEW_POKEMON);
@@ -221,7 +222,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (NEW) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesNew, (void*)estructuraAdministrativaDestroyer);
+		list_destroy_and_destroy_elements(mensajesNew, (void*)estructuraAdministrativaDestroyer);
 	break;
 	case d_CATCH_POKEMON:
 		mensajesCatch = tomarLosMensajes (d_CATCH_POKEMON);
@@ -233,7 +234,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CATCH) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesCatch, (void *) estructuraAdministrativaDestroyer);
+		list_destroy_and_destroy_elements(mensajesCatch, (void *) estructuraAdministrativaDestroyer);
 	break;
 	case d_GET_POKEMON:
 		mensajesGet = tomarLosMensajes (d_GET_POKEMON);
@@ -245,7 +246,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (GET) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesGet, (void *) estructuraAdministrativaDestroyer);
+		list_clean_and_destroy_elements(mensajesGet, (void *) estructuraAdministrativaDestroyer);
 	break;
 	case d_APPEARED_POKEMON:
 		mensajesAppeared = tomarLosMensajes (d_APPEARED_POKEMON);
@@ -257,7 +258,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (APPEARED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesAppeared, (void *) estructuraAdministrativaDestroyer);
+		list_destroy_and_destroy_elements(mensajesAppeared, (void *) estructuraAdministrativaDestroyer);
 	break;
 	case d_CAUGHT_POKEMON:
 		mensajesCaught = tomarLosMensajes (d_CAUGHT_POKEMON);
@@ -269,7 +270,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CAUGHT) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesCaught, (void *) estructuraAdministrativaDestroyer);
+		list_destroy_and_destroy_elements(mensajesCaught, (void *) estructuraAdministrativaDestroyer);
 	break;
 	case d_LOCALIZED_POKEMON:
 		mensajesLocalized = tomarLosMensajes (d_LOCALIZED_POKEMON);
@@ -281,7 +282,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (LOCALIZED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		//list_clean_and_destroy_elements(mensajesLocalized, (void *) estructuraAdministrativaDestroyer);
+		list_destroy_and_destroy_elements(mensajesLocalized, (void *) estructuraAdministrativaDestroyer);
 		break;
 	default:
 		log_error(LOGGER_OBLIGATORIO, "No existe el mensaje");
@@ -290,17 +291,28 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 }
 
 t_list * tomarLosMensajes (d_message tipoMensaje){
-	estructuraAdministrativa* elemento = malloc (sizeof(estructuraAdministrativa));
+	estructuraAdministrativa* elemento;
 	t_list * listaTipo = list_create();
 	int tamanioLista = list_size(ADMINISTRADOR_MEMORIA);
 	for (int i = 0; i < tamanioLista; i++){
-		elemento = list_get(ADMINISTRADOR_MEMORIA, i);
-		if (elemento->tipoMensaje == tipoMensaje && elemento->estaOcupado == 1){
+		estructuraAdministrativa* auxiliar = list_get(ADMINISTRADOR_MEMORIA, i);
+		if (auxiliar->tipoMensaje == tipoMensaje && auxiliar->estaOcupado == 1){
+			elemento = malloc (sizeof(estructuraAdministrativa));
+			elemento->estaOcupado = auxiliar->estaOcupado;
+			elemento->idMensaje = auxiliar->idMensaje;
+			elemento->tamanioParticion = auxiliar->tamanioParticion;
+			elemento->tipoMensaje = auxiliar->tipoMensaje;
+			elemento->suscriptoresConACK = list_duplicate(auxiliar->suscriptoresConACK);
+			elemento->suscriptoresConMensajeEnviado = list_duplicate(auxiliar->suscriptoresConMensajeEnviado);
+			elemento->tiempo = string_duplicate(auxiliar->tiempo);
+			elemento->ultimaReferencia = string_duplicate(auxiliar->ultimaReferencia);
+			elemento->donde = auxiliar->donde;
 			list_add (listaTipo, elemento);
 		}
 	}
 	return listaTipo;
 }
+
 
 void enviarACK(int cliente, int ID){
 	if(Serialize_PackAndSend_ACK(cliente, (uint32_t) ID)){
@@ -403,6 +415,7 @@ int tratarMensaje (d_message tipoMensaje, void *paquete){
 		//memcpy(resultado->donde, unMensaje, tamanioDeMensaje(tipoMensaje, unMensaje));
 		log_info(LOGGER_OBLIGATORIO, "Se guardo el mensaje en la memoria id: %i posicion: %i", resultado->idMensaje, posicionALog(resultado->donde));
 	}
+	sem_post(&MUTEX_LISTA);
 	t_list * subs = suscriptoresPara(tipoMensaje);
 	enviarUnMensaje(unMensaje, tipoMensaje, resultado, subs, *id);
 	free (id);
@@ -543,10 +556,12 @@ estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id){
 		if(elemento->idMensaje == id){
 			posicion = contador;
 		}
-			contador ++;
-		}
+		contador ++;
+	}
+	sem_wait(&MUTEX_LISTA);
 	list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
 	retorno = list_get (ADMINISTRADOR_MEMORIA, posicion);
+	sem_post(&MUTEX_LISTA);
 	return retorno;
 	//return list_find(ADMINISTRADOR_MEMORIA, (void*) _is_the_one);
 }
@@ -619,10 +634,9 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "ff")){
 		bool hayParticionParaGuardarlo(estructuraAdministrativa* elemento) {
 				return (elemento->estaOcupado == 0 && elemento->tamanioParticion >= tamanioMensaje);
-			}
+		}
 		sem_wait(&MUTEX_LISTA);
 		particion = list_find(ADMINISTRADOR_MEMORIA, (void*) hayParticionParaGuardarlo);
-		sem_post(&MUTEX_LISTA);
 		}
 	//////////BEST FIT///////////////////////
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "bf")){
@@ -634,9 +648,9 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 				}
 				j++;
 			}
-			list_iterate(ADMINISTRADOR_MEMORIA, (void*) mejorParticion);
-			particion =  list_get(ADMINISTRADOR_MEMORIA, k);
-
+		sem_wait(&MUTEX_LISTA);
+		list_iterate(ADMINISTRADOR_MEMORIA, (void*) mejorParticion);
+		particion =  list_get(ADMINISTRADOR_MEMORIA, k);
 		}
 		if (particion != NULL){
 			log_info(LOGGER_OBLIGATORIO, "Encontre particion Libre");
@@ -654,6 +668,7 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 					sem_wait(&MUTEX_COMPACTACION);
 					FLAG_COMPACTACION = 1;
 					sem_post(&MUTEX_COMPACTACION);
+					sem_post(&MUTEX_LISTA);
 					return buscarParticionLibre(tipoMensaje, mensaje);
 				}
 				if(valorReemplazar() == 1){
@@ -666,6 +681,7 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 					sem_wait(&MUTEX_BUSQUEDA);
 					BUSQUEDAS_FALLIDAS ++;
 					sem_post(&MUTEX_BUSQUEDA);
+					sem_post(&MUTEX_LISTA);
 					return buscarParticionLibre(tipoMensaje, mensaje);
 				}
 				sem_wait(&MUTEX_BUSQUEDA);
@@ -681,6 +697,7 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 				sem_wait(&MUTEX_REEMPLAZAR);
 				FLAG_REEMPLAZAR = 0;
 				sem_post(&MUTEX_REEMPLAZAR);
+				sem_post(&MUTEX_LISTA);
 				return buscarParticionLibre(tipoMensaje, mensaje);
 			}
 			if (valorReemplazar() == 0){
@@ -691,6 +708,7 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 				sem_wait(&MUTEX_REEMPLAZAR);
 				FLAG_REEMPLAZAR = 1;
 				sem_post(&MUTEX_REEMPLAZAR);
+				sem_post(&MUTEX_LISTA);
 				return buscarParticionLibre(tipoMensaje, mensaje);
 			}
 		}
@@ -718,9 +736,7 @@ int primeraParticion(){
 	bool estaOcupado(estructuraAdministrativa* elemento) {
 					return (elemento->estaOcupado == 1);
 				}
-	sem_wait(&MUTEX_LISTA);
 	particionMenor = list_find(ADMINISTRADOR_MEMORIA, (void*) estaOcupado); // asi arreglo de agarrar uno que este desocupado
-	sem_post(&MUTEX_LISTA);
 	void tomarParticion(estructuraAdministrativa* elemento){
 					if(elemento->donde == particionMenor->donde){
 					posicionMenor = contador;
@@ -748,9 +764,7 @@ int particionMenosReferenciada(){
 		bool estaOcupado(estructuraAdministrativa* elemento) {
 						return (elemento->estaOcupado == 1);
 					}
-		sem_wait(&MUTEX_LISTA);
 		particionMenor = list_find(ADMINISTRADOR_MEMORIA, (void*) estaOcupado); // asi arreglo de agarrar uno que este desocupado
-		sem_post(&MUTEX_LISTA);
 		void tomarParticion(estructuraAdministrativa* elemento){
 						if(elemento->donde == particionMenor->donde){
 						posicionMenor = contador;
@@ -830,9 +844,7 @@ bool noPuedoReemplazarMas(){
 	bool cualquieraOcupado(estructuraAdministrativa* elemento) {
 		return (elemento->estaOcupado == 1);
 	}
-	sem_wait(&MUTEX_LISTA);
 	void * x = list_find(ADMINISTRADOR_MEMORIA, (void*)cualquieraOcupado);
-	sem_post(&MUTEX_LISTA);
 	return (x==NULL);
 }
 
@@ -1028,13 +1040,15 @@ void dump() {
 bool primerFechaEsAnterior(char* unaFecha, char* otraFecha){
 	char** primerFechaSeparada = string_split(unaFecha, ":");
 	char** segundaFechaSeparada = string_split(otraFecha, ":");
-	for(int i = 0; primerFechaSeparada[i]!=NULL; i++){
+	int i = 0;
+	while(primerFechaSeparada[i]!=NULL && segundaFechaSeparada[i]!=NULL){
 		if (atoi(primerFechaSeparada[i]) != atoi(segundaFechaSeparada[i])){
 			bool retorno = atoi(primerFechaSeparada[i]) < atoi(segundaFechaSeparada[i]);
 			string_iterate_lines(primerFechaSeparada, (void*) free);
 			string_iterate_lines(segundaFechaSeparada, (void*) free);
 			return (retorno);
 		}
+		i++;
 	}
 	string_iterate_lines(primerFechaSeparada, (void*) free);
 	string_iterate_lines(segundaFechaSeparada, (void*) free);
