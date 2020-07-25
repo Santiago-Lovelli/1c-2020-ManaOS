@@ -35,6 +35,7 @@ void inicializar(int argc, char *argv[]){
 	iniciarVariablesDePlanificacion();
 	SEGUIR_ATENDIENDO = true;
 	ID_QUE_NECESITO = list_create();
+	IDs_GET = list_create();
 	MISIONES_PENDIENTES = list_create();
 	DEADLOCKS_RESUELTOS = 0;
 	CAMBIOS_DE_CONTEXTO_REALIZADOS = 0;
@@ -191,8 +192,9 @@ void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
 	}
 	Serialize_PackAndSend_GET_POKEMON_NoID(conexion,pokemon);
 	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
-	recibirResponse(conexion, headerACK); //NO ESTOY USANDO ESTE DATO
-
+	int* idResponse = malloc(sizeof(int));
+	*idResponse = recibirResponse(conexion, headerACK);
+	list_add(IDs_GET, idResponse);
 }
 
 void enviarGetXCadaPokemonObjetivo(){
@@ -280,6 +282,16 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 	return 0;
 }
 
+bool idEstaEnLista(uint32_t id, t_list *lista){
+	int *aux;
+	for(int i =0; i<list_size(lista); i++){
+		aux = list_get(lista,i);
+		if(id == *aux)
+			return true;
+	}
+	return false;
+}
+
 
 void atender(HeaderDelibird header, int cliente, t_log* logger) {
 	switch (header.tipoMensaje) {
@@ -313,6 +325,10 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 			log_info(logger,"x: %i, y:%i",asd->posX,asd->posY);
 		}
 		Serialize_PackAndSend_ACK(cliente, idMensajeLocalized);
+		if(!idEstaEnLista(idMensajeLocalized,IDs_GET)){
+			log_error(logger, "NO NECESITO ESTE ID DE LOCALIZED");
+			break;
+		}
 		if(necesitoEstePokemon(localizedNombrePokemon)){
 			printf("Necesito este pokemon!!! \n ");
 			for(int i=0; i<list_size(posCant);i++){
