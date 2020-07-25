@@ -276,20 +276,20 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 		mensajesLocalized = tomarLosMensajes (d_LOCALIZED_POKEMON);
 		int tamanioLocalized = list_size(mensajesLocalized);
 		d_PosCant** posiciones = malloc(sizeof(d_PosCant**) + sizeof(uint32_t));
-		for (int i=0; i<tamanioLocalized;i++){
+		posiciones[0] = NULL;
+		for (int i=0; i < tamanioLocalized; i++){
 			elemento = list_get (mensajesLocalized, i);
 			mensajeLocalized = leerInfoYActualizarUsoPorID(elemento->idMensaje);
-			for (int i = 0; i<tamanioLozalized;i++){
-			d_PosCant* posicion = malloc(sizeof(d_PosCant));
-			posicion->posX = mensajeLocalized->punto->posX;
-			posicion->posY = mensajeLocalized->punto->posY;
-		    log_info(loggerGeneral,"x: %i, y: %i", posicion->posX, posicion->posY);
-			posiciones = realloc(posicionCantidad, (sizeof(d_PosCant**) + (i+1)*(sizeof(d_PosCant*)) + sizeof(uint32_t) ) );
-			posiciones[i] = posicion;
-			posiciones[i+1] = NULL;
-			i=i+1;
-		}
-
+			for (int i = 0; i<mensajeLocalized->cantidadDePuntos;i++){
+				d_PosCant* posicion = malloc(sizeof(d_PosCant));
+				posicion->posX = mensajeLocalized->puntos->posX;
+				posicion->posY = mensajeLocalized->puntos->posY;
+				log_info(LOGGER_OBLIGATORIO,"x: %i, y: %i", posicion->posX, posicion->posY);
+				posiciones = realloc(posiciones, (sizeof(d_PosCant**) + (i+1)*(sizeof(d_PosCant*)) + sizeof(uint32_t) ) );
+				posiciones[i] = posicion;
+				posiciones[i+1] = NULL;
+				i=i+1;
+			}
 			Serialize_PackAndSend_LOCALIZED_POKEMON(*cliente, elemento->idMensaje, mensajeLocalized->nombrePokemon, &mensajeLocalized->puntos);
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (LOCALIZED) al suscriptor %i", elemento->idMensaje, *cliente);
@@ -327,9 +327,8 @@ t_list * tomarLosMensajes (d_message tipoMensaje){
 
 
 void enviarACK(int cliente, int ID){
-	if(Serialize_PackAndSend_ACK(cliente, (uint32_t) ID)){
-		log_info(LOGGER_OBLIGATORIO, "Envio ACK ID: %i al cliente: %i", ID, cliente);
-		actualizarRecibidosPorID((int)ID, cliente);
+	if(Serialize_PackAndSend_ACK(cliente, (uint32_t) ID + 1)){
+		log_info(LOGGER_OBLIGATORIO, "Envio ACK ID: %i al cliente: %i", ID + 1, cliente);
 	}
 }
 
@@ -374,7 +373,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_APPEARED_POKEMON:
 		mensajeAppeared = (appearedEnMemoria*)mensaje;
 		void notificarSuscriptorAppeared(int * self){
-			Serialize_PackAndSend_APPEARED_POKEMON_NoID(*self, mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
+			Serialize_PackAndSend_APPEARED_POKEMON(*self, resultado->idMensaje, mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
@@ -411,11 +410,12 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 int tratarMensaje (d_message tipoMensaje, void *paquete){
 	estructuraAdministrativa * resultado;
 	uint32_t * id = malloc(sizeof(uint32_t));
+	*id = 0;
 	void* unMensaje = cargarMensajeAGuardar(tipoMensaje, paquete, id);
 	resultado = guardarMensaje(tipoMensaje, unMensaje);
 	int ID = 0;
 	if (resultado){
-		ID = obtenerID();
+		ID = obtenerID(*id);
 		resultado->idMensaje = ID;
 		resultado->tipoMensaje = tipoMensaje;
 		resultado->estaOcupado = 1;
@@ -490,6 +490,8 @@ void SemaphoresInit(){
 	sem_init(&MUTEX_LEERREEMPLAZAR, 0, 1);
 	sem_init(&MUTEX_LEERCOMPOSICION, 0, 1);
 	sem_init(&MUTEX_LEERCOMPACTACION, 0, 1);
+	sem_init(&MUTEX_ACK, 0, 1);
+	sem_init(&MUTEX_ENVIADOS, 0, 1);
 }
 
 void DumpFileInit(){
@@ -531,15 +533,20 @@ void limpiarSemaforos(){
 	sem_destroy(&MUTEX_LEERREEMPLAZAR);
 	sem_destroy(&MUTEX_LEERCOMPOSICION);
 	sem_destroy(&MUTEX_LEERCOMPACTACION);
+	sem_destroy(&MUTEX_ACK);
+	sem_destroy(&MUTEX_ENVIADOS);
 }
 
 /////////FUNCIONES VARIAS/////////
-int obtenerID(){
-	sem_wait(&MUTEX_CONTADOR);
-	CONTADOR ++;
-	int i = CONTADOR;
-	sem_post(&MUTEX_CONTADOR);
-	return i;
+int obtenerID(int id){
+	if(id == 0){
+		sem_wait(&MUTEX_CONTADOR);
+		CONTADOR += 2;
+		int i = CONTADOR;
+		sem_post(&MUTEX_CONTADOR);
+		return i;
+	}
+	return id + 1;
 }
 
 //////FUNCIONES CACHE//////////
@@ -550,18 +557,28 @@ estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeA
 }
 
 void actualizarEnviadosPorID(int id, int socketCliente){
+	sem_wait(&MUTEX_ENVIADOS);
 	estructuraAdministrativa* unaEstructura = buscarEstructuraAdministrativaConID(id);
-	list_add(unaEstructura->suscriptoresConMensajeEnviado, &socketCliente);
+	if(unaEstructura != NULL){
+		list_add(unaEstructura->suscriptoresConMensajeEnviado, &socketCliente);
+	}
 	return;
+	sem_wait(&MUTEX_ENVIADOS);
 }
 
 void actualizarRecibidosPorID(int id, int socketCliente){
+	sem_wait(&MUTEX_ACK);
+	int * cliente = malloc(sizeof(int));
+	*cliente = socketCliente;
 	estructuraAdministrativa* unaEstructura = buscarEstructuraAdministrativaConID(id);
-	list_add(unaEstructura->suscriptoresConACK, &socketCliente);
+	if(unaEstructura != NULL){
+		list_add(unaEstructura->suscriptoresConACK, cliente);
+	}
+	sem_post(&MUTEX_ACK);
 }
 
 estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id){
-	estructuraAdministrativa * retorno;
+	estructuraAdministrativa * retorno = NULL;
 	int posicion;
 	int contador = 0;
 	void tomarParticion(estructuraAdministrativa* elemento){
@@ -570,10 +587,13 @@ estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id){
 		}
 		contador ++;
 	}
-	sem_wait(&MUTEX_LISTA);
 	list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
-	retorno = list_get (ADMINISTRADOR_MEMORIA, posicion);
-	sem_post(&MUTEX_LISTA);
+	if(list_size(ADMINISTRADOR_MEMORIA) > posicion){
+		retorno = list_get (ADMINISTRADOR_MEMORIA, posicion);
+	}
+	else{
+		log_error(LOGGER_OBLIGATORIO, "La pecheamos papá");
+	}
 	return retorno;
 	//return list_find(ADMINISTRADOR_MEMORIA, (void*) _is_the_one);
 }

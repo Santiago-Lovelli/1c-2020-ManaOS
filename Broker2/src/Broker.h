@@ -161,7 +161,7 @@ int reemplazar ();
 ////////////FUNCIONES DESTROYER//////////////////
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self);
 static void suscriptorDestroyer(int *self);
-static void estructuraAdministrativaDestroyerSinDestruirListas(estructuraAdministrativa *self);
+//static void estructuraAdministrativaDestroyerSinDestruirListas(estructuraAdministrativa *self);
 void destruirTodo();
 void limpiarSemaforos();
 
@@ -191,6 +191,8 @@ sem_t MUTEX_LEERBUSQUEDA;
 sem_t MUTEX_LEERREEMPLAZAR;
 sem_t MUTEX_LEERCOMPACTACION;
 sem_t MUTEX_LEERCOMPOSICION;
+sem_t MUTEX_ACK;
+sem_t MUTEX_ENVIADOS;
 
 ////////LISTA DE SUSCRIPTORES//////
 t_list* SUSCRIPTORES_NEW;
