@@ -328,7 +328,7 @@ t_list * tomarLosMensajes (d_message tipoMensaje){
 
 void enviarACK(int cliente, int ID){
 	if(Serialize_PackAndSend_ACK(cliente, (uint32_t) ID + 1)){
-		log_info(LOGGER_OBLIGATORIO, "Envio ACK ID: %i al cliente: %i", ID + 1, cliente);
+		log_info(LOGGER_OBLIGATORIO, "Envio ACK ID: %i al cliente: %i", ID, cliente);
 	}
 }
 
@@ -415,7 +415,7 @@ int tratarMensaje (d_message tipoMensaje, void *paquete){
 	resultado = guardarMensaje(tipoMensaje, unMensaje);
 	int ID = 0;
 	if (resultado){
-		ID = obtenerID(*id);
+		ID = obtenerID();
 		resultado->idMensaje = ID;
 		resultado->tipoMensaje = tipoMensaje;
 		resultado->estaOcupado = 1;
@@ -538,15 +538,12 @@ void limpiarSemaforos(){
 }
 
 /////////FUNCIONES VARIAS/////////
-int obtenerID(int id){
-	if(id == 0){
+int obtenerID(){
 		sem_wait(&MUTEX_CONTADOR);
-		CONTADOR += 2;
+		CONTADOR ++;
 		int i = CONTADOR;
 		sem_post(&MUTEX_CONTADOR);
 		return i;
-	}
-	return id + 1;
 }
 
 //////FUNCIONES CACHE//////////
