@@ -489,6 +489,7 @@ void enviarCaughtPokemon(char* pkm, uint32_t resultado, uint32_t idMensajeNew) {
 				"No se pudo conectar al Broker para un CaughtPokemon");
 		return;
 	}
+	log_info(loggerGeneral,"CaughtPokemon pkm: %s, resul: %i, id: %i", pkm, resultado, idMensajeNew);
 	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, idMensajeNew, resultado);
 }
 

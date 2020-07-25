@@ -654,7 +654,7 @@ int DEADLOCKS_RESUELTOS;
 int CICLOS_TOTALES;
 sem_t semaforoPlanifiquenme;
 sem_t semaforoTermine;
-sem_t semaforoSocket;
+//sem_t semaforoSocket;
 sem_t semaforoGameboy;
 sem_t semaforoCambioEstado;
 sem_t semaforoConexionABroker;
