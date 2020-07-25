@@ -163,7 +163,6 @@ void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* poke
 void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch){
 	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
 	if(conexion == -1){
-		log_error(TEAM_LOG,"No se pudo conectar con el Broker. Se procede con comportamiento DEFAULT");
 		entrenador *trainer = list_get(ENTRENADORES_TOTALES, idEntrenadorQueMandaCatch);
 		sumarPokemon(trainer,pokemon);
 		descontarDeObjetivoGlobal(pokemon);
@@ -431,6 +430,7 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught){
 		free(objetoID);
 	}
 	else{
+		log_info(TEAM_LOG, "No pudimos atrapar a este pokemon");
 		free(objetoID);
 		objetoID = list_get(ID_QUE_NECESITO, index);
 		list_remove(ID_QUE_NECESITO, index);
@@ -974,14 +974,14 @@ void crearEntrenadores(){
 		pokemones = NULL;
 		pokemonesObjetivo = NULL;
 		punto punto = crearPunto(TEAM_CONFIG.POSICIONES_ENTRENADORES[i]);
-		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.POKEMON_ENTRENADORES))
+		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.POKEMON_ENTRENADORES) && TEAM_CONFIG.POKEMON_ENTRENADORES[0] != NULL)
 			pokemones = string_split(TEAM_CONFIG.POKEMON_ENTRENADORES[i], "|");
 		else{
 			pokemones = malloc(sizeof(char**)+ 4);
 			pokemones[0] = NULL;
 		}
 
-		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.OBJETIVOS_ENTRENADORES))
+		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.OBJETIVOS_ENTRENADORES) && TEAM_CONFIG.OBJETIVOS_ENTRENADORES[0] != NULL)
 			pokemonesObjetivo = string_split(TEAM_CONFIG.OBJETIVOS_ENTRENADORES[i], "|");
 		else{
 			pokemonesObjetivo = malloc(sizeof(char**) + 4);
