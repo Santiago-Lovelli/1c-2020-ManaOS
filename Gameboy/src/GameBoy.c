@@ -39,7 +39,7 @@ void Appeared_pokemon(char *argv[]){
 	if( procesoActual == d_BROKER)
 		Serialize_PackAndSend_APPEARED_POKEMON(conexion, atoi(argv[6]) ,argv[3], atoi(argv[4]), atoi(argv[5]) );
 	else if ( procesoActual == d_TEAM)
-		Serialize_PackAndSend_APPEARED_POKEMON(conexion, 1, argv[3], atoi(argv[4]), atoi(argv[5]));
+		Serialize_PackAndSend_APPEARED_POKEMON_IDCorrelativo(conexion, 1, 1, argv[3], atoi(argv[4]), atoi(argv[5]));
 }
 
 void Catch_pokemon(char *argv[]){
