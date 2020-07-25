@@ -1069,7 +1069,7 @@ void esperarAlgunoEnReady(bool isDeadlock){
 	}
 	else{
 		sem_wait(&semaforoCambioEstado);
-		while(list_is_empty(EstadoReady)){
+		while(list_is_empty(EstadoReady) && !objetivoGlobalCumplido()){
 			sem_post(&semaforoCambioEstado);
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 			sem_wait(&semaforoCambioEstado);
@@ -1094,6 +1094,8 @@ void FIFO(){
 	sem_init(&semaforoTermine,0,0);
 	while(!objetivoGlobalCumplido()){
 		esperarAlgunoEnReady(false);
+		if(objetivoGlobalCumplido())
+			break;
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		sem_wait(&semaforoCambioEstado);
 		entrenador *trainer = list_get(EstadoReady,0);
@@ -1129,6 +1131,8 @@ void RR(){
 	sem_init(&semaforoPlanifiquenme,0,0);
 	while(!objetivoGlobalCumplido()){
 		esperarAlgunoEnReady(false);
+		if(objetivoGlobalCumplido())
+			break;
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		sem_wait(&semaforoCambioEstado);
 		entrenador *trainer = list_get(EstadoReady,0);
@@ -1189,6 +1193,8 @@ void SJFCD(){
 	sem_init(&semaforoPlanifiquenme,0,0);
 	while(!objetivoGlobalCumplido()){
 		esperarAlgunoEnReady(false);
+		if(objetivoGlobalCumplido())
+			break;
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		sem_wait(&semaforoCambioEstado);
@@ -1247,6 +1253,8 @@ void SJFSD(){
 	sem_init(&semaforoTermine,0,0);
 	while(!objetivoGlobalCumplido()){
 		esperarAlgunoEnReady(false);
+		if(objetivoGlobalCumplido())
+			break;
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		sem_wait(&semaforoCambioEstado);
