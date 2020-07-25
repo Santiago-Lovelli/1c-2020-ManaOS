@@ -280,17 +280,18 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 		for (int i=0; i < tamanioLocalized; i++){
 			elemento = list_get (mensajesLocalized, i);
 			mensajeLocalized = leerInfoYActualizarUsoPorID(elemento->idMensaje);
-			for (int i = 0; i<mensajeLocalized->cantidadDePuntos;i++){
+			for (int j = 0; j<mensajeLocalized->cantidadDePuntos;j++){
+				d_PosCant * sarasa = list_get(mensajeLocalized->puntos, j);
 				d_PosCant* posicion = malloc(sizeof(d_PosCant));
-				posicion->posX = mensajeLocalized->puntos->posX;
-				posicion->posY = mensajeLocalized->puntos->posY;
+				posicion->posX = sarasa->posX;
+				posicion->posY = sarasa->posY;
 				log_info(LOGGER_OBLIGATORIO,"x: %i, y: %i", posicion->posX, posicion->posY);
-				posiciones = realloc(posiciones, (sizeof(d_PosCant**) + (i+1)*(sizeof(d_PosCant*)) + sizeof(uint32_t) ) );
-				posiciones[i] = posicion;
-				posiciones[i+1] = NULL;
-				i=i+1;
+				posiciones = realloc(posiciones, (sizeof(d_PosCant**) + (j+1)*(sizeof(d_PosCant*)) + sizeof(uint32_t) ) );
+				posiciones[j] = posicion;
+				posiciones[j+1] = NULL;
+				j=j+1;
 			}
-			Serialize_PackAndSend_LOCALIZED_POKEMON(*cliente, elemento->idMensaje, mensajeLocalized->nombrePokemon, &mensajeLocalized->puntos);
+			Serialize_PackAndSend_LOCALIZED_POKEMON(*cliente, elemento->idMensaje, mensajeLocalized->nombrePokemon, posiciones);
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (LOCALIZED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
@@ -305,6 +306,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 t_list * tomarLosMensajes (d_message tipoMensaje){
 	estructuraAdministrativa* elemento;
 	t_list * listaTipo = list_create();
+	sem_wait(&MUTEX_LISTA);
 	int tamanioLista = list_size(ADMINISTRADOR_MEMORIA);
 	for (int i = 0; i < tamanioLista; i++){
 		estructuraAdministrativa* auxiliar = list_get(ADMINISTRADOR_MEMORIA, i);
@@ -322,6 +324,7 @@ t_list * tomarLosMensajes (d_message tipoMensaje){
 			list_add (listaTipo, elemento);
 		}
 	}
+	sem_post(&MUTEX_LISTA);
 	return listaTipo;
 }
 
@@ -392,8 +395,21 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 			break;
 	case d_LOCALIZED_POKEMON:
 		mensajeLocalized = (localizedEnMemoria*)mensaje;
+		d_PosCant** posiciones = malloc(sizeof(d_PosCant**) + sizeof(uint32_t));
+		posiciones[0] = NULL;
+		for (int i=0; i < mensajeLocalized->puntos->elements_count; i++){
+			d_PosCant * sarasa = list_get(mensajeLocalized->puntos, i);
+			d_PosCant* posicion = malloc(sizeof(d_PosCant));
+			posicion->posX = sarasa->posX;
+			posicion->posY = sarasa->posY;
+			log_info(LOGGER_OBLIGATORIO,"x: %i, y: %i", posicion->posX, posicion->posY);
+			posiciones = realloc(posiciones, (sizeof(d_PosCant**) + (i+1)*(sizeof(d_PosCant*)) + sizeof(uint32_t) ) );
+			posiciones[i] = posicion;
+			posiciones[i+1] = NULL;
+			i=i+1;
+		}
 		void notificarSuscriptorLocalized(int * self){
-			Serialize_PackAndSend_LOCALIZED_POKEMON(*self, id, mensajeLocalized->nombrePokemon, &mensajeLocalized->puntos);
+			Serialize_PackAndSend_LOCALIZED_POKEMON(*self, id, mensajeLocalized->nombrePokemon, posiciones);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
@@ -554,24 +570,25 @@ estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeA
 }
 
 void actualizarEnviadosPorID(int id, int socketCliente){
-	sem_wait(&MUTEX_ENVIADOS);
+	sem_wait(&MUTEX_LISTA);
 	estructuraAdministrativa* unaEstructura = buscarEstructuraAdministrativaConID(id);
 	if(unaEstructura != NULL){
 		list_add(unaEstructura->suscriptoresConMensajeEnviado, &socketCliente);
 	}
+	sem_post(&MUTEX_LISTA);
 	return;
-	sem_wait(&MUTEX_ENVIADOS);
 }
 
 void actualizarRecibidosPorID(int id, int socketCliente){
-	sem_wait(&MUTEX_ACK);
+	sem_wait(&MUTEX_LISTA);
 	int * cliente = malloc(sizeof(int));
 	*cliente = socketCliente;
 	estructuraAdministrativa* unaEstructura = buscarEstructuraAdministrativaConID(id);
 	if(unaEstructura != NULL){
 		list_add(unaEstructura->suscriptoresConACK, cliente);
 	}
-	sem_post(&MUTEX_ACK);
+	sem_post(&MUTEX_LISTA);
+	return;
 }
 
 estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id){
@@ -1020,9 +1037,9 @@ void * leerInfoYActualizarUsoPorID(int id){ //deuelve un tipo en memoria
 			}
 	sem_wait(&MUTEX_LISTA);
 	estructuraAdministrativa * ElElemento = list_find(ADMINISTRADOR_MEMORIA, (void*)igualID);
-	sem_post(&MUTEX_LISTA);
 	ElElemento->ultimaReferencia = string_new();
 	string_append(&ElElemento->ultimaReferencia, (char*)temporal_get_string_time());
+	sem_post(&MUTEX_LISTA);
 	return(levantarMensaje(ElElemento->tipoMensaje, ElElemento->donde));
 }
 
@@ -1151,10 +1168,18 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t* id)
 		retornoLocalized = malloc(sizeof(localizedEnMemoria));
 		Serialize_Unpack_LocalizedPokemon(paquete, id, &pokemon, &listaDePuntos);
 		log_info(LOGGER_OBLIGATORIO,"Me llego mensaje localized correlativo a: %i, pkm: %s \n", *id, pokemon);
-		void mostrarPuntos(d_PosCant self){
+		for(int i = 0; i<listaDePuntos->elements_count; i++){
+			d_PosCant* asd = list_get(listaDePuntos,i);
+			log_info(LOGGER_OBLIGATORIO,"x: %i, y:%i",asd->posX,asd->posY);
+		}
+		/*void mostrarPuntos(d_PosCant self){
 			log_info(LOGGER_OBLIGATORIO,"Punto en x: %i, y: %i \n", self.posX, self.posY);
 		}
-		list_iterate(listaDePuntos, (void*)mostrarPuntos);
+		list_iterate(listaDePuntos, (void*)mostrarPuntos);*/
+		retornoLocalized->cantidadDePuntos = listaDePuntos->elements_count;
+		retornoLocalized->largoDeNombre = strlen(pokemon);
+		memcpy(retornoLocalized->nombrePokemon, pokemon, retornoLocalized->largoDeNombre);
+		retornoLocalized->puntos = listaDePuntos;
 		retorno = retornoLocalized;
 		break;
 	default:
@@ -1269,10 +1294,12 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo){
 		memcpy(&retornoLocalized->cantidadDePuntos, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
 		for(int i=0; retornoLocalized->cantidadDePuntos>i; i++){
-			memcpy(&retornoLocalized->puntos->posX, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
+			d_PosCant* punto = malloc(sizeof(d_PosCant));
+			memcpy(&punto->posX, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
 			desplazamiento += sizeof(uint32_t);
-			memcpy(&retornoLocalized->puntos->posY, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
+			memcpy(&punto->posY, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
 			desplazamiento += sizeof(uint32_t);
+			list_add(retornoLocalized->puntos, punto);
 		}
 		sem_post(&MUTEX_MEMORIA);
 		return retornoLocalized;
@@ -1351,9 +1378,10 @@ void guardarMensajeEnMemoria(d_message tipoMensaje, void * mensaje, void * lugar
 		memcpy(lugarDeComienzo + desplazamiento, &retornoLocalized->cantidadDePuntos, sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
 		for(int i=0; retornoLocalized->cantidadDePuntos>i; i++){
-			memcpy(lugarDeComienzo + desplazamiento, &retornoLocalized->puntos->posX, sizeof(uint32_t));
+			d_PosCant* punto = list_get(retornoLocalized->puntos, i);
+			memcpy(lugarDeComienzo + desplazamiento, &punto->posX, sizeof(uint32_t));
 			desplazamiento += sizeof(uint32_t);
-			memcpy(lugarDeComienzo + desplazamiento, &retornoLocalized->puntos->posY, sizeof(uint32_t));
+			memcpy(lugarDeComienzo + desplazamiento, &punto->posY, sizeof(uint32_t));
 			desplazamiento += sizeof(uint32_t);
 		}
 		sem_post(&MUTEX_MEMORIA);

@@ -99,7 +99,7 @@ typedef struct localizedEnMemoria{
 	uint32_t largoDeNombre;
 	char * nombrePokemon;
 	uint32_t cantidadDePuntos;
-	d_PosCant* puntos;
+	t_list* puntos;
 }localizedEnMemoria;
 
 ///////FUNCIONES INICIALIZACION/////////
