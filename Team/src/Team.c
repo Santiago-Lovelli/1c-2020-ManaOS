@@ -181,6 +181,7 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 		objetoID->idEntrenador = idEntrenadorQueMandaCatch;
 		objetoID->pokemon = pokemon;
 		bloquearEntrenador(objetoID->idEntrenador, t_ESPERANDO_RESPUESTA);
+		log_info(TEAM_LOG, "El mensaje CATCH:%s se va a quedar esperando al IDCorrelativo: %i", pokemon, objetoID->idMensaje);
 		list_add(ID_QUE_NECESITO, objetoID);
 	}
 }
@@ -195,6 +196,7 @@ void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
 	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
 	int* idResponse = malloc(sizeof(int));
 	*idResponse = recibirResponse(conexion, headerACK);
+	log_info(TEAM_LOG, "El GET:%s se va a quedar esperando al IDCorrelativo: %i", pokemon, *idResponse);
 	sem_wait(&semaforoGet);
 	list_add(IDs_GET, idResponse);
 	sem_post(&semaforoGet);
@@ -326,7 +328,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		uint32_t idMensajeLocalized, idMensajeCorrelativo;
 		char *localizedNombrePokemon;
 		Serialize_Unpack_LocalizedPokemon_IDCorrelativo(packLocalizedPokemon,&idMensajeLocalized, &idMensajeCorrelativo,&localizedNombrePokemon,&posCant);
-		log_info(logger,"Contenidos del mensaje: id: %i, Pkm: %s",idMensajeLocalized,localizedNombrePokemon);
+		log_info(logger,"Contenidos del mensaje: id: %i, id correlativo: %i, Pkm: %s",idMensajeLocalized, idMensajeCorrelativo,localizedNombrePokemon);
 		for(int i = 0; i<posCant->elements_count; i++){
 			d_PosCant* asd = list_get(posCant,i);
 			log_info(logger,"x: %i, y:%i",asd->posX,asd->posY);
@@ -355,10 +357,13 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		//Con estas dos variables desempaquetamos el paquete
 		uint32_t idMensajeCaught, resultadoCaught, idCorrelativoCaught;
 		Serialize_Unpack_CaughtPokemon_IDCorrelativo(packCaughtPokemon, &idMensajeCaught, &idCorrelativoCaught, &resultadoCaught);
-		log_info(logger, "Contenidos del mensaje: Id: %i, Result: %i\n", idMensajeCaught, resultadoCaught);
+		log_info(logger, "Contenidos del mensaje: Id: %i, Id Correlativo: %i, Result: %i\n", idMensajeCaught, idCorrelativoCaught, resultadoCaught);
 		Serialize_PackAndSend_ACK(cliente, idMensajeCaught);
 		if(necesitoEsteID(idCorrelativoCaught)){
 			hacerCaught(idCorrelativoCaught,resultadoCaught);
+		}
+		else{
+			log_error(logger, "Este IDCorrelativo no me corresponde");
 		}
 
 		free(packCaughtPokemon);
