@@ -935,8 +935,7 @@ void composicion(){
 		log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)estructuraAdministrativaDestroyer);
 	}
-	int tamanio = list_size(ADMINISTRADOR_MEMORIA);
-		for (i=1; i<tamanio-1; i++){
+		for (i=1; i<list_size(ADMINISTRADOR_MEMORIA); i++){
 		particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
 		particionAnterior = list_get (ADMINISTRADOR_MEMORIA, i-1);
 		particionPosterior = list_get (ADMINISTRADOR_MEMORIA, i+1);
@@ -946,14 +945,16 @@ void composicion(){
 				particionActual->tamanioParticion = particionAnterior->tamanioParticion + particionActual->tamanioParticion;
 				log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionAnterior->donde));
 				list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i-1, (void*)estructuraAdministrativaDestroyer);
+				if (particionPosterior != NULL){
 				if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0 && particionActual->tamanioParticion == particionPosterior->tamanioParticion){
 					particionActual->estaOcupado = 0;
 					particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
 					log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)estructuraAdministrativaDestroyer);
+					}
+				}
+			}
 		}
-		}
-	}
 }
 
 estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje, estructuraAdministrativa* particion){
