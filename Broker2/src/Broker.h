@@ -135,6 +135,8 @@ bool sirveCompactar(int tamanioMensaje);
 void enviarACK(int cliente, int ID);
 estructuraAdministrativa * newParticion();
 void limpiarParticion(estructuraAdministrativa * unaParticion);
+void relacionar(int ID, int idCorrelativo);
+int obtenerRelacion(int ID);
 
 //////FUNCIONES ESTRUCTURA ADMINISTRATIVA//////////
 estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar);
@@ -176,6 +178,7 @@ int FLAG_REEMPLAZAR = 1;
 int FLAG_COMPACTACION = 1;
 char* nombresColas[] = {"NEW_POKEMON", "CATCH_POKEMON", "GET_POKEMON", "APPEARED_POKEMON", "CAUGHT_POKEMON", "LOCALIZED_POKEMON"};
 int BUSQUEDAS_FALLIDAS = 0;
+t_dictionary *RELACION_IDS;
 
 ////////SEMAFOROS///////////
 sem_t MUTEX_CLIENTE;
@@ -193,6 +196,7 @@ sem_t MUTEX_LEERCOMPACTACION;
 sem_t MUTEX_LEERCOMPOSICION;
 sem_t MUTEX_ACK;
 sem_t MUTEX_ENVIADOS;
+sem_t MUTEX_DICCIONARIO;
 
 ////////LISTA DE SUSCRIPTORES//////
 t_list* SUSCRIPTORES_NEW;

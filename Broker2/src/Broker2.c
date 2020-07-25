@@ -110,6 +110,7 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 		default:
 			log_error(LOGGER_OBLIGATORIO, "Mensaje no entendido: %i\n", header);
 			void* packBasura = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
+			sem_post(&MUTEX_CLIENTE);
 			free(packBasura);
 			break;
 	}
@@ -210,7 +211,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 	getEnMemoria* mensajeGet;
 	caughtEnMemoria* mensajeCaught;
 	localizedEnMemoria* mensajeLocalized;
-
+	int unID;
 	switch (tipoMensaje){
 	case d_NEW_POKEMON:
 		mensajesNew = tomarLosMensajes (d_NEW_POKEMON);
@@ -254,7 +255,8 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 		for (int i=0; i<tamanioAppeared;i++){
 			elemento = list_get (mensajesAppeared, i);
 			mensajeAppeared = leerInfoYActualizarUsoPorID(elemento->idMensaje);
-			Serialize_PackAndSend_APPEARED_POKEMON_NoID(*cliente, mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
+			unID = obtenerRelacion(elemento->idMensaje);
+			Serialize_PackAndSend_APPEARED_POKEMON_IDCorrelativo(*cliente, elemento->idMensaje, unID, mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (APPEARED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
@@ -266,7 +268,8 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 		for (int i=0; i<tamanioCaught;i++){
 			elemento = list_get (mensajesCaught, i);
 			mensajeCaught = leerInfoYActualizarUsoPorID(elemento->idMensaje);
-			Serialize_PackAndSend_CAUGHT_POKEMON(*cliente, elemento->idMensaje, mensajeCaught->atrapado);
+			unID = obtenerRelacion(elemento->idMensaje);
+			Serialize_PackAndSend_CAUGHT_POKEMON_IDCorrelativo(*cliente, elemento->idMensaje, unID, mensajeCaught->atrapado);
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CAUGHT) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
@@ -291,7 +294,8 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 				posiciones[j+1] = NULL;
 				j=j+1;
 			}
-			Serialize_PackAndSend_LOCALIZED_POKEMON(*cliente, elemento->idMensaje, mensajeLocalized->nombrePokemon, posiciones);
+			unID = obtenerRelacion(elemento->idMensaje);
+			Serialize_PackAndSend_LOCALIZED_POKEMON_IDCorrelativo(*cliente, elemento->idMensaje, unID, mensajeLocalized->nombrePokemon, posiciones);
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (LOCALIZED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
@@ -376,7 +380,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_APPEARED_POKEMON:
 		mensajeAppeared = (appearedEnMemoria*)mensaje;
 		void notificarSuscriptorAppeared(int * self){
-			Serialize_PackAndSend_APPEARED_POKEMON(*self, resultado->idMensaje, mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
+			Serialize_PackAndSend_APPEARED_POKEMON_IDCorrelativo(*self, resultado->idMensaje, id, mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
@@ -386,7 +390,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_CAUGHT_POKEMON:
 		mensajeCaught = (caughtEnMemoria*)mensaje;
 		void notificarSuscriptorCaught(int * self){
-			Serialize_PackAndSend_CAUGHT_POKEMON(*self, id, mensajeCaught->atrapado);
+			Serialize_PackAndSend_CAUGHT_POKEMON_IDCorrelativo(*self, resultado->idMensaje, id, mensajeCaught->atrapado);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
@@ -409,7 +413,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 			i=i+1;
 		}
 		void notificarSuscriptorLocalized(int * self){
-			Serialize_PackAndSend_LOCALIZED_POKEMON(*self, id, mensajeLocalized->nombrePokemon, posiciones);
+			Serialize_PackAndSend_LOCALIZED_POKEMON_IDCorrelativo(*self, resultado->idMensaje, id, mensajeLocalized->nombrePokemon, posiciones);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
 		}
@@ -445,6 +449,7 @@ int tratarMensaje (d_message tipoMensaje, void *paquete){
 	}
 	sem_post(&MUTEX_LISTA);
 	t_list * subs = suscriptoresPara(tipoMensaje);
+	relacionar(ID, *id);
 	enviarUnMensaje(unMensaje, tipoMensaje, resultado, subs, *id);
 	free (id);
 	return ID;
@@ -457,6 +462,7 @@ void Init(){
 	ListsInit();
 	MemoriaPrincipalInit();
 	SemaphoresInit();
+	RELACION_IDS = dictionary_create();
 	//DumpFileInit();
 }
 
@@ -508,6 +514,7 @@ void SemaphoresInit(){
 	sem_init(&MUTEX_LEERCOMPACTACION, 0, 1);
 	sem_init(&MUTEX_ACK, 0, 1);
 	sem_init(&MUTEX_ENVIADOS, 0, 1);
+	sem_init(&MUTEX_DICCIONARIO, 0, 1);
 }
 
 void DumpFileInit(){
@@ -530,6 +537,7 @@ void destruirTodo(){
 	list_destroy(SUSCRIPTORES_CAUGHT);
 	list_destroy(SUSCRIPTORES_LOCALIZED);
 	list_destroy_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void*)estructuraAdministrativaDestroyer);
+	//dictionary_destroy_and_destroy_elements(RELACION_IDS, );
 	limpiarSemaforos();
 	free(MEMORIA_PRINCIPAL);
 	log_destroy(LOGGER_OBLIGATORIO);
@@ -551,6 +559,7 @@ void limpiarSemaforos(){
 	sem_destroy(&MUTEX_LEERCOMPACTACION);
 	sem_destroy(&MUTEX_ACK);
 	sem_destroy(&MUTEX_ENVIADOS);
+	sem_destroy(&MUTEX_DICCIONARIO);
 }
 
 /////////FUNCIONES VARIAS/////////
@@ -1393,3 +1402,18 @@ void guardarMensajeEnMemoria(d_message tipoMensaje, void * mensaje, void * lugar
 	}
 }
 
+void relacionar(int ID, int idCorrelativo){
+	int * idCorre = malloc(sizeof(int));
+	*idCorre = idCorrelativo;
+	sem_wait(&MUTEX_DICCIONARIO);
+	dictionary_put(RELACION_IDS, string_itoa(ID), idCorre);
+	sem_post(&MUTEX_DICCIONARIO);
+}
+
+int obtenerRelacion(int ID){
+	sem_wait(&MUTEX_DICCIONARIO);
+	int* retorno = malloc(sizeof(int));
+	retorno = dictionary_get(RELACION_IDS, string_itoa(ID));
+	sem_post(&MUTEX_DICCIONARIO);
+	return *retorno;
+}
