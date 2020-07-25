@@ -15,6 +15,7 @@
 #include <semaphore.h>
 #include <commons/txt.h>
 #include <signal.h>
+#include <commons/temporal.h>
 
 ///////ESTRUCTURAS//////////
 typedef struct config
@@ -111,7 +112,7 @@ void DumpFileInit();
 
 //////FUNCIONES DE CONEXION//////////
 void EsperarClientes();
-void* AtenderCliente();
+void* AtenderCliente(int* a);
 void ActuarAnteMensaje();
 void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t * id);
 
@@ -127,12 +128,15 @@ int tratarMensaje (d_message tipoMensaje, void *paquete);
 void * leerInfoYActualizarUsoPorID(int id);
 t_list * tomarLosMensajes (d_message tipoMensaje);
 void enviarVariosMensajes(int * cliente, d_message tipoMensaje);
-void tratarMensajeACK (void* paquete, int cliente);
 void actualizarRecibidosPorID(int id, int socketCliente);
 void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministrativa * resultado, t_list * lista, uint32_t id);
 t_list* suscriptoresPara(d_message tipoDeMensaje);
 bool sirveCompactar(int tamanioMensaje);
 void enviarACK(int cliente, int ID);
+estructuraAdministrativa * newParticion();
+void limpiarParticion(estructuraAdministrativa * unaParticion);
+void relacionar(int ID, int idCorrelativo);
+int obtenerRelacion(int ID);
 
 //////FUNCIONES ESTRUCTURA ADMINISTRATIVA//////////
 estructuraAdministrativa * guardarMensaje(d_message tipoMensaje, void * mensajeAGuardar);
@@ -143,6 +147,7 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo);
 void reposicionarParticionesOcupadas(t_list * listaAuxiliar);
 void dump();
 bool noPuedoReemplazarMas();
+void guardarMensajeEnMemoria(d_message tipoMensaje, void * mensaje, void * lugarDeComienzo);
 
 //////////FUNCION BUDDY Y PARTICION DINAMICA//////////////
 void composicion();
@@ -152,29 +157,28 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 int primeraParticion();
 int particionMenosReferenciada();
 void compactacion();
-int reemplazar (d_message tipoMensaje, void* mensaje);
+int reemplazar ();
 //void limpiarParticion (estructuraAdministrativa * particion);
 
 ////////////FUNCIONES DESTROYER//////////////////
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self);
 static void suscriptorDestroyer(int *self);
-static void estructuraAdministrativaDestroyerSinDestruirListas(estructuraAdministrativa *self);
+//static void estructuraAdministrativaDestroyerSinDestruirListas(estructuraAdministrativa *self);
 void destruirTodo();
 void limpiarSemaforos();
 
 ////////VARIABLES GLOBALES//////////
 config BROKER_CONFIG;
-t_log * LOGGER_GENERAL;
 t_log * LOGGER_OBLIGATORIO;
-enum queueName COLAS;
 void * MEMORIA_PRINCIPAL;
 t_list* ADMINISTRADOR_MEMORIA;
 int CONTADOR = 0;
 int FLAG_COMPOSICION = 0;
 int FLAG_REEMPLAZAR = 1;
 int FLAG_COMPACTACION = 1;
-const char* nombresColas[] = {"NEW_POKEMON", "CATCH_POKEMON", "GET_POKEMON", "APPEARED_POKEMON", "CAUGHT_POKEMON", "LOCALIZED_POKEMON"};
+char* nombresColas[] = {"NEW_POKEMON", "CATCH_POKEMON", "GET_POKEMON", "APPEARED_POKEMON", "CAUGHT_POKEMON", "LOCALIZED_POKEMON"};
 int BUSQUEDAS_FALLIDAS = 0;
+t_dictionary *RELACION_IDS;
 
 ////////SEMAFOROS///////////
 sem_t MUTEX_CLIENTE;
@@ -186,6 +190,13 @@ sem_t MUTEX_REEMPLAZAR;
 sem_t MUTEX_COMPACTACION;
 sem_t MUTEX_COMPOSICION;
 sem_t MUTEX_BUSQUEDA;
+sem_t MUTEX_LEERBUSQUEDA;
+sem_t MUTEX_LEERREEMPLAZAR;
+sem_t MUTEX_LEERCOMPACTACION;
+sem_t MUTEX_LEERCOMPOSICION;
+sem_t MUTEX_ACK;
+sem_t MUTEX_ENVIADOS;
+sem_t MUTEX_DICCIONARIO;
 
 ////////LISTA DE SUSCRIPTORES//////
 t_list* SUSCRIPTORES_NEW;
@@ -198,10 +209,3 @@ t_list* SUSCRIPTORES_LOCALIZED;
 void funcionParaVerMemoria();
 
 #endif /* BROKER_H_ */
-
-
-
-
-
-
-
