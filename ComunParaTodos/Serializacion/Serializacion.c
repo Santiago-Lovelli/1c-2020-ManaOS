@@ -206,7 +206,7 @@ bool Serialize_PackAndSend_CAUGHT_POKEMON_IDCorrelativo(int socketCliente, uint3
 	memcpy(pack, &idMensaje, sizeof(uint32_t));
 	memcpy(pack+sizeof(uint32_t), &resultado, sizeof(uint32_t));
 	memcpy(pack+sizeof(uint32_t)+sizeof(uint32_t), &idCorrelativo, sizeof(uint32_t));
-	int resultadoenvio = Serialize_PackAndSend(socketCliente, pack, 2*sizeof(uint32_t), d_CAUGHT_POKEMON);
+	int resultadoenvio = Serialize_PackAndSend(socketCliente, pack, 3*sizeof(uint32_t), d_CAUGHT_POKEMON);
 	free(pack);
 	return resultadoenvio;
 }
