@@ -274,9 +274,21 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 	case d_LOCALIZED_POKEMON:
 		mensajesLocalized = tomarLosMensajes (d_LOCALIZED_POKEMON);
 		int tamanioLocalized = list_size(mensajesLocalized);
+		d_PosCant** posiciones = malloc(sizeof(d_PosCant**) + sizeof(uint32_t));
 		for (int i=0; i<tamanioLocalized;i++){
 			elemento = list_get (mensajesLocalized, i);
 			mensajeLocalized = leerInfoYActualizarUsoPorID(elemento->idMensaje);
+			for (int i = 0; i<tamanioLozalized;i++){
+			d_PosCant* posicion = malloc(sizeof(d_PosCant));
+			posicion->posX = mensajeLocalized->punto->posX;
+			posicion->posY = mensajeLocalized->punto->posY;
+		    log_info(loggerGeneral,"x: %i, y: %i", posicion->posX, posicion->posY);
+			posiciones = realloc(posicionCantidad, (sizeof(d_PosCant**) + (i+1)*(sizeof(d_PosCant*)) + sizeof(uint32_t) ) );
+			posiciones[i] = posicion;
+			posiciones[i+1] = NULL;
+			i=i+1;
+		}
+
 			Serialize_PackAndSend_LOCALIZED_POKEMON(*cliente, elemento->idMensaje, mensajeLocalized->nombrePokemon, &mensajeLocalized->puntos);
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (LOCALIZED) al suscriptor %i", elemento->idMensaje, *cliente);
