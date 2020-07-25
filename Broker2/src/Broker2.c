@@ -94,8 +94,8 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			log_info(LOGGER_OBLIGATORIO, "Llego un Subscribe");
 			void * recibir = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			uint32_t variable = Serialize_Unpack_ACK(recibir);
-			sem_post(&MUTEX_CLIENTE);
 			suscribir(variable, cliente);
+			sem_post(&MUTEX_CLIENTE);
 			free(recibir);
 			break;
 		case d_ACK:
@@ -285,7 +285,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			unID = obtenerRelacion(elemento->idMensaje);
 			Serialize_PackAndSend_CAUGHT_POKEMON_IDCorrelativo(*cliente, elemento->idMensaje, unID, mensajeCaught->atrapado);
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
-			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CAUGHT) al suscriptor %i", elemento->idMensaje, *cliente);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i correlativo a: %i (CAUGHT) al suscriptor %i", elemento->idMensaje,unID, *cliente);
 		}
 		list_destroy_and_destroy_elements(mensajesCaught, (void *) estructuraAdministrativaDestroyer);
 	break;
@@ -405,7 +405,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 		void notificarSuscriptorCaught(int * self){
 			Serialize_PackAndSend_CAUGHT_POKEMON_IDCorrelativo(*self, resultado->idMensaje, id, mensajeCaught->atrapado);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
-			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
+			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i correlativo: %i al suscriptor %i", resultado->idMensaje, id, *self);
 		}
 			list_iterate(lista, (void*)notificarSuscriptorCaught);
 			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
@@ -730,7 +730,8 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 		}
 		if(particion == NULL){
 			if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
-				if(valorBusquedaFallida() >= BROKER_CONFIG.FRECUENCIA_COMPACTACION || valorCompactacion() == 0){
+				//|| valorCompactacion() == 0
+				if(valorBusquedaFallida() >= BROKER_CONFIG.FRECUENCIA_COMPACTACION){
 					sem_wait(&MUTEX_BUSQUEDA);
 					BUSQUEDAS_FALLIDAS=0;
 					sem_post(&MUTEX_BUSQUEDA);
@@ -742,12 +743,13 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 					return buscarParticionLibre(tipoMensaje, mensaje);
 				}
 				if(valorReemplazar() == 1){
-					reemplazar();
-					if (sirveCompactar(tamanioMensaje)){
+					int pos = reemplazar();
+					consolidarParticiones(pos);
+					/*if (sirveCompactar(tamanioMensaje)){
 						sem_wait(&MUTEX_COMPACTACION);
 						FLAG_COMPACTACION = 0;
 						sem_post(&MUTEX_COMPACTACION);
-					}
+					}*/
 					sem_wait(&MUTEX_BUSQUEDA);
 					BUSQUEDAS_FALLIDAS ++;
 					sem_post(&MUTEX_BUSQUEDA);
@@ -795,7 +797,7 @@ bool sirveCompactar(int tamanioMensaje) {
 		}
 	}
 	list_iterate(ADMINISTRADOR_MEMORIA, (void*)tamanioLibre);
-	return (tamanioMensaje >= contador);
+	return (tamanioMensaje <= contador);
 }
 
 int primeraParticion(){
@@ -829,6 +831,7 @@ int primeraParticion(){
 int particionMenosReferenciada(){
 	estructuraAdministrativa * particionMenor;
 		estructuraAdministrativa * particion;
+		char * menor;
 		int i, posicionMenor, contador = 0;
 		int particionesMemoria = list_size(ADMINISTRADOR_MEMORIA);
 		bool estaOcupado(estructuraAdministrativa* elemento) {
@@ -842,10 +845,11 @@ int particionMenosReferenciada(){
 						contador ++;
 					}
 		list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
+		menor = particionMenor->ultimaReferencia;
 		for (i = posicionMenor + 1; i < particionesMemoria; i++){
 			particion = list_get(ADMINISTRADOR_MEMORIA, i);
-			if (primerFechaEsAnterior(particion->ultimaReferencia, particionMenor->ultimaReferencia) && particion->estaOcupado == 1){
-					particionMenor->ultimaReferencia = particion->ultimaReferencia;
+			if (primerFechaEsAnterior(particion->ultimaReferencia, menor) && particion->estaOcupado == 1){
+					menor = particion->ultimaReferencia;
 					posicionMenor = i;
 			}
 		}
@@ -931,7 +935,8 @@ void composicion(){
 		log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
 		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)estructuraAdministrativaDestroyer);
 	}
-		for (i=1; i<list_size(ADMINISTRADOR_MEMORIA); i++){
+	int tamanio = list_size(ADMINISTRADOR_MEMORIA);
+		for (i=1; i<tamanio-1; i++){
 		particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
 		particionAnterior = list_get (ADMINISTRADOR_MEMORIA, i-1);
 		particionPosterior = list_get (ADMINISTRADOR_MEMORIA, i+1);
@@ -958,19 +963,20 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
 		int tamanioInicial = particion->tamanioParticion;
 		particion->tamanioParticion = tamanioDeMensaje(tipoMensaje, mensaje);
-		if(particion->tamanioParticion < BROKER_CONFIG.TAMANO_MINIMO_PARTICION){
+		if(particion->tamanioParticion <= BROKER_CONFIG.TAMANO_MINIMO_PARTICION){
 			particion->tamanioParticion = BROKER_CONFIG.TAMANO_MINIMO_PARTICION;
 		}
 		limpiarParticion(particion);
-		if(tamanioInicial - particion->tamanioParticion > BROKER_CONFIG.TAMANO_MINIMO_PARTICION){
+		//if(tamanioInicial - particion->tamanioParticion > BROKER_CONFIG.TAMANO_MINIMO_PARTICION){
+		if (tamanioInicial - particion->tamanioParticion > 0){
 			estructuraAdministrativa * particionVacia = newParticion();
 			particionVacia->tamanioParticion = tamanioInicial - particion->tamanioParticion;
 			particionVacia->donde = particion->donde + particion->tamanioParticion;
 			list_add(ADMINISTRADOR_MEMORIA, particionVacia);
 		}
-		else{
-			particion->tamanioParticion = tamanioInicial;
-		}
+		//else{
+			return particion;
+		//}
 	}
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "bs")){
 		if (particion->tamanioParticion == BROKER_CONFIG.TAMANO_MINIMO_PARTICION ){
@@ -1032,7 +1038,8 @@ void reposicionarParticionesOcupadas(t_list * listaAuxiliar){
 	estructuraAdministrativa * espacioFaltante = newParticion();
 	espacioFaltante->donde = nuevoDonde;
 	espacioFaltante->tamanioParticion = BROKER_CONFIG.TAMANO_MEMORIA - contarTamanio();
-	list_add_in_index(ADMINISTRADOR_MEMORIA, 0, espacioFaltante);
+	//list_add_in_index(ADMINISTRADOR_MEMORIA, 0, espacioFaltante);
+	list_add (ADMINISTRADOR_MEMORIA, espacioFaltante);
 }
 
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self) {
@@ -1056,13 +1063,22 @@ static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self) {
 }*/
 
 void * leerInfoYActualizarUsoPorID(int id){ //deuelve un tipo en memoria
-	bool igualID(estructuraAdministrativa* elemento) {
+	/*bool igualID(estructuraAdministrativa* elemento) {
 				return (elemento->idMensaje == id);
-			}
+			}*/
+	int posicion;
+	int contador = 0;
+	void tomarParticion(estructuraAdministrativa* elemento){
+		if(elemento->idMensaje == id){
+			posicion = contador;
+		}
+		contador ++;
+	}
+	list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
 //	sem_wait(&MUTEX_LISTA);
-	estructuraAdministrativa * ElElemento = list_find(ADMINISTRADOR_MEMORIA, (void*)igualID);
+	estructuraAdministrativa * ElElemento = list_get (ADMINISTRADOR_MEMORIA, posicion);
 	ElElemento->ultimaReferencia = string_new();
-	string_append(&ElElemento->ultimaReferencia, (char*)temporal_get_string_time());
+	ElElemento->ultimaReferencia = temporal_get_string_time();
 //	sem_post(&MUTEX_LISTA);
 	return(levantarMensaje(ElElemento->tipoMensaje, ElElemento->donde));
 }
@@ -1174,7 +1190,7 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t* id)
 		retornoAppeared = malloc(sizeof(appearedEnMemoria));
 		Serialize_Unpack_AppearedPokemon(paquete, id, &pokemon, &posX, &posY);
 		log_info(LOGGER_OBLIGATORIO,"Me llego mensaje appeared Pkm: %s, x: %i, y: %i , id: %i \n", pokemon, posX, posY, *id);
-		retornoAppeared->largoDeNombre = string_length(pokemon);
+		retornoAppeared->largoDeNombre = string_length(pokemon) + 1;
 		retornoAppeared->nombrePokemon = pokemon;
 		retornoAppeared->posX = posX;
 		retornoAppeared->posY = posY;
@@ -1313,12 +1329,12 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo){
 		retornoLocalized = malloc(sizeof(localizedEnMemoria));
 		retornoLocalized->puntos = list_create();
 		memcpy(&retornoLocalized->largoDeNombre, lugarDeComienzo, sizeof(uint32_t));
-		retornoLocalized->largoDeNombre +=1;
+		uint32_t largoAux = retornoLocalized->largoDeNombre + 1;
 		desplazamiento += sizeof(uint32_t);
-		retornoLocalized->nombrePokemon = malloc(retornoLocalized->largoDeNombre);
-		memcpy(retornoLocalized->nombrePokemon, lugarDeComienzo + desplazamiento, retornoLocalized->largoDeNombre -1);
-		memcpy(retornoLocalized->nombrePokemon + retornoLocalized->largoDeNombre -1, &barraCero, 1);
-		desplazamiento += retornoLocalized->largoDeNombre-1;
+		retornoLocalized->nombrePokemon = malloc(largoAux);
+		memcpy(retornoLocalized->nombrePokemon, lugarDeComienzo + desplazamiento, retornoLocalized->largoDeNombre);
+		memcpy(retornoLocalized->nombrePokemon + retornoLocalized->largoDeNombre, &barraCero, 1);
+		desplazamiento += retornoLocalized->largoDeNombre;
 		memcpy(&retornoLocalized->cantidadDePuntos, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
 		for(int i=0; retornoLocalized->cantidadDePuntos>i; i++){
@@ -1383,10 +1399,11 @@ void guardarMensajeEnMemoria(d_message tipoMensaje, void * mensaje, void * lugar
 		return;
 	case d_APPEARED_POKEMON:
 		retornoAppeared = mensaje;
-		memcpy(lugarDeComienzo, &retornoAppeared->largoDeNombre, sizeof(uint32_t));
+		uint32_t largoAuxiliar = retornoAppeared->largoDeNombre - 1;
+		memcpy(lugarDeComienzo, &largoAuxiliar, sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
-		memcpy(lugarDeComienzo + desplazamiento, retornoAppeared->nombrePokemon, retornoAppeared->largoDeNombre);
-		desplazamiento += retornoAppeared->largoDeNombre;
+		memcpy(lugarDeComienzo + desplazamiento, retornoAppeared->nombrePokemon, largoAuxiliar);
+		desplazamiento += largoAuxiliar;
 		memcpy(lugarDeComienzo + desplazamiento, &retornoAppeared->posX, sizeof(uint32_t));
 		desplazamiento += sizeof(uint32_t);
 		memcpy(lugarDeComienzo + desplazamiento, &retornoAppeared->posY, sizeof(uint32_t));
@@ -1436,4 +1453,28 @@ int obtenerRelacion(int ID){
 	retorno = dictionary_get(RELACION_IDS, string_itoa(ID));
 	sem_post(&MUTEX_DICCIONARIO);
 	return *retorno;
+}
+
+void consolidarParticiones (int posicion){
+	estructuraAdministrativa * particionAnterior;
+	estructuraAdministrativa * particionActual;
+	estructuraAdministrativa * particionPosterior;
+	particionActual = list_get(ADMINISTRADOR_MEMORIA, posicion);
+	particionPosterior = list_get (ADMINISTRADOR_MEMORIA, posicion+1);
+	particionAnterior = list_get (ADMINISTRADOR_MEMORIA, posicion-1);
+	if (particionPosterior != NULL){
+	if (particionActual->estaOcupado == 0 && particionPosterior->estaOcupado == 0){
+		particionActual->estaOcupado = 0;
+		particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
+		log_info (LOGGER_OBLIGATORIO, "Se consolido la particion %i", posicionALog(particionPosterior->donde));
+		list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, posicion+1, (void*)estructuraAdministrativaDestroyer);
+	}
+}
+	if(particionAnterior != NULL){
+	if (particionActual->estaOcupado == 0 && particionAnterior->estaOcupado == 0){
+			particionAnterior->tamanioParticion = particionActual->tamanioParticion + particionAnterior->tamanioParticion;
+			log_info (LOGGER_OBLIGATORIO, "Se consolido la particion %i", posicionALog(particionActual->donde));
+			list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, posicion, (void*)estructuraAdministrativaDestroyer);
+		}
+	}
 }

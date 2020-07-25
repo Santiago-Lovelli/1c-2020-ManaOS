@@ -790,7 +790,7 @@ void cumplirMision(entrenador* trainer){
 			else{
 				log_info(TEAM_LOG,"Hola soy el entrenador %i \n Se va a intentar atrapar a: %s \n En la posicion: x:%i y:%i", trainer->tid, trainer->mision->pokemon, trainer->posicion.x, trainer->posicion.y);
 				sumarXCiclos(trainer,1);
-				enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
+				enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.y, trainer->tid);
 			}
 			avisarQueTermine(trainer);
 		//}
