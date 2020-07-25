@@ -287,11 +287,11 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		log_info(logger, "Llego un APPEARED POKEMON");
 		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 		sem_post(&semaforoSocket);
-		uint32_t posicionAppearedX, posicionAppearedY;
+		uint32_t posicionAppearedX, posicionAppearedY, idMensajeAppeared;
 		char *AppearedNombrePokemon;
-		Serialize_Unpack_AppearedPokemon_NoID(packAppearedPokemon, &AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
+		Serialize_Unpack_AppearedPokemon(packAppearedPokemon, &idMensajeAppeared, &AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
 		log_info(logger, "Contenidos del mensaje: Pkm: %s, x: %i, y: %i\n", AppearedNombrePokemon, posicionAppearedX, posicionAppearedY);
-		Serialize_PackAndSend_ACK(cliente, 1);
+		Serialize_PackAndSend_ACK(cliente, idMensajeAppeared);
 		if(necesitoEstePokemon(AppearedNombrePokemon)){
 			printf("Necesito este pokemon!!! \n ");
 			hacerAppeared(AppearedNombrePokemon,posicionAppearedX,posicionAppearedY,logger);
@@ -312,7 +312,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 			d_PosCant* asd = list_get(posCant,i);
 			log_info(logger,"x: %i, y:%i",asd->posX,asd->posY);
 		}
-		Serialize_PackAndSend_ACK(cliente, 1);
+		Serialize_PackAndSend_ACK(cliente, idMensajeLocalized);
 		if(necesitoEstePokemon(localizedNombrePokemon)){
 			printf("Necesito este pokemon!!! \n ");
 			for(int i=0; i<list_size(posCant);i++){
@@ -333,7 +333,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		uint32_t idMensajeCaught, resultadoCaught;
 		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught, &resultadoCaught);
 		log_info(logger, "Contenidos del mensaje: Id: %i, Result: %i\n", idMensajeCaught, resultadoCaught);
-		Serialize_PackAndSend_ACK(cliente, 1);
+		Serialize_PackAndSend_ACK(cliente, idMensajeCaught);
 		if(necesitoEsteID(idMensajeCaught)){
 			hacerCaught(idMensajeCaught,resultadoCaught);
 		}
