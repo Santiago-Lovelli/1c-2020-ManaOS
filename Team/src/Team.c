@@ -545,6 +545,7 @@ void asignarMisionPendienteDePoke(char* pokemon){
 bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
 	sem_wait(&semaforoCambioEstado);
 	sem_wait(&semaforoMisiones);
+	sem_wait(&semaforoPokemon);
 	bool response = (entrenadorAUX->estado != t_EXIT) &&
 			   	   (entrenadorAUX->estado != t_READY) &&
 				   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA) &&
@@ -552,6 +553,7 @@ bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
 	if(entrenadorAUX->pokemones[0] != NULL){
 		response = response && (damePosicionFinalDoblePuntero(entrenadorAUX->pokemones) < damePosicionFinalDoblePuntero(entrenadorAUX->pokemonesObjetivo));
 	}
+	sem_post(&semaforoPokemon);
 	sem_post(&semaforoMisiones);
 	sem_post(&semaforoCambioEstado);
 	return response;
