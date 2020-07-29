@@ -55,6 +55,9 @@ int sonIgualesSinInportarOrden(char** unPuntero, char** otroPuntero){
 	if(limiteDeUno != limiteDeDos)
 		return -1;
 
+	if(unPuntero[0] == NULL)
+		return 0;
+
 	int contador = 0;
 	while(list_size(listaDeUno) != 0 && list_size(listaDeOtro) != 0){
 

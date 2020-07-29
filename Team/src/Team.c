@@ -547,9 +547,11 @@ bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
 	sem_wait(&semaforoMisiones);
 	bool response = (entrenadorAUX->estado != t_EXIT) &&
 			   	   (entrenadorAUX->estado != t_READY) &&
-				   (damePosicionFinalDoblePuntero(entrenadorAUX->pokemones) < damePosicionFinalDoblePuntero(entrenadorAUX->pokemonesObjetivo)) &&
 				   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA) &&
 				   (entrenadorAUX->mision == NULL);
+	if(entrenadorAUX->pokemones[0] != NULL){
+		response = response && (damePosicionFinalDoblePuntero(entrenadorAUX->pokemones) < damePosicionFinalDoblePuntero(entrenadorAUX->pokemonesObjetivo));
+	}
 	sem_post(&semaforoMisiones);
 	sem_post(&semaforoCambioEstado);
 	return response;
@@ -933,13 +935,14 @@ void finalFeliz(){
 }
 
 void iniciarConfig(int argc, char *argv[]){
-	//t_config* creacionConfig = config_create("../Team.config");
 	t_config* creacionConfig;
 	if(argc == 2){
 		creacionConfig = config_create(argv[1]);
 	}else{
-		creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team.config");
+		creacionConfig = config_create("../Team.config");
+//		creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team.config");
 	}
+//	t_config* creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team2.config");
 	TEAM_CONFIG.POSICIONES_ENTRENADORES = config_get_array_value(creacionConfig, "POSICIONES_ENTRENADORES");
 	TEAM_CONFIG.POKEMON_ENTRENADORES = config_get_array_value(creacionConfig, "POKEMON_ENTRENADORES");
 	TEAM_CONFIG.OBJETIVOS_ENTRENADORES = config_get_array_value(creacionConfig, "OBJETIVOS_ENTRENADORES");
