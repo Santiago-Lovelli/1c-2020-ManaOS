@@ -934,9 +934,12 @@ void finalFeliz(){
 
 void iniciarConfig(int argc, char *argv[]){
 	//t_config* creacionConfig = config_create("../Team.config");
-	t_config* creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team.config");
-	if(argc == 2)
+	t_config* creacionConfig;
+	if(argc == 2){
 		creacionConfig = config_create(argv[1]);
+	}else{
+		creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team.config");
+	}
 	TEAM_CONFIG.POSICIONES_ENTRENADORES = config_get_array_value(creacionConfig, "POSICIONES_ENTRENADORES");
 	TEAM_CONFIG.POKEMON_ENTRENADORES = config_get_array_value(creacionConfig, "POKEMON_ENTRENADORES");
 	TEAM_CONFIG.OBJETIVOS_ENTRENADORES = config_get_array_value(creacionConfig, "OBJETIVOS_ENTRENADORES");
