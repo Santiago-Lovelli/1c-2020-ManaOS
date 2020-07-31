@@ -671,6 +671,7 @@ sem_t semaforoMovimiento;
 sem_t semaforoPokemon;
 sem_t semaforoGet;
 sem_t semaforoSocketGameboy;
+sem_t semaforoListaIDS;
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;
