@@ -363,6 +363,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_NEW_POKEMON:
 		mensajeNew = (newEnMemoria*)mensaje;
 		void notificarSuscriptorNew(int * self){
+			log_info (LOGGER_OBLIGATORIO, "Se va a enviar el mensaje new al suscriptor %i", *self);
 			Serialize_PackAndSend_NEW_POKEMON(*self, resultado->idMensaje, mensajeNew->nombrePokemon, mensajeNew->posX, mensajeNew->posY, mensajeNew->cantidad);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
@@ -373,6 +374,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_CATCH_POKEMON:
 		mensajeCatch = (catchEnMemoria*)mensaje;
 		void notificarSuscriptorCatch(int * self){
+			log_info (LOGGER_OBLIGATORIO, "Se va a enviar el mensaje catch al suscriptor %i", *self);
 			Serialize_PackAndSend_CATCH_POKEMON(* self, resultado->idMensaje,mensajeCatch->nombrePokemon, mensajeCatch->posX, mensajeCatch->posY);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
@@ -383,6 +385,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_GET_POKEMON:
 		mensajeGet = (getEnMemoria*)mensaje;
 		void notificarSuscriptorGet(int * self){
+			log_info (LOGGER_OBLIGATORIO, "Se va a enviar el mensaje get al suscriptor %i", *self);
 			Serialize_PackAndSend_GET_POKEMON(*self, resultado->idMensaje, mensajeGet->nombrePokemon);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
@@ -393,6 +396,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_APPEARED_POKEMON:
 		mensajeAppeared = (appearedEnMemoria*)mensaje;
 		void notificarSuscriptorAppeared(int * self){
+			log_info (LOGGER_OBLIGATORIO, "Se va a enviar el mensaje appeared al suscriptor %i", *self);
 			Serialize_PackAndSend_APPEARED_POKEMON_IDCorrelativo(*self, resultado->idMensaje, id, mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
@@ -403,6 +407,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 	case d_CAUGHT_POKEMON:
 		mensajeCaught = (caughtEnMemoria*)mensaje;
 		void notificarSuscriptorCaught(int * self){
+			log_info (LOGGER_OBLIGATORIO, "Se va a enviar el mensaje caught al suscriptor %i", *self);
 			Serialize_PackAndSend_CAUGHT_POKEMON_IDCorrelativo(*self, resultado->idMensaje, id, mensajeCaught->atrapado);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i correlativo: %i al suscriptor %i", resultado->idMensaje, id, *self);
@@ -426,6 +431,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 			i=i+1;
 		}
 		void notificarSuscriptorLocalized(int * self){
+			log_info (LOGGER_OBLIGATORIO, "Se va a enviar el mensaje localized al suscriptor %i", *self);
 			Serialize_PackAndSend_LOCALIZED_POKEMON_IDCorrelativo(*self, resultado->idMensaje, id, mensajeLocalized->nombrePokemon, posiciones);
 			actualizarEnviadosPorID(resultado->idMensaje, *self);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje de id: %i al suscriptor %i", resultado->idMensaje, *self);
