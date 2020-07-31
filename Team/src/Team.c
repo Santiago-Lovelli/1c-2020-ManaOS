@@ -21,6 +21,7 @@ void inicializarSemaforos(){
 	sem_init(&semaforoMovimiento,0,1);
 	sem_init(&semaforoPokemon,0,1);
 	sem_init(&semaforoGet,0,1);
+	sem_init(&semaforoSocketGameboy,0,1);
 }
 
 void inicializar(int argc, char *argv[]){
@@ -229,7 +230,7 @@ void* atenderGameBoy() {
 		sem_post(&semaforoSocket);
 
 		if (pthread_create(dondeSeAtiende, NULL,
-				(void*) recibirYAtenderUnCliente, elemento) == 0) {
+				(void*) recibirYAtenderUnClienteGameboy, elemento) == 0) {
 			log_info(gameBoyLog, ":::: Se creo hilo para cliente ::::");
 		} else {
 			log_error(gameBoyLog,
@@ -266,6 +267,22 @@ void* suscribirme(d_message colaDeSuscripcion) {
 		elemento->log = TEAM_LOG;
 		recibirYAtenderUnCliente(elemento);
 	}
+	return 0;
+}
+
+void* recibirYAtenderUnClienteGameboy(p_elementoDeHilo* elemento) {
+	while (SEGUIR_ATENDIENDO) {
+		sem_wait(&semaforoSocketGameboy);
+		HeaderDelibird headerRecibido = Serialize_RecieveHeader(elemento->cliente);
+		if (headerRecibido.tipoMensaje == -1) {
+			log_error(elemento->log, "Se desconecto el cliente\n");
+			sem_post(&semaforoSocketGameboy);
+			break;
+		}
+		atender(headerRecibido, elemento->cliente, elemento->log);
+		sem_post(&semaforoSocketGameboy);
+	}
+	free(elemento);
 	return 0;
 }
 
@@ -387,9 +404,11 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 	posicionPoke.y = posicionAppearedY;
 	sem_wait(&semaforoAppeared);
 	if(!contandoMisionesActualesNecesitoEstePokemon(pokemon)){
+		sem_wait(&semaforoMisiones);
 		t_mision* misionPendiente = crearMision(pokemon,posicionPoke,false,(-1));
 		list_add(MISIONES_PENDIENTES, misionPendiente);
 		printf("\n Este pokemon se agregara a pendientes \n");
+		sem_post(&semaforoMisiones);
 		sem_post(&semaforoAppeared);
 		return;
 	}
@@ -456,11 +475,13 @@ void destruirMision(t_mision *mision){
 
 void borrarEstePokemonDePendientes(char *pokemon){
 	t_mision *mision;
+	sem_wait(&semaforoMisiones);
 	for(int i=0; i<list_size(MISIONES_PENDIENTES); i++){
 		mision = list_get(MISIONES_PENDIENTES,i);
 		if(mismoPokemonDeMision(mision,pokemon))
 			list_remove_and_destroy_element(MISIONES_PENDIENTES,i,(void*)destruirMision);
 	}
+	sem_post(&semaforoMisiones);
 }
 
 bool mismoPokemonDeMision(t_mision* pokemon1, char* pokemon2){

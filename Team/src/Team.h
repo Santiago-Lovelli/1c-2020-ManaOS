@@ -611,6 +611,12 @@ void* suscribirme(d_message colaDeSuscripcion);
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento);
 
 /*
+ * ESTA FUNCION RECIBE UNA CONEXION DEL GAMEBOY Y LA ATIENDE
+ */
+
+void* recibirYAtenderUnClienteGameboy(p_elementoDeHilo* elemento);
+
+/*
  * FUNCION PRINCIPAL DE TEAM, CUANDO NOS LLEGA UN MENSAJE POR SOCKET
  * ESTA FUNCION LO DIRIJE HACIA LA FUNCION ADECUADA
  */
@@ -664,6 +670,7 @@ sem_t semaforoAppeared;
 sem_t semaforoMovimiento;
 sem_t semaforoPokemon;
 sem_t semaforoGet;
+sem_t semaforoSocketGameboy;
 
 /////////VARIABLES/////////
 config TEAM_CONFIG;
