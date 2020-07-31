@@ -118,15 +118,16 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 }
 
 int memoriaVacia (){
-	sem_wait(&MUTEX_LISTA);
+	//sem_wait(&MUTEX_LISTA);
 	int valor = (list_is_empty(ADMINISTRADOR_MEMORIA));
-	sem_post(&MUTEX_LISTA);
+	//sem_post(&MUTEX_LISTA);
 	return valor;
 }
 
 void suscribir(uint32_t variable, int clienteA){
 	int * cliente = malloc(sizeof(int));
 	*cliente=clienteA;
+	sem_wait(&MUTEX_LISTA);
 	sem_wait(&MUTEX_SUSCRIPTOR);
 	switch (variable){
 	case d_NEW_POKEMON:
@@ -136,9 +137,7 @@ void suscribir(uint32_t variable, int clienteA){
 			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 		}
 		else{
-			sem_wait(&MUTEX_LISTA);
 			enviarVariosMensajes(cliente, d_NEW_POKEMON);
-			sem_post(&MUTEX_LISTA);
 		}
 		break;
 	case d_CATCH_POKEMON:
@@ -148,9 +147,7 @@ void suscribir(uint32_t variable, int clienteA){
 			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 			}
 			else{
-				sem_wait(&MUTEX_LISTA);
 				enviarVariosMensajes(cliente, d_CATCH_POKEMON);
-				sem_post(&MUTEX_LISTA);
 			}
 		break;
 	case d_GET_POKEMON:
@@ -160,9 +157,7 @@ void suscribir(uint32_t variable, int clienteA){
 			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 			}
 			else{
-				sem_wait(&MUTEX_LISTA);
 				enviarVariosMensajes(cliente, d_GET_POKEMON);
-				sem_post(&MUTEX_LISTA);
 			}
 		break;
 	case d_APPEARED_POKEMON:
@@ -172,9 +167,7 @@ void suscribir(uint32_t variable, int clienteA){
 			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 			}
 			else{
-				sem_wait(&MUTEX_LISTA);
 				enviarVariosMensajes(cliente, d_APPEARED_POKEMON);
-				sem_post(&MUTEX_LISTA);
 			}
 		break;
 	case d_CAUGHT_POKEMON:
@@ -184,9 +177,7 @@ void suscribir(uint32_t variable, int clienteA){
 			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 			}
 			else{
-				sem_wait(&MUTEX_LISTA);
 				enviarVariosMensajes(cliente, d_CAUGHT_POKEMON);
-				sem_post(&MUTEX_LISTA);
 			}
 		break;
 	case d_LOCALIZED_POKEMON:
@@ -196,9 +187,7 @@ void suscribir(uint32_t variable, int clienteA){
 			log_info (LOGGER_OBLIGATORIO, "No hay mensajes anteriores");
 			}
 			else{
-				sem_wait(&MUTEX_LISTA);
 				enviarVariosMensajes(cliente, d_LOCALIZED_POKEMON);
-				sem_post(&MUTEX_LISTA);
 			}
 		break;
 	default:
@@ -206,6 +195,7 @@ void suscribir(uint32_t variable, int clienteA){
 		break;
 	}
 	sem_post(&MUTEX_SUSCRIPTOR);
+	sem_post(&MUTEX_LISTA);
 }
 
 /////////////////ENVIAR MENSAJE A SUSCRIPTORES/////////////////////////////////////
@@ -460,6 +450,11 @@ int tratarMensaje (d_message tipoMensaje, void *paquete){
 		guardarMensajeEnMemoria(resultado->tipoMensaje, unMensaje, resultado->donde);
 		//memcpy(resultado->donde, unMensaje, tamanioDeMensaje(tipoMensaje, unMensaje));
 		log_info(LOGGER_OBLIGATORIO, "Se guardo el mensaje en la memoria id: %i posicion: %i", resultado->idMensaje, posicionALog(resultado->donde));
+	}
+	else {
+		log_error(LOGGER_OBLIGATORIO, "Resultado llega nulo rey");
+		sem_post(&MUTEX_LISTA);
+		return ID;
 	}
 	t_list * subs = suscriptoresPara(tipoMensaje);
 	relacionar(ID, *id);

@@ -331,6 +331,7 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		Serialize_Unpack_AppearedPokemon_IDCorrelativo(packAppearedPokemon, &idMensajeAppeared, &idCorrelativoAppeared, &AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
 		log_info(logger, "Contenidos del mensaje: Pkm: %s, x: %i, y: %i\n", AppearedNombrePokemon, posicionAppearedX, posicionAppearedY);
 		Serialize_PackAndSend_ACK(cliente, idMensajeAppeared);
+		printf("Paso pack and send del ack!! \n ");
 		if(necesitoEstePokemon(AppearedNombrePokemon)){
 			printf("Necesito este pokemon!!! \n ");
 			hacerAppeared(AppearedNombrePokemon,posicionAppearedX,posicionAppearedY,logger);
