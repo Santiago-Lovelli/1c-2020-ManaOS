@@ -700,12 +700,12 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 	int tamanioMensaje = tamanioDeMensaje(tipoMensaje, mensaje);
 	int i = BROKER_CONFIG.TAMANO_MEMORIA;
 	int j = 0, k = -1;
+	sem_wait(&MUTEX_LISTA);
 	///////////FIRST FIT ///////////////////
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE, "ff")){
 		bool hayParticionParaGuardarlo(estructuraAdministrativa* elemento) {
 				return (elemento->estaOcupado == 0 && elemento->tamanioParticion >= tamanioMensaje);
 		}
-		sem_wait(&MUTEX_LISTA);
 		particion = list_find(ADMINISTRADOR_MEMORIA, (void*) hayParticionParaGuardarlo);
 		}
 	//////////BEST FIT///////////////////////
@@ -718,7 +718,6 @@ estructuraAdministrativa* buscarParticionLibre(d_message tipoMensaje, void* mens
 				}
 				j++;
 			}
-		sem_wait(&MUTEX_LISTA);
 		list_iterate(ADMINISTRADOR_MEMORIA, (void*) mejorParticion);
 		particion =  list_get(ADMINISTRADOR_MEMORIA, k);
 		}
@@ -1279,7 +1278,6 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo){
 		memcpy(&retorno->cantidad, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
 		sem_post(&MUTEX_MEMORIA);
 		return retorno;
-		break;
 	case d_CATCH_POKEMON:
 		retornoCatch = malloc(sizeof(catchEnMemoria));
 		memcpy(&retornoCatch->largoDeNombre, lugarDeComienzo, sizeof(uint32_t));
@@ -1304,7 +1302,6 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo){
 		retornoGet->nombrePokemon = usableString;
 		sem_post(&MUTEX_MEMORIA);
 		return retornoGet;
-		break;
 	case d_APPEARED_POKEMON:
 		retornoAppeared = malloc(sizeof(appearedEnMemoria));
 		memcpy(&retornoAppeared->largoDeNombre, lugarDeComienzo, sizeof(uint32_t));
@@ -1319,13 +1316,11 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo){
 		memcpy(&retornoAppeared->posY, lugarDeComienzo + desplazamiento, sizeof(uint32_t));
 		sem_post(&MUTEX_MEMORIA);
 		return retornoAppeared;
-		break;
 	case d_CAUGHT_POKEMON:
 		retornoCaught = malloc(sizeof(caughtEnMemoria));
 		memcpy(&retornoCaught->atrapado, lugarDeComienzo, sizeof(uint32_t));
 		sem_post(&MUTEX_MEMORIA);
 		return retornoCaught;
-		break;
 	case d_LOCALIZED_POKEMON:
 		retornoLocalized = malloc(sizeof(localizedEnMemoria));
 		retornoLocalized->puntos = list_create();
@@ -1348,7 +1343,6 @@ void * levantarMensaje(d_message tipoMensaje, void * lugarDeComienzo){
 		}
 		sem_post(&MUTEX_MEMORIA);
 		return retornoLocalized;
-		break;
 	default:
 		log_error(LOGGER_OBLIGATORIO, "Error levantando data de la memoria");
 		sem_post(&MUTEX_MEMORIA);
