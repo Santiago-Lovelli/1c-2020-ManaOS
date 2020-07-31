@@ -1,5 +1,5 @@
 # tp-2020-1c-ManaOS-
-
+```
                                   ,'\
     _.----.        ____         ,'  _\   ___    ___     ____
 _,-'       `.     |    |  /`.   \,-'    |   \  /   |   |    \  |`.
@@ -12,7 +12,7 @@ _,-'       `.     |    |  /`.   \,-'    |   \  /   |   |    \  |`.
        \    \ `.__,'|  |`-._    `|      |__| \/ |  `.__,'|  | |   |
         \_.-'       |__|    `-._ |              '-.|     '-.| |   |
                                 `'                            '-._|
-
+```
 ## Compilacio: 
 ### GameCard (26-05): 
 gcc -L"/home/utnso/workspace/tp-2020-1c-ManaOS-/ComunParaTodos/Debug" -o "GameCard"  ./src/GameCard.o   -lComunParaTodos -lpthread -lcommons
