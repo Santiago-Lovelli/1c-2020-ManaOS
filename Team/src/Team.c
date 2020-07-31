@@ -28,6 +28,7 @@ void inicializar(int argc, char *argv[]){
 	TEAM_LOG = iniciar_log("Team");
 	inicializarSemaforos();
 	iniciarConfig(argc, argv);
+	TEAM_LOG = iniciar_log(TEAM_CONFIG.LOG_FILE);
 	crearEstados();
 	crearEntrenadores();
 	iniciarVariablesDePlanificacion();
