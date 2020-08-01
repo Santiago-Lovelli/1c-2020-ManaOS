@@ -612,7 +612,7 @@ void actualizarRecibidosPorID(int id, int socketCliente){
 
 estructuraAdministrativa* buscarEstructuraAdministrativaConID(int id){
 	estructuraAdministrativa * retorno = NULL;
-	int posicion;
+	int posicion = 0;
 	int contador = 0;
 	void tomarParticion(estructuraAdministrativa* elemento){
 		if(elemento->idMensaje == id){
