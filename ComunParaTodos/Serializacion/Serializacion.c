@@ -104,7 +104,7 @@ bool Serialize_PackAndSend_CATCHoAPPEARED(int socketCliente, uint32_t idMensaje,
 }
 
 bool Serialize_PackAndSend_APPEARED_POKEMON_IDCorrelativo(int socketCliente, uint32_t idMensaje,uint32_t idCorrelativo, const void *pokemon, uint32_t posX, uint32_t posY){
-	uint32_t tamMessage = strlen(pokemon) + 1 + (5*sizeof(uint32_t)); //+1 por el /0
+	uint32_t tamMessage = strlen(pokemon) + 1 + (4*sizeof(uint32_t)); //+1 por el /0
 	uint32_t tamNombrePokemon = strlen(pokemon) + 1;
 	void* buffer = malloc( tamMessage );
 	int desplazamiento = 0;

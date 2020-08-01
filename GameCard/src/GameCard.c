@@ -470,12 +470,14 @@ void enviarAperedPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	if (conexion == -1) {
 		log_error(loggerGeneral,
 				"No se pudo conectar al Broker para un aperedPokemon");
+		close(conexion);
 		return;
 	}
 	log_info(loggerGeneral,"Envio el apperes_pokemon: id: %i, pkm: %s, posx: %i, posy: %i",idMensajeNew, pkm,
 			posicionX, posicionY);
 	Serialize_PackAndSend_APPEARED_POKEMON(conexion, idMensajeNew, pkm,
 			posicionX, posicionY);
+	close(conexion);
 }
 
 void enviarCaughtPokemon(char* pkm, uint32_t resultado, uint32_t idMensajeNew) {
@@ -487,10 +489,12 @@ void enviarCaughtPokemon(char* pkm, uint32_t resultado, uint32_t idMensajeNew) {
 	if (conexion == -1) {
 		log_error(loggerGeneral,
 				"No se pudo conectar al Broker para un CaughtPokemon");
+		close(conexion);
 		return;
 	}
 	log_info(loggerGeneral,"CaughtPokemon pkm: %s, resul: %i, id: %i", pkm, resultado, idMensajeNew);
 	Serialize_PackAndSend_CAUGHT_POKEMON(conexion, idMensajeNew, resultado);
+	close(conexion);
 }
 
 void enviarLocalizedPokemon(char* pkm, d_PosCant** posicionesConCantidad,
@@ -503,11 +507,13 @@ void enviarLocalizedPokemon(char* pkm, d_PosCant** posicionesConCantidad,
 	if (conexion == -1) {
 		log_error(loggerGeneral,
 				"No se pudo conectar al Broker para un LocalizedPokemon");
+		close(conexion);
 		return;
 	}
 	log_info(loggerGeneral, "Mando Localized: cantidad de puntos: %i", damePosicionFinalDoblePuntero(posicionesConCantidad));
 	Serialize_PackAndSend_LOCALIZED_POKEMON(conexion, idMensajeNew, pkm,
 			posicionesConCantidad);
+	close(conexion);
 }
 
 void escribirUnPokemon(int cantidadDeLineas, char** lineasDeBloque,
