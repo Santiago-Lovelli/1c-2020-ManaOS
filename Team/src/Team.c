@@ -1432,7 +1432,7 @@ void planificarDeadlocks(){
 void ordenarListaSJF(t_list *lista){
 	log_info(TEAM_LOG, "Se reordena la lista de ready SJF");
 	list_sort(lista, (void*)entrenador1MenorEstimacionQueEntrenador2);
-	list_map(lista, (void*)establecerNuevaEstimacion);
+	list_iterate(lista, (void*)establecerNuevaEstimacion);
 }
 
 void establecerNuevaEstimacion(entrenador* trainer){
