@@ -920,6 +920,7 @@ void composicion(){
 	estructuraAdministrativa * particionAnterior;
 	estructuraAdministrativa * particionActual;
 	estructuraAdministrativa * particionPosterior;
+	//CUANDO TENGO 2 PARTICIONES
 	int i = 0;
 	particionActual = list_get(ADMINISTRADOR_MEMORIA, i);
 	particionPosterior = list_get (ADMINISTRADOR_MEMORIA, i+1);
@@ -944,8 +945,7 @@ void composicion(){
 					particionActual->estaOcupado = 0;
 					particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
 					log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
-//					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)estructuraAdministrativaDestroyer);
-					list_remove(ADMINISTRADOR_MEMORIA, i+1);
+					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i, (void*)estructuraAdministrativaDestroyer);
 					}
 				}
 			}
