@@ -465,8 +465,9 @@ void enviarAperedPokemon(char* pkm, uint32_t posicionX, uint32_t posicionY,
 	char *ip = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
 	char *puerto = config_get_string_value(archivo_de_configuracion,
 			"PUERTO_BROKER");
-
+	sem_wait(&mutexServidor);
 	int conexion = conectarse_a_un_servidor(ip, puerto, loggerGeneral);
+	sem_post(&mutexServidor);
 	if (conexion == -1) {
 		log_error(loggerGeneral,
 				"No se pudo conectar al Broker para un aperedPokemon");
@@ -484,8 +485,9 @@ void enviarCaughtPokemon(char* pkm, uint32_t resultado, uint32_t idMensajeNew) {
 	char *ip = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
 	char *puerto = config_get_string_value(archivo_de_configuracion,
 			"PUERTO_BROKER");
-
+sem_wait(&mutexServidor);
 	int conexion = conectarse_a_un_servidor(ip, puerto, loggerGeneral);
+	sem_post(&mutexServidor);
 	if (conexion == -1) {
 		log_error(loggerGeneral,
 				"No se pudo conectar al Broker para un CaughtPokemon");
@@ -502,8 +504,9 @@ void enviarLocalizedPokemon(char* pkm, d_PosCant** posicionesConCantidad,
 	char *ip = config_get_string_value(archivo_de_configuracion, "IP_BROKER");
 	char *puerto = config_get_string_value(archivo_de_configuracion,
 			"PUERTO_BROKER");
-
+	sem_wait(&mutexServidor);
 	int conexion = conectarse_a_un_servidor(ip, puerto, loggerGeneral);
+	sem_post(&mutexServidor);
 	if (conexion == -1) {
 		log_error(loggerGeneral,
 				"No se pudo conectar al Broker para un LocalizedPokemon");
@@ -1061,7 +1064,9 @@ void* suscribirme(d_message colaDeSuscripcion) {
 	int conexion;
 
 	while (1) {
+		sem_wait(&mutexServidor);
 		conexion = conectarse_a_un_servidor(ip, puerto, loggerGeneral);
+		sem_post(&mutexServidor);
 		if (conexion == -1) {
 			log_error(loggerGeneral,
 					"No se pudo conectar con el Broken a la cola de: %i\n",
@@ -1346,6 +1351,7 @@ void iniciarSemaforos() {
 	sem_init(&bitSem, 0, 1);
 	sem_init(&sock, 0, 1);
 	sem_init(&mutexCliente, 0, 1);
+	sem_init(&mutexServidor, 0, 1);
 	sem_init(&listaPokemon, 0, 1);
 	sem_init(&existencia, 0, 1);
 }
