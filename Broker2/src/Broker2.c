@@ -944,7 +944,8 @@ void composicion(){
 					particionActual->estaOcupado = 0;
 					particionActual->tamanioParticion = particionActual->tamanioParticion + particionPosterior->tamanioParticion;
 					log_info (LOGGER_OBLIGATORIO, "Se elimino la partición %i porque se realizó una composición", posicionALog(particionPosterior->donde));
-					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)estructuraAdministrativaDestroyer);
+//					list_remove_and_destroy_element(ADMINISTRADOR_MEMORIA, i+1, (void*)estructuraAdministrativaDestroyer);
+					list_remove(ADMINISTRADOR_MEMORIA, i+1);
 					}
 				}
 			}
