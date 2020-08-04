@@ -200,7 +200,7 @@ void suscribir(uint32_t variable, int clienteA){
 
 /////////////////ENVIAR MENSAJE A SUSCRIPTORES/////////////////////////////////////
 void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
-	int * cliente = malloc(sizeof(int));
+	int * cliente;
 	cliente=clienteA;
 	estructuraAdministrativa * elemento = malloc (sizeof(estructuraAdministrativa));
 	t_list * mensajesNew;
@@ -476,7 +476,7 @@ void Init(){
 }
 
 void ConfigInit(){
-	t_config* configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker2/Broker.config");
+	configCreator = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Broker2/Broker.config");
 	BROKER_CONFIG.ALGORITMO_REEMPLAZO = config_get_string_value(configCreator, "ALGORITMO_REEMPLAZO");
 	BROKER_CONFIG.ALGORITMO_MEMORIA = config_get_string_value(configCreator, "ALGORITMO_MEMORIA");
 	BROKER_CONFIG.ALGORITMO_PARTICION_LIBRE = config_get_string_value(configCreator, "ALGORITMO_PARTICION_LIBRE");
@@ -535,23 +535,24 @@ void DumpFileInit(){
 }
 
 void destruirTodo(){
-	/*list_destroy_and_destroy_elements(SUSCRIPTORES_NEW, (void*)suscriptorDestroyer);
+	list_destroy_and_destroy_elements(SUSCRIPTORES_NEW, (void*)suscriptorDestroyer);
 	list_destroy_and_destroy_elements(SUSCRIPTORES_APPEARED, (void*)suscriptorDestroyer);
 	list_destroy_and_destroy_elements(SUSCRIPTORES_GET, (void*)suscriptorDestroyer);
 	list_destroy_and_destroy_elements(SUSCRIPTORES_CATCH, (void*)suscriptorDestroyer);
 	list_destroy_and_destroy_elements(SUSCRIPTORES_CAUGHT, (void*)suscriptorDestroyer);
-	list_destroy_and_destroy_elements(SUSCRIPTORES_LOCALIZED, (void*)suscriptorDestroyer);*/
-	list_destroy(SUSCRIPTORES_NEW);
+	list_destroy_and_destroy_elements(SUSCRIPTORES_LOCALIZED, (void*)suscriptorDestroyer);
+	/*list_destroy(SUSCRIPTORES_NEW);
 	list_destroy(SUSCRIPTORES_APPEARED);
 	list_destroy(SUSCRIPTORES_GET);
 	list_destroy(SUSCRIPTORES_CATCH);
 	list_destroy(SUSCRIPTORES_CAUGHT);
-	list_destroy(SUSCRIPTORES_LOCALIZED);
+	list_destroy(SUSCRIPTORES_LOCALIZED);*/
 	list_destroy_and_destroy_elements(ADMINISTRADOR_MEMORIA, (void*)estructuraAdministrativaDestroyer);
-	//dictionary_destroy_and_destroy_elements(RELACION_IDS, );
+	dictionary_destroy_and_destroy_elements(RELACION_IDS, (void*)suscriptorDestroyer);
 	limpiarSemaforos();
 	free(MEMORIA_PRINCIPAL);
 	log_destroy(LOGGER_OBLIGATORIO);
+	config_destroy (configCreator);
 	exit(0);
 }
 
@@ -653,7 +654,7 @@ int tamanioDeMensaje(d_message tipoMensaje, void * unMensaje){
 		return (sizeof(uint32_t));
 		break;
 	case d_LOCALIZED_POKEMON:
-		return (((localizedEnMemoria *)unMensaje)->largoDeNombre * sizeof(char) + sizeof(punto) * ((localizedEnMemoria *)unMensaje)->cantidadDePuntos);
+		return (((localizedEnMemoria *)unMensaje)->largoDeNombre * sizeof(char) + sizeof(uint32_t) + 2 * sizeof(uint32_t) * ((localizedEnMemoria *)unMensaje)->cantidadDePuntos);
 		break;
 	default:
 		log_error(LOGGER_OBLIGATORIO, "Tamanio de mensaje de nada, no se puede");
@@ -873,9 +874,7 @@ void limpiarParticion(estructuraAdministrativa * particion){
 	particion->idMensaje = 0; ///////UN ID MENSAJE NO PUEDE SER 0, POR LO QUE SE LO CONSIDERA COMO NULO
 	//list_clean(particion->suscriptoresConACK); /////SON SOLO INT,
 	//list_clean(particion->suscriptoresConMensajeEnviado);
-	particion->tiempo = string_new();
 	particion->tiempo = temporal_get_string_time();
-	particion->ultimaReferencia = string_new();
 	particion->ultimaReferencia = temporal_get_string_time();
 }
 
@@ -1041,9 +1040,9 @@ void reposicionarParticionesOcupadas(t_list * listaAuxiliar){
 static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self) {
     free(self->tiempo);
     free(self->ultimaReferencia);
-    //list_clean_and_destroy_elements(self->suscriptoresConACK, (void*)suscriptorDestroyer);
+    list_clean(self->suscriptoresConACK);
     list_destroy(self->suscriptoresConACK);
-    //list_clean_and_destroy_elements(self->suscriptoresConMensajeEnviado, (void*)suscriptorDestroyer);
+    list_clean(self->suscriptoresConMensajeEnviado);
     list_destroy(self->suscriptoresConMensajeEnviado);
     free(self);
 }
@@ -1054,9 +1053,9 @@ static void estructuraAdministrativaDestroyer(estructuraAdministrativa *self) {
     free(self);
 }*/
 
-/*static void suscriptorDestroyer(int *self) {
+static void suscriptorDestroyer(int *self) {
     free(self);
-}*/
+}
 
 void * leerInfoYActualizarUsoPorID(int id){ //deuelve un tipo en memoria
 	/*bool igualID(estructuraAdministrativa* elemento) {
@@ -1073,7 +1072,6 @@ void * leerInfoYActualizarUsoPorID(int id){ //deuelve un tipo en memoria
 	list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
 //	sem_wait(&MUTEX_LISTA);
 	estructuraAdministrativa * ElElemento = list_get (ADMINISTRADOR_MEMORIA, posicion);
-	ElElemento->ultimaReferencia = string_new();
 	ElElemento->ultimaReferencia = temporal_get_string_time();
 //	sem_post(&MUTEX_LISTA);
 	return(levantarMensaje(ElElemento->tipoMensaje, ElElemento->donde));
@@ -1090,6 +1088,8 @@ void dump() {
 	string_append(&unaLinea, extra);
 	string_append(&unaLinea, "\n");
 	txt_write_in_file(archivoDump, unaLinea);
+	free(unaLinea);
+	free(extra);
 	for(int i = 1; i-1<list_size(ADMINISTRADOR_MEMORIA); i++){
 		char* unaLinea = string_new();	char* nombreCola = string_new(); char* tipo = string_new();
 		estructuraAdministrativa * ElElemento = list_get(ADMINISTRADOR_MEMORIA, i-1);
@@ -1113,6 +1113,10 @@ void dump() {
 		void* finParticion = ElElemento->donde + ElElemento->tamanioParticion;
 		unaLinea = string_from_format("Partición %i: %06p - %06p %s  Size: %i b     %s Cola:%s ID:%i \n", i, ElElemento->donde, finParticion, extra, ElElemento->tamanioParticion, tipo, nombreCola, ElElemento->idMensaje);
 		txt_write_in_file(archivoDump, unaLinea);
+		free(extra);
+		free(tipo);
+		free(nombreCola);
+		free(unaLinea);
 	}
 	txt_close_file(archivoDump);
 	sem_post(&MUTEX_MEMORIA);
@@ -1440,8 +1444,10 @@ void relacionar(int ID, int idCorrelativo){
 
 int obtenerRelacion(int ID){
 	sem_wait(&MUTEX_DICCIONARIO);
-	int* retorno = malloc(sizeof(int));
-	retorno = dictionary_get(RELACION_IDS, string_itoa(ID));
+	int * retorno;
+	char * charID = string_itoa(ID);
+	retorno = dictionary_get(RELACION_IDS, charID);
+	free(charID);
 	sem_post(&MUTEX_DICCIONARIO);
 	return *retorno;
 }
