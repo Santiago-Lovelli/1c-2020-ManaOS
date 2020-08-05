@@ -202,7 +202,7 @@ void suscribir(uint32_t variable, int clienteA){
 void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 	int * cliente;
 	cliente=clienteA;
-	estructuraAdministrativa * elemento = malloc (sizeof(estructuraAdministrativa));
+	estructuraAdministrativa * elemento;
 	t_list * mensajesNew;
 	t_list * mensajesCatch;
 	t_list * mensajesAppeared;
@@ -228,6 +228,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (NEW) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		list_destroy_and_destroy_elements(mensajesNew, (void*)estructuraAdministrativaDestroyer);
+		//free(mensajeNew);
 	break;
 	case d_CATCH_POKEMON:
 		mensajesCatch = tomarLosMensajes (d_CATCH_POKEMON);
@@ -240,6 +241,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (CATCH) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		list_destroy_and_destroy_elements(mensajesCatch, (void *) estructuraAdministrativaDestroyer);
+		//free(mensajeCatch);
 	break;
 	case d_GET_POKEMON:
 		mensajesGet = tomarLosMensajes (d_GET_POKEMON);
@@ -252,6 +254,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (GET) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		list_destroy_and_destroy_elements(mensajesGet, (void *) estructuraAdministrativaDestroyer);
+		//free(mensajeGet);
 	break;
 	case d_APPEARED_POKEMON:
 		mensajesAppeared = tomarLosMensajes (d_APPEARED_POKEMON);
@@ -265,6 +268,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (APPEARED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		list_destroy_and_destroy_elements(mensajesAppeared, (void *) estructuraAdministrativaDestroyer);
+		//free(mensajeAppeared);
 	break;
 	case d_CAUGHT_POKEMON:
 		mensajesCaught = tomarLosMensajes (d_CAUGHT_POKEMON);
@@ -278,6 +282,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i correlativo a: %i (CAUGHT) al suscriptor %i", elemento->idMensaje,unID, *cliente);
 		}
 		list_destroy_and_destroy_elements(mensajesCaught, (void *) estructuraAdministrativaDestroyer);
+		//free(mensajeCaught);
 	break;
 	case d_LOCALIZED_POKEMON:
 		mensajesLocalized = tomarLosMensajes (d_LOCALIZED_POKEMON);
@@ -305,6 +310,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 		}
 		list_destroy_and_destroy_elements(mensajesLocalized, (void *) estructuraAdministrativaDestroyer);
 		liberarDoblePuntero(posiciones);
+		//free(mensajeLocalized);
 		break;
 	default:
 		log_error(LOGGER_OBLIGATORIO, "No existe el mensaje");
