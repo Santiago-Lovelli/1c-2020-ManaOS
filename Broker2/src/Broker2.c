@@ -251,7 +251,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (GET) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
-		list_clean_and_destroy_elements(mensajesGet, (void *) estructuraAdministrativaDestroyer);
+		list_destroy_and_destroy_elements(mensajesGet, (void *) estructuraAdministrativaDestroyer);
 	break;
 	case d_APPEARED_POKEMON:
 		mensajesAppeared = tomarLosMensajes (d_APPEARED_POKEMON);
@@ -304,6 +304,7 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (LOCALIZED) al suscriptor %i", elemento->idMensaje, *cliente);
 		}
 		list_destroy_and_destroy_elements(mensajesLocalized, (void *) estructuraAdministrativaDestroyer);
+		liberarDoblePuntero(posiciones);
 		break;
 	default:
 		log_error(LOGGER_OBLIGATORIO, "No existe el mensaje");
@@ -443,8 +444,8 @@ int tratarMensaje (d_message tipoMensaje, void *paquete){
 		resultado->idMensaje = ID;
 		resultado->tipoMensaje = tipoMensaje;
 		resultado->estaOcupado = 1;
-		resultado->suscriptoresConACK = list_create();
-		resultado->suscriptoresConMensajeEnviado = list_create();
+		//resultado->suscriptoresConACK = list_create();
+		//resultado->suscriptoresConMensajeEnviado = list_create();
 		resultado->tiempo = (char*)temporal_get_string_time();
 		resultado->ultimaReferencia = (char*)temporal_get_string_time();
 		guardarMensajeEnMemoria(resultado->tipoMensaje, unMensaje, resultado->donde);
@@ -860,10 +861,14 @@ estructuraAdministrativa* newParticion (){
 	particion->tipoMensaje = 20;
 	particion->suscriptoresConACK = list_create();
 	particion->suscriptoresConMensajeEnviado = list_create();
+	char* temporal = temporal_get_string_time();
 	particion->tiempo = string_new();
-	string_append(&particion->tiempo, (char*)temporal_get_string_time());
+	string_append(&particion->tiempo, temporal);
 	particion->ultimaReferencia = string_new();
-	string_append(&particion->ultimaReferencia, (char*)temporal_get_string_time());
+	char* temporal2 = temporal_get_string_time();
+	string_append(&particion->ultimaReferencia, temporal2);
+	free(temporal);
+	free(temporal2);
 	return particion;
 }
 
@@ -1130,14 +1135,18 @@ bool primerFechaEsAnterior(char* unaFecha, char* otraFecha){
 	while(primerFechaSeparada[i]!=NULL && segundaFechaSeparada[i]!=NULL){
 		if (atoi(primerFechaSeparada[i]) != atoi(segundaFechaSeparada[i])){
 			bool retorno = atoi(primerFechaSeparada[i]) < atoi(segundaFechaSeparada[i]);
-			string_iterate_lines(primerFechaSeparada, (void*) free);
-			string_iterate_lines(segundaFechaSeparada, (void*) free);
+			liberarDoblePuntero(primerFechaSeparada);
+			liberarDoblePuntero(segundaFechaSeparada);
+			//string_iterate_lines(primerFechaSeparada, (void*) free);
+			//string_iterate_lines(segundaFechaSeparada, (void*) free);
 			return (retorno);
 		}
 		i++;
 	}
-	string_iterate_lines(primerFechaSeparada, (void*) free);
-	string_iterate_lines(segundaFechaSeparada, (void*) free);
+	liberarDoblePuntero(primerFechaSeparada);
+	liberarDoblePuntero(segundaFechaSeparada);
+	//string_iterate_lines(primerFechaSeparada, (void*) free);
+	//string_iterate_lines(segundaFechaSeparada, (void*) free);
 	return true;
 }
 
@@ -1438,7 +1447,9 @@ void relacionar(int ID, int idCorrelativo){
 	int * idCorre = malloc(sizeof(int));
 	*idCorre = idCorrelativo;
 	sem_wait(&MUTEX_DICCIONARIO);
-	dictionary_put(RELACION_IDS, string_itoa(ID), idCorre);
+	char* variable = string_itoa(ID);
+	dictionary_put(RELACION_IDS, variable , idCorre);
+	free(variable);
 	sem_post(&MUTEX_DICCIONARIO);
 }
 
