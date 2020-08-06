@@ -672,8 +672,10 @@ sem_t semaforoPokemon;
 sem_t semaforoGet;
 sem_t semaforoSocketGameboy;
 sem_t semaforoListaIDS;
+sem_t semaforoConectarseServidor;
 
 /////////VARIABLES/////////
+t_config* creacionConfig;
 config TEAM_CONFIG;
 t_log * TEAM_LOG;
 t_dictionary * OBJETIVO_GLOBAL;

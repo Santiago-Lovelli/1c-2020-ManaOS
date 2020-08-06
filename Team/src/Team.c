@@ -160,7 +160,9 @@ void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* poke
 
 
 void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch){
+	sem_wait(&semaforoConexionABroker);
 	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+	sem_post(&semaforoConexionABroker);
 	if(conexion == -1){
 		close(conexion);
 		log_error(TEAM_LOG, "Como no se pudo conectar con el broker se procede con el comportamiento DEFAULT de catch");
@@ -191,7 +193,9 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 }
 
 void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
+	sem_wait(&semaforoConexionABroker);
 	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+	sem_post(&semaforoConexionABroker);
 	if(conexion == -1){
 		close(conexion);
 		log_error(TEAM_LOG,"No se pudo conectar con el Broker para enviar GET %s. Se procede con comportamiento DEFAULT",pokemon);
@@ -345,7 +349,10 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 			printf("Necesito este pokemon!!! \n ");
 			hacerAppeared(AppearedNombrePokemon,posicionAppearedX,posicionAppearedY,logger);
 		}
-		else{ printf("No necesito este pokemon!!! \n "); }
+		else{
+			printf("No necesito este pokemon!!! \n ");
+			free(AppearedNombrePokemon);
+		}
 		free(packAppearedPokemon);
 		break;
 	case d_LOCALIZED_POKEMON:;
@@ -364,6 +371,9 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		Serialize_PackAndSend_ACK(cliente, idMensajeLocalized);
 		if(!idEstaEnLista(idMensajeCorrelativo,IDs_GET)){
 			log_error(logger, "NO NECESITO ESTE ID DE LOCALIZED");
+			list_destroy(posCant);
+			free(packLocalizedPokemon);
+			free(localizedNombrePokemon);
 			break;
 		}
 		if(necesitoEstePokemon(localizedNombrePokemon)){
@@ -372,8 +382,14 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 				d_PosCant *posCantAUX = list_get(posCant,i);
 				hacerAppeared(localizedNombrePokemon,posCantAUX->posX,posCantAUX->posY,logger);
 			}
+			list_destroy(posCant);
 		}
-		else{ printf("No necesito este pokemon!!! \n "); }
+		else{
+			printf("No necesito este pokemon!!! \n ");
+			list_destroy(posCant);
+			free(packLocalizedPokemon);
+			free(localizedNombrePokemon);
+		}
 		free(packLocalizedPokemon);
 		break;
 
@@ -393,7 +409,6 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		else{
 			log_error(logger, "Este IDCorrelativo no me corresponde");
 		}
-
 		free(packCaughtPokemon);
 		break;
 
@@ -948,6 +963,14 @@ void destruirSemaforos(){
 //	sem_destroy(&semaforoSocket);
 	sem_destroy(&semaforoTermine);
 	sem_destroy(&semaforoAppeared);
+	sem_destroy(&semaforoMovimiento);
+	sem_destroy(&semaforoPokemon);
+	sem_destroy(&semaforoGet);
+	sem_destroy(&semaforoSocketGameboy);
+	sem_destroy(&semaforoListaIDS);
+
+
+
 }
 
 void destruirTodo(){
@@ -956,6 +979,8 @@ void destruirTodo(){
 	destruirEstados();
 	destruirSemaforos();
 	matarHilos();
+	config_destroy(creacionConfig);
+	log_destroy(TEAM_LOG);
 }
 
 void matarHilos(){
@@ -967,7 +992,6 @@ void matarHilos(){
 }
 
 void finalFeliz(){
-	SEGUIR_ATENDIENDO = false;
 	planificarDeadlocks();
 	sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 	logearFin();
@@ -975,7 +999,6 @@ void finalFeliz(){
 }
 
 void iniciarConfig(int argc, char *argv[]){
-	t_config* creacionConfig;
 	if(argc == 2){
 		creacionConfig = config_create(argv[1]);
 	}else{
@@ -997,7 +1020,6 @@ void iniciarConfig(int argc, char *argv[]){
 	TEAM_CONFIG.LOG_FILE = config_get_string_value (creacionConfig, "LOG_FILE");
 	TEAM_CONFIG.IP_TEAM = config_get_string_value(creacionConfig, "IP_TEAM");
 	TEAM_CONFIG.PUERTO_TEAM = config_get_string_value(creacionConfig, "PUERTO_TEAM");
-	free(creacionConfig);
 }
 
 void descontarPokemonsActualesDeOBJGlobal(entrenador* trainer){
@@ -1049,6 +1071,7 @@ punto crearPunto(char * posiciones){
 		atoi(xey[0]),
 		atoi(xey[1])
 	};
+	liberarDoblePuntero(xey);
 	return p;
 }
 
@@ -1127,14 +1150,22 @@ void esperarAlgunoEnReady(bool isDeadlock){
 }
 
 void planificarSegun(char* tipoPlanificacion){
-	if(string_equals_ignore_case(tipoPlanificacion, "FIFO"))
+	if(string_equals_ignore_case(tipoPlanificacion, "FIFO")){
 		FIFO();
-	if(string_equals_ignore_case(tipoPlanificacion, "RR"))
+		return;
+	}
+	if(string_equals_ignore_case(tipoPlanificacion, "RR")){
 		RR();
-	if(string_equals_ignore_case(tipoPlanificacion, "SJFCD"))
+		return;
+	}
+	if(string_equals_ignore_case(tipoPlanificacion, "SJFCD")){
 		SJFCD();
-	if(string_equals_ignore_case(tipoPlanificacion, "SJFSD"))
+		return;
+	}
+	if(string_equals_ignore_case(tipoPlanificacion, "SJFSD")){
 		SJFSD();
+		return;
+	}
 }
 
 void FIFO(){
@@ -1177,13 +1208,14 @@ void FIFO(){
 void RR(){
 	CICLOS_TOTALES = 0;
 	sem_init(&semaforoPlanifiquenme,0,0);
+	entrenador *trainer;
 	while(!objetivoGlobalCumplido()){
 		esperarAlgunoEnReady(false);
 		if(objetivoGlobalCumplido())
 			break;
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		sem_wait(&semaforoCambioEstado);
-		entrenador *trainer = list_get(EstadoReady,0);
+		trainer = list_get(EstadoReady,0);
 		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
@@ -1212,7 +1244,7 @@ void RR(){
 		esperarAlgunoEnReady(true);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		sem_wait(&semaforoCambioEstado);
-		entrenador *trainer = list_get(EstadoReady,0);
+		trainer = list_get(EstadoReady,0);
 		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
@@ -1400,7 +1432,7 @@ void planificarDeadlocks(){
 void ordenarListaSJF(t_list *lista){
 	log_info(TEAM_LOG, "Se reordena la lista de ready SJF");
 	list_sort(lista, (void*)entrenador1MenorEstimacionQueEntrenador2);
-	list_map(lista, (void*)establecerNuevaEstimacion);
+	list_iterate(lista, (void*)establecerNuevaEstimacion);
 }
 
 void establecerNuevaEstimacion(entrenador* trainer){
