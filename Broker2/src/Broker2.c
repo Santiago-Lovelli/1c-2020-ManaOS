@@ -441,8 +441,10 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 		}
 			list_iterate(lista, (void*)notificarSuscriptorLocalized);
 			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
-			free(mensajeLocalized->nombrePokemon);
-			list_destroy_and_destroy_elements(mensajeLocalized->puntos, free);
+			free(((localizedEnMemoria*)mensaje)->nombrePokemon);
+			list_iterate(((localizedEnMemoria*)mensaje)->puntos, free);
+			list_destroy(((localizedEnMemoria*)mensaje)->puntos);
+			liberarDoblePuntero(posiciones);
 			break;
 	default:
 		log_error(LOGGER_OBLIGATORIO, "No existe el mensaje");
