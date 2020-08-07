@@ -3,7 +3,7 @@
 int main(void) {
 	Init();
 	signal(SIGUSR1, dump);
-	signal(SIGINT, destruirTodo);
+	//signal(SIGINT, destruirTodo);
 	EsperarClientes();
 	return EXIT_SUCCESS;
 }
@@ -15,8 +15,8 @@ void EsperarClientes(){
 		int *cliente = malloc(sizeof(int));
 		*cliente = esperar_cliente_con_accept(server, LOGGER_OBLIGATORIO);
 		log_info(LOGGER_OBLIGATORIO, "Se conecto un cliente: %i", *cliente);
-		pthread_t* hiloDeAtencion = malloc(sizeof(pthread_t));
-		int hilo = pthread_create(hiloDeAtencion, NULL, (void* )AtenderCliente, cliente);
+		pthread_t hiloDeAtencion;
+		int hilo = pthread_create(&hiloDeAtencion, NULL, (void* )AtenderCliente, cliente);
 		if (hilo != 0){
 			sem_post(&MUTEX_CLIENTE);
 		}
@@ -458,8 +458,14 @@ int tratarMensaje (d_message tipoMensaje, void *paquete){
 		resultado->estaOcupado = 1;
 		//resultado->suscriptoresConACK = list_create();
 		//resultado->suscriptoresConMensajeEnviado = list_create();
-		resultado->tiempo = (char*)temporal_get_string_time();
-		resultado->ultimaReferencia = (char*)temporal_get_string_time();
+		char* temporal = temporal_get_string_time();
+		resultado->tiempo=realloc(resultado->tiempo,strlen(temporal)+1);
+		memcpy(resultado->tiempo,temporal,strlen(temporal)+1);
+		char* temporal2 = temporal_get_string_time();
+		resultado->ultimaReferencia=realloc(resultado->ultimaReferencia,strlen(temporal2)+1);
+		memcpy(resultado->ultimaReferencia ,temporal2,strlen(temporal2)+1);
+		free(temporal);
+		free(temporal2);
 		guardarMensajeEnMemoria(resultado->tipoMensaje, unMensaje, resultado->donde);
 		//memcpy(resultado->donde, unMensaje, tamanioDeMensaje(tipoMensaje, unMensaje));
 		log_info(LOGGER_OBLIGATORIO, "Se guardo el mensaje en la memoria id: %i posicion: %i", resultado->idMensaje, posicionALog(resultado->donde));
@@ -472,6 +478,7 @@ int tratarMensaje (d_message tipoMensaje, void *paquete){
 	t_list * subs = suscriptoresPara(tipoMensaje);
 	relacionar(ID, *id);
 	enviarUnMensaje(unMensaje, tipoMensaje, resultado, subs, *id);
+	free(unMensaje);
 	sem_post(&MUTEX_LISTA);
 	free (id);
 	return ID;
@@ -874,13 +881,9 @@ estructuraAdministrativa* newParticion (){
 	particion->suscriptoresConACK = list_create();
 	particion->suscriptoresConMensajeEnviado = list_create();
 	char* temporal = temporal_get_string_time();
-	particion->tiempo = string_new();
-	string_append(&particion->tiempo, temporal);
-	particion->ultimaReferencia = string_new();
+	particion->tiempo=temporal;
 	char* temporal2 = temporal_get_string_time();
-	string_append(&particion->ultimaReferencia, temporal2);
-	free(temporal);
-	free(temporal2);
+	particion->ultimaReferencia= temporal2;
 	return particion;
 }
 
@@ -1089,7 +1092,10 @@ void * leerInfoYActualizarUsoPorID(int id){ //deuelve un tipo en memoria
 	list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
 //	sem_wait(&MUTEX_LISTA);
 	estructuraAdministrativa * ElElemento = list_get (ADMINISTRADOR_MEMORIA, posicion);
-	ElElemento->ultimaReferencia = temporal_get_string_time();
+	char* temporal = temporal_get_string_time();
+	ElElemento->ultimaReferencia=realloc(ElElemento->ultimaReferencia,strlen(temporal)+1);
+	memcpy(ElElemento->ultimaReferencia,temporal,strlen(temporal)+1);
+	free(temporal);
 //	sem_post(&MUTEX_LISTA);
 	return(levantarMensaje(ElElemento->tipoMensaje, ElElemento->donde));
 }
@@ -1099,16 +1105,15 @@ void dump() {
 	log_info(LOGGER_OBLIGATORIO, "Se requirió un dump");
 	FILE * archivoDump = txt_open_for_append(BROKER_CONFIG.DUMP_FILE);
 	char* unaLinea = string_new();
-	char* extra = string_new();
 	string_append(&unaLinea, "Dump: ");
-	extra = temporal_get_string_time();
+	char* extra = temporal_get_string_time();
 	string_append(&unaLinea, extra);
 	string_append(&unaLinea, "\n");
 	txt_write_in_file(archivoDump, unaLinea);
 	free(unaLinea);
 	free(extra);
 	for(int i = 1; i-1<list_size(ADMINISTRADOR_MEMORIA); i++){
-		char* unaLinea = string_new();	char* nombreCola = string_new(); char* tipo = string_new();
+		char* nombreCola = string_new(); char* tipo = string_new();
 		estructuraAdministrativa * ElElemento = list_get(ADMINISTRADOR_MEMORIA, i-1);
 		char* extra = string_new();
 		if(ElElemento->estaOcupado == 0){
@@ -1128,7 +1133,7 @@ void dump() {
 			string_append(&tipo, ElElemento->tiempo);
 		}
 		void* finParticion = ElElemento->donde + ElElemento->tamanioParticion;
-		unaLinea = string_from_format("Partición %i: %06p - %06p %s  Size: %i b     %s Cola:%s ID:%i \n", i, ElElemento->donde, finParticion, extra, ElElemento->tamanioParticion, tipo, nombreCola, ElElemento->idMensaje);
+		char* unaLinea = string_from_format("Partición %i: %06p - %06p %s  Size: %i b     %s Cola:%s ID:%i \n", i, ElElemento->donde, finParticion, extra, ElElemento->tamanioParticion, tipo, nombreCola, ElElemento->idMensaje);
 		txt_write_in_file(archivoDump, unaLinea);
 		free(extra);
 		free(tipo);
