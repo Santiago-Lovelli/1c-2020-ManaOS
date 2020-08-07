@@ -88,6 +88,7 @@ void ActuarAnteMensaje(HeaderDelibird header, int cliente){
 			void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
 			sem_post(&MUTEX_CLIENTE);
 			tratarMensaje(header.tipoMensaje, packLocalizedPokemon);
+			free(packLocalizedPokemon);
 			break;
 		case d_SUBSCRIBE_QUEUE:
 			//sem_wait(&MUTEX_CLIENTE);
@@ -266,9 +267,10 @@ void enviarVariosMensajes(int * clienteA, d_message tipoMensaje){
 			Serialize_PackAndSend_APPEARED_POKEMON_IDCorrelativo(*cliente, elemento->idMensaje, unID, mensajeAppeared->nombrePokemon, mensajeAppeared->posX, mensajeAppeared->posY);
 			actualizarEnviadosPorID(elemento->idMensaje, *cliente);
 			log_info (LOGGER_OBLIGATORIO, "Se envió el mensaje %i (APPEARED) al suscriptor %i", elemento->idMensaje, *cliente);
+			free(mensajeAppeared->nombrePokemon);
+			free(mensajeAppeared);
 		}
 		list_destroy_and_destroy_elements(mensajesAppeared, (void *) estructuraAdministrativaDestroyer);
-		//free(mensajeAppeared);
 	break;
 	case d_CAUGHT_POKEMON:
 		mensajesCaught = tomarLosMensajes (d_CAUGHT_POKEMON);
@@ -367,6 +369,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 		}
 		list_iterate(lista, (void*)notificarSuscriptorNew);
 		log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
+		free(mensajeNew->nombrePokemon);
 		break;
 	case d_CATCH_POKEMON:
 		mensajeCatch = (catchEnMemoria*)mensaje;
@@ -378,6 +381,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 		}
 			list_iterate(lista, (void*)notificarSuscriptorCatch);
 			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
+			free(mensajeCatch->nombrePokemon);
 		break;
 	case d_GET_POKEMON:
 		mensajeGet = (getEnMemoria*)mensaje;
@@ -389,6 +393,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 		}
 			list_iterate(lista, (void*)notificarSuscriptorGet);
 			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
+			free(mensajeGet->nombrePokemon);
 			break;
 	case d_APPEARED_POKEMON:
 		mensajeAppeared = (appearedEnMemoria*)mensaje;
@@ -400,6 +405,7 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 		}
 			list_iterate(lista, (void*)notificarSuscriptorAppeared);
 			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
+			free(mensajeAppeared->nombrePokemon);
 			break;
 	case d_CAUGHT_POKEMON:
 		mensajeCaught = (caughtEnMemoria*)mensaje;
@@ -435,6 +441,8 @@ void enviarUnMensaje (void* mensaje, d_message tipoMensaje, estructuraAdministra
 		}
 			list_iterate(lista, (void*)notificarSuscriptorLocalized);
 			log_info(LOGGER_OBLIGATORIO, "No hay mas suscriptores! \n");
+			free(mensajeLocalized->nombrePokemon);
+			list_destroy_and_destroy_elements(mensajeLocalized->puntos, free);
 			break;
 	default:
 		log_error(LOGGER_OBLIGATORIO, "No existe el mensaje");
@@ -1246,6 +1254,7 @@ void * cargarMensajeAGuardar(d_message tipoMensaje, void *paquete, uint32_t* id)
 		retornoLocalized->largoDeNombre = strlen(pokemon) + 1;
 		retornoLocalized->nombrePokemon = malloc(retornoLocalized->largoDeNombre);
 		memcpy(retornoLocalized->nombrePokemon, pokemon, retornoLocalized->largoDeNombre);
+		free(pokemon);
 		retornoLocalized->puntos = listaDePuntos;
 		retorno = retornoLocalized;
 		break;
