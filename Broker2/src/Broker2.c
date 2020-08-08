@@ -988,6 +988,13 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 	if(string_equals_ignore_case(BROKER_CONFIG.ALGORITMO_MEMORIA, "particiones")){
 		int tamanioInicial = particion->tamanioParticion;
 		particion->tamanioParticion = tamanioDeMensaje(tipoMensaje, mensaje);
+		void tomarParticion(estructuraAdministrativa* elemento){
+			if(elemento->donde == particion->donde){
+						posicion = contador;
+				}
+					contador ++;
+				}
+		list_iterate(ADMINISTRADOR_MEMORIA, (void*)tomarParticion);
 		if(particion->tamanioParticion <= BROKER_CONFIG.TAMANO_MINIMO_PARTICION){
 			particion->tamanioParticion = BROKER_CONFIG.TAMANO_MINIMO_PARTICION;
 		}
@@ -997,7 +1004,7 @@ estructuraAdministrativa * particionAMedida(d_message tipoMensaje, void*mensaje,
 			estructuraAdministrativa * particionVacia = newParticion();
 			particionVacia->tamanioParticion = tamanioInicial - particion->tamanioParticion;
 			particionVacia->donde = particion->donde + particion->tamanioParticion;
-			list_add(ADMINISTRADOR_MEMORIA, particionVacia);
+			list_add_in_index(ADMINISTRADOR_MEMORIA, posicion+1, particionVacia);
 		}
 		//else{
 			return particion;
