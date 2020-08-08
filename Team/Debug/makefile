@@ -26,7 +26,7 @@ endif
 all: Team
 
 dependents:
-	-cd /home/utnso/workspace/tp-2020-1c-ManaOS-/ComunParaTodos/Debug && $(MAKE) all
+	-cd /home/utnso/workspace/tp-2020-1c-ManaOS-/ComunParaTodos/Debug && $(MAKE) clean all
 
 # Tool invocations
 Team: $(OBJS) $(USER_OBJS) /home/utnso/workspace/tp-2020-1c-ManaOS-/ComunParaTodos/Debug/libComunParaTodos.so

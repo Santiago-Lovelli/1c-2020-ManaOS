@@ -46,14 +46,27 @@ bool esElString(p_punteroEnLista* unString, char* otroString){
 	return rest== 0;
 }
 
+void destroyer(p_punteroEnLista* unPuntero){
+	free(unPuntero);
+}
+
 int sonIgualesSinInportarOrden(char** unPuntero, char** otroPuntero){
 	t_list* listaDeUno = convertirDoblePunteroEnLista(unPuntero);
 	t_list* listaDeOtro = convertirDoblePunteroEnLista(otroPuntero);
 	int limiteDeUno = damePosicionFinalDoblePuntero(unPuntero);
 	int limiteDeDos = damePosicionFinalDoblePuntero(otroPuntero);
 
-	if(limiteDeUno != limiteDeDos)
+	if(limiteDeUno != limiteDeDos){
+		list_destroy_and_destroy_elements(listaDeUno,(void*)destroyer);
+		list_destroy_and_destroy_elements(listaDeOtro,(void*)destroyer);
 		return -1;
+	}
+
+	if(unPuntero[0] == NULL){
+		list_destroy_and_destroy_elements(listaDeUno,(void*)destroyer);
+		list_destroy_and_destroy_elements(listaDeOtro,(void*)destroyer);
+		return 0;
+	}
 
 	int contador = 0;
 	while(list_size(listaDeUno) != 0 && list_size(listaDeOtro) != 0){
@@ -64,12 +77,14 @@ int sonIgualesSinInportarOrden(char** unPuntero, char** otroPuntero){
 		p_punteroEnLista* unAux = list_get(listaDeUno,contador);
 		int otroIndex = list_get_index(listaDeOtro,unAux->data,(void*)esElString);
 		if(unIndex == -1 || otroIndex == -1){
-			list_destroy(listaDeUno);
-			list_destroy(listaDeOtro);
+			list_destroy_and_destroy_elements(listaDeUno,(void*)destroyer);
+			list_destroy_and_destroy_elements(listaDeOtro,(void*)destroyer);
 			return -1;
 		}
-		list_remove(listaDeUno, contador);
-		list_remove(listaDeOtro, unIndex);
+		list_remove_and_destroy_element(listaDeUno,contador, (void*)destroyer);
+		list_remove_and_destroy_element(listaDeOtro,unIndex, (void*)destroyer);
+//		list_remove(listaDeUno, contador);
+//		list_remove(listaDeOtro, unIndex);
 	}
 	list_destroy(listaDeUno);
 	list_destroy(listaDeOtro);

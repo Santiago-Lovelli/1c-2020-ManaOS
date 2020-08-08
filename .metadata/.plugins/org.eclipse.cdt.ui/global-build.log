@@ -1,0 +1,82 @@
+20:16:02 **** Clean-only build of configuration Debug for project ComunParaTodos ****
+make clean 
+rm -rf  ./Time/Time.o  ./Serializacion/Serializacion.o  ./ManejoDePunterosDobles/ManejoDePunterosDobles.o  ./Logger/Logger.o  ./Lista/lista.o  ./Conexiones/Conexiones.o  ./Bitmap/Bitmap.o  ./Archivos/archivos.o  ./Time/Time.d  ./Serializacion/Serializacion.d  ./ManejoDePunterosDobles/ManejoDePunterosDobles.d  ./Logger/Logger.d  ./Lista/lista.d  ./Conexiones/Conexiones.d  ./Bitmap/Bitmap.d  ./Archivos/archivos.d  libComunParaTodos.so
+ 
+20:16:03 **** Build of configuration Debug for project ComunParaTodos ****
+make all 
+Building file: ../Time/Time.c
+Invoking: GCC C Compiler
+gcc -Icommons -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"Time/Time.d" -MT"Time/Time.o" -o "Time/Time.o" "../Time/Time.c"
+Finished building: ../Time/Time.c
+ 
+Building file: ../Serializacion/Serializacion.c
+Invoking: GCC C Compiler
+gcc -Icommons -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"Serializacion/Serializacion.d" -MT"Serializacion/Serializacion.o" -o "Serializacion/Serializacion.o" "../Serializacion/Serializacion.c"
+Finished building: ../Serializacion/Serializacion.c
+ 
+Building file: ../ManejoDePunterosDobles/ManejoDePunterosDobles.c
+Invoking: GCC C Compiler
+gcc -Icommons -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"ManejoDePunterosDobles/ManejoDePunterosDobles.d" -MT"ManejoDePunterosDobles/ManejoDePunterosDobles.o" -o "ManejoDePunterosDobles/ManejoDePunterosDobles.o" "../ManejoDePunterosDobles/ManejoDePunterosDobles.c"
+Finished building: ../ManejoDePunterosDobles/ManejoDePunterosDobles.c
+ 
+Building file: ../Logger/Logger.c
+Invoking: GCC C Compiler
+gcc -Icommons -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"Logger/Logger.d" -MT"Logger/Logger.o" -o "Logger/Logger.o" "../Logger/Logger.c"
+Finished building: ../Logger/Logger.c
+ 
+Building file: ../Lista/lista.c
+Invoking: GCC C Compiler
+gcc -Icommons -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"Lista/lista.d" -MT"Lista/lista.o" -o "Lista/lista.o" "../Lista/lista.c"
+Finished building: ../Lista/lista.c
+ 
+Building file: ../Conexiones/Conexiones.c
+Invoking: GCC C Compiler
+gcc -Icommons -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"Conexiones/Conexiones.d" -MT"Conexiones/Conexiones.o" -o "Conexiones/Conexiones.o" "../Conexiones/Conexiones.c"
+../Conexiones/Conexiones.c: In function ‘esperar_cliente_con_accept’:
+../Conexiones/Conexiones.c:69:47: warning: passing argument 2 of ‘accept’ from incompatible pointer type [-Wincompatible-pointer-types]
+  int socket_cliente = accept(socket_servidor, &dir_cliente, &tam_direccion);
+                                               ^
+In file included from /usr/include/netinet/in.h:23:0,
+                 from /usr/include/arpa/inet.h:22,
+                 from ../Conexiones/Conexiones.h:4,
+                 from ../Conexiones/Conexiones.c:1:
+/usr/include/i386-linux-gnu/sys/socket.h:243:12: note: expected ‘struct sockaddr * restrict’ but argument is of type ‘struct sockaddr_in *’
+ extern int accept (int __fd, __SOCKADDR_ARG __addr,
+            ^
+../Conexiones/Conexiones.c:69:61: warning: pointer targets in passing argument 3 of ‘accept’ differ in signedness [-Wpointer-sign]
+  int socket_cliente = accept(socket_servidor, &dir_cliente, &tam_direccion);
+                                                             ^
+In file included from /usr/include/netinet/in.h:23:0,
+                 from /usr/include/arpa/inet.h:22,
+                 from ../Conexiones/Conexiones.h:4,
+                 from ../Conexiones/Conexiones.c:1:
+/usr/include/i386-linux-gnu/sys/socket.h:243:12: note: expected ‘socklen_t * restrict {aka unsigned int * restrict}’ but argument is of type ‘int *’
+ extern int accept (int __fd, __SOCKADDR_ARG __addr,
+            ^
+Finished building: ../Conexiones/Conexiones.c
+ 
+Building file: ../Bitmap/Bitmap.c
+Invoking: GCC C Compiler
+gcc -Icommons -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"Bitmap/Bitmap.d" -MT"Bitmap/Bitmap.o" -o "Bitmap/Bitmap.o" "../Bitmap/Bitmap.c"
+Finished building: ../Bitmap/Bitmap.c
+ 
+Building file: ../Archivos/archivos.c
+Invoking: GCC C Compiler
+gcc -Icommons -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"Archivos/archivos.d" -MT"Archivos/archivos.o" -o "Archivos/archivos.o" "../Archivos/archivos.c"
+Finished building: ../Archivos/archivos.c
+ 
+Building target: libComunParaTodos.so
+Invoking: GCC C Linker
+gcc -shared -o "libComunParaTodos.so"  ./Time/Time.o  ./Serializacion/Serializacion.o  ./ManejoDePunterosDobles/ManejoDePunterosDobles.o  ./Logger/Logger.o  ./Lista/lista.o  ./Conexiones/Conexiones.o  ./Bitmap/Bitmap.o  ./Archivos/archivos.o   -lcommons
+Finished building target: libComunParaTodos.so
+ 
+20:16:04 **** Clean-only build of configuration Debug for project Team ****
+make clean 
+make: *** No rule to make target 'clean'.  Stop.
+20:16:05 **** Build of configuration Debug for project Team ****
+make all 
+Building target: Team
+Invoking: GCC C Linker
+gcc -L"/home/utnso/workspace/tp-2020-1c-ManaOS-/ComunParaTodos/Debug" -o "Team"  ./src/Team.o   -lcommons -lpthread -lComunParaTodos
+Finished building target: Team
+ 

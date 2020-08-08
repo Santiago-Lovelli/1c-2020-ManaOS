@@ -56,7 +56,6 @@ typedef enum d_messages {
 	d_CAUGHT_POKEMON,
 	d_LOCALIZED_POKEMON,
 	d_ACK,
-	d_RESPONSE_CATCH,
 	d_SUBSCRIBE_QUEUE
 } d_message;
 
@@ -79,7 +78,7 @@ typedef struct {
 typedef struct {
 	uint32_t posX;
 	uint32_t posY;
-	uint32_t cantidad;
+	//uint32_t cantidad;
 }__attribute__((packed)) d_PosCant;
 
 ////////////////
@@ -168,7 +167,7 @@ bool Serialize_PackAndSend_CAUGHT_POKEMON(int socketCliente, uint32_t idMensaje,
  * ESTA FUNCION ENVIA UN PAQUETE DEL TIPO LOCALIZED_POKEMON A TRAVES DEL SOCKET ESPECIFICADO
  */
 
-bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensaje, char *pokemon, t_list *poscant);
+bool Serialize_PackAndSend_LOCALIZED_POKEMON(int socketCliente, uint32_t idMensaje, char *pokemon, d_PosCant** posiciones);
 
 /**
  * ESTA FUNCION SIRVE COMO UNA ABSTRACCION PARA NO REPETIR LOGICA, SE USA A TRAVES DE
@@ -183,6 +182,24 @@ bool Serialize_PackAndSend_CATCHoAPPEARED(int socketCliente, uint32_t idMensaje,
  */
 
 bool Serialize_PackAndSend_CATCHoAPPEARED_NoID(int socketCliente, const void *pokemon, uint32_t posX, uint32_t posY, d_message tipoMensaje);
+
+/*
+ * LO MISMO QUE LA ANTERIOR PERO CON ID CORRELATIVO
+ */
+
+bool Serialize_PackAndSend_APPEARED_POKEMON_IDCorrelativo(int socketCliente, uint32_t idMensaje, uint32_t idCorrelativo,const void *pokemon, uint32_t posX, uint32_t posY);
+
+/*
+ * LO MISMO QUE LA ANTERIOR PERO CON ID CORRELATIVO
+ */
+
+bool Serialize_PackAndSend_CAUGHT_POKEMON_IDCorrelativo(int socketCliente, uint32_t idMensaje, uint32_t idCorrelativo, uint32_t resultado);
+
+/*
+ * LO MISMO QUE LA ANTERIOR PERO CON ID CORRELATIVO
+ */
+
+bool Serialize_PackAndSend_LOCALIZED_POKEMON_IDCorrelativo(int socketCliente, uint32_t idMensaje, uint32_t idCorrelativo, char *pokemon, d_PosCant** posiciones);
 
 ////////////////////////////
 // FUNCIONES PARA RECIBIR //
@@ -404,5 +421,25 @@ void Serialize_Unpack_CatchPokemon_NoID(void *packCatchPokemon, char **nombre, u
  */
 
 void Serialize_Unpack_GetPokemon_NoID(void *packGetPokemon, char **nombre);
+
+/*
+ * LO MISMO QUE LA ANTERIOR PERO CON ID CORRELATIVO
+ */
+
+void Serialize_Unpack_CaughtPokemon_IDCorrelativo(void *packCaughtPokemon, uint32_t *idMensaje, uint32_t *idCorrelativo, uint32_t *resultado);
+
+/*
+ * LO MISMO QUE LA ANTERIOR PERO CON ID CORRELATIVO
+ */
+
+void Serialize_Unpack_LocalizedPokemon_IDCorrelativo(void *packLocalizedPokemon, uint32_t *idMensaje, uint32_t *idCorrelativo, char **nombre, t_list **poscant);
+
+/*
+ * LO MISMO QUE LA ANTERIOR PERO CON ID CORRELATIVO
+ */
+
+void Serialize_Unpack_AppearedPokemon_IDCorrelativo(void *packAppearedPokemon, uint32_t *idMensaje,uint32_t *idCorrelativo, char **nombre, uint32_t *posX, uint32_t *posY);
+
+
 
 #endif /* SERIALIZACION_SERIALIZACION_H_ */

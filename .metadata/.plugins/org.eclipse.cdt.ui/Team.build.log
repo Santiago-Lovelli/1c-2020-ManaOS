@@ -1,0 +1,10 @@
+20:16:05 **** Build of configuration Debug for project Team ****
+make all 
+Building target: Team
+Invoking: GCC C Linker
+gcc -L"/home/utnso/workspace/tp-2020-1c-ManaOS-/ComunParaTodos/Debug" -o "Team"  ./src/Team.o   -lcommons -lpthread -lComunParaTodos
+Finished building target: Team
+ 
+
+20:16:06 Build Finished (took 697ms)
+

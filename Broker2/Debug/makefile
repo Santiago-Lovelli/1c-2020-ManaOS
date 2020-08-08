@@ -26,13 +26,13 @@ endif
 all: Broker2
 
 dependents:
-	-cd /home/utnso/tp-2020-1c-ManaOS-/ComunParaTodos/Debug && $(MAKE) all
+	-cd /home/utnso/workspace/tp-2020-1c-ManaOS-/ComunParaTodos/Debug && $(MAKE) all
 
 # Tool invocations
-Broker2: $(OBJS) $(USER_OBJS) /home/utnso/tp-2020-1c-ManaOS-/ComunParaTodos/Debug/libComunParaTodos.so
+Broker2: $(OBJS) $(USER_OBJS) /home/utnso/workspace/tp-2020-1c-ManaOS-/ComunParaTodos/Debug/libComunParaTodos.so
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -L"/home/utnso/tp-2020-1c-ManaOS-/ComunParaTodos/Debug" -o "Broker2" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -L"/home/utnso/workspace/tp-2020-1c-ManaOS-/ComunParaTodos/Debug" -o "Broker2" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -42,6 +42,6 @@ clean:
 	-@echo ' '
 
 .PHONY: all clean dependents
-/home/utnso/tp-2020-1c-ManaOS-/ComunParaTodos/Debug/libComunParaTodos.so:
+/home/utnso/workspace/tp-2020-1c-ManaOS-/ComunParaTodos/Debug/libComunParaTodos.so:
 
 -include ../makefile.targets

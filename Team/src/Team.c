@@ -1,11 +1,7 @@
 #include "Team.h"
 
-int main (void){
-	inicializar();
-//	while(objetivoTerminado() == 0){
-//		proceso* procesoAEjecutar = planificarSegun(TEAM_CONFIG.ALGORITMO_PLANIFICACION, EstadoReady);
-//	}
-//	finalFeliz();
+int main (int argc, char *argv[]){
+	inicializar(argc, argv);
 	return EXIT_SUCCESS;
 }
 
@@ -15,7 +11,7 @@ void crear_hilo_planificacion(){
 }
 
 void inicializarSemaforos(){
-	sem_init(&semaforoSocket,0,1);
+//	sem_init(&semaforoSocket,0,1);
 	sem_init(&semaforoGameboy,0,1);
 	sem_init(&semaforoCambioEstado,0,1);
 	sem_init(&semaforoConexionABroker,0,1);
@@ -24,17 +20,22 @@ void inicializarSemaforos(){
 	sem_init(&semaforoAppeared,0,1);
 	sem_init(&semaforoMovimiento,0,1);
 	sem_init(&semaforoPokemon,0,1);
+	sem_init(&semaforoGet,0,1);
+	sem_init(&semaforoSocketGameboy,0,1);
+	sem_init(&semaforoListaIDS,0,1);
 }
 
-void inicializar(){
+void inicializar(int argc, char *argv[]){
 	TEAM_LOG = iniciar_log("Team");
 	inicializarSemaforos();
-	iniciarConfig();
+	iniciarConfig(argc, argv);
+	TEAM_LOG = iniciar_log(TEAM_CONFIG.LOG_FILE);
 	crearEstados();
 	crearEntrenadores();
 	iniciarVariablesDePlanificacion();
 	SEGUIR_ATENDIENDO = true;
 	ID_QUE_NECESITO = list_create();
+	IDs_GET = list_create();
 	MISIONES_PENDIENTES = list_create();
 	DEADLOCKS_RESUELTOS = 0;
 	CAMBIOS_DE_CONTEXTO_REALIZADOS = 0;
@@ -159,9 +160,12 @@ void intercambiarPokemon(entrenador* trainer, int tidTrainerObjetivo, char* poke
 
 
 void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int idEntrenadorQueMandaCatch){
+	sem_wait(&semaforoConexionABroker);
 	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+	sem_post(&semaforoConexionABroker);
 	if(conexion == -1){
-		log_error(TEAM_LOG,"No se pudo conectar con el Broker. Se procede con comportamiento DEFAULT");
+		close(conexion);
+		log_error(TEAM_LOG, "Como no se pudo conectar con el broker se procede con el comportamiento DEFAULT de catch");
 		entrenador *trainer = list_get(ENTRENADORES_TOTALES, idEntrenadorQueMandaCatch);
 		sumarPokemon(trainer,pokemon);
 		descontarDeObjetivoGlobal(pokemon);
@@ -174,25 +178,38 @@ void enviarCatchPokemonYRecibirResponse(char *pokemon, int posX, int posY, int i
 		Serialize_PackAndSend_CATCH_POKEMON_NoID(conexion, pokemon, posX, posY);
 		HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
 		int idEsperado = recibirResponse(conexion, headerACK);
+		close(conexion);
 		objetoID_QUE_NECESITO *objetoID = malloc(2*sizeof(int) + strlen(pokemon)+1);
 		objetoID->idMensaje = idEsperado;
 		objetoID->idEntrenador = idEntrenadorQueMandaCatch;
 		objetoID->pokemon = pokemon;
 		bloquearEntrenador(objetoID->idEntrenador, t_ESPERANDO_RESPUESTA);
+		sacarMision(idEntrenadorQueMandaCatch);
+		log_info(TEAM_LOG, "El mensaje CATCH:%s se va a quedar esperando al IDCorrelativo: %i", pokemon, objetoID->idMensaje);
+		sem_wait(&semaforoListaIDS);
 		list_add(ID_QUE_NECESITO, objetoID);
+		sem_post(&semaforoListaIDS);
 	}
 }
 
 void enviarGetPokemonYRecibirResponse(char *pokemon, void* value){
+	sem_wait(&semaforoConexionABroker);
 	int conexion = conectarse_a_un_servidor(TEAM_CONFIG.IP_BROKER, TEAM_CONFIG.PUERTO_BROKER, TEAM_LOG);
+	sem_post(&semaforoConexionABroker);
 	if(conexion == -1){
-		log_error(TEAM_LOG,"No se pudo conectar con el Broker. Se procede con comportamiento DEFAULT");
+		close(conexion);
+		log_error(TEAM_LOG,"No se pudo conectar con el Broker para enviar GET %s. Se procede con comportamiento DEFAULT",pokemon);
 		return; //comportamiento Default es asumir que el pokemon no esta
 	}
 	Serialize_PackAndSend_GET_POKEMON_NoID(conexion,pokemon);
 	HeaderDelibird headerACK = Serialize_RecieveHeader(conexion);
-	recibirResponse(conexion, headerACK); //NO ESTOY USANDO ESTE DATO
-
+	int* idResponse = malloc(sizeof(int));
+	*idResponse = recibirResponse(conexion, headerACK);
+	close(conexion);
+	log_info(TEAM_LOG, "El GET:%s se va a quedar esperando al IDCorrelativo: %i", pokemon, *idResponse);
+	sem_wait(&semaforoGet);
+	list_add(IDs_GET, idResponse);
+	sem_post(&semaforoGet);
 }
 
 void enviarGetXCadaPokemonObjetivo(){
@@ -211,6 +228,8 @@ void iniciarServidorDeGameBoy(pthread_t* servidor) {
 
 
 void* atenderGameBoy() {
+	sem_t semaforoSocket;
+	sem_init(&semaforoSocket,0,1);
 	t_log* gameBoyLog = iniciar_log("GameBoy");
 	int conexion = iniciar_servidor(TEAM_CONFIG.IP_TEAM, TEAM_CONFIG.PUERTO_TEAM, gameBoyLog);
 	while (SEGUIR_ATENDIENDO) {
@@ -225,7 +244,7 @@ void* atenderGameBoy() {
 		sem_post(&semaforoSocket);
 
 		if (pthread_create(dondeSeAtiende, NULL,
-				(void*) recibirYAtenderUnCliente, elemento) == 0) {
+				(void*) recibirYAtenderUnClienteGameboy, elemento) == 0) {
 			log_info(gameBoyLog, ":::: Se creo hilo para cliente ::::");
 		} else {
 			log_error(gameBoyLog,
@@ -265,7 +284,25 @@ void* suscribirme(d_message colaDeSuscripcion) {
 	return 0;
 }
 
+void* recibirYAtenderUnClienteGameboy(p_elementoDeHilo* elemento) {
+	while (SEGUIR_ATENDIENDO) {
+		sem_wait(&semaforoSocketGameboy);
+		HeaderDelibird headerRecibido = Serialize_RecieveHeader(elemento->cliente);
+		if (headerRecibido.tipoMensaje == -1) {
+			log_error(elemento->log, "Se desconecto el cliente\n");
+			sem_post(&semaforoSocketGameboy);
+			break;
+		}
+		atender(headerRecibido, elemento->cliente, elemento->log);
+		sem_post(&semaforoSocketGameboy);
+	}
+	free(elemento);
+	return 0;
+}
+
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
+	sem_t semaforoSocket;
+	sem_init(&semaforoSocket,0,1);
 	while (SEGUIR_ATENDIENDO) {
 		sem_wait(&semaforoSocket);
 		HeaderDelibird headerRecibido = Serialize_RecieveHeader(elemento->cliente);
@@ -275,70 +312,103 @@ void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento) {
 			break;
 		}
 		atender(headerRecibido, elemento->cliente, elemento->log);
+		sem_post(&semaforoSocket);
 	}
+	sem_destroy(&semaforoSocket);
 	free(elemento);
 	return 0;
 }
 
+bool idEstaEnLista(uint32_t id, t_list *lista){
+	int *aux;
+	sem_wait(&semaforoGet);
+	for(int i =0; i<list_size(lista); i++){
+		aux = list_get(lista,i);
+		if(id == *aux){
+			sem_post(&semaforoGet);
+			return true;
+		}
+	}
+	sem_post(&semaforoGet);
+	return false;
+}
+
 
 void atender(HeaderDelibird header, int cliente, t_log* logger) {
-	//es el atender del gamecard, ahora hay que tunearlo para que atienda el team
 	switch (header.tipoMensaje) {
-	case d_APPEARED_POKEMON:
-		;
+	case d_APPEARED_POKEMON:;
 		log_info(logger, "Llego un APPEARED POKEMON");
 		void* packAppearedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-		sem_post(&semaforoSocket);
-		uint32_t posicionAppearedX, posicionAppearedY;
+//		sem_post(&semaforoSocket);
+		uint32_t posicionAppearedX, posicionAppearedY, idMensajeAppeared, idCorrelativoAppeared;
 		char *AppearedNombrePokemon;
-		Serialize_Unpack_AppearedPokemon_NoID(packAppearedPokemon, &AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
-		log_info(logger, "Me llego mensaje de %i. Pkm: %s, x: %i, y: %i\n", header.tipoMensaje, AppearedNombrePokemon, posicionAppearedX, posicionAppearedY);
-
+		Serialize_Unpack_AppearedPokemon_IDCorrelativo(packAppearedPokemon, &idMensajeAppeared, &idCorrelativoAppeared, &AppearedNombrePokemon, &posicionAppearedX, &posicionAppearedY);
+		log_info(logger, "Contenidos del mensaje: Pkm: %s, x: %i, y: %i\n", AppearedNombrePokemon, posicionAppearedX, posicionAppearedY);
+		Serialize_PackAndSend_ACK(cliente, idMensajeAppeared);
 		if(necesitoEstePokemon(AppearedNombrePokemon)){
 			printf("Necesito este pokemon!!! \n ");
 			hacerAppeared(AppearedNombrePokemon,posicionAppearedX,posicionAppearedY,logger);
 		}
-		else{ printf("No necesito este pokemon!!! \n "); }
+		else{
+			printf("No necesito este pokemon!!! \n ");
+			free(AppearedNombrePokemon);
+		}
 		free(packAppearedPokemon);
-
 		break;
-	case d_LOCALIZED_POKEMON:
-		;
-//		SERIALIZACION PENDIENTE
+	case d_LOCALIZED_POKEMON:;
 		log_info(logger, "Llego un LOCALIZED POKEMON");
 		void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-		sem_post(&semaforoSocket);
+//		sem_post(&semaforoSocket);
 		t_list *posCant = list_create();
-		uint32_t idMensajeLocalized;
+		uint32_t idMensajeLocalized, idMensajeCorrelativo;
 		char *localizedNombrePokemon;
-		Serialize_Unpack_LocalizedPokemon(packLocalizedPokemon,&idMensajeLocalized,&localizedNombrePokemon,&posCant);
-		//logear lo que llego
+		Serialize_Unpack_LocalizedPokemon_IDCorrelativo(packLocalizedPokemon,&idMensajeLocalized, &idMensajeCorrelativo,&localizedNombrePokemon,&posCant);
+		log_info(logger,"Contenidos del mensaje: id: %i, id correlativo: %i, Pkm: %s",idMensajeLocalized, idMensajeCorrelativo,localizedNombrePokemon);
+		for(int i = 0; i<posCant->elements_count; i++){
+			d_PosCant* asd = list_get(posCant,i);
+			log_info(logger,"x: %i, y:%i",asd->posX,asd->posY);
+		}
+		Serialize_PackAndSend_ACK(cliente, idMensajeLocalized);
+		if(!idEstaEnLista(idMensajeCorrelativo,IDs_GET)){
+			log_error(logger, "NO NECESITO ESTE ID DE LOCALIZED");
+			list_destroy(posCant);
+			free(packLocalizedPokemon);
+			free(localizedNombrePokemon);
+			break;
+		}
 		if(necesitoEstePokemon(localizedNombrePokemon)){
 			printf("Necesito este pokemon!!! \n ");
 			for(int i=0; i<list_size(posCant);i++){
 				d_PosCant *posCantAUX = list_get(posCant,i);
 				hacerAppeared(localizedNombrePokemon,posCantAUX->posX,posCantAUX->posY,logger);
 			}
+			list_destroy(posCant);
 		}
-		else{ printf("No necesito este pokemon!!! \n "); }
+		else{
+			printf("No necesito este pokemon!!! \n ");
+			list_destroy(posCant);
+			free(packLocalizedPokemon);
+			free(localizedNombrePokemon);
+		}
 		free(packLocalizedPokemon);
 		break;
 
-	case d_CAUGHT_POKEMON:
-		;
+	case d_CAUGHT_POKEMON:;
 		log_info(logger, "Llego un CAUGHT POKEMON");
 		//recibimos el resto del paquete
 		void* packCaughtPokemon = Serialize_ReceiveAndUnpack(cliente, header.tamanioMensaje);
-		sem_post(&semaforoSocket);
+//		sem_post(&semaforoSocket);
 		//Con estas dos variables desempaquetamos el paquete
-		uint32_t idMensajeCaught, resultadoCaught;
-		Serialize_Unpack_CaughtPokemon(packCaughtPokemon, &idMensajeCaught, &resultadoCaught);
-		log_info(logger, "Me llego mensaje de %i. Id: %i, Result: %i\n", header.tipoMensaje, idMensajeCaught, resultadoCaught);
-
-		if(necesitoEsteID(idMensajeCaught)){
-			hacerCaught(idMensajeCaught,resultadoCaught);
+		uint32_t idMensajeCaught, resultadoCaught, idCorrelativoCaught;
+		Serialize_Unpack_CaughtPokemon_IDCorrelativo(packCaughtPokemon, &idMensajeCaught, &idCorrelativoCaught, &resultadoCaught);
+		log_info(logger, "Contenidos del mensaje: Id: %i, Id Correlativo: %i, Result: %i\n", idMensajeCaught, idCorrelativoCaught, resultadoCaught);
+		Serialize_PackAndSend_ACK(cliente, idMensajeCaught);
+		if(necesitoEsteID(idCorrelativoCaught)){
+			hacerCaught(idCorrelativoCaught,resultadoCaught);
 		}
-
+		else{
+			log_error(logger, "Este IDCorrelativo no me corresponde");
+		}
 		free(packCaughtPokemon);
 		break;
 
@@ -346,8 +416,9 @@ void atender(HeaderDelibird header, int cliente, t_log* logger) {
 		log_error(logger, "Mensaje no entendido: %i\n", header);
 		void* packBasura = Serialize_ReceiveAndUnpack(cliente,
 				header.tamanioMensaje);
+		Serialize_PackAndSend_ACK(cliente, 0);
 		free(packBasura);
-		sem_post(&semaforoSocket);
+//		sem_post(&semaforoSocket);
 		break;
 	}
 }
@@ -358,9 +429,11 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 	posicionPoke.y = posicionAppearedY;
 	sem_wait(&semaforoAppeared);
 	if(!contandoMisionesActualesNecesitoEstePokemon(pokemon)){
+		sem_wait(&semaforoMisiones);
 		t_mision* misionPendiente = crearMision(pokemon,posicionPoke,false,(-1));
 		list_add(MISIONES_PENDIENTES, misionPendiente);
 		printf("\n Este pokemon se agregara a pendientes \n");
+		sem_post(&semaforoMisiones);
 		sem_post(&semaforoAppeared);
 		return;
 	}
@@ -389,6 +462,7 @@ void hacerAppeared(char* pokemon, int posicionAppearedX, int posicionAppearedY, 
 void hacerCaught(int idMensajeCaught, int resultadoCaught){
 	objetoID_QUE_NECESITO *objetoID = malloc(sizeof(objetoID_QUE_NECESITO));
 	objetoID->idMensaje = idMensajeCaught;
+	sem_wait(&semaforoListaIDS);
 	int index = list_get_index(ID_QUE_NECESITO, objetoID, (void*)comparadorIDs);
 	if(resultadoCaught){
 		free(objetoID);
@@ -398,19 +472,21 @@ void hacerCaught(int idMensajeCaught, int resultadoCaught){
 		sumarPokemon(trainer,objetoID->pokemon);
 		descontarDeObjetivoGlobal(objetoID->pokemon);
 		trainer->razonBloqueo = t_DESOCUPADO;
-		sacarMision(objetoID->idEntrenador);
+//		sacarMision(objetoID->idEntrenador);
 		verPendientes(objetoID->pokemon);
 		free(objetoID);
 	}
 	else{
+		log_info(TEAM_LOG, "No pudimos atrapar a este pokemon");
 		free(objetoID);
 		objetoID = list_get(ID_QUE_NECESITO, index);
 		list_remove(ID_QUE_NECESITO, index);
 		bloquearEntrenador(objetoID->idEntrenador, t_DESOCUPADO);
-		sacarMision(objetoID->idEntrenador);
-		asignarMisionPendienteDePoke(objetoID->pokemon);
+//		sacarMision(objetoID->idEntrenador);
+		verPendientes(objetoID->pokemon);
 		free(objetoID);
 	}
+	sem_post(&semaforoListaIDS);
 }
 
 void verPendientes(char *pokemon){
@@ -426,11 +502,13 @@ void destruirMision(t_mision *mision){
 
 void borrarEstePokemonDePendientes(char *pokemon){
 	t_mision *mision;
+	sem_wait(&semaforoMisiones);
 	for(int i=0; i<list_size(MISIONES_PENDIENTES); i++){
 		mision = list_get(MISIONES_PENDIENTES,i);
 		if(mismoPokemonDeMision(mision,pokemon))
 			list_remove_and_destroy_element(MISIONES_PENDIENTES,i,(void*)destruirMision);
 	}
+	sem_post(&semaforoMisiones);
 }
 
 bool mismoPokemonDeMision(t_mision* pokemon1, char* pokemon2){
@@ -505,7 +583,7 @@ void asignarMisionPendienteDePoke(char* pokemon){
 	t_mision *mision;
 	for(int i=0; i<list_size(MISIONES_PENDIENTES); i++){
 		mision = list_get(MISIONES_PENDIENTES,i);
-		if(mismoPokemonDeMision(mision,pokemon)){
+		if(mismoPokemonDeMision(mision,pokemon) && contandoMisionesActualesNecesitoEstePokemon(pokemon)){
 			hacerAppeared(mision->pokemon,mision->point.x,mision->point.y, TEAM_LOG);
 			return;
 		}
@@ -515,11 +593,15 @@ void asignarMisionPendienteDePoke(char* pokemon){
 bool entrenadorEstaDisponible(entrenador* entrenadorAUX){
 	sem_wait(&semaforoCambioEstado);
 	sem_wait(&semaforoMisiones);
+	sem_wait(&semaforoPokemon);
 	bool response = (entrenadorAUX->estado != t_EXIT) &&
 			   	   (entrenadorAUX->estado != t_READY) &&
-				   (damePosicionFinalDoblePuntero(entrenadorAUX->pokemones) < damePosicionFinalDoblePuntero(entrenadorAUX->pokemonesObjetivo)) &&
 				   (entrenadorAUX->razonBloqueo != t_ESPERANDO_RESPUESTA) &&
 				   (entrenadorAUX->mision == NULL);
+	if(entrenadorAUX->pokemones[0] != NULL){
+		response = response && (damePosicionFinalDoblePuntero(entrenadorAUX->pokemones) < damePosicionFinalDoblePuntero(entrenadorAUX->pokemonesObjetivo));
+	}
+	sem_post(&semaforoPokemon);
 	sem_post(&semaforoMisiones);
 	sem_post(&semaforoCambioEstado);
 	return response;
@@ -684,12 +766,15 @@ t_mision* crearMision(char *pokemon, punto point, bool esIntercambio, int tidObj
 
 bool hayAlgunaMision(){
 	entrenador* trainer;
+	sem_wait(&semaforoMisiones);
 	for(int i=0; i<list_size(ENTRENADORES_TOTALES); i++){
 		trainer = list_get(ENTRENADORES_TOTALES,i);
 		if(trainer->mision != NULL){
+			sem_post(&semaforoMisiones);
 			return true;
 		}
 	}
+	sem_post(&semaforoMisiones);
 	return false;
 }
 
@@ -760,7 +845,7 @@ void cumplirMision(entrenador* trainer){
 			else{
 				log_info(TEAM_LOG,"Hola soy el entrenador %i \n Se va a intentar atrapar a: %s \n En la posicion: x:%i y:%i", trainer->tid, trainer->mision->pokemon, trainer->posicion.x, trainer->posicion.y);
 				sumarXCiclos(trainer,1);
-				enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.x, trainer->tid);
+				enviarCatchPokemonYRecibirResponse( trainer->mision->pokemon, trainer->mision->point.x, trainer->mision->point.y, trainer->tid);
 			}
 			avisarQueTermine(trainer);
 		//}
@@ -811,7 +896,9 @@ bool comparadorIDs(objetoID_QUE_NECESITO *objetoID1, objetoID_QUE_NECESITO *obje
 bool necesitoEsteID(int id){
 	objetoID_QUE_NECESITO* objetoIDAux = malloc(sizeof(objetoID_QUE_NECESITO));
 	objetoIDAux->idMensaje = id;
+	sem_wait(&semaforoListaIDS);
 	int resultado = list_get_index(ID_QUE_NECESITO, objetoIDAux, (void*)comparadorIDs);
+	sem_post(&semaforoListaIDS);
 	free(objetoIDAux);
 	if(resultado == -1)
 		return false;
@@ -826,7 +913,7 @@ void descontarDeObjetivoGlobal(char *pokemon){
 		dictionary_put(OBJETIVO_GLOBAL, pokemon, valor);
 	else
 		dictionary_remove(OBJETIVO_GLOBAL, pokemon);
-	printf("Hemos atrapado al pokemon: %s \n",pokemon);
+	log_info(TEAM_LOG,"Hemos atrapado al pokemon: %s \n",pokemon);
 	sem_post(&semaforoDiccionario);
 }
 
@@ -873,9 +960,17 @@ void destruirSemaforos(){
 	sem_destroy(&semaforoGameboy);
 	sem_destroy(&semaforoMisiones);
 	sem_destroy(&semaforoPlanifiquenme);
-	sem_destroy(&semaforoSocket);
+//	sem_destroy(&semaforoSocket);
 	sem_destroy(&semaforoTermine);
 	sem_destroy(&semaforoAppeared);
+	sem_destroy(&semaforoMovimiento);
+	sem_destroy(&semaforoPokemon);
+	sem_destroy(&semaforoGet);
+	sem_destroy(&semaforoSocketGameboy);
+	sem_destroy(&semaforoListaIDS);
+
+
+
 }
 
 void destruirTodo(){
@@ -884,6 +979,8 @@ void destruirTodo(){
 	destruirEstados();
 	destruirSemaforos();
 	matarHilos();
+	config_destroy(creacionConfig);
+	log_destroy(TEAM_LOG);
 }
 
 void matarHilos(){
@@ -895,15 +992,20 @@ void matarHilos(){
 }
 
 void finalFeliz(){
-	SEGUIR_ATENDIENDO = false;
 	planificarDeadlocks();
 	sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 	logearFin();
 	destruirTodo(); //Hakai
 }
 
-void iniciarConfig(){
-	t_config* creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team.config");
+void iniciarConfig(int argc, char *argv[]){
+	if(argc == 2){
+		creacionConfig = config_create(argv[1]);
+	}else{
+		creacionConfig = config_create("../Team.config");
+//		creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team.config");
+	}
+//	t_config* creacionConfig = config_create("/home/utnso/workspace/tp-2020-1c-ManaOS-/Team/Team2.config");
 	TEAM_CONFIG.POSICIONES_ENTRENADORES = config_get_array_value(creacionConfig, "POSICIONES_ENTRENADORES");
 	TEAM_CONFIG.POKEMON_ENTRENADORES = config_get_array_value(creacionConfig, "POKEMON_ENTRENADORES");
 	TEAM_CONFIG.OBJETIVOS_ENTRENADORES = config_get_array_value(creacionConfig, "OBJETIVOS_ENTRENADORES");
@@ -918,7 +1020,6 @@ void iniciarConfig(){
 	TEAM_CONFIG.LOG_FILE = config_get_string_value (creacionConfig, "LOG_FILE");
 	TEAM_CONFIG.IP_TEAM = config_get_string_value(creacionConfig, "IP_TEAM");
 	TEAM_CONFIG.PUERTO_TEAM = config_get_string_value(creacionConfig, "PUERTO_TEAM");
-	free(creacionConfig);
 }
 
 void descontarPokemonsActualesDeOBJGlobal(entrenador* trainer){
@@ -943,14 +1044,14 @@ void crearEntrenadores(){
 		pokemones = NULL;
 		pokemonesObjetivo = NULL;
 		punto punto = crearPunto(TEAM_CONFIG.POSICIONES_ENTRENADORES[i]);
-		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.POKEMON_ENTRENADORES))
+		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.POKEMON_ENTRENADORES) && TEAM_CONFIG.POKEMON_ENTRENADORES[0] != NULL)
 			pokemones = string_split(TEAM_CONFIG.POKEMON_ENTRENADORES[i], "|");
 		else{
 			pokemones = malloc(sizeof(char**)+ 4);
 			pokemones[0] = NULL;
 		}
 
-		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.OBJETIVOS_ENTRENADORES))
+		if(i <= damePosicionFinalDoblePuntero(TEAM_CONFIG.OBJETIVOS_ENTRENADORES) && TEAM_CONFIG.OBJETIVOS_ENTRENADORES[0] != NULL)
 			pokemonesObjetivo = string_split(TEAM_CONFIG.OBJETIVOS_ENTRENADORES[i], "|");
 		else{
 			pokemonesObjetivo = malloc(sizeof(char**) + 4);
@@ -970,6 +1071,7 @@ punto crearPunto(char * posiciones){
 		atoi(xey[0]),
 		atoi(xey[1])
 	};
+	liberarDoblePuntero(xey);
 	return p;
 }
 
@@ -1013,12 +1115,14 @@ void entrenadorDestroy(entrenador *self) {
 }
 
 void ponerAlFinalDeLista(entrenador *trainer, t_list *lista){
+	sem_wait(&semaforoCambioEstado);
 	int index = list_get_index(lista,trainer, (void*)mismaPosicion);
 	if(index != -1){
 		list_remove(lista,index);
 		list_add(lista,trainer);
 	}
 	trainer->ciclosCPUEjecutados = 0;
+	sem_post(&semaforoCambioEstado);
 }
 
 ////////////Funciones planificacion/////////////
@@ -1036,7 +1140,7 @@ void esperarAlgunoEnReady(bool isDeadlock){
 	}
 	else{
 		sem_wait(&semaforoCambioEstado);
-		while(list_is_empty(EstadoReady)){
+		while(list_is_empty(EstadoReady) && !objetivoGlobalCumplido()){
 			sem_post(&semaforoCambioEstado);
 			sleep(TEAM_CONFIG.RETARDO_CICLO_CPU);
 			sem_wait(&semaforoCambioEstado);
@@ -1046,14 +1150,22 @@ void esperarAlgunoEnReady(bool isDeadlock){
 }
 
 void planificarSegun(char* tipoPlanificacion){
-	if(string_equals_ignore_case(tipoPlanificacion, "FIFO"))
+	if(string_equals_ignore_case(tipoPlanificacion, "FIFO")){
 		FIFO();
-	if(string_equals_ignore_case(tipoPlanificacion, "RR"))
+		return;
+	}
+	if(string_equals_ignore_case(tipoPlanificacion, "RR")){
 		RR();
-	if(string_equals_ignore_case(tipoPlanificacion, "SJFCD"))
+		return;
+	}
+	if(string_equals_ignore_case(tipoPlanificacion, "SJFCD")){
 		SJFCD();
-	if(string_equals_ignore_case(tipoPlanificacion, "SJFSD"))
+		return;
+	}
+	if(string_equals_ignore_case(tipoPlanificacion, "SJFSD")){
 		SJFSD();
+		return;
+	}
 }
 
 void FIFO(){
@@ -1061,6 +1173,8 @@ void FIFO(){
 	sem_init(&semaforoTermine,0,0);
 	while(!objetivoGlobalCumplido()){
 		esperarAlgunoEnReady(false);
+		if(objetivoGlobalCumplido())
+			break;
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		sem_wait(&semaforoCambioEstado);
 		entrenador *trainer = list_get(EstadoReady,0);
@@ -1094,11 +1208,14 @@ void FIFO(){
 void RR(){
 	CICLOS_TOTALES = 0;
 	sem_init(&semaforoPlanifiquenme,0,0);
+	entrenador *trainer;
 	while(!objetivoGlobalCumplido()){
 		esperarAlgunoEnReady(false);
+		if(objetivoGlobalCumplido())
+			break;
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		sem_wait(&semaforoCambioEstado);
-		entrenador *trainer = list_get(EstadoReady,0);
+		trainer = list_get(EstadoReady,0);
 		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
@@ -1127,7 +1244,7 @@ void RR(){
 		esperarAlgunoEnReady(true);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		sem_wait(&semaforoCambioEstado);
-		entrenador *trainer = list_get(EstadoReady,0);
+		trainer = list_get(EstadoReady,0);
 		sem_post(&semaforoCambioEstado);
 		log_info(TEAM_LOG, "\n ::: Se planificara al entrenador nro: %i ::: \n",trainer->tid);
 		sem_post(&(trainer->semaforoDeEntrenador));
@@ -1156,6 +1273,8 @@ void SJFCD(){
 	sem_init(&semaforoPlanifiquenme,0,0);
 	while(!objetivoGlobalCumplido()){
 		esperarAlgunoEnReady(false);
+		if(objetivoGlobalCumplido())
+			break;
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		sem_wait(&semaforoCambioEstado);
@@ -1214,6 +1333,8 @@ void SJFSD(){
 	sem_init(&semaforoTermine,0,0);
 	while(!objetivoGlobalCumplido()){
 		esperarAlgunoEnReady(false);
+		if(objetivoGlobalCumplido())
+			break;
 		ordenarListaSJF(EstadoReady);
 		CAMBIOS_DE_CONTEXTO_REALIZADOS = CAMBIOS_DE_CONTEXTO_REALIZADOS + 2;
 		sem_wait(&semaforoCambioEstado);
@@ -1263,7 +1384,9 @@ void analizarDeadlockEspecifico(entrenador *trainer){
 }
 
 void planificarDeadlocks(){
+	sem_wait(&semaforoCambioEstado);
 	int cantidadEntrenadoresEnDeadlock = list_size(EstadoBlock);
+	sem_post(&semaforoCambioEstado);
 
 	if(cantidadEntrenadoresEnDeadlock == 0 || hayAlgunaMision())
 		return;
@@ -1309,7 +1432,7 @@ void planificarDeadlocks(){
 void ordenarListaSJF(t_list *lista){
 	log_info(TEAM_LOG, "Se reordena la lista de ready SJF");
 	list_sort(lista, (void*)entrenador1MenorEstimacionQueEntrenador2);
-	list_map(lista, (void*)establecerNuevaEstimacion);
+	list_iterate(lista, (void*)establecerNuevaEstimacion);
 }
 
 void establecerNuevaEstimacion(entrenador* trainer){
@@ -1375,6 +1498,9 @@ bool todosLosEntrenadoresCumplieronObjetivo(){
 }
 
 bool entrenadorCumplioObjetivo(entrenador* trainer){
-	return (sonIgualesSinInportarOrden(trainer->pokemones,trainer->pokemonesObjetivo) == 1);
+	sem_wait(&semaforoPokemon);
+	bool response = (sonIgualesSinInportarOrden(trainer->pokemones,trainer->pokemonesObjetivo) == 1);
+	sem_post(&semaforoPokemon);
+	return response;
 }
 

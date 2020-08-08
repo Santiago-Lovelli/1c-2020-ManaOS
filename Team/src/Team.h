@@ -91,8 +91,8 @@ typedef struct objetoID_QUE_NECESITO{
 
 
 //////FUNCIONES INICIALES/////////
-void iniciarConfig();
-void inicializar();
+void iniciarConfig(int argc, char *argv[]);
+void inicializar(int argc, char *argv[]);
 void inicializarSemaforos();
 void crearEntrenadores();
 void escucharMensajes();
@@ -611,6 +611,12 @@ void* suscribirme(d_message colaDeSuscripcion);
 void* recibirYAtenderUnCliente(p_elementoDeHilo* elemento);
 
 /*
+ * ESTA FUNCION RECIBE UNA CONEXION DEL GAMEBOY Y LA ATIENDE
+ */
+
+void* recibirYAtenderUnClienteGameboy(p_elementoDeHilo* elemento);
+
+/*
  * FUNCION PRINCIPAL DE TEAM, CUANDO NOS LLEGA UN MENSAJE POR SOCKET
  * ESTA FUNCION LO DIRIJE HACIA LA FUNCION ADECUADA
  */
@@ -654,7 +660,7 @@ int DEADLOCKS_RESUELTOS;
 int CICLOS_TOTALES;
 sem_t semaforoPlanifiquenme;
 sem_t semaforoTermine;
-sem_t semaforoSocket;
+//sem_t semaforoSocket;
 sem_t semaforoGameboy;
 sem_t semaforoCambioEstado;
 sem_t semaforoConexionABroker;
@@ -663,8 +669,13 @@ sem_t semaforoDiccionario;
 sem_t semaforoAppeared;
 sem_t semaforoMovimiento;
 sem_t semaforoPokemon;
+sem_t semaforoGet;
+sem_t semaforoSocketGameboy;
+sem_t semaforoListaIDS;
+sem_t semaforoConectarseServidor;
 
 /////////VARIABLES/////////
+t_config* creacionConfig;
 config TEAM_CONFIG;
 t_log * TEAM_LOG;
 t_dictionary * OBJETIVO_GLOBAL;
@@ -672,6 +683,7 @@ t_list * ENTRENADORES_TOTALES;
 t_list * POKEMONES_ATRAPADOS;
 t_list * ID_QUE_NECESITO;
 t_list * MISIONES_PENDIENTES;
+t_list * IDs_GET;
 int AUX_ID_TRAINER;
 bool SEGUIR_ATENDIENDO;
 

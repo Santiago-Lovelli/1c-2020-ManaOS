@@ -1,0 +1,12 @@
+src/Broker.o: ../src/Broker.c ../src/Broker.h \
+ /home/utnso/tp-2020-1c-ManaOS-/ComunParaTodos/Logger/Logger.h \
+ /home/utnso/tp-2020-1c-ManaOS-/ComunParaTodos/Conexiones/Conexiones.h \
+ /home/utnso/tp-2020-1c-ManaOS-/ComunParaTodos/Serializacion/Serializacion.h
+
+../src/Broker.h:
+
+/home/utnso/tp-2020-1c-ManaOS-/ComunParaTodos/Logger/Logger.h:
+
+/home/utnso/tp-2020-1c-ManaOS-/ComunParaTodos/Conexiones/Conexiones.h:
+
+/home/utnso/tp-2020-1c-ManaOS-/ComunParaTodos/Serializacion/Serializacion.h:
