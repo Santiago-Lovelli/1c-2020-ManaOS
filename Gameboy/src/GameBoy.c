@@ -131,6 +131,8 @@ int obtenerNroMensaje(char *actual){
 		return d_CAUGHT_POKEMON;
 	else if ( string_equals_ignore_case(actual,"GET_POKEMON") )
 		return d_GET_POKEMON;
+	else if ( string_equals_ignore_case(actual,"LOCALIZED_POKEMON") )
+		return d_LOCALIZED_POKEMON;
 	return 99;
 }
 
@@ -325,8 +327,21 @@ void atenderMensajes (HeaderDelibird headerRecibido, int socket){
 		log_info(logger,"Me llego mensaje de %i. Id: %i, Resultado: %i\n", headerRecibido.tipoMensaje, idMensajeCaught, resultado);
 		free(packCaughtPokemon);
 		break;
-	//case d_LOCALIZED_POKEMON:
-	default: log_info(logger, "Llego cualquiera");
+	case d_LOCALIZED_POKEMON:;
+		log_info(logger, "Llego un localized pokemon");
+		void* packLocalizedPokemon = Serialize_ReceiveAndUnpack(socket, headerRecibido.tamanioMensaje);
+		t_list *posCant = list_create();
+		uint32_t idMensajeLocalized, idMensajeCorrelativo;
+		char *localizedNombrePokemon;
+		Serialize_Unpack_LocalizedPokemon_IDCorrelativo(packLocalizedPokemon,&idMensajeLocalized, &idMensajeCorrelativo,&localizedNombrePokemon,&posCant);
+		log_info(logger,"Contenidos del mensaje: id: %i, id correlativo: %i, Pkm: %s",idMensajeLocalized, idMensajeCorrelativo,localizedNombrePokemon);
+		for(int i = 0; i<posCant->elements_count; i++){
+			d_PosCant* asd = list_get(posCant,i);
+			log_info(logger,"x: %i, y:%i",asd->posX,asd->posY);
+		}
+		free(packLocalizedPokemon);
+		break;
+	default: log_info(logger, "Llego al caso DEFAULT");
 	}
 }
 
