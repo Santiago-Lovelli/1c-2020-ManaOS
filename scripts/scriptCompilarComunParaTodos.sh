@@ -1,5 +1,7 @@
 
-echo "Comienzo compilacion ComunParaTodos"
+echo " 
+::: Comienzo compilacion ComunParaTodos ::: 
+"
 cd /home/utnso/workspace/tp-2020-1c-ManaOS-/ComunParaTodos/
 mkdir Debug
 cd Debug
@@ -31,4 +33,6 @@ gcc -Icommons -O0 -g3 -Wall -c -fmessage-length=0 -fPIC -MMD -MP -MF"Archivos/ar
 
 gcc -shared -o "libComunParaTodos.so"  ./Time/Time.o  ./Serializacion/Serializacion.o  ./ManejoDePunterosDobles/ManejoDePunterosDobles.o  ./Logger/Logger.o  ./Lista/lista.o  ./Conexiones/Conexiones.o  ./Bitmap/Bitmap.o  ./Archivos/archivos.o   -lcommons
 
-echo "Termine compilacion ComunParaTodos" 
+echo "
+::: Termine compilacion ComunParaTodos ::: 
+" 

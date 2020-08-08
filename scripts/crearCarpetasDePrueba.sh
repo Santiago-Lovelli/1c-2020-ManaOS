@@ -1,4 +1,6 @@
-cd /home/utnso/Escritorio;
+cd /home/utnso;
+mkdir Escritorio;
+cd Escritorio;
 mkdir tall-grass;
 cd tall-grass;
 mkdir Metadata;
@@ -10,4 +12,6 @@ BLOCKS=1024
 MAGIC_NUMBER=TALL_GRASS
 " >> Metadata.bin;
 echo "" >> Bitmap.bin;
-echo "Lista las carpetas base"
+echo "
+::: Lista las carpetas base :::
+"
