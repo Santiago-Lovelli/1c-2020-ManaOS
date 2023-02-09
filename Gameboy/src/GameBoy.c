@@ -1,7 +1,6 @@
 #include "GameBoy.h"
 
 uint32_t OKoFAIL(char *actual){
-	// todo piola
 	if( string_equals_ignore_case(actual, "OK") )
 		return 1;
 	else if( string_equals_ignore_case(actual, "FAIL") )
